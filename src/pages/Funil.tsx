@@ -37,8 +37,8 @@ import { Label } from '@/components/ui/label';
 export interface Lead {
   id: string;
   name: string;
-  email: string;
-  phone: string;
+  emails: { type: 'email' | 'phone' | 'mobile'; value: string; isPrimary?: boolean }[];
+  phones: { type: 'email' | 'phone' | 'mobile'; value: string; isPrimary?: boolean }[];
   property: string;
   value: string;
   source: string;
@@ -47,6 +47,7 @@ export interface Lead {
   stage?: string;
   lastContact?: string;
   nextAction?: string;
+  tags?: string[];
 }
 
 const stages = [
@@ -61,27 +62,117 @@ const stages = [
 
 const initialLeads: Record<string, Lead[]> = {
   new: [
-    { id: '1', name: 'Maria Santos', email: 'maria@email.com', phone: '11 99999-0001', property: 'Apt 2 quartos', value: 'R$ 350.000', source: 'Site', assignedTo: 'JS' },
-    { id: '2', name: 'Carlos Oliveira', email: 'carlos@email.com', phone: '11 99999-0002', property: 'Casa 3 quartos', value: 'R$ 580.000', source: 'Facebook', assignedTo: 'MR' },
+    { 
+      id: '1', 
+      name: 'Maria Santos', 
+      emails: [{ type: 'email', value: 'maria@email.com', isPrimary: true }], 
+      phones: [{ type: 'phone', value: '11 99999-0001', isPrimary: true }], 
+      property: 'Apt 2 quartos', 
+      value: 'R$ 350.000', 
+      source: 'Site', 
+      assignedTo: 'JS',
+      tags: ['Hot Lead', 'Primeira Compra']
+    },
+    { 
+      id: '2', 
+      name: 'Carlos Oliveira', 
+      emails: [{ type: 'email', value: 'carlos@email.com', isPrimary: true }], 
+      phones: [{ type: 'mobile', value: '11 99999-0002', isPrimary: true }], 
+      property: 'Casa 3 quartos', 
+      value: 'R$ 580.000', 
+      source: 'Facebook', 
+      assignedTo: 'MR',
+      tags: ['Investidor']
+    },
   ],
   contact: [
-    { id: '3', name: 'João Silva', email: 'joao@email.com', phone: '11 99999-0003', property: 'Cobertura', value: 'R$ 1.200.000', source: 'Indicação', assignedTo: 'JS' },
+    { 
+      id: '3', 
+      name: 'João Silva', 
+      emails: [{ type: 'email', value: 'joao@email.com', isPrimary: true }], 
+      phones: [{ type: 'phone', value: '11 99999-0003', isPrimary: true }], 
+      property: 'Cobertura', 
+      value: 'R$ 1.200.000', 
+      source: 'Indicação', 
+      assignedTo: 'JS',
+      tags: ['VIP']
+    },
   ],
   visit: [
-    { id: '4', name: 'Ana Costa', email: 'ana@email.com', phone: '11 99999-0004', property: 'Apt 3 quartos', value: 'R$ 450.000', source: 'Instagram', assignedTo: 'MR' },
-    { id: '5', name: 'Pedro Souza', email: 'pedro@email.com', phone: '11 99999-0005', property: 'Casa condomínio', value: 'R$ 720.000', source: 'Site', assignedTo: 'JS' },
+    { 
+      id: '4', 
+      name: 'Ana Costa', 
+      emails: [{ type: 'email', value: 'ana@email.com', isPrimary: true }], 
+      phones: [{ type: 'mobile', value: '11 99999-0004', isPrimary: true }], 
+      property: 'Apt 3 quartos', 
+      value: 'R$ 450.000', 
+      source: 'Instagram', 
+      assignedTo: 'MR',
+      tags: ['Aluguel']
+    },
+    { 
+      id: '5', 
+      name: 'Pedro Souza', 
+      emails: [{ type: 'email', value: 'pedro@email.com', isPrimary: true }], 
+      phones: [{ type: 'phone', value: '11 99999-0005', isPrimary: true }], 
+      property: 'Casa condomínio', 
+      value: 'R$ 720.000', 
+      source: 'Site', 
+      assignedTo: 'JS',
+      tags: ['Financiamento']
+    },
   ],
   proposal: [
-    { id: '6', name: 'Fernanda Lima', email: 'fernanda@email.com', phone: '11 99999-0006', property: 'Apt 4 quartos', value: 'R$ 650.000', source: 'Portal', assignedTo: 'MR' },
+    { 
+      id: '6', 
+      name: 'Fernanda Lima', 
+      emails: [{ type: 'email', value: 'fernanda@email.com', isPrimary: true }], 
+      phones: [{ type: 'mobile', value: '11 99999-0006', isPrimary: true }], 
+      property: 'Apt 4 quartos', 
+      value: 'R$ 650.000', 
+      source: 'Portal', 
+      assignedTo: 'MR',
+      tags: ['Interesse Alto']
+    },
   ],
   negotiation: [
-    { id: '7', name: 'Roberto Alves', email: 'roberto@email.com', phone: '11 99999-0007', property: 'Casa térrea', value: 'R$ 480.000', source: 'Site', assignedTo: 'JS' },
+    { 
+      id: '7', 
+      name: 'Roberto Alves', 
+      emails: [{ type: 'email', value: 'roberto@email.com', isPrimary: true }], 
+      phones: [{ type: 'phone', value: '11 99999-0007', isPrimary: true }], 
+      property: 'Casa térrea', 
+      value: 'R$ 480.000', 
+      source: 'Site', 
+      assignedTo: 'JS',
+      tags: ['Follow-up Necessário']
+    },
   ],
   closed: [
-    { id: '8', name: 'Juliana Rocha', email: 'juliana@email.com', phone: '11 99999-0008', property: 'Cobertura duplex', value: 'R$ 950.000', source: 'Indicação', assignedTo: 'MR' },
+    { 
+      id: '8', 
+      name: 'Juliana Rocha', 
+      emails: [{ type: 'email', value: 'juliana@email.com', isPrimary: true }], 
+      phones: [{ type: 'mobile', value: '11 99999-0008', isPrimary: true }], 
+      property: 'Cobertura duplex', 
+      value: 'R$ 950.000', 
+      source: 'Indicação', 
+      assignedTo: 'MR',
+      tags: ['VIP', 'Hot Lead']
+    },
   ],
   lost: [
-    { id: '9', name: 'Lucas Mendes', email: 'lucas@email.com', phone: '11 99999-0009', property: 'Kitnet', value: 'R$ 180.000', source: 'Telefone', assignedTo: 'JS' },
+    { 
+      id: '9', 
+      name: 'Lucas Mendes', 
+      emails: [{ type: 'email', value: 'lucas@email.com', isPrimary: true }], 
+      phones: [{ type: 'phone', value: '11 99999-0009', isPrimary: true }], 
+      property: 'Kitnet', 
+      value: 'R$ 180.000', 
+      source: 'Telefone', 
+      assignedTo: 'JS',
+      tags: []
+    },
   ],
 };
 
@@ -128,7 +219,7 @@ export function Funil() {
     });
   };
 
-  const handleSaveLead = (leadData: any) => {
+  const handleSaveLead = (leadData: Lead) => {
     if (editingLead) {
       // Update existing lead
       setLeads(prevLeads => {
@@ -194,7 +285,13 @@ export function Funil() {
     setScheduleOpen(true);
   };
 
-  const handleConfirmVisit = (visitData: any) => {
+  interface VisitData {
+  activity: string;
+  date: string;
+  time: string;
+}
+
+const handleConfirmVisit = (visitData: VisitData) => {
     // Update lead with visit information
     if (selectedLead) {
       const updatedLead = {
@@ -220,14 +317,21 @@ export function Funil() {
 
   const handleSendEmail = (lead: Lead) => {
     // In a real app, this would open the default email client
-    window.location.href = `mailto:${lead.email}?subject=Contato sobre o imóvel ${lead.property}`;
+    const primaryEmail = lead.emails?.find(email => email.isPrimary)?.value || lead.emails?.[0]?.value;
+    if (primaryEmail) {
+      window.location.href = `mailto:${primaryEmail}?subject=Contato sobre o imóvel ${lead.property}`;
+    }
   };
 
-  const handleWhatsApp = (phone: string) => {
-    // Remove non-digits from phone number
-    const cleanPhone = phone.replace(/\D/g, '');
-    // Open WhatsApp with the phone number
-    window.open(`https://wa.me/55${cleanPhone}`, '_blank');
+  const handleWhatsApp = (lead: Lead) => {
+    // Get primary phone or first phone
+    const primaryPhone = lead.phones?.find(phone => phone.isPrimary)?.value || lead.phones?.[0]?.value;
+    if (primaryPhone) {
+      // Remove non-digits from phone number
+      const cleanPhone = primaryPhone.replace(/\D/g, '');
+      // Open WhatsApp with phone number
+      window.open(`https://wa.me/55${cleanPhone}`, '_blank');
+    }
   };
 
   const handleClearFilters = () => {
@@ -248,9 +352,12 @@ export function Funil() {
     const filteredLeads = Object.entries(leads).reduce((acc, [stage, stageLeads]) => {
       const filteredStageLeads = stageLeads.filter(lead => {
         // Filtro de busca
+        const primaryEmail = lead.emails?.find(email => email.isPrimary)?.value || lead.emails?.[0]?.value || '';
+        const primaryPhone = lead.phones?.find(phone => phone.isPrimary)?.value || lead.phones?.[0]?.value || '';
+        
         const matchesSearch = searchTerm === '' || 
           lead.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          lead.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          primaryEmail.toLowerCase().includes(searchTerm.toLowerCase()) ||
           lead.property.toLowerCase().includes(searchTerm.toLowerCase());
         
         // Filtros específicos
@@ -419,6 +526,21 @@ export function Funil() {
                                       <Badge variant="outline" className="mt-1 text-xs">
                                         {lead.source}
                                       </Badge>
+                                      {/* Tags */}
+                                      {lead.tags && lead.tags.length > 0 && (
+                                        <div className="flex flex-wrap gap-1 mt-1">
+                                          {lead.tags.slice(0, 2).map((tag) => (
+                                            <Badge key={tag} variant="secondary" className="text-xs">
+                                              {tag}
+                                            </Badge>
+                                          ))}
+                                          {lead.tags.length > 2 && (
+                                            <Badge variant="secondary" className="text-xs">
+                                              +{lead.tags.length - 2}
+                                            </Badge>
+                                          )}
+                                        </div>
+                                      )}
                                     </div>
                                   </div>
                                   <DropdownMenu>
@@ -502,7 +624,7 @@ export function Funil() {
                                     className={`${isMobile ? 'gap-2' : 'h-8 w-8'}`}
                                     onClick={(e) => {
                                       e.stopPropagation();
-                                      handleWhatsApp(lead.phone);
+                                      handleWhatsApp(lead);
                                     }}
                                   >
                                     <MessageCircle className="h-4 w-4" />
