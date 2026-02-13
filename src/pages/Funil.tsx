@@ -2,19 +2,14 @@ import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Plus, MoreVertical, Mail, Calendar, GripVertical, Trash2, Edit, Eye, MessageCircle, Filter, X, Search } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Plus, Filter, X, Search } from 'lucide-react';
 import { LeadDetailsModal } from '@/components/modals/LeadDetailsModal';
 import { LeadFormModal } from '@/components/modals/LeadFormModal';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { toast } from '@/hooks/use-toast';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { DragDropContext, Droppable, Draggable, DropResult } from '@hello-pangea/dnd';
+import { LeadCard } from '@/components/LeadCard';
 import { useMediaQuery } from '@/hooks';
 import { ScheduleVisitModal } from '@/components/modals/ScheduleVisitModal';
 import {
@@ -31,174 +26,139 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
-export interface Lead {
-  id: string;
+interface ContactInfo {
+  type: 'email' | 'phone' | 'mobile';
+  value: string;
+  isPrimary?: boolean;
+}
+
+interface LeadData {
   name: string;
-  emails: { type: 'email' | 'phone' | 'mobile'; value: string; isPrimary?: boolean }[];
-  phones: { type: 'email' | 'phone' | 'mobile'; value: string; isPrimary?: boolean }[];
+  emails: ContactInfo[];
+  phones: ContactInfo[];
   property: string;
   value: string;
   source: string;
+  notes: string;
+  stage: string;
   assignedTo: string;
-  notes?: string;
-  stage?: string;
+  tags: string[];
+}
+
+interface Lead extends LeadData {
+  id: string;
   lastContact?: string;
   nextAction?: string;
-  tags?: string[];
+}
+
+interface VisitData {
+  date: string;
+  time: string;
+  type: string;
+  notes?: string;
 }
 
 const stages = [
-  { id: 'new', title: 'Novo Lead', color: 'bg-primary-100 text-primary-700 dark:bg-primary-900 dark:text-primary-100' },
-  { id: 'contact', title: 'Contato Realizado', color: 'bg-accent/10 text-accent dark:bg-accent/20' },
-  { id: 'visit', title: 'Visita Agendada', color: 'bg-warning/10 text-warning dark:bg-warning/20' },
-  { id: 'proposal', title: 'Proposta Enviada', color: 'bg-primary/10 text-primary dark:bg-primary/20' },
-  { id: 'negotiation', title: 'Negociação', color: 'bg-accent/20 text-accent dark:bg-accent/30' },
-  { id: 'closed', title: 'Fechado', color: 'bg-success/10 text-success dark:bg-success/20' },
-  { id: 'lost', title: 'Perdido', color: 'bg-destructive/10 text-destructive dark:bg-destructive/20' },
+  { id: 'new', title: 'Novo Lead', color: 'bg-blue-100 text-blue-800' },
+  { id: 'contact', title: 'Contato Realizado', color: 'bg-yellow-100 text-yellow-800' },
+  { id: 'visit', title: 'Visita Agendada', color: 'bg-purple-100 text-purple-800' },
+  { id: 'proposal', title: 'Proposta Enviada', color: 'bg-orange-100 text-orange-800' },
+  { id: 'negotiation', title: 'Negociação', color: 'bg-red-100 text-red-800' },
+  { id: 'closed', title: 'Fechado', color: 'bg-green-100 text-green-800' },
 ];
 
-const initialLeads: Record<string, Lead[]> = {
-  new: [
-    { 
-      id: '1', 
-      name: 'Maria Santos', 
-      emails: [{ type: 'email', value: 'maria@email.com', isPrimary: true }], 
-      phones: [{ type: 'phone', value: '11 99999-0001', isPrimary: true }], 
-      property: 'Apt 2 quartos', 
-      value: 'R$ 350.000', 
-      source: 'Site', 
-      assignedTo: 'JS',
-      tags: ['Hot Lead', 'Primeira Compra']
-    },
-    { 
-      id: '2', 
-      name: 'Carlos Oliveira', 
-      emails: [{ type: 'email', value: 'carlos@email.com', isPrimary: true }], 
-      phones: [{ type: 'mobile', value: '11 99999-0002', isPrimary: true }], 
-      property: 'Casa 3 quartos', 
-      value: 'R$ 580.000', 
-      source: 'Facebook', 
-      assignedTo: 'MR',
-      tags: ['Investidor']
-    },
-  ],
-  contact: [
-    { 
-      id: '3', 
-      name: 'João Silva', 
-      emails: [{ type: 'email', value: 'joao@email.com', isPrimary: true }], 
-      phones: [{ type: 'phone', value: '11 99999-0003', isPrimary: true }], 
-      property: 'Cobertura', 
-      value: 'R$ 1.200.000', 
-      source: 'Indicação', 
-      assignedTo: 'JS',
-      tags: ['VIP']
-    },
-  ],
-  visit: [
-    { 
-      id: '4', 
-      name: 'Ana Costa', 
-      emails: [{ type: 'email', value: 'ana@email.com', isPrimary: true }], 
-      phones: [{ type: 'mobile', value: '11 99999-0004', isPrimary: true }], 
-      property: 'Apt 3 quartos', 
-      value: 'R$ 450.000', 
-      source: 'Instagram', 
-      assignedTo: 'MR',
-      tags: ['Aluguel']
-    },
-    { 
-      id: '5', 
-      name: 'Pedro Souza', 
-      emails: [{ type: 'email', value: 'pedro@email.com', isPrimary: true }], 
-      phones: [{ type: 'phone', value: '11 99999-0005', isPrimary: true }], 
-      property: 'Casa condomínio', 
-      value: 'R$ 720.000', 
-      source: 'Site', 
-      assignedTo: 'JS',
-      tags: ['Financiamento']
-    },
-  ],
-  proposal: [
-    { 
-      id: '6', 
-      name: 'Fernanda Lima', 
-      emails: [{ type: 'email', value: 'fernanda@email.com', isPrimary: true }], 
-      phones: [{ type: 'mobile', value: '11 99999-0006', isPrimary: true }], 
-      property: 'Apt 4 quartos', 
-      value: 'R$ 650.000', 
-      source: 'Portal', 
-      assignedTo: 'MR',
-      tags: ['Interesse Alto']
-    },
-  ],
-  negotiation: [
-    { 
-      id: '7', 
-      name: 'Roberto Alves', 
-      emails: [{ type: 'email', value: 'roberto@email.com', isPrimary: true }], 
-      phones: [{ type: 'phone', value: '11 99999-0007', isPrimary: true }], 
-      property: 'Casa térrea', 
-      value: 'R$ 480.000', 
-      source: 'Site', 
-      assignedTo: 'JS',
-      tags: ['Follow-up Necessário']
-    },
-  ],
-  closed: [
-    { 
-      id: '8', 
-      name: 'Juliana Rocha', 
-      emails: [{ type: 'email', value: 'juliana@email.com', isPrimary: true }], 
-      phones: [{ type: 'mobile', value: '11 99999-0008', isPrimary: true }], 
-      property: 'Cobertura duplex', 
-      value: 'R$ 950.000', 
-      source: 'Indicação', 
-      assignedTo: 'MR',
-      tags: ['VIP', 'Hot Lead']
-    },
-  ],
-  lost: [
-    { 
-      id: '9', 
-      name: 'Lucas Mendes', 
-      emails: [{ type: 'email', value: 'lucas@email.com', isPrimary: true }], 
-      phones: [{ type: 'phone', value: '11 99999-0009', isPrimary: true }], 
-      property: 'Kitnet', 
-      value: 'R$ 180.000', 
-      source: 'Telefone', 
-      assignedTo: 'JS',
-      tags: []
-    },
-  ],
-};
+const initialLeads: Lead[] = [
+  {
+    id: '1',
+    name: 'João Silva',
+    emails: [
+      { type: 'email', value: 'joao.silva@email.com', isPrimary: true },
+      { type: 'email', value: 'joao.silva2@email.com', isPrimary: false }
+    ],
+    phones: [
+      { type: 'phone', value: '(11) 98765-4321', isPrimary: true },
+      { type: 'mobile', value: '(11) 91234-5678', isPrimary: false }
+    ],
+    property: 'Apartamento 2 quartos - Brooklin',
+    value: 'R$ 450.000',
+    source: 'Facebook',
+    assignedTo: 'JS',
+    stage: 'new',
+    tags: ['Hot Lead', 'VIP'],
+    notes: ''
+  },
+  {
+    id: '2',
+    name: 'Maria Santos',
+    emails: [
+      { type: 'email', value: 'maria.santos@email.com', isPrimary: true }
+    ],
+    phones: [
+      { type: 'mobile', value: '(11) 99876-5432', isPrimary: true }
+    ],
+    property: 'Casa 3 quartos - Moema',
+    value: 'R$ 750.000',
+    source: 'Instagram',
+    assignedTo: 'MR',
+    stage: 'contact',
+    tags: ['Primeira Compra'],
+    notes: ''
+  },
+  {
+    id: '3',
+    name: 'Pedro Costa',
+    emails: [
+      { type: 'email', value: 'pedro.costa@email.com', isPrimary: true }
+    ],
+    phones: [
+      { type: 'phone', value: '(11) 3456-7890', isPrimary: true },
+      { type: 'mobile', value: '(11) 98765-4321', isPrimary: false }
+    ],
+    property: 'Studio - Vila Madalena',
+    value: 'R$ 280.000',
+    source: 'Site',
+    assignedTo: 'PC',
+    stage: 'visit',
+    tags: ['Investidor'],
+    notes: ''
+  },
+];
 
 export function Funil() {
-  const [leads, setLeads] = useState<Record<string, Lead[]>>(initialLeads);
-  const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
+  const navigate = useNavigate();
+  const [leads, setLeads] = useState<Record<string, Lead[]>>({
+    new: initialLeads.filter(lead => lead.stage === 'new'),
+    contact: initialLeads.filter(lead => lead.stage === 'contact'),
+    visit: initialLeads.filter(lead => lead.stage === 'visit'),
+    proposal: initialLeads.filter(lead => lead.stage === 'proposal'),
+    negotiation: initialLeads.filter(lead => lead.stage === 'negotiation'),
+    closed: initialLeads.filter(lead => lead.stage === 'closed'),
+  });
+
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filterModalOpen, setFilterModalOpen] = useState(false);
   const [detailsOpen, setDetailsOpen] = useState(false);
   const [formOpen, setFormOpen] = useState(false);
   const [scheduleOpen, setScheduleOpen] = useState(false);
+  const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
   const [editingLead, setEditingLead] = useState<Lead | null>(null);
-  const [filterModalOpen, setFilterModalOpen] = useState(false);
-  const [searchTerm, setSearchTerm] = useState('');
   const [filters, setFilters] = useState({
     nomeLead: '',
     corretor: '',
     valorMin: '',
     valorMax: '',
     regiao: '',
-    imovel: ''
+    imovel: '',
   });
-  const isMobile = useMediaQuery('(max-width: 768px)');
-  const navigate = useNavigate();
 
-  const handleOpenDetails = useCallback((lead: Lead) => {
-    navigate(`/leads/${lead.id}`);
-  }, [navigate]);
+  const isMobile = useMediaQuery('(max-width: 768px)');
+
+  const handleOpenDetails = (lead: Lead) => {
+    setSelectedLead(lead);
+    setDetailsOpen(true);
+  };
 
   const handleEditLead = (lead: Lead) => {
     setEditingLead(lead);
@@ -206,73 +166,60 @@ export function Funil() {
   };
 
   const handleDeleteLead = (leadId: string) => {
-    setLeads(prevLeads => {
-      const newLeads = { ...prevLeads };
-      for (const stage in newLeads) {
+    setLeads(prev => {
+      const newLeads = { ...prev };
+      Object.keys(newLeads).forEach(stage => {
         newLeads[stage] = newLeads[stage].filter(lead => lead.id !== leadId);
-      }
-      toast({
-        title: "Lead removido",
-        description: "O lead foi removido do funil com sucesso.",
       });
       return newLeads;
+    });
+    toast({
+      title: "Lead excluído",
+      description: "O lead foi removido com sucesso.",
     });
   };
 
   const handleSaveLead = (leadData: Lead) => {
     if (editingLead) {
       // Update existing lead
-      setLeads(prevLeads => {
-        const newLeads = { ...prevLeads };
-        
-        // Remove from current stage
-        for (const stage in newLeads) {
-          newLeads[stage] = newLeads[stage].filter(l => l.id !== editingLead.id);
-        }
-        
-        // Add to new stage (or same stage if not changed)
-        const stage = leadData.stage || 'new';
-        const updatedLead = { ...editingLead, ...leadData };
-        
-        if (!newLeads[stage]) {
-          newLeads[stage] = [];
-        }
-        
-        newLeads[stage].push(updatedLead);
-        
-        toast({
-          title: "Lead atualizado com sucesso!",
-          description: `As alterações em ${leadData.name} foram salvas.`,
-          variant: "success",
+      setLeads(prev => {
+        const newLeads = { ...prev };
+        Object.keys(newLeads).forEach(stage => {
+          newLeads[stage] = newLeads[stage].map(lead => 
+            lead.id === editingLead.id ? leadData : lead
+          );
         });
-        
         return newLeads;
+      });
+      toast({
+        title: "Lead atualizado",
+        description: "As alterações foram salvas com sucesso.",
       });
     } else {
       // Add new lead
-      const newLead = {
-        ...leadData,
-        id: Date.now().toString(),
-        stage: leadData.stage || 'new',
-      };
-      
-      setLeads(prevLeads => {
-        const stage = newLead.stage || 'new';
-        return {
-          ...prevLeads,
-          [stage]: [...(prevLeads[stage] || []), newLead],
-        };
-      });
-      
+      const newLead = { ...leadData, id: Date.now().toString() };
+      setLeads(prev => ({
+        ...prev,
+        new: [...prev.new, newLead]
+      }));
       toast({
-        title: "Lead adicionado com sucesso!",
-        description: `${leadData.name} foi adicionado ao funil.`,
-        variant: "success",
+        title: "Lead criado",
+        description: "Novo lead adicionado com sucesso.",
       });
     }
-    
     setFormOpen(false);
     setEditingLead(null);
+  };
+
+  const handleSendEmail = (lead: Lead) => {
+    const primaryEmail = lead.emails?.find(email => email.isPrimary)?.value || lead.emails?.[0]?.value || '';
+    window.location.href = `mailto:${primaryEmail}`;
+  };
+
+  const handleWhatsApp = (lead: Lead) => {
+    const primaryPhone = lead.phones?.find(phone => phone.isPrimary)?.value || lead.phones?.[0]?.value || '';
+    const message = `Olá ${lead.name}, tudo bem?`;
+    window.open(`https://wa.me/${primaryPhone.replace(/\D/g, '')}?text=${encodeURIComponent(message)}`, '_blank');
   };
 
   const handleScheduleVisit = (lead: Lead) => {
@@ -280,59 +227,101 @@ export function Funil() {
     setScheduleOpen(true);
   };
 
-  const handleCreateActivity = (lead: Lead) => {
-    setSelectedLead(lead);
-    setScheduleOpen(true);
-  };
-
-  interface VisitData {
-  activity: string;
-  date: string;
-  time: string;
-}
-
-const handleConfirmVisit = (visitData: VisitData) => {
-    // Update lead with visit information
+  const handleConfirmVisit = (data: { date: string; time: string; notes: string; activity: string; }) => {
     if (selectedLead) {
-      const updatedLead = {
-        ...selectedLead,
-        nextAction: `${visitData.activity} agendada para ${visitData.date} às ${visitData.time}`,
-        lastContact: new Date().toISOString(),
-      };
+      // Move lead to visit stage
+      setLeads(prev => {
+        const newLeads = { ...prev };
+        Object.keys(newLeads).forEach(stage => {
+          newLeads[stage] = newLeads[stage].filter(lead => lead.id !== selectedLead.id);
+        });
+        newLeads.visit = [...newLeads.visit, { ...selectedLead, stage: 'visit' }];
+        return newLeads;
+      });
       
-      // Update the lead in the appropriate stage
-      setLeads(prev => ({
-        ...prev,
-        [selectedLead.stage || 'new']: prev[selectedLead.stage || 'new'].map(lead => 
-          lead.id === selectedLead.id ? updatedLead : lead
-        )
-      }));
+      toast({
+        title: "Visita agendada",
+        description: `Visita agendada para ${selectedLead.name} em ${data.date} às ${data.time}`,
+      });
       
-      // Show success message
-      alert(`${visitData.activity} agendada com sucesso para ${selectedLead.name}!`);
+      setScheduleOpen(false);
+      setSelectedLead(null);
     }
+  };
+
+  const handleCreateActivity = (lead: Lead) => {
+    handleScheduleVisit(lead);
+  };
+
+  const getFilteredLeads = useCallback(() => {
+    const filteredLeads: Record<string, Lead[]> = {};
     
-    setScheduleOpen(false);
-  };
-
-  const handleSendEmail = (lead: Lead) => {
-    // In a real app, this would open the default email client
-    const primaryEmail = lead.emails?.find(email => email.isPrimary)?.value || lead.emails?.[0]?.value;
-    if (primaryEmail) {
-      window.location.href = `mailto:${primaryEmail}?subject=Contato sobre o imóvel ${lead.property}`;
-    }
-  };
-
-  const handleWhatsApp = (lead: Lead) => {
-    // Get primary phone or first phone
-    const primaryPhone = lead.phones?.find(phone => phone.isPrimary)?.value || lead.phones?.[0]?.value;
-    if (primaryPhone) {
-      // Remove non-digits from phone number
-      const cleanPhone = primaryPhone.replace(/\D/g, '');
-      // Open WhatsApp with phone number
-      window.open(`https://wa.me/55${cleanPhone}`, '_blank');
-    }
-  };
+    stages.forEach(stage => {
+      let stageLeads = leads[stage.id] || [];
+      
+      // Apply search filter
+      if (searchTerm) {
+        const primaryEmail = stageLeads.map(lead => 
+          lead.emails?.find(email => email.isPrimary)?.value || lead.emails?.[0]?.value || ''
+        );
+        const primaryPhone = stageLeads.map(lead => 
+          lead.phones?.find(phone => phone.isPrimary)?.value || lead.phones?.[0]?.value || ''
+        );
+        
+        stageLeads = stageLeads.filter(lead => 
+          lead.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          primaryEmail.some(email => email.toLowerCase().includes(searchTerm.toLowerCase())) ||
+          primaryPhone.some(phone => phone.includes(searchTerm)) ||
+          lead.property.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+      }
+      
+      // Apply additional filters
+      if (filters.nomeLead) {
+        stageLeads = stageLeads.filter(lead =>
+          lead.name.toLowerCase().includes(filters.nomeLead.toLowerCase())
+        );
+      }
+      
+      if (filters.corretor) {
+        stageLeads = stageLeads.filter(lead =>
+          lead.assignedTo === filters.corretor
+        );
+      }
+      
+      if (filters.valorMin) {
+        stageLeads = stageLeads.filter(lead => {
+          const value = parseInt(lead.value.replace(/\D/g, ''));
+          return value >= parseInt(filters.valorMin.replace(/\D/g, ''));
+        });
+      }
+      
+      if (filters.valorMax) {
+        stageLeads = stageLeads.filter(lead => {
+          const value = parseInt(lead.value.replace(/\D/g, ''));
+          return value <= parseInt(filters.valorMax.replace(/\D/g, ''));
+        });
+      }
+      
+      if (filters.regiao) {
+        stageLeads = stageLeads.filter(lead =>
+          lead.property.toLowerCase().includes(filters.regiao.toLowerCase())
+        );
+      }
+      
+      if (filters.imovel) {
+        stageLeads = stageLeads.filter(lead =>
+          lead.property.toLowerCase().includes(filters.imovel.toLowerCase())
+        );
+      }
+      
+      if (stageLeads.length > 0) {
+        filteredLeads[stage.id] = stageLeads;
+      }
+    });
+    
+    return filteredLeads;
+  }, [leads, searchTerm, filters]);
 
   const handleClearFilters = () => {
     setFilters({
@@ -341,95 +330,8 @@ const handleConfirmVisit = (visitData: VisitData) => {
       valorMin: '',
       valorMax: '',
       regiao: '',
-      imovel: ''
+      imovel: '',
     });
-    setSearchTerm('');
-  };
-
-  const hasActiveFilters = Object.values(filters).some(value => value !== '') || searchTerm !== '';
-
-  const getFilteredLeads = () => {
-    const filteredLeads = Object.entries(leads).reduce((acc, [stage, stageLeads]) => {
-      const filteredStageLeads = stageLeads.filter(lead => {
-        // Filtro de busca
-        const primaryEmail = lead.emails?.find(email => email.isPrimary)?.value || lead.emails?.[0]?.value || '';
-        const primaryPhone = lead.phones?.find(phone => phone.isPrimary)?.value || lead.phones?.[0]?.value || '';
-        
-        const matchesSearch = searchTerm === '' || 
-          lead.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          primaryEmail.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          lead.property.toLowerCase().includes(searchTerm.toLowerCase());
-        
-        // Filtros específicos
-        const matchesNome = filters.nomeLead === '' || lead.name.toLowerCase().includes(filters.nomeLead.toLowerCase());
-        const matchesCorretor = filters.corretor === '' || lead.assignedTo === filters.corretor;
-        const matchesRegiao = filters.regiao === '' || lead.property.toLowerCase().includes(filters.regiao.toLowerCase());
-        const matchesImovel = filters.imovel === '' || lead.property.toLowerCase().includes(filters.imovel.toLowerCase());
-        
-        // Filtro de valor
-        let matchesValor = true;
-        if (filters.valorMin || filters.valorMax) {
-          const valorNumerico = parseInt(lead.value.replace(/[^0-9]/g, ''));
-          if (filters.valorMin) {
-            matchesValor = valorNumerico >= parseInt(filters.valorMin.replace(/[^0-9]/g, ''));
-          }
-          if (filters.valorMax) {
-            matchesValor = matchesValor && valorNumerico <= parseInt(filters.valorMax.replace(/[^0-9]/g, ''));
-          }
-        }
-        
-        return matchesSearch && matchesNome && matchesCorretor && matchesRegiao && matchesImovel && matchesValor;
-      });
-      
-      if (filteredStageLeads.length > 0) {
-        acc[stage] = filteredStageLeads;
-      }
-      return acc;
-    }, {} as Record<string, Lead[]>);
-    
-    return filteredLeads;
-  };
-
-  const onDragEnd = (result: DropResult) => {
-    const { source, destination, draggableId } = result;
-
-    // Se não houver destino válido, cancela
-    if (!destination) return;
-
-    // Se soltou no mesmo lugar, cancela
-    if (
-      source.droppableId === destination.droppableId &&
-      source.index === destination.index
-    ) {
-      return;
-    }
-
-    const sourceStage = source.droppableId;
-    const destStage = destination.droppableId;
-
-    // Obtém os dados filtrados atuais
-    const filteredLeadsData = getFilteredLeads();
-    
-    // Se não houver leads no estágio de origem nos dados filtrados, cancela
-    if (!filteredLeadsData[sourceStage] || filteredLeadsData[sourceStage].length === 0) {
-      return;
-    }
-
-    // Cria cópias dos arrays
-    const newLeads = { ...leads };
-    const sourceLeads = [...newLeads[sourceStage]];
-    const destLeads = [...newLeads[destStage]];
-
-    // Remove do estágio de origem
-    const [removed] = sourceLeads.splice(source.index, 1);
-    // Adiciona ao estágio de destino
-    destLeads.splice(destination.index, 0, removed);
-
-    // Atualiza o estado
-    newLeads[sourceStage] = sourceLeads;
-    newLeads[destStage] = destLeads;
-
-    setLeads(newLeads);
   };
 
   return (
@@ -449,21 +351,15 @@ const handleConfirmVisit = (visitData: VisitData) => {
               className="pl-10"
             />
           </div>
-          <Button 
+          <Button
             variant="outline"
-            className="gap-2"
             onClick={() => setFilterModalOpen(true)}
+            className="gap-2"
           >
             <Filter className="h-4 w-4" />
             Filtros
-            {hasActiveFilters && (
-              <span className="bg-primary text-primary-foreground rounded-full px-2 py-0.5 text-xs">
-                {Object.values(filters).filter(value => value !== '').length + (searchTerm !== '' ? 1 : 0)}
-              </span>
-            )}
           </Button>
-          <Button 
-            className="gap-2"
+          <Button
             onClick={() => {
               setEditingLead(null);
               setFormOpen(true);
@@ -475,194 +371,39 @@ const handleConfirmVisit = (visitData: VisitData) => {
         </div>
       </div>
 
-      <DragDropContext onDragEnd={onDragEnd}>
-        <div className="flex-1 overflow-x-auto pb-6">
-          <div className="flex gap-4 h-full overflow-x-auto pb-4">
-            {stages.map((stage) => (
-              <div key={stage.id} className="flex-shrink-0 w-72 md:w-80 flex flex-col">
-                <div className="mb-4">
-                  <div className="flex items-center justify-between mb-2">
-                    <h3 className={`font-semibold text-sm px-3 py-1 rounded-full ${stage.color}`}>
-                      {stage.title}
-                    </h3>
-                    <span className="text-xs text-muted-foreground">
-                      {getFilteredLeads()[stage.id]?.length || 0}
-                    </span>
-                  </div>
+      <div className="flex-1 overflow-x-auto pb-6">
+        <div className="flex gap-4 h-full overflow-x-auto pb-4">
+          {stages.map((stage) => (
+            <div key={stage.id} className="flex-shrink-0 w-72 md:w-80 flex flex-col">
+              <div className="mb-4">
+                <div className="flex items-center justify-between mb-2">
+                  <h3 className={`font-semibold text-sm px-3 py-1 rounded-full ${stage.color}`}>
+                    {stage.title}
+                  </h3>
+                  <span className="text-xs text-muted-foreground">
+                    {getFilteredLeads()[stage.id]?.length || 0}
+                  </span>
                 </div>
-                <Droppable droppableId={stage.id}>
-                  {(provided, snapshot) => (
-                    <div
-                      ref={provided.innerRef}
-                      {...provided.droppableProps}
-                      className={`space-y-3 flex-1 overflow-y-auto rounded-lg p-2 transition-colors ${
-                        snapshot.isDraggingOver ? 'bg-primary/5 border-2 border-dashed border-primary' : ''
-                      }`}
-                    >
-                      {getFilteredLeads()[stage.id]?.map((lead, index) => (
-                        <Draggable key={lead.id} draggableId={lead.id} index={index}>
-                          {(provided, snapshot) => (
-                            <Card
-                              ref={provided.innerRef}
-                              {...provided.draggableProps}
-                              className={`hover:shadow-lg transition-all cursor-pointer ${
-                                snapshot.isDragging ? 'shadow-2xl rotate-2 scale-105' : ''
-                              }`}
-                              onClick={() => handleOpenDetails(lead)}
-                            >
-                              <CardHeader className="pb-3">
-                                <div className="flex items-start justify-between">
-                                  <div className="flex items-center gap-2">
-                                    <div {...provided.dragHandleProps} className="cursor-grab active:cursor-grabbing">
-                                      <GripVertical className="h-5 w-5 text-muted-foreground" />
-                                    </div>
-                                    <Avatar className="h-8 w-8">
-                                      <AvatarFallback className="bg-gradient-primary text-primary-foreground text-xs">
-                                        {lead.name.split(' ').map(n => n[0]).join('')}
-                                      </AvatarFallback>
-                                    </Avatar>
-                                    <div>
-                                      <CardTitle className="text-sm">{lead.name}</CardTitle>
-                                      <Badge variant="outline" className="mt-1 text-xs">
-                                        {lead.source}
-                                      </Badge>
-                                      {/* Tags */}
-                                      {lead.tags && lead.tags.length > 0 && (
-                                        <div className="flex flex-wrap gap-1 mt-1">
-                                          {lead.tags.slice(0, 2).map((tag) => (
-                                            <Badge key={tag} variant="secondary" className="text-xs">
-                                              {tag}
-                                            </Badge>
-                                          ))}
-                                          {lead.tags.length > 2 && (
-                                            <Badge variant="secondary" className="text-xs">
-                                              +{lead.tags.length - 2}
-                                            </Badge>
-                                          )}
-                                        </div>
-                                      )}
-                                    </div>
-                                  </div>
-                                  <DropdownMenu>
-                                    <DropdownMenuTrigger asChild>
-                                      <Button 
-                                        variant="ghost" 
-                                        size="icon" 
-                                        className="h-8 w-8"
-                                        onClick={(e) => e.stopPropagation()}
-                                      >
-                                        <MoreVertical className="h-4 w-4" />
-                                      </Button>
-                                    </DropdownMenuTrigger>
-                                    <DropdownMenuContent align="end">
-                                      <DropdownMenuItem onClick={(e) => {
-                                          e.stopPropagation();
-                                          handleOpenDetails(lead);
-                                        }}>
-                                        <span className="flex items-center gap-2">
-                                          <span className="h-4 w-4"><Eye className="h-4 w-4" /></span>
-                                          Ver detalhes
-                                        </span>
-                                      </DropdownMenuItem>
-                                      <DropdownMenuItem onClick={(e) => {
-                                          e.stopPropagation();
-                                          handleEditLead(lead);
-                                        }}>
-                                        <span className="flex items-center gap-2">
-                                          <Edit className="h-4 w-4" />
-                                          Editar
-                                        </span>
-                                      </DropdownMenuItem>
-                                      <DropdownMenuItem onClick={(e) => {
-                                          e.stopPropagation();
-                                          handleScheduleVisit(lead);
-                                        }}>
-                                        <span className="flex items-center gap-2">
-                                          <Calendar className="h-4 w-4" />
-                                          Agendar atividade
-                                        </span>
-                                      </DropdownMenuItem>
-                                      <DropdownMenuItem 
-                                        className="text-destructive"
-                                        onClick={(e) => {
-                                          e.stopPropagation();
-                                          if (confirm('Tem certeza que deseja excluir este lead?')) {
-                                            handleDeleteLead(lead.id);
-                                          }
-                                        }}
-                                      >
-                                        <span className="flex items-center gap-2">
-                                          <Trash2 className="h-4 w-4" />
-                                          Excluir
-                                        </span>
-                                      </DropdownMenuItem>
-                                    </DropdownMenuContent>
-                                  </DropdownMenu>
-                                </div>
-                              </CardHeader>
-                              <CardContent className="space-y-2">
-                                <div className="text-sm">
-                                  <div className="font-medium text-foreground">{lead.property}</div>
-                                  <div className="text-primary font-semibold mt-1">{lead.value}</div>
-                                </div>
-                                <div className="flex gap-2 pt-2">
-                                  <Button 
-                                    variant="outline" 
-                                    size={isMobile ? 'sm' : 'icon'} 
-                                    className={`${isMobile ? 'gap-2' : 'h-8 w-8'}`}
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      handleSendEmail(lead);
-                                    }}
-                                  >
-                                    <Mail className="h-4 w-4" />
-                                    {isMobile && <span>E-mail</span>}
-                                  </Button>
-                                  <Button 
-                                    variant="outline" 
-                                    size={isMobile ? 'sm' : 'icon'} 
-                                    className={`${isMobile ? 'gap-2' : 'h-8 w-8'}`}
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      handleWhatsApp(lead);
-                                    }}
-                                  >
-                                    <MessageCircle className="h-4 w-4" />
-                                    {isMobile && <span>WhatsApp</span>}
-                                  </Button>
-                                  <Button 
-                                    variant="outline" 
-                                    size={isMobile ? 'sm' : 'icon'} 
-                                    className={`${isMobile ? 'gap-2' : 'h-8 w-8'}`}
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      handleCreateActivity(lead);
-                                    }}
-                                  >
-                                    <Calendar className="h-4 w-4" />
-                                    {isMobile && <span>Atividade</span>}
-                                  </Button>
-                                </div>
-                                <div className="flex items-center gap-2 pt-2 border-t border-border">
-                                  <Avatar className="h-6 w-6">
-                                    <AvatarFallback className="bg-muted text-xs">{lead.assignedTo}</AvatarFallback>
-                                  </Avatar>
-                                  <span className="text-xs text-muted-foreground">Responsível</span>
-                                </div>
-                              </CardContent>
-                            </Card>
-                          )}
-                        </Draggable>
-                      ))}
-                      {provided.placeholder}
-                    </div>
-                  )}
-                </Droppable>
               </div>
-            ))}
-          </div>
+              <div className="flex-1 space-y-3 overflow-y-auto">
+                {getFilteredLeads()[stage.id]?.map((lead) => (
+                  <LeadCard
+                    key={lead.id}
+                    lead={lead}
+                    onOpenDetails={handleOpenDetails}
+                    onEdit={handleEditLead}
+                    onScheduleVisit={handleScheduleVisit}
+                    onSendEmail={handleSendEmail}
+                    onWhatsApp={handleWhatsApp}
+                    onDelete={handleDeleteLead}
+                    isMobile={isMobile}
+                  />
+                ))}
+              </div>
+            </div>
+          ))}
         </div>
-      </DragDropContext>
+      </div>
 
       <LeadDetailsModal
         lead={selectedLead}
@@ -673,7 +414,7 @@ const handleConfirmVisit = (visitData: VisitData) => {
           handleEditLead(selectedLead!);
         }}
         onDelete={() => {
-          if (selectedLead && confirm('Tem certeza que deseja excluir este lead?')) {
+          if (selectedLead) {
             handleDeleteLead(selectedLead.id);
             setDetailsOpen(false);
           }
@@ -729,12 +470,13 @@ const handleConfirmVisit = (visitData: VisitData) => {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="">Todos</SelectItem>
-                  <SelectItem value="JS">JS</SelectItem>
-                  <SelectItem value="MR">MR</SelectItem>
+                  <SelectItem value="JS">João Silva</SelectItem>
+                  <SelectItem value="MR">Maria Rocha</SelectItem>
+                  <SelectItem value="PC">Pedro Costa</SelectItem>
                 </SelectContent>
               </Select>
             </div>
-
+            
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <Label htmlFor="valorMin">Valor Mínimo</Label>
@@ -745,7 +487,6 @@ const handleConfirmVisit = (visitData: VisitData) => {
                   onChange={(e) => setFilters({...filters, valorMin: e.target.value})}
                 />
               </div>
-              
               <div>
                 <Label htmlFor="valorMax">Valor Máximo</Label>
                 <Input

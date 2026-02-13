@@ -41,11 +41,17 @@ import { Separator } from '@/components/ui/separator';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 
+interface ContactInfo {
+  type: 'email' | 'phone' | 'mobile';
+  value: string;
+  isPrimary?: boolean;
+}
+
 export interface Lead {
   id: string;
   name: string;
-  email: string;
-  phone: string;
+  emails: ContactInfo[];
+  phones: ContactInfo[];
   property: string;
   value: string;
   source: string;
@@ -54,6 +60,7 @@ export interface Lead {
   stage?: string;
   lastContact?: string;
   nextAction?: string;
+  tags?: string[];
 }
 
 interface LeadDetailsModalProps {
@@ -103,6 +110,8 @@ export function LeadDetailsModal({
     notes: '',
     assignedTo: '',
   });
+  const [emailMessage, setEmailMessage] = useState('');
+  const [agendamento, setAgendamento] = useState({ data: '', hora: '', tipo: 'visita' });
 
   // Store original data for unsaved changes detection
   const [originalData] = useState({
@@ -141,10 +150,12 @@ export function LeadDetailsModal({
 
   useEffect(() => {
     if (lead) {
+      const primaryEmail = lead?.emails?.find(email => email.isPrimary)?.value || lead?.emails?.[0]?.value || '';
+      const primaryPhone = lead?.phones?.find(phone => phone.isPrimary)?.value || lead?.phones?.[0]?.value || '';
       setFormData({
         name: lead.name || '',
-        email: lead.email || '',
-        phone: lead.phone || '',
+        email: primaryEmail,
+        phone: primaryPhone,
         property: lead.property || '',
         value: lead.value || '',
         source: lead.source || '',
@@ -176,13 +187,10 @@ export function LeadDetailsModal({
   };
 
   if (!lead) return null;
-  const [emailMessage, setEmailMessage] = useState('');
-  const [agendamento, setAgendamento] = useState({ data: '', hora: '', tipo: 'visita' });
-
-  if (!lead) return null;
 
   const handleSendEmail = () => {
-    console.log('Enviando email para:', lead.email, 'Mensagem:', emailMessage);
+    const primaryEmail = lead?.emails?.find(email => email.isPrimary)?.value || lead?.emails?.[0]?.value || '';
+    console.log('Enviando email para:', primaryEmail, 'Mensagem:', emailMessage);
     setEmailMessage('');
     
     // Show success toast
@@ -357,7 +365,9 @@ export function LeadDetailsModal({
                   </Avatar>
                   <div>
                     <CardTitle className="text-xl">{lead.name}</CardTitle>
-                    <p className="text-sm text-muted-foreground">{lead.email}</p>
+                    <p className="text-sm text-muted-foreground">
+                      {lead?.emails?.find(email => email.isPrimary)?.value || lead?.emails?.[0]?.value || ''}
+                    </p>
                   </div>
                 </div>
                 <Badge variant="outline" className="text-sm">
@@ -370,20 +380,27 @@ export function LeadDetailsModal({
                 <div className="space-y-4">
                   <div>
                     <h3 className="text-sm font-medium text-muted-foreground mb-2">Contato</h3>
-                    <div className="space-y-2">
-                      <div className="flex items-center gap-2">
-                        <Phone className="h-4 w-4 text-muted-foreground" />
-                        <a href={`tel:${lead.phone}`} className="hover:underline">
-                          {lead.phone}
-                        </a>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Mail className="h-4 w-4 text-muted-foreground" />
-                        <a href={`mailto:${lead.email}`} className="hover:underline">
-                          {lead.email}
-                        </a>
-                      </div>
-                    </div>
+                    {(() => {
+                      const primaryPhone = lead?.phones?.find(phone => phone.isPrimary)?.value || lead?.phones?.[0]?.value || '';
+                      const primaryEmail = lead?.emails?.find(email => email.isPrimary)?.value || lead?.emails?.[0]?.value || '';
+                      
+                      return (
+                        <div className="space-y-2">
+                          <div className="flex items-center gap-2">
+                            <Phone className="h-4 w-4 text-muted-foreground" />
+                            <a href={`tel:${primaryPhone}`} className="hover:underline">
+                              {primaryPhone}
+                            </a>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <Mail className="h-4 w-4 text-muted-foreground" />
+                            <a href={`mailto:${primaryEmail}`} className="hover:underline">
+                              {primaryEmail}
+                            </a>
+                          </div>
+                        </div>
+                      );
+                    })()}
                   </div>
 
                   <div>
