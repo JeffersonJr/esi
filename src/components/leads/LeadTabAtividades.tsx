@@ -2,7 +2,7 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Calendar, Clock, User, MessageCircle, Phone, Home, FileText, Users, ArrowRight, Download, Paperclip, Trash, Eye, Edit } from 'lucide-react';
+import { Calendar, Clock, User, MessageCircle, Phone, Home, FileText, Users, ArrowRight, Download, Paperclip, Trash, Edit, StickyNote } from 'lucide-react';
 import { HistoricoAtendimento, Documento } from '@/types/lead';
 
 interface LeadTabAtividadesProps {
@@ -178,7 +178,7 @@ export const LeadTabAtividades: React.FC<LeadTabAtividadesProps> = ({
                         size="sm"
                         onClick={() => onActivityDetails(activity)}
                       >
-                        <Eye className="h-4 w-4" />
+                        <StickyNote className="h-4 w-4" />
                       </Button>
                       {activity.editavel && (
                         <Button
