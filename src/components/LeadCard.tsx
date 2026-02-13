@@ -18,9 +18,31 @@ import {
   Eye, 
   Trash2,
   Thermometer,
-  TrendingUp
+  TrendingUp,
+  GripVertical
 } from 'lucide-react';
-import { Lead } from '@/pages/Funil';
+
+interface ContactInfo {
+  type: 'email' | 'phone' | 'mobile';
+  value: string;
+  isPrimary?: boolean;
+}
+
+interface Lead {
+  id: string;
+  name: string;
+  emails: ContactInfo[];
+  phones: ContactInfo[];
+  property: string;
+  value: string;
+  source: string;
+  assignedTo: string;
+  notes?: string;
+  stage?: string;
+  lastContact?: string;
+  nextAction?: string;
+  tags?: string[];
+}
 
 interface LeadCardProps {
   lead: Lead;
@@ -31,6 +53,12 @@ interface LeadCardProps {
   onWhatsApp: (lead: Lead) => void;
   onDelete: (leadId: string) => void;
   isMobile?: boolean;
+  provided?: {
+    innerRef: (element: HTMLElement | null) => void;
+    draggableProps: React.HTMLAttributes<HTMLElement>;
+    dragHandleProps: React.HTMLAttributes<HTMLElement>;
+  }; // Drag and drop provided props
+  isDragging?: boolean;
 }
 
 export function LeadCard({ 
@@ -41,7 +69,9 @@ export function LeadCard({
   onSendEmail, 
   onWhatsApp, 
   onDelete,
-  isMobile = false 
+  isMobile = false,
+  provided,
+  isDragging = false
 }: LeadCardProps) {
   const [isHovered, setIsHovered] = useState(false);
 
@@ -81,9 +111,11 @@ export function LeadCard({
 
   return (
     <Card
+      ref={provided?.innerRef}
+      {...provided?.draggableProps}
       className={`hover:shadow-lg transition-all duration-200 cursor-pointer relative group ${
         isHovered ? 'transform -translate-y-1' : ''
-      }`}
+      } ${isDragging ? 'opacity-50 rotate-2 scale-105' : ''}`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       onClick={() => onOpenDetails(lead)}
@@ -96,6 +128,11 @@ export function LeadCard({
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-2">
+            {provided && (
+              <div {...provided.dragHandleProps} className="cursor-grab active:cursor-grabbing">
+                <GripVertical className="h-5 w-5 text-muted-foreground" />
+              </div>
+            )}
             <Avatar className="h-8 w-8">
               <AvatarFallback className="bg-gradient-primary text-primary-foreground text-xs">
                 {lead.name.split(' ').map(n => n[0]).join('')}

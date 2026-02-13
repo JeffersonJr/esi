@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Plus, Filter, X, Search } from 'lucide-react';
+import { Plus, Filter, X, Search, GripVertical } from 'lucide-react';
 import { LeadDetailsModal } from '@/components/modals/LeadDetailsModal';
 import { LeadFormModal } from '@/components/modals/LeadFormModal';
 import { Badge } from '@/components/ui/badge';
@@ -12,6 +12,7 @@ import { toast } from '@/hooks/use-toast';
 import { LeadCard } from '@/components/LeadCard';
 import { useMediaQuery } from '@/hooks';
 import { ScheduleVisitModal } from '@/components/modals/ScheduleVisitModal';
+import { DragDropContext, Droppable, Draggable, DropResult } from '@hello-pangea/dnd';
 import {
   Dialog,
   DialogContent,
@@ -334,6 +335,56 @@ export function Funil() {
     });
   };
 
+  const onDragEnd = (result: DropResult) => {
+    const { source, destination, draggableId } = result;
+
+    // Se não houver destino válido, cancela
+    if (!destination) return;
+
+    // Se soltou no mesmo lugar, cancela
+    if (
+      source.droppableId === destination.droppableId &&
+      source.index === destination.index
+    ) {
+      return;
+    }
+
+    const sourceStage = source.droppableId;
+    const destStage = destination.droppableId;
+
+    // Obtém os dados filtrados atuais
+    const filteredLeadsData = getFilteredLeads();
+    
+    // Se não houver leads no estágio de origem nos dados filtrados, cancela
+    if (!filteredLeadsData[sourceStage] || filteredLeadsData[sourceStage].length === 0) {
+      return;
+    }
+
+    // Cria cópias dos arrays
+    const newLeads = { ...leads };
+    const sourceLeads = [...newLeads[sourceStage]];
+    const destLeads = [...newLeads[destStage]];
+
+    // Remove do estágio de origem
+    const [removed] = sourceLeads.splice(source.index, 1);
+    // Adiciona ao estágio de destino
+    destLeads.splice(destination.index, 0, removed);
+
+    // Atualiza o estágio do lead
+    const updatedLead = { ...removed, stage: destStage };
+
+    // Atualiza o estado
+    newLeads[sourceStage] = sourceLeads;
+    newLeads[destStage] = destLeads;
+
+    setLeads(newLeads);
+
+    toast({
+      title: "Lead movido",
+      description: `Lead movido para ${stages.find(s => s.id === destStage)?.title}`,
+    });
+  };
+
   return (
     <div className="space-y-6 animate-fade-in h-full flex flex-col">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -371,39 +422,63 @@ export function Funil() {
         </div>
       </div>
 
-      <div className="flex-1 overflow-x-auto pb-6">
-        <div className="flex gap-4 h-full overflow-x-auto pb-4">
-          {stages.map((stage) => (
-            <div key={stage.id} className="flex-shrink-0 w-72 md:w-80 flex flex-col">
-              <div className="mb-4">
-                <div className="flex items-center justify-between mb-2">
-                  <h3 className={`font-semibold text-sm px-3 py-1 rounded-full ${stage.color}`}>
-                    {stage.title}
-                  </h3>
-                  <span className="text-xs text-muted-foreground">
-                    {getFilteredLeads()[stage.id]?.length || 0}
-                  </span>
+      <DragDropContext onDragEnd={onDragEnd}>
+        <div className="flex-1 overflow-x-auto pb-6">
+          <div className="flex gap-4 h-full overflow-x-auto pb-4">
+            {stages.map((stage) => (
+              <div key={stage.id} className="flex-shrink-0 w-72 md:w-80 flex flex-col">
+                <div className="mb-4">
+                  <div className="flex items-center justify-between mb-2">
+                    <h3 className={`font-semibold text-sm px-3 py-1 rounded-full ${stage.color}`}>
+                      {stage.title}
+                    </h3>
+                    <span className="text-xs text-muted-foreground">
+                      {getFilteredLeads()[stage.id]?.length || 0}
+                    </span>
+                  </div>
                 </div>
+                <Droppable droppableId={stage.id}>
+                  {(provided, snapshot) => (
+                    <div
+                      ref={provided.innerRef}
+                      {...provided.droppableProps}
+                      className={`flex-1 space-y-3 overflow-y-auto rounded-lg p-2 transition-colors ${
+                        snapshot.isDraggingOver ? 'bg-primary/5 border-2 border-dashed border-primary' : ''
+                      }`}
+                    >
+                      {getFilteredLeads()[stage.id]?.map((lead, index) => (
+                        <Draggable key={lead.id} draggableId={lead.id} index={index}>
+                          {(provided, snapshot) => (
+                            <div
+                              ref={provided.innerRef}
+                              {...provided.draggableProps}
+                              className={`${snapshot.isDragging ? 'opacity-50' : ''}`}
+                            >
+                              <LeadCard
+                                lead={lead}
+                                onOpenDetails={handleOpenDetails}
+                                onEdit={handleEditLead}
+                                onScheduleVisit={handleScheduleVisit}
+                                onSendEmail={handleSendEmail}
+                                onWhatsApp={handleWhatsApp}
+                                onDelete={handleDeleteLead}
+                                isMobile={isMobile}
+                                provided={provided}
+                                isDragging={snapshot.isDragging}
+                              />
+                            </div>
+                          )}
+                        </Draggable>
+                      ))}
+                      {provided.placeholder}
+                    </div>
+                  )}
+                </Droppable>
               </div>
-              <div className="flex-1 space-y-3 overflow-y-auto">
-                {getFilteredLeads()[stage.id]?.map((lead) => (
-                  <LeadCard
-                    key={lead.id}
-                    lead={lead}
-                    onOpenDetails={handleOpenDetails}
-                    onEdit={handleEditLead}
-                    onScheduleVisit={handleScheduleVisit}
-                    onSendEmail={handleSendEmail}
-                    onWhatsApp={handleWhatsApp}
-                    onDelete={handleDeleteLead}
-                    isMobile={isMobile}
-                  />
-                ))}
-              </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
-      </div>
+      </DragDropContext>
 
       <LeadDetailsModal
         lead={selectedLead}
