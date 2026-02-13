@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { DashboardLayout } from './components/layout/DashboardLayout';
 import { Dashboard } from './pages/Dashboard';
 import { Funil } from './pages/Funil';
+import { DeletedLeads } from './pages/DeletedLeads';
 import { Contatos } from './pages/Contatos';
 import ContatoPerfil from './pages/ContatoPerfil';
 import ContatoEditar from './pages/ContatoEditar';
@@ -14,7 +15,7 @@ import { Usuarios } from './pages/Usuarios';
 import { Equipes } from './pages/Equipes';
 import { Configuracoes } from './pages/Configuracoes';
 import { EditorSite } from './pages/EditorSite';
-import { LeadDetalhes } from './pages/LeadDetalhes';
+import LeadDetalhes from './pages/LeadDetalhes';
 import { Login } from './pages/Login';
 import { Perfil } from './pages/Perfil';
 import { RecuperarSenha } from './pages/RecuperarSenha';
@@ -42,6 +43,7 @@ function App() {
           <Route path="/" element={<DashboardLayout />}>
             <Route index element={<Dashboard />} />
             <Route path="funil" element={<Funil />} />
+            <Route path="lixeira" element={<DeletedLeads />} />
             <Route path="leads/:id" element={<LeadDetalhes />} />
             <Route path="contatos" element={<Contatos />} />
             <Route path="contatos/perfil/:id" element={<ContatoPerfil />} />

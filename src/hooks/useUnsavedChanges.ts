@@ -48,8 +48,14 @@ export function useUnsavedChanges({
     }
   }, [nextLocation, navigate]);
 
-  // Handle modal cancellation
+  // Handle modal cancellation - allow closing without saving
   const handleCancel = useCallback(() => {
+    setShowModal(false);
+    setNextLocation(null);
+  }, []);
+
+  // Handle close without saving
+  const handleCloseWithoutSaving = useCallback(() => {
     setShowModal(false);
     setNextLocation(null);
   }, []);
@@ -60,6 +66,7 @@ export function useUnsavedChanges({
     hideUnsavedChangesModal: () => setShowModal(false),
     confirmNavigation,
     handleConfirm,
-    handleCancel
+    handleCancel,
+    handleCloseWithoutSaving
   };
 }

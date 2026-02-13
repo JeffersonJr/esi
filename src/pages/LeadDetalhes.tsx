@@ -1,410 +1,385 @@
-import { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import React, { useState, useEffect, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Separator } from '@/components/ui/separator';
-import { 
-  ArrowLeft, 
-  Mail, 
-  Phone, 
-  Calendar, 
-  MapPin, 
-  Home, 
-  User, 
-  Clock, 
-  FileText, 
-  MessageCircle,
-  Edit,
-  Trash2,
-  Eye,
-  Download,
-  Send,
-  History,
-  Building,
-  DollarSign,
-  Star,
-  TrendingUp,
-  Activity,
-  Target,
-  Plus,
-  UserCheck,
-  MoreVertical,
-  Car
-} from 'lucide-react';
-import { format } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
+import { Badge } from '@/components/ui/badge';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { toast } from '@/hooks/use-toast';
+import { 
+  Phone, 
+  Mail, 
+  MapPin, 
+  Calendar, 
+  Clock, 
+  User, 
+  MessageCircle, 
+  Home, 
+  FileText, 
+  Users, 
+  ArrowRight,
+  Edit,
+  Trash2,
+  Plus,
+  Eye,
+  Send,
+  DollarSign,
+  Car,
+  MoreVertical,
+  UserCheck,
+  MessageSquare,
+  Tag,
+  StickyNote,
+  X,
+  AlertTriangle
+} from 'lucide-react';
 
-interface Lead {
-  id: string;
-  name: string;
-  email: string;
-  phone: string;
-  property: string;
-  value: string;
-  source: string;
-  assignedTo: string;
-  notes?: string;
-  stage?: string;
-  lastContact?: string;
-  nextAction?: string;
-  createdAt?: string;
-  address?: string;
-  city?: string;
-  state?: string;
-  cep?: string;
-  budget?: string;
-  financing?: boolean;
-  timeline?: string;
-  priorities?: string[];
-  tags?: string[];
-}
+// Importar os novos componentes
+import { ActivityEditModal } from '@/components/leads/ActivityEditModal';
+import { LeadTabAtividades } from '@/components/leads/LeadTabAtividades';
+import { LeadTabDocumentos } from '@/components/leads/LeadTabDocumentos';
+import { LeadTabImoveis } from '@/components/leads/LeadTabImoveis';
 
-interface HistoricoAtendimento {
-  id: string;
-  data: string;
-  tipo: 'ligacao' | 'email' | 'visita' | 'proposta' | 'reuniao' | 'whatsapp' | 'followup';
-  descricao: string;
-  usuario: string;
-  duracao?: string;
-  resultado?: string;
-  proximoPasso?: string;
-  anexos?: string[];
-  notaAtividade?: string;
-  avaliacao?: 'boa' | 'ruim' | null;
-  editavel?: boolean;
-}
+import { Lead, HistoricoAtendimento, ImovelInteresse, Documento } from '@/types/lead';
 
-interface ImovelInteresse {
-  id: string;
-  titulo: string;
-  tipo: string;
-  endereco: string;
-  valor: string;
-  area: string;
-  quartos: number;
-  banheiros: number;
-  vagas: number;
-  descricao: string;
-  status: string;
-  match: number;
-  imagens: string[];
-}
-
-interface Documento {
-  id: string;
-  nome: string;
-  tamanho: string;
-  data: string;
-  tipo: string;
-}
-
-const mockLead: Lead = {
-  id: '1',
-  name: 'Maria Santos',
-  email: 'maria.santos@email.com',
-  phone: '(11) 99999-0001',
-  property: 'Apartamento 2 quartos',
-  value: 'R$ 350.000',
-  source: 'Website',
-  assignedTo: 'JS',
-  notes: 'Cliente muito interessado, já visitou 2 imóveis. Busca apartamento com 2 quartos, próximo ao metrô. Prefere região central ou zona sul.',
-  stage: 'visit',
-  lastContact: '2024-12-18T14:30:00',
-  nextAction: 'Visita agendada para 20/12/2024 às 15:00',
-  createdAt: '2024-12-01T09:00:00',
-  address: 'Rua das Flores, 123',
-  city: 'São Paulo',
-  state: 'SP',
-  cep: '01234-567',
-  budget: 'R$ 300.000 - R$ 400.000',
-  financing: true,
-  timeline: '1-2 meses',
-  priorities: ['Localização', 'Segurança', 'Transporte', 'Área'],
-  tags: ['prioridade-alta', 'financiamento', 'zona-sul']
-};
-
-const historicoAtendimento: HistoricoAtendimento[] = [
-  {
-    id: '1',
-    data: '2024-12-18T14:30:00',
-    tipo: 'ligacao',
-    descricao: 'Cliente ligou para confirmar visita do dia 20/12. Confirmou presença e perguntou sobre estacionamento.',
-    usuario: 'João Silva',
-    duracao: '15 minutos',
-    resultado: 'Visita confirmada',
-    proximoPasso: 'Realizar visita no dia 20/12',
-    anexos: ['proposta_apartamento.pdf'],
-    notaAtividade: 'Cliente parece muito comprometido com a compra',
-    avaliacao: 'boa',
-    editavel: false
-  },
-  {
-    id: '2',
-    data: '2024-12-17T10:15:00',
-    tipo: 'whatsapp',
-    descricao: 'Enviado fotos do apartamento da Vila Mariana. Cliente demonstrou interesse.',
-    usuario: 'João Silva',
-    resultado: 'Cliente interessado',
-    proximoPasso: 'Agendar visita',
-    notaAtividade: 'Respondeu rapidamente às fotos',
-    avaliacao: 'boa',
-    editavel: false
-  },
-  {
-    id: '3',
-    data: '2024-12-15T16:00:00',
-    tipo: 'visita',
-    descricao: 'Visita ao apartamento no Centro. Cliente gostou mas achou pequeno.',
-    usuario: 'Maria Rodrigues',
-    duracao: '45 minutos',
-    resultado: 'Imóvel não atende 100%',
-    proximoPasso: 'Apresentar outras opções',
-    notaAtividade: 'Gostou da localização mas precisa de mais espaço',
-    avaliacao: 'ruim',
-    editavel: false
-  },
-  {
-    id: '4',
-    data: '2024-12-12T14:20:00',
-    tipo: 'email',
-    descricao: 'Envio de catálogo com 5 opções de imóveis dentro do perfil do cliente.',
-    usuario: 'João Silva',
-    resultado: 'Cliente analisando opções',
-    proximoPasso: 'Follow-up em 2 dias',
-    editavel: false
-  },
-  {
-    id: '5',
-    data: '2024-12-10T11:30:00',
-    tipo: 'ligacao',
-    descricao: 'Primeiro contato. Cliente buscando apartamento 2 quartos, orçamento até R$ 400k.',
-    usuario: 'João Silva',
-    duracao: '20 minutos',
-    resultado: 'Lead qualificado',
-    proximoPasso: 'Enviar opções de imóveis',
-    editavel: false
-  }
-];
-
-const documentosMock: Documento[] = [
-  {
-    id: '1',
-    nome: 'Proposta Comercial.pdf',
-    tamanho: '2.4 MB',
-    data: '15/12/2024',
-    tipo: 'pdf'
-  },
-  {
-    id: '2',
-    nome: 'Ficha Cadastral.pdf',
-    tamanho: '850 KB',
-    data: '10/12/2024',
-    tipo: 'pdf'
-  },
-  {
-    id: '3',
-    nome: 'Documentos Necessários.docx',
-    tamanho: '1.1 MB',
-    data: '05/12/2024',
-    tipo: 'docx'
-  }
-];
-
-const imoveisInteresse: ImovelInteresse[] = [
-  {
-    id: '1',
-    titulo: 'Apartamento 2 Quartos - Vila Mariana',
-    tipo: 'Apartamento',
-    endereco: 'Rua Vergueiro, 1500 - Vila Mariana, São Paulo',
-    valor: 'R$ 380.000',
-    area: '65m²',
-    quartos: 2,
-    banheiros: 1,
-    vagas: 1,
-    descricao: 'Excelente apartamento reformado, próximo ao metrô Vila Mariana.',
-    status: 'Disponível',
-    match: 95,
-    imagens: ['https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=400&h=300&fit=crop']
-  },
-  {
-    id: '2',
-    titulo: 'Apartamento 2 Quartos - Paraíso',
-    tipo: 'Apartamento',
-    endereco: 'Rua da Consolação, 200 - Paraíso, São Paulo',
-    valor: 'R$ 420.000',
-    area: '70m²',
-    quartos: 2,
-    banheiros: 2,
-    vagas: 1,
-    descricao: 'Amplo apartamento com vista livre, 2 vagas na garagem.',
-    status: 'Disponível',
-    match: 88,
-    imagens: ['https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=400&h=300&fit=crop']
-  },
-  {
-    id: '3',
-    titulo: 'Apartamento 2 Quartos - Centro',
-    tipo: 'Apartamento',
-    endereco: 'Rua São Bento, 500 - Centro, São Paulo',
-    valor: 'R$ 350.000',
-    area: '60m²',
-    quartos: 2,
-    banheiros: 1,
-    vagas: 0,
-    descricao: 'Apartamento em excelente localização, reformado recentemente.',
-    status: 'Disponível',
-    match: 82,
-    imagens: ['https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=400&h=300&fit=crop']
-  }
-];
-
-const getTipoIcon = (tipo: string) => {
-  switch (tipo) {
-    case 'ligacao': return Phone;
-    case 'email': return Mail;
-    case 'visita': return Home;
-    case 'proposta': return FileText;
-    case 'reuniao': return User;
-    case 'whatsapp': return MessageCircle;
-    case 'followup': return Clock;
-    default: return Activity;
-  }
-};
-
-const getTipoColor = (tipo: string) => {
-  switch (tipo) {
-    case 'ligacao': return 'bg-blue-100 text-blue-700';
-    case 'email': return 'bg-green-100 text-green-700';
-    case 'visita': return 'bg-purple-100 text-purple-700';
-    case 'proposta': return 'bg-orange-100 text-orange-700';
-    case 'reuniao': return 'bg-red-100 text-red-700';
-    case 'whatsapp': return 'bg-green-100 text-green-700';
-    case 'followup': return 'bg-gray-100 text-gray-700';
-    default: return 'bg-gray-100 text-gray-700';
-  }
-};
-
-export function LeadDetalhes() {
-  const { id } = useParams();
+const LeadDetalhes: React.FC = () => {
   const navigate = useNavigate();
+  const { id: leadId } = useParams();
   const [lead, setLead] = useState<Lead | null>(null);
   const [loading, setLoading] = useState(true);
-  const [showAssignModal, setShowAssignModal] = useState(false);
-  const [showNoteModal, setShowNoteModal] = useState(false);
-  const [showActivityModal, setShowActivityModal] = useState(false);
+  const [activeTab, setActiveTab] = useState('atividades');
+  
+  // Estados para modais
   const [showEditModal, setShowEditModal] = useState(false);
-  const [showEditNoteModal, setShowEditNoteModal] = useState(false);
-  const [showAddDocumentModal, setShowAddDocumentModal] = useState(false);
-  const [showTagsModal, setShowTagsModal] = useState(false);
+  const [showAssignModal, setShowAssignModal] = useState(false);
+  const [showActivityModal, setShowActivityModal] = useState(false);
+  const [showActivityEditModal, setShowActivityEditModal] = useState(false);
   const [showActivityDetailsModal, setShowActivityDetailsModal] = useState(false);
-  const [newNote, setNewNote] = useState('');
-  const [selectedCorretor, setSelectedCorretor] = useState('');
-  const [activityData, setActivityData] = useState({
-    tipo: 'ligacao',
-    data: new Date(),
-    hora: '14:00',
-    descricao: ''
-  });
-  const [historico, setHistorico] = useState<HistoricoAtendimento[]>(historicoAtendimento);
-  const [editData, setEditData] = useState({
-    budget: '',
-    financing: false,
-    timeline: '',
-    source: '',
-    assignedTo: '',
-    tags: [] as string[],
-    priorities: [] as string[],
-    notes: ''
-  });
-  const [selectedProperties, setSelectedProperties] = useState<string[]>([]);
+  const [showNoteEditModal, setShowNoteEditModal] = useState(false);
+  const [showAddDocumentModal, setShowAddDocumentModal] = useState(false);
   const [showSendModal, setShowSendModal] = useState(false);
-  const [sendMethod, setSendMethod] = useState<'email' | 'whatsapp'>('email');
-  const [newEditTag, setNewEditTag] = useState('');
-  const [deleteConfirmModal, setDeleteConfirmModal] = useState<{show: boolean, documentId: string, documentName: string}>({show: false, documentId: '', documentName: ''});
-  const [editingNote, setEditingNote] = useState<{id: string, content: string} | null>(null);
-  const [documentos, setDocumentos] = useState<Documento[]>(documentosMock);
-  const [newDocument, setNewDocument] = useState({nome: '', arquivo: null as File | null});
-  const [leadTags, setLeadTags] = useState<string[]>([]);
-  const [newTag, setNewTag] = useState('');
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showChangeAgentModal, setShowChangeAgentModal] = useState(false);
+  const [showTagsModal, setShowTagsModal] = useState(false);
+  const [showUploadModal, setShowUploadModal] = useState(false);
+  const [showAddNoteModal, setShowAddNoteModal] = useState(false);
+  const [showDeleteActivityModal, setShowDeleteActivityModal] = useState(false);
+  const [activityToDelete, setActivityToDelete] = useState<HistoricoAtendimento | null>(null);
+  
+  // Estados para dados
+  const [historico, setHistorico] = useState<HistoricoAtendimento[]>([]);
+  const [imoveisInteresse, setImoveisInteresse] = useState<ImovelInteresse[]>([]);
+  const [documentos, setDocumentos] = useState<Documento[]>([]);
+  const [selectedProperties, setSelectedProperties] = useState<string[]>([]);
   const [selectedActivity, setSelectedActivity] = useState<HistoricoAtendimento | null>(null);
   const [activityNote, setActivityNote] = useState('');
   const [activityRating, setActivityRating] = useState<'boa' | 'ruim' | null>(null);
+  const [activityTags, setActivityTags] = useState<string[]>([]);
+  const [isActivityShowcased, setIsActivityShowcased] = useState(false);
+  const [nextActivity, setNextActivity] = useState('');
+  const [newDocument, setNewDocument] = useState({nome: '', arquivo: null as File | null});
+  const [sendMethods, setSendMethods] = useState<{email: boolean, whatsapp: boolean}>({email: true, whatsapp: false});
+  
+  // Estados para edição do lead
+  const [editLead, setEditLead] = useState({
+    name: '',
+    emails: [] as any[],
+    phones: [] as any[],
+    property: '',
+    location: '',
+    searchType: 'compra' as any,
+    value: '',
+    source: '',
+    notes: '',
+    tags: [] as string[]
+  });
+  
+  // Estados para mudança de corretor
+  const [selectedAgent, setSelectedAgent] = useState('');
+  
+  // Estados para tags
+  const [newTag, setNewTag] = useState('');
+  const [availableTags] = useState([
+    'prioridade-alta', 'prioridade-media', 'prioridade-baixa',
+    'financiamento', 'vista', 'troca',
+    'zona-sul', 'zona-norte', 'zona-oeste', 'centro',
+    'apartamento', 'casa', 'cobertura', 'kitnet',
+    'primeira-compra', 'investidor', 'moradia'
+  ]);
+  
+  // Estados para upload
+  const [uploadFile, setUploadFile] = useState<File | null>(null);
+  
+  // Estados para nota
+  const [noteText, setNoteText] = useState('');
+  const [noteFile, setNoteFile] = useState<File | null>(null);
+  const [noteName, setNoteName] = useState('');
+  
+  // Estados para edição de nota
+  const [editingNoteText, setEditingNoteText] = useState('');
+  const [editingNoteFiles, setEditingNoteFiles] = useState<File[]>([]);
+  const [editingNoteId, setEditingNoteId] = useState<string | null>(null);
+  const [editingNoteName, setEditingNoteName] = useState('');
+  
+  // Estados para nova atividade
+  const [newActivity, setNewActivity] = useState({
+    tipo: 'ligacao',
+    data: new Date().toISOString().split('T')[0],
+    hora: new Date().toTimeString().slice(0, 5),
+    descricao: ''
+  });
+  
+  // Ref para o checkbox master
+  const masterCheckboxRef = useRef<HTMLInputElement>(null);
 
-  const corretores = [
-    { id: 'JS', nome: 'João Silva' },
-    { id: 'MR', nome: 'Maria Rodrigues' },
-    { id: 'PS', nome: 'Pedro Santos' },
-    { id: 'AC', nome: 'Ana Costa' }
-  ];
-
-  const handleWhatsApp = () => {
-    if (lead) {
-      const cleanPhone = lead.phone.replace(/\D/g, '');
-      window.open(`https://wa.me/55${cleanPhone}`, '_blank');
-    }
-  };
-
-  const handleAssignCorretor = () => {
-    if (lead && selectedCorretor) {
-      setLead({ ...lead, assignedTo: selectedCorretor });
-      setShowAssignModal(false);
-      setSelectedCorretor('');
-    }
-  };
-
-  const handleAddNote = () => {
-    if (lead && newNote.trim()) {
-      const novaNota: HistoricoAtendimento = {
-        id: Date.now().toString(),
-        data: new Date().toISOString(),
-        tipo: 'followup',
-        descricao: newNote,
-        usuario: 'Usuário Atual',
-        resultado: 'Nota adicionada',
-        proximoPasso: '',
-        editavel: true
-      };
+  // Dados mockados para demonstração
+  useEffect(() => {
+    // Simular carregamento de dados
+    setTimeout(() => {
+      setLead({
+        id: leadId,
+        name: 'João Silva',
+        emails: [{ type: 'email', value: 'joao.silva@email.com', isPrimary: true }],
+        phones: [{ type: 'phone', value: '11987654321', isPrimary: true }],
+        property: 'Apartamento 3 quartos',
+        location: 'São Paulo - SP',
+        searchType: 'compra',
+        value: 'R$ 500.000 - R$ 700.000',
+        source: 'Website',
+        assignedTo: 'Maria Santos',
+        notes: 'Cliente interessado em imóveis na zona sul',
+        stage: 'Negociação',
+        lastContact: '2024-01-15',
+        nextAction: 'Agendar visita',
+        tags: ['prioridade-alta', 'zona-sul'],
+        createdAt: '2024-01-10',
+        updatedAt: '2024-01-15'
+      });
       
-      setHistorico([novaNota, ...historico]);
+      setHistorico([
+        {
+          id: '1',
+          data: '2024-01-15',
+          tipo: 'ligacao',
+          descricao: 'Contato inicial para apresentação de imóveis',
+          usuario: 'Maria Santos',
+          duracao: '15 min',
+          resultado: 'Cliente interessado em agendar visita',
+          proximoPasso: 'Enviar proposta de visita',
+          editavel: true
+        },
+        {
+          id: '2',
+          data: '2024-01-14',
+          tipo: 'email',
+          descricao: 'Envio de catálogo de imóveis disponíveis',
+          usuario: 'Maria Santos',
+          resultado: 'Cliente respondeu positivamente',
+          editavel: true
+        }
+      ]);
       
-      const updatedLead = {
-        ...lead,
-        notes: lead.notes ? `${lead.notes}\n\n${new Date().toLocaleDateString('pt-BR')} - ${newNote}` : `${new Date().toLocaleDateString('pt-BR')} - ${newNote}`
-      };
-      setLead(updatedLead);
-      setShowNoteModal(false);
-      setNewNote('');
+      setImoveisInteresse([
+        {
+          id: '1',
+          titulo: 'Apartamento 3 quartos - Moema',
+          tipo: 'apartamento',
+          endereco: 'Rua Moema, 123 - São Paulo, SP',
+          valor: 'R$ 650.000',
+          area: '120m²',
+          quartos: 3,
+          banheiros: 2,
+          vagas: 2,
+          descricao: 'Excelente apartamento em Moema, com 3 quartos, sala ampla, cozinha planejada e 2 vagas de garagem.',
+          imagens: ['https://via.placeholder.com/300x200']
+        },
+        {
+          id: '2',
+          titulo: 'Casa 4 quartos - Vila Mariana',
+          tipo: 'casa',
+          endereco: 'Rua Vila Mariana, 456 - São Paulo, SP',
+          valor: 'R$ 750.000',
+          area: '200m²',
+          quartos: 4,
+          banheiros: 3,
+          vagas: 3,
+          descricao: 'Casa espaçosa em Vila Mariana, com 4 quartos, jardim, piscina e 3 vagas de garagem.',
+          imagens: ['https://via.placeholder.com/300x200']
+        }
+      ]);
+      
+      setDocumentos([
+        {
+          id: '1',
+          nome: 'Proposta_Comercial_001.pdf',
+          tamanho: '2.5 MB',
+          data: '15/01/2024',
+          tipo: 'pdf'
+        },
+        {
+          id: '2',
+          nome: 'Contrato_Proposta.docx',
+          tamanho: '1.2 MB',
+          data: '14/01/2024',
+          tipo: 'docx'
+        }
+      ]);
+      
+      setLoading(false);
+    }, 1000);
+  }, [leadId]);
+
+  // Estados computados
+  const isAllPropertiesSelected = selectedProperties.length === imoveisInteresse.length && imoveisInteresse.length > 0;
+  const isSomePropertiesSelected = selectedProperties.length > 0 && selectedProperties.length < imoveisInteresse.length;
+
+  // Atualizar estado indeterminado do checkbox master
+  useEffect(() => {
+    if (masterCheckboxRef.current) {
+      masterCheckboxRef.current.indeterminate = isSomePropertiesSelected;
+    }
+  }, [selectedProperties, imoveisInteresse, isSomePropertiesSelected]);
+
+  // Handlers
+  const handlePropertySelection = (propertyId: string) => {
+    setSelectedProperties(prev => 
+      prev.includes(propertyId) 
+        ? prev.filter(id => id !== propertyId)
+        : [...prev, propertyId]
+    );
+  };
+
+  const handleSelectAllProperties = (checked: boolean) => {
+    if (checked) {
+      setSelectedProperties(imoveisInteresse.map(imovel => imovel.id));
+    } else {
+      setSelectedProperties([]);
     }
   };
 
-  const handleEditNote = (noteId: string, currentContent: string) => {
-    setEditingNote({id: noteId, content: currentContent});
-    setShowEditNoteModal(true);
+  const handleViewProperty = (propertyId: string) => {
+    window.open(`/imoveis/detalhes/${propertyId}`, '_blank');
   };
 
-  const handleSaveEditNote = () => {
-    if (editingNote) {
-      setHistorico(historico.map(item => 
-        item.id === editingNote.id 
-          ? {...item, descricao: editingNote.content}
+  const handleScheduleVisit = (imovel: ImovelInteresse) => {
+    // Implementar lógica de agendar visita
+    toast({
+      title: "Visita agendada",
+      description: `Visita para ${imovel.titulo} foi agendada com sucesso!`,
+    });
+  };
+
+  const handleScheduleMultipleVisits = () => {
+    const selectedImoveis = imoveisInteresse.filter(imovel => 
+      selectedProperties.includes(imovel.id)
+    );
+    
+    if (selectedImoveis.length === 0) {
+      toast({
+        title: "Nenhum imóvel selecionado",
+        description: "Selecione pelo menos um imóvel para agendar visitas.",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    // Implementar lógica de agendar múltiplas visitas
+    toast({
+      title: "Visitas agendadas",
+      description: `${selectedImoveis.length} visitas foram agendadas com sucesso!`,
+    });
+  };
+
+  const handleSendProperties = () => {
+    if (!sendMethods.email && !sendMethods.whatsapp) {
+      toast({
+        title: "Erro",
+        description: "Selecione pelo menos um método de envio.",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    const selectedImoveis = imoveisInteresse.filter(imovel => 
+      selectedProperties.includes(imovel.id)
+    );
+    
+    const imoveisText = selectedImoveis.map(imovel => `${imovel.titulo} - ${imovel.valor}`).join('\n');
+    const message = `Olá ${lead?.name}, aqui estão os imóveis que selecionei para você:\n\n${imoveisText}`;
+    
+    if (sendMethods.email && lead?.emails[0]) {
+      window.open(`mailto:${lead.emails[0].value}?subject=Imóveis de Interesse&body=${encodeURIComponent(imoveisText)}`);
+    }
+    
+    if (sendMethods.whatsapp && lead?.phones[0]) {
+      window.open(`https://wa.me/55${lead.phones[0].value.replace(/\D/g, '')}?text=${encodeURIComponent(message)}`);
+    }
+    
+    setShowSendModal(false);
+  };
+
+  const handleActivityDetails = (activity: HistoricoAtendimento) => {
+    setSelectedActivity(activity);
+    setActivityNote(activity.notaAtividade || '');
+    setActivityRating(activity.avaliacao || null);
+    setActivityTags(activity.tags || []);
+    setIsActivityShowcased(activity.noShow || false);
+    setNextActivity(activity.nextActivity || '');
+    setShowActivityDetailsModal(true);
+  };
+
+  const handleSaveActivityDetails = () => {
+    if (selectedActivity) {
+      setHistorico(historico.map(item =>
+        item.id === selectedActivity.id
+          ? {
+              ...item,
+              notaAtividade: activityNote,
+              avaliacao: activityRating,
+              tags: activityTags,
+              noShow: isActivityShowcased,
+              nextActivity: nextActivity
+            }
           : item
       ));
-      setShowEditNoteModal(false);
-      setEditingNote(null);
+      setShowActivityDetailsModal(false);
+      setSelectedActivity(null);
+      setActivityNote('');
+      setActivityRating(null);
+      setActivityTags([]);
+      setIsActivityShowcased(false);
+      setNextActivity('');
     }
   };
 
-  const handleDeleteNote = (noteId: string) => {
-    setHistorico(historico.filter(item => item.id !== noteId));
+  const handleViewDocument = (document: Documento) => {
+    // Implementar visualização de documento
+    toast({
+      title: "Abrindo documento",
+      description: `Visualizando ${document.nome}...`,
+    });
+  };
+
+  const handleDownloadDocument = (document: Documento) => {
+    // Implementar download de documento
+    toast({
+      title: "Baixando documento",
+      description: `Baixando ${document.nome}...`,
+    });
+  };
+
+  const handleDeleteDocument = (id: string, nome: string) => {
+    setDocumentos(documentos.filter(doc => doc.id !== id));
+    toast({
+      title: "Documento excluído",
+      description: `${nome} foi excluído com sucesso!`,
+    });
   };
 
   const handleAddDocument = () => {
@@ -419,22 +394,273 @@ export function LeadDetalhes() {
       setDocumentos([documento, ...documentos]);
       setNewDocument({nome: '', arquivo: null});
       setShowAddDocumentModal(false);
+      toast({
+        title: "Documento adicionado",
+        description: `${documento.nome} foi adicionado com sucesso!`,
+      });
     }
   };
 
-  const handleDeleteDocument = (documentId: string, documentName: string) => {
-    setDeleteConfirmModal({show: true, documentId, documentName});
+  const handleScheduleActivity = () => {
+    setShowActivityModal(true);
   };
 
-  const confirmDeleteDocument = () => {
-    if (deleteConfirmModal.documentId) {
-      setDocumentos(documentos.filter(doc => doc.id !== deleteConfirmModal.documentId));
-      setDeleteConfirmModal({show: false, documentId: '', documentName: ''});
+  const handleSaveNewActivity = () => {
+    if (newActivity.descricao.trim()) {
+      const activity: HistoricoAtendimento = {
+        id: Date.now().toString(),
+        data: newActivity.data,
+        tipo: newActivity.tipo as 'ligacao' | 'email' | 'visita' | 'proposta' | 'reuniao' | 'whatsapp' | 'followup',
+        descricao: newActivity.descricao,
+        usuario: 'Usuário Atual',
+        editavel: true
+      };
+      
+      setHistorico([activity, ...historico]);
+      setNewActivity({
+        tipo: 'ligacao',
+        data: new Date().toISOString().split('T')[0],
+        hora: new Date().toTimeString().slice(0, 5),
+        descricao: ''
+      });
+      setShowActivityModal(false);
+      
+      toast({
+        title: "Atividade adicionada",
+        description: "Nova atividade foi registrada com sucesso.",
+      });
+    }
+  };
+
+  const handleWhatsApp = () => {
+    if (lead && lead.phones && lead.phones.length > 0) {
+      const primaryPhone = lead.phones.find(phone => phone.isPrimary)?.value || lead.phones[0].value;
+      const cleanPhone = primaryPhone.replace(/\D/g, '');
+      window.open(`https://wa.me/55${cleanPhone}`, '_blank');
+    }
+  };
+
+  const handleChangeAgent = () => {
+    if (lead) {
+      setSelectedAgent(lead.assignedTo || '');
+      setShowChangeAgentModal(true);
+    }
+  };
+
+  const handleManageTags = () => {
+    if (lead) {
+      setNewTag('');
+      setShowTagsModal(true);
+    }
+  };
+
+  const handleUploadFile = () => {
+    setUploadFile(null);
+    setShowUploadModal(true);
+  };
+
+  const handleAddNote = () => {
+    setNoteText('');
+    setNoteFile(null);
+    setShowAddNoteModal(true);
+  };
+
+  const handleSaveUpload = () => {
+    if (uploadFile && lead) {
+      const documento: Documento = {
+        id: Date.now().toString(),
+        nome: uploadFile.name,
+        tamanho: `${(uploadFile.size / 1024 / 1024).toFixed(1)} MB`,
+        data: new Date().toLocaleDateString('pt-BR'),
+        tipo: uploadFile.name.split('.').pop() || 'unknown'
+      };
+      
+      setDocumentos([documento, ...documentos]);
+      setUploadFile(null);
+      setShowUploadModal(false);
+      
+      toast({
+        title: "Arquivo enviado",
+        description: `${uploadFile.name} foi adicionado com sucesso.`,
+      });
+    }
+  };
+
+  const handleAddNoteSave = () => {
+    if (noteText.trim() && lead) {
+      const now = new Date();
+      const noteDescription = noteName.trim() 
+        ? `**${noteName}**\n\n${noteText}`
+        : noteText;
+      
+      const note: HistoricoAtendimento = {
+        id: Date.now().toString(),
+        data: now.toISOString(),
+        tipo: 'followup',
+        descricao: noteDescription,
+        usuario: 'Usuário Atual',
+        editavel: true
+      };
+      
+      setHistorico([note, ...historico]);
+      
+      // Se houver arquivo, adiciona também aos documentos com o mesmo timestamp
+      if (noteFile) {
+        const documento: Documento = {
+          id: Date.now().toString(),
+          nome: noteFile.name,
+          tamanho: `${(noteFile.size / 1024 / 1024).toFixed(1)} MB`,
+          data: now.toISOString(), // Usar timestamp completo em vez de data formatada
+          tipo: noteFile.name.split('.').pop() || 'unknown'
+        };
+        setDocumentos([documento, ...documentos]);
+      }
+      
+      setNoteText('');
+      setNoteFile(null);
+      setNoteName('');
+      setShowAddNoteModal(false);
+      
+      toast({
+        title: "Nota adicionada",
+        description: noteFile 
+          ? `Nota "${noteName || 'Sem nome'}" e arquivo "${noteFile.name}" foram adicionados com sucesso.`
+          : `Nota "${noteName || 'Sem nome'}" foi adicionada ao histórico com sucesso.`,
+      });
+    }
+  };
+
+  const handleSaveNoteEdit = () => {
+    if (editingNoteId && editingNoteText.trim() && lead) {
+      // Atualizar o texto da nota no histórico
+      const noteDescription = editingNoteName.trim() 
+        ? `**${editingNoteName}**\n\n${editingNoteText}`
+        : editingNoteText;
+      
+      setHistorico(historico.map(item => 
+        item.id === editingNoteId 
+          ? { ...item, descricao: noteDescription }
+          : item
+      ));
+      
+      // Remover documentos antigos relacionados a esta nota
+      const activityTimestamp = new Date(historico.find(item => item.id === editingNoteId)?.data || '').getTime();
+      const filteredDocs = documentos.filter(doc => {
+        const docDate = new Date(doc.data);
+        const docTimestamp = docDate.getTime();
+        return Math.abs(docTimestamp - activityTimestamp) >= 5000;
+      });
+      
+      // Adicionar novos arquivos (se houver)
+      const newDocs = editingNoteFiles.map(file => ({
+        id: Date.now().toString() + Math.random(),
+        nome: file.name,
+        tamanho: `${(file.size / 1024 / 1024).toFixed(1)} MB`,
+        data: new Date(activityTimestamp).toISOString(),
+        tipo: file.name.split('.').pop() || 'unknown'
+      }));
+      
+      setDocumentos([...filteredDocs, ...newDocs]);
+      
+      // Limpar estados
+      setEditingNoteId(null);
+      setEditingNoteText('');
+      setEditingNoteName('');
+      setEditingNoteFiles([]);
+      setShowNoteEditModal(false);
+      
+      toast({
+        title: "Nota atualizada",
+        description: `Nota "${editingNoteName || 'Sem nome'}" foi atualizada com sucesso${editingNoteFiles.length > 0 ? ` com ${editingNoteFiles.length} arquivo${editingNoteFiles.length > 1 ? 's' : ''} anexado${editingNoteFiles.length > 1 ? 's' : ''}` : '.'}`,
+      });
+    }
+  };
+
+  const handleAddNoteFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    setEditingNoteFiles([...editingNoteFiles, ...files]);
+  };
+
+  const handleRemoveNoteFile = (index: number) => {
+    setEditingNoteFiles(editingNoteFiles.filter((_, i) => i !== index));
+  };
+
+  const handleDeleteActivity = (activity: HistoricoAtendimento) => {
+    setActivityToDelete(activity);
+    setShowDeleteActivityModal(true);
+  };
+
+  const handleConfirmDelete = () => {
+    if (activityToDelete) {
+      setHistorico(historico.filter(item => item.id !== activityToDelete.id));
+      // Se houver arquivos relacionados, remove também
+      const activityTimestamp = new Date(activityToDelete.data).getTime();
+      const filteredDocs = documentos.filter(doc => {
+        const docDate = new Date(doc.data);
+        const docTimestamp = docDate.getTime();
+        return Math.abs(docTimestamp - activityTimestamp) >= 5000;
+      });
+      setDocumentos(filteredDocs);
+      
+      setActivityToDelete(null);
+      setShowDeleteActivityModal(false);
+      
+      toast({
+        title: "Atividade excluída",
+        description: `A atividade "${activityToDelete.descricao.substring(0, 50)}..." foi excluída com sucesso.`,
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleEditLead = () => {
+    if (lead) {
+      setShowEditModal(true);
+    }
+  };
+
+  const handleSaveLead = () => {
+    if (lead) {
+      setShowEditModal(false);
+      
+      toast({
+        title: "Lead atualizado",
+        description: "As informações do lead foram atualizadas com sucesso.",
+      });
+    }
+  };
+
+  const handleChangeAgentSave = () => {
+    if (lead && selectedAgent && selectedAgent !== lead.assignedTo) {
+      const oldAgent = lead.assignedTo || 'Nenhum';
+      const updatedLead = {
+        ...lead,
+        assignedTo: selectedAgent
+      };
+      setLead(updatedLead);
+      setShowChangeAgentModal(false);
+      
+      toast({
+        title: "👥 Corretor alterado com sucesso!",
+        description: (
+          <div className="space-y-2">
+            <p><strong>{lead.name}</strong> foi reatribuído(a)!</p>
+            <div className="flex items-center gap-2 text-xs text-muted-foreground">
+              <span>De:</span>
+              <span className="bg-blue-100 text-blue-700 px-2 py-1 rounded">{oldAgent}</span>
+              <span className="text-green-500">→</span>
+              <span className="bg-green-100 text-green-700 px-2 py-1 rounded">{selectedAgent}</span>
+            </div>
+          </div>
+        ),
+        variant: "success",
+        duration: 4000,
+      });
     }
   };
 
   const handleAddTag = () => {
-    if (newTag.trim() && lead && !lead.tags?.includes(newTag.trim())) {
+    if (lead && newTag.trim() && !lead.tags?.includes(newTag.trim())) {
       const updatedLead = {
         ...lead,
         tags: [...(lead.tags || []), newTag.trim()]
@@ -454,190 +680,64 @@ export function LeadDetalhes() {
     }
   };
 
-  const handleActivityDetails = (activity: HistoricoAtendimento) => {
-    setSelectedActivity(activity);
-    setActivityNote(activity.notaAtividade || '');
-    setActivityRating(activity.avaliacao || null);
-    setShowActivityDetailsModal(true);
-  };
-
-  const handleViewProperty = (propertyId: string) => {
-    navigate(`/imovel/${propertyId}`);
-  };
-
-  const handleScheduleVisit = (property: any) => {
-    setActivityData({
-      ...activityData,
-      tipo: 'visita',
-      descricao: `Visita ao imóvel: ${property.titulo}`
-    });
-    setShowActivityModal(true);
-  };
-
-  const handlePropertySelection = (propertyId: string) => {
-    setSelectedProperties(prev => 
-      prev.includes(propertyId) 
-        ? prev.filter(id => id !== propertyId)
-        : [...prev, propertyId]
-    );
-  };
-
-  const handleSendProperties = () => {
-    if (selectedProperties.length > 0) {
-      setShowSendModal(true);
-    }
-  };
-
-  const handleConfirmSend = () => {
-    const selectedImoveis = imoveisInteresse.filter(imovel => 
-      selectedProperties.includes(imovel.id)
-    );
-    
-    if (sendMethod === 'email') {
-      window.open(`mailto:${lead.email}?subject=Imóveis de Interesse&body=${encodeURIComponent(selectedImoveis.map(imovel => `${imovel.titulo} - ${imovel.valor}`).join('\n'))}`);
+  const handleEditActivity = (activity: HistoricoAtendimento) => {
+    if (activity.tipo === 'followup') {
+      // É uma nota - abrir modal de edição de nota
+      setEditingNoteId(activity.id);
+      setEditingNoteText(activity.descricao);
+      
+      // Buscar arquivos relacionados à nota
+      const activityTimestamp = new Date(activity.data).getTime();
+      const relatedDocs = documentos.filter(doc => {
+        const docDate = new Date(doc.data);
+        const docTimestamp = docDate.getTime();
+        return Math.abs(docTimestamp - activityTimestamp) < 5000;
+      });
+      
+      // Converter documentos para File objects (simulação)
+      setEditingNoteFiles(relatedDocs.map(doc => new File([], doc.nome, { type: doc.tipo })));
+      setShowNoteEditModal(true);
     } else {
-      const message = selectedImoveis.map(imovel => `${imovel.titulo} - ${imovel.valor}`).join('\n');
-      window.open(`https://wa.me/55${lead.phone.replace(/\D/g, '')}?text=${encodeURIComponent(`Olá ${lead.name}, aqui estão os imóveis que selecionei para você:\n\n${message}`)}`);
-    }
-    setShowSendModal(false);
-  };
-
-  const handleCreateActivityFromNextStep = (nextStep: string) => {
-    // Extrair o tipo de atividade do próximo passo
-    let activityType = 'ligacao'; // padrão
-    
-    if (nextStep.toLowerCase().includes('ligacao')) activityType = 'ligacao';
-    else if (nextStep.toLowerCase().includes('email')) activityType = 'email';
-    else if (nextStep.toLowerCase().includes('visita')) activityType = 'visita';
-    else if (nextStep.toLowerCase().includes('reuniao')) activityType = 'reuniao';
-    else if (nextStep.toLowerCase().includes('proposta')) activityType = 'proposta';
-    else if (nextStep.toLowerCase().includes('whatsapp')) activityType = 'whatsapp';
-    else if (nextStep.toLowerCase().includes('followup')) activityType = 'followup';
-    
-    setActivityData({
-      ...activityData,
-      tipo: activityType,
-      descricao: `Realizar ${activityType} - ${nextStep}`
-    });
-    setShowActivityModal(true);
-  };
-
-  const handleAddEditTag = () => {
-    if (newEditTag.trim() && !editData.tags.includes(newEditTag.trim())) {
-      setEditData({...editData, tags: [...editData.tags, newEditTag.trim()]});
-      setNewEditTag('');
+      // É uma atividade normal - abrir modal de edição de atividade
+      setSelectedActivity(activity);
+      setShowActivityEditModal(true);
     }
   };
 
-  const handleSaveActivityDetails = () => {
+  const handleSaveActivity = (activity: {
+    id: string;
+    tipo: 'ligacao' | 'email' | 'visita' | 'proposta' | 'reuniao' | 'whatsapp' | 'followup';
+    data: string;
+    descricao: string;
+    usuario: string;
+    proximoPasso?: string;
+  }) => {
     if (selectedActivity) {
-      setHistorico(historico.map(item => 
-        item.id === selectedActivity.id 
-          ? {...item, notaAtividade: activityNote, avaliacao: activityRating}
-          : item
+      setHistorico(historico.map(item =>
+        item.id === selectedActivity.id ? activity : item
       ));
-      setShowActivityDetailsModal(false);
-      setSelectedActivity(null);
-      setActivityNote('');
-      setActivityRating(null);
+    } else {
+      setHistorico([activity, ...historico]);
     }
+    setSelectedActivity(null);
+    setShowActivityEditModal(false);
   };
-
-  const handleEditLead = () => {
-    if (lead) {
-      setEditData({
-        budget: lead.budget || '',
-        financing: lead.financing || false,
-        timeline: lead.timeline || '',
-        source: lead.source || '',
-        assignedTo: lead.assignedTo || '',
-        tags: lead.tags || [],
-        priorities: lead.priorities || [],
-        notes: lead.notes || ''
-      });
-      setShowEditModal(true);
-    }
-  };
-
-  const handleSaveEdit = () => {
-    if (lead) {
-      const updatedLead = {
-        ...lead,
-        budget: editData.budget,
-        financing: editData.financing,
-        timeline: editData.timeline,
-        source: editData.source,
-        assignedTo: editData.assignedTo,
-        tags: editData.tags,
-        priorities: editData.priorities,
-        notes: editData.notes
-      };
-      setLead(updatedLead);
-      setShowEditModal(false);
-    }
-  };
-
-  const handleScheduleActivity = () => {
-    if (lead && activityData.descricao.trim()) {
-      const novaAtividade: HistoricoAtendimento = {
-        id: Date.now().toString(),
-        data: new Date(activityData.data.getFullYear(), activityData.data.getMonth(), activityData.data.getDate(), 
-                parseInt(activityData.hora.split(':')[0]), parseInt(activityData.hora.split(':')[1])).toISOString(),
-        tipo: activityData.tipo as any,
-        descricao: activityData.descricao,
-        usuario: 'Usuário Atual',
-        resultado: 'Atividade agendada',
-        proximoPasso: `Realizar ${activityData.tipo} em ${activityData.data.toLocaleDateString('pt-BR')} às ${activityData.hora}`
-      };
-      
-      setHistorico([novaAtividade, ...historico]);
-      
-      const updatedLead = {
-        ...lead,
-        nextAction: `${activityData.tipo} agendada para ${activityData.data.toLocaleDateString('pt-BR')} às ${activityData.hora}`
-      };
-      setLead(updatedLead);
-      setShowActivityModal(false);
-      setActivityData({
-        tipo: 'ligacao',
-        data: new Date(),
-        hora: '14:00',
-        descricao: ''
-      });
-    }
-  };
-
-
-  const copyToClipboard = (text: string) => {
-    navigator.clipboard.writeText(text);
-  };
-
-  useEffect(() => {
-    // Simular carregamento dos dados do lead
-    setTimeout(() => {
-      setLead(mockLead);
-      setLoading(false);
-    }, 500);
-  }, [id]);
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-muted-foreground">Carregando detalhes do lead...</p>
-        </div>
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary"></div>
       </div>
     );
   }
 
   if (!lead) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
-          <p className="text-muted-foreground mb-4">Lead não encontrado</p>
-          <Button onClick={() => navigate('/funil')}>
-            Voltar para o Funil
+          <h2 className="text-2xl font-bold mb-4">Lead não encontrado</h2>
+          <Button onClick={() => navigate('/leads')}>
+            Voltar para Leads
           </Button>
         </div>
       </div>
@@ -645,627 +745,265 @@ export function LeadDetalhes() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      className="container mx-auto p-6"
+    >
       {/* Header */}
-      <div className="bg-white border-b border-gray-200 px-6 py-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <Button variant="ghost" onClick={() => navigate('/funil')} className="gap-2">
-              <ArrowLeft className="h-4 w-4" />
-              Voltar
-            </Button>
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900">{lead.name}</h1>
-              <p className="text-sm text-gray-500">Detalhes completos do lead</p>
-            </div>
+      <div className="flex justify-between items-start mb-6">
+        <div>
+          <h1 className="text-3xl font-bold">{lead.name}</h1>
+          <div className="flex items-center gap-4 mt-2 text-muted-foreground">
+            <span className="flex items-center gap-1">
+              <Phone className="h-4 w-4" />
+              {lead.phones[0]?.value}
+            </span>
+            <span className="flex items-center gap-1">
+              <Mail className="h-4 w-4" />
+              {lead.emails[0]?.value}
+            </span>
+            <span className="flex items-center gap-1">
+              <MapPin className="h-4 w-4" />
+              {lead.location}
+            </span>
           </div>
-          <div className="flex items-center gap-2">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline" className="gap-2">
-                  <MoreVertical className="h-4 w-4" />
-                  Ações
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={handleEditLead}>
-                  <Edit className="h-4 w-4 mr-2" />
-                  Editar
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setShowAssignModal(true)}>
-                  <UserCheck className="h-4 w-4 mr-2" />
-                  Mudar Corretor
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={handleWhatsApp}>
-                  <MessageCircle className="h-4 w-4 mr-2" />
-                  WhatsApp
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setShowActivityModal(true)}>
-                  <Calendar className="h-4 w-4 mr-2" />
-                  Agendar Atividade
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setShowNoteModal(true)}>
-                  <Plus className="h-4 w-4 mr-2" />
-                  Adicionar Nota
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setShowTagsModal(true)}>
-                  <Target className="h-4 w-4 mr-2" />
-                  Tags
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
+        </div>
+        <div className="flex gap-2">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" size="sm">
+                <MoreVertical className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={() => setShowEditModal(true)}>
+                <Edit className="h-4 w-4 mr-2" />
+                Editar
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={handleChangeAgent}>
+                <UserCheck className="h-4 w-4 mr-2" />
+                Mudar Corretor
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={handleWhatsApp}>
+                <MessageSquare className="h-4 w-4 mr-2" />
+                WhatsApp
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={handleScheduleActivity}>
+                <Calendar className="h-4 w-4 mr-2" />
+                Agendar Atividade
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={handleAddNote}>
+                <Plus className="h-4 w-4 mr-2" />
+                Adicionar Nota
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={handleManageTags}>
+                <Tag className="h-4 w-4 mr-2" />
+                Tags
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setShowDeleteModal(true)} className="text-red-600">
+                <Trash2 className="h-4 w-4 mr-2" />
+                Excluir
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
 
-      <div className="container mx-auto px-6 py-6">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Informações Principais */}
-          <div className="lg:col-span-1 space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <User className="h-5 w-5" />
-                  Informações do Lead
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="flex items-center gap-3">
-                  <Avatar className="h-12 w-12">
-                    <AvatarFallback className="bg-primary text-primary-foreground">
-                      {lead.name.split(' ').map(n => n[0]).join('')}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div>
-                    <h3 className="font-semibold text-lg">{lead.name}</h3>
-                    <Badge variant="outline" className="text-xs">
-                      {lead.stage === 'new' && 'Novo Lead'}
-                      {lead.stage === 'contact' && 'Contato Realizado'}
-                      {lead.stage === 'visit' && 'Visita Agendada'}
-                      {lead.stage === 'proposal' && 'Proposta Enviada'}
-                      {lead.stage === 'negotiation' && 'Negociação'}
-                      {lead.stage === 'closed' && 'Fechado'}
-                    </Badge>
+      {/* Layout Lado a Lado */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* LADO ESQUERDO - Informações do Lead (Fixo) */}
+        <div className="lg:col-span-1">
+          <Card className="sticky top-6">
+            <CardHeader>
+              <CardTitle>Informações do Lead</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div>
+                <Label className="text-sm font-medium text-muted-foreground">Tipo de Busca</Label>
+                <p className="capitalize">{lead.searchType}</p>
+              </div>
+              <div>
+                <Label className="text-sm font-medium text-muted-foreground">Faixa de Valor</Label>
+                <p>{lead.value}</p>
+              </div>
+              <div>
+                <Label className="text-sm font-medium text-muted-foreground">Origem</Label>
+                <p>{lead.source}</p>
+              </div>
+              <div>
+                <Label className="text-sm font-medium text-muted-foreground">Responsável</Label>
+                <p>{lead.assignedTo}</p>
+              </div>
+              <div>
+                <Label className="text-sm font-medium text-muted-foreground">Estágio</Label>
+                <Badge variant="secondary">{lead.stage}</Badge>
+              </div>
+              <div>
+                <Label className="text-sm font-medium text-muted-foreground">Último Contato</Label>
+                <p>{lead.lastContact}</p>
+              </div>
+              <div>
+                <Label className="text-sm font-medium text-muted-foreground">Data de Entrada</Label>
+                <p>{new Date(lead.createdAt).toLocaleDateString('pt-BR', { 
+                  day: '2-digit', 
+                  month: '2-digit', 
+                  year: 'numeric' 
+                })}</p>
+              </div>
+              {lead.notes && (
+                <div>
+                  <Label className="text-sm font-medium text-muted-foreground">Observações</Label>
+                  <p className="mt-1 text-sm">{lead.notes}</p>
+                </div>
+              )}
+              {lead.tags && lead.tags.length > 0 && (
+                <div>
+                  <Label className="text-sm font-medium text-muted-foreground">Tags</Label>
+                  <div className="flex flex-wrap gap-2 mt-1">
+                    {lead.tags.map((tag, index) => (
+                      <Badge key={index} variant="outline">{tag}</Badge>
+                    ))}
                   </div>
                 </div>
+              )}
+            </CardContent>
+          </Card>
+        </div>
 
-                <Separator />
+        {/* LADO DIREITO - Abas (Conteúdo Dinâmico) */}
+        <div className="lg:col-span-2">
+          <Tabs value={activeTab} onValueChange={setActiveTab}>
+            <TabsList className="grid w-full grid-cols-4">
+              <TabsTrigger value="atividades">Atividades</TabsTrigger>
+              <TabsTrigger value="imoveis">Imóveis de Interesse</TabsTrigger>
+              <TabsTrigger value="documentos">Documentos</TabsTrigger>
+              <TabsTrigger value="propostas">Propostas</TabsTrigger>
+            </TabsList>
 
-                <div className="space-y-3">
-                  <div className="flex items-center gap-2">
-                    <Mail className="h-4 w-4 text-muted-foreground" />
-                    <span className="text-sm">{lead.email}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Phone className="h-4 w-4 text-muted-foreground" />
-                    <span className="text-sm">{lead.phone}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <MapPin className="h-4 w-4 text-muted-foreground" />
-                    <span className="text-sm">{lead.address}, {lead.city} - {lead.state}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Building className="h-4 w-4 text-muted-foreground" />
-                    <span className="text-sm">{lead.property}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <DollarSign className="h-4 w-4 text-muted-foreground" />
-                    <span className="text-sm">{lead.value}</span>
-                  </div>
-                </div>
+            {/* Tab Atividades */}
+            <TabsContent value="atividades">
+              <LeadTabAtividades
+                historico={historico}
+                documentos={documentos}
+                onScheduleActivity={handleScheduleActivity}
+                onActivityDetails={handleActivityDetails}
+                onEditActivity={handleEditActivity}
+                onDeleteActivity={handleDeleteActivity}
+              />
+            </TabsContent>
 
-                <Separator />
+            {/* Tab Imóveis */}
+            <TabsContent value="imoveis">
+              <LeadTabImoveis
+                imoveisInteresse={imoveisInteresse}
+                selectedProperties={selectedProperties}
+                isAllPropertiesSelected={isAllPropertiesSelected}
+                isSomePropertiesSelected={isSomePropertiesSelected}
+                masterCheckboxRef={masterCheckboxRef}
+                onPropertySelection={handlePropertySelection}
+                onSelectAllProperties={handleSelectAllProperties}
+                onViewProperty={handleViewProperty}
+                onScheduleVisit={handleScheduleVisit}
+                onScheduleMultipleVisits={handleScheduleMultipleVisits}
+                onSendProperties={handleSendProperties}
+              />
+            </TabsContent>
 
-                <div className="space-y-2">
-                  <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Orçamento:</span>
-                    <span className="font-medium">{lead.budget}</span>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Financiamento:</span>
-                    <span className="font-medium">{lead.financing ? 'Sim' : 'Não'}</span>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Prazo:</span>
-                    <span className="font-medium">{lead.timeline}</span>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Origem:</span>
-                    <span className="font-medium">{lead.source}</span>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Responsável:</span>
-                    <span className="font-medium">{lead.assignedTo}</span>
-                  </div>
-                </div>
+            {/* Tab Documentos */}
+            <TabsContent value="documentos">
+              <LeadTabDocumentos
+                documentos={documentos}
+                onAddDocument={() => setShowAddDocumentModal(true)}
+                onViewDocument={handleViewDocument}
+                onDownloadDocument={handleDownloadDocument}
+                onDeleteDocument={handleDeleteDocument}
+              />
+            </TabsContent>
 
-                {lead.tags && (
-                  <>
-                    <Separator />
-                    <div>
-                      <h4 className="font-medium mb-2">Tags</h4>
-                      <div className="flex flex-wrap gap-1">
-                        {lead.tags.map((tag, index) => (
-                          <Badge key={index} variant="outline" className="text-xs">
-                            {tag}
-                          </Badge>
-                        ))}
-                      </div>
-                    </div>
-                  </>
-                )}
-
-                {lead.priorities && (
-                  <>
-                    <Separator />
-                    <div>
-                      <h4 className="font-medium mb-2">Prioridades</h4>
-                      <div className="flex flex-wrap gap-1">
-                        {lead.priorities.map((priority, index) => (
-                          <Badge key={index} variant="secondary" className="text-xs">
-                            {priority}
-                          </Badge>
-                        ))}
-                      </div>
-                    </div>
-                  </>
-                )}
-
-                {lead.notes && (
-                  <>
-                    <Separator />
-                    <div>
-                      <h4 className="font-medium mb-2">Observações</h4>
-                      <p className="text-sm text-muted-foreground whitespace-pre-line">{lead.notes}</p>
-                    </div>
-                  </>
-                )}
-              </CardContent>
-            </Card>
-
-            {/* Próxima Ação */}
-            {lead.nextAction && (
+            {/* Tab Propostas */}
+            <TabsContent value="propostas">
               <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Target className="h-5 w-5" />
-                    Próxima Ação
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-sm">{lead.nextAction}</p>
-                </CardContent>
-              </Card>
-            )}
-
-            {/* Estatísticas */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <TrendingUp className="h-5 w-5" />
-                  Estatísticas
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Contatos realizados:</span>
-                  <span className="font-medium">{historicoAtendimento.length}</span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Último contato:</span>
-                  <span className="font-medium">
-                    {lead.lastContact ? format(new Date(lead.lastContact), "dd/MM/yyyy 'às' HH:mm", { locale: ptBR }) : '-'}
-                  </span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Lead desde:</span>
-                  <span className="font-medium">
-                    {lead.createdAt ? format(new Date(lead.createdAt), "dd/MM/yyyy", { locale: ptBR }) : '-'}
-                  </span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Imóveis visitados:</span>
-                  <span className="font-medium">2</span>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Conteúdo Principal */}
-          <div className="lg:col-span-2">
-            <Tabs defaultValue="historico" className="space-y-6">
-              <TabsList className="grid w-full grid-cols-3">
-                <TabsTrigger value="historico">Histórico</TabsTrigger>
-                <TabsTrigger value="imoveis">Imóveis de Interesse</TabsTrigger>
-                <TabsTrigger value="documentos">Documentos</TabsTrigger>
-              </TabsList>
-
-              <TabsContent value="historico" className="space-y-4">
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <History className="h-5 w-5" />
-                      Histórico de Atendimento
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      {historico.map((item, index) => {
-                        const Icon = getTipoIcon(item.tipo);
-                        return (
-                          <div key={item.id} className="border rounded-lg p-4 space-y-3">
-                            <div className="flex items-start justify-between">
-                              <div className="flex items-center gap-3">
-                                <div className={`p-2 rounded-full ${getTipoColor(item.tipo)}`}>
-                                  <Icon className="h-4 w-4" />
-                                </div>
-                                <div>
-                                  <div className="flex items-center gap-2">
-                                    <h4 className="font-medium capitalize">{item.tipo}</h4>
-                                    <Badge variant="outline" className="text-xs">
-                                      {format(new Date(item.data), "dd/MM/yyyy 'às' HH:mm", { locale: ptBR })}
-                                    </Badge>
-                                    {item.avaliacao && (
-                                      <Badge variant={item.avaliacao === 'boa' ? 'default' : 'destructive'} className="text-xs">
-                                        {item.avaliacao === 'boa' ? 'Boa' : 'Ruim'}
-                                      </Badge>
-                                    )}
-                                  </div>
-                                  <p className="text-sm text-muted-foreground">
-                                    Por {item.usuario}
-                                    {item.duracao && ` • ${item.duracao}`}
-                                  </p>
-                                </div>
-                              </div>
-                              <div className="flex gap-1">
-                                <Button 
-                                  variant="ghost" 
-                                  size="sm" 
-                                  onClick={() => handleActivityDetails(item)}
-                                >
-                                  <Eye className="h-4 w-4" />
-                                </Button>
-                                {item.editavel && (
-                                  <>
-                                    <Button 
-                                      variant="ghost" 
-                                      size="sm" 
-                                      onClick={() => handleEditNote(item.id, item.descricao)}
-                                    >
-                                      <Edit className="h-4 w-4" />
-                                    </Button>
-                                    <Button 
-                                      variant="ghost" 
-                                      size="sm" 
-                                      onClick={() => handleDeleteNote(item.id)}
-                                    >
-                                      <Trash2 className="h-4 w-4" />
-                                    </Button>
-                                  </>
-                                )}
-                              </div>
-                            </div>
-                            
-                            <p className="text-sm">{item.descricao}</p>
-                            
-                            {item.notaAtividade && (
-                              <div className="bg-muted p-2 rounded text-sm">
-                                <span className="font-medium">Nota sobre atividade:</span> {item.notaAtividade}
-                              </div>
-                            )}
-                            
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                              {item.resultado && (
-                                <div>
-                                  <span className="font-medium text-green-600">Resultado:</span>
-                                  <p className="text-muted-foreground">{item.resultado}</p>
-                                </div>
-                              )}
-                              {item.proximoPasso && (
-                                <div>
-                                  <span className="font-medium text-blue-600">Próximo passo:</span>
-                                  <div className="flex items-center gap-2 mt-1">
-                                    <p className="text-muted-foreground">{item.proximoPasso}</p>
-                                    <Button 
-                                      variant="ghost" 
-                                      size="sm" 
-                                      onClick={() => handleCreateActivityFromNextStep(item.proximoPasso!)}
-                                      className="h-6 px-2 text-xs"
-                                    >
-                                      <Plus className="h-3 w-3 mr-1" />
-                                      Criar
-                                    </Button>
-                                  </div>
-                                </div>
-                              )}
-                            </div>
-
-                            {item.anexos && item.anexos.length > 0 && (
-                              <div className="flex items-center gap-2 text-sm">
-                                <FileText className="h-4 w-4" />
-                                <span>Anexos:</span>
-                                <div className="flex gap-2">
-                                  {item.anexos.map((anexo, idx) => (
-                                    <Badge key={idx} variant="outline" className="text-xs">
-                                      {anexo}
-                                    </Badge>
-                                  ))}
-                                </div>
-                              </div>
-                            )}
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </CardContent>
-                </Card>
-              </TabsContent>
-
-              <TabsContent value="imoveis" className="space-y-4">
-                <div className="flex justify-between items-center">
-                  <h3 className="text-lg font-semibold">Imóveis de Interesse</h3>
-                  <div className="flex gap-2">
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
-                      onClick={handleSendProperties}
-                      disabled={selectedProperties.length === 0}
-                    >
-                      <Send className="h-4 w-4 mr-1" />
-                      Enviar ({selectedProperties.length})
-                    </Button>
-                  </div>
-                </div>
-                
-                <div className="space-y-3">
-                  {imoveisInteresse.map((imovel) => (
-                    <div key={imovel.id} className="border rounded-lg p-4 hover:shadow-md transition-shadow">
-                      <div className="flex items-start gap-4">
-                        <input
-                          type="checkbox"
-                          checked={selectedProperties.includes(imovel.id)}
-                          onChange={() => handlePropertySelection(imovel.id)}
-                          className="mt-1"
-                        />
-                        
-                        <div className="w-32 h-24 rounded-lg overflow-hidden flex-shrink-0">
-                          <img
-                            src={imovel.imagens[0]}
-                            alt={imovel.titulo}
-                            className="w-full h-full object-cover"
-                          />
-                        </div>
-                        
-                        <div className="flex-1">
-                          <div className="flex justify-between items-start">
-                            <div className="flex-1">
-                              <h3 className="font-semibold">{imovel.titulo}</h3>
-                              <p className="text-sm text-muted-foreground">{imovel.endereco}</p>
-                              <p className="text-lg font-bold text-primary mt-1">{imovel.valor}</p>
-                              
-                              <div className="flex gap-4 mt-3 text-sm">
-                                <span className="flex items-center gap-1">
-                                  <Home className="h-4 w-4" />
-                                  {imovel.quartos} quartos
-                                </span>
-                                <span className="flex items-center gap-1">
-                                  <DollarSign className="h-4 w-4" />
-                                  {imovel.area} m²
-                                </span>
-                                <span className="flex items-center gap-1">
-                                  <Car className="h-4 w-4" />
-                                  {imovel.vagas} vagas
-                                </span>
-                              </div>
-                              
-                              <p className="text-sm text-muted-foreground mt-2">{imovel.descricao}</p>
-                              
-                              {/* Links Section */}
-                              <div className="mt-4 p-4 bg-gray-50 rounded-lg">
-                                <h4 className="font-semibold text-sm mb-3">Links</h4>
-                                
-                                <div className="space-y-3">
-                                  <div className="flex items-center gap-2">
-                                    <Input
-                                      value={`https://seusite.com/imovel/${imovel.id}`}
-                                      readOnly
-                                      className="flex-1 text-xs"
-                                    />
-                                    <Button 
-                                      variant="outline" 
-                                      size="sm"
-                                      onClick={() => copyToClipboard(`https://seusite.com/imovel/${imovel.id}`)}
-                                    >
-                                      Copiar
-                                    </Button>
-                                  </div>
-                                  
-                                  <div className="flex items-center gap-2">
-                                    <Input
-                                      value={`https://seusite.com/anuncio/${imovel.id}`}
-                                      readOnly
-                                      className="flex-1 text-xs"
-                                    />
-                                    <Button 
-                                      variant="outline" 
-                                      size="sm"
-                                      onClick={() => copyToClipboard(`https://seusite.com/anuncio/${imovel.id}`)}
-                                    >
-                                      Copiar
-                                    </Button>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                            
-                            <div className="flex gap-2 ml-4">
-                              <Button 
-                                variant="outline" 
-                                size="sm" 
-                                onClick={() => handleViewProperty(imovel.id)}
-                              >
-                                <Eye className="h-4 w-4 mr-1" />
-                                Ver
-                              </Button>
-                              <Button 
-                                variant="outline" 
-                                size="sm" 
-                                onClick={() => handleScheduleVisit(imovel)}
-                              >
-                                <Calendar className="h-4 w-4 mr-1" />
-                                Visitar
-                              </Button>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </TabsContent>
-
-              <TabsContent value="documentos" className="space-y-4">
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <FileText className="h-5 w-5" />
-                        Documentos do Lead
-                      </div>
-                      <Button onClick={() => setShowAddDocumentModal(true)} size="sm">
-                        <Plus className="h-4 w-4 mr-1" />
-                        Adicionar
-                      </Button>
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      {documentos.map((doc) => (
-                        <div key={doc.id} className="border rounded-lg p-4">
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-3">
-                              <div className="p-2 rounded-md bg-muted">
-                                <FileText className="h-5 w-5" />
-                              </div>
-                              <div>
-                                <p className="font-medium">{doc.nome}</p>
-                                <p className="text-sm text-muted-foreground">{doc.tamanho} • {doc.data}</p>
-                              </div>
-                            </div>
-                            <div className="flex gap-1">
-                              <Button variant="ghost" size="sm">
-                                <Download className="h-4 w-4" />
-                              </Button>
-                              <Button 
-                                variant="ghost" 
-                                size="sm" 
-                                onClick={() => handleDeleteDocument(doc.id, doc.nome)}
-                                className="text-red-600 hover:text-red-700"
-                              >
-                                <Trash2 className="h-4 w-4" />
-                              </Button>
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
-              </TabsContent>
-            </Tabs>
-          </div>
+                <CardContent className="p-6">
+                  <div className="text-center py-8">
+                    <FileText className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+                    <h3 className="text-lg font-semibold mb-2">Nenhuma proposta enviada</h3>
+                    <p className="text-muted-foreground mb-4">
+                      Este lead ainda não recebeu nenhuma proposta comercial.
+                    </p>
+                <Button>
+                  <Plus className="h-4 w-4 mr-2" />
+                  Criar Proposta
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
         </div>
       </div>
 
-      {/* Modal para Mudar Corretor */}
-      <Dialog open={showAssignModal} onOpenChange={setShowAssignModal}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Mudar Corretor Responsável</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4">
-            <div>
-              <Label htmlFor="corretor">Selecione o novo corretor</Label>
-              <Select value={selectedCorretor} onValueChange={setSelectedCorretor}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Selecione um corretor" />
-                </SelectTrigger>
-                <SelectContent>
-                  {corretores.map((corretor) => (
-                    <SelectItem key={corretor.id} value={corretor.id}>
-                      {corretor.nome}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setShowAssignModal(false)}>
-              Cancelar
-            </Button>
-            <Button onClick={handleAssignCorretor} disabled={!selectedCorretor}>
-              Confirmar
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      {/* Modals */}
+      <ActivityEditModal
+        open={showActivityEditModal}
+        onClose={() => setShowActivityEditModal(false)}
+        activity={selectedActivity || undefined}
+        onSave={handleSaveActivity}
+      />
 
-      {/* Modal para Agendar Atividade */}
+      {/* Modal de Nova Atividade */}
       <Dialog open={showActivityModal} onOpenChange={setShowActivityModal}>
         <DialogContent className="sm:max-w-[500px]">
           <DialogHeader>
             <DialogTitle>Agendar Atividade</DialogTitle>
+            <DialogDescription>
+              Registre uma nova atividade para {lead?.name}
+            </DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
             <div>
-              <Label htmlFor="tipo-atividade">Tipo de Atividade</Label>
-              <Select value={activityData.tipo} onValueChange={(value) => setActivityData({...activityData, tipo: value})}>
+              <Label htmlFor="activityType">Tipo de Atividade</Label>
+              <Select value={newActivity.tipo} onValueChange={(value) => setNewActivity({...newActivity, tipo: value})}>
                 <SelectTrigger>
-                  <SelectValue placeholder="Selecione o tipo de atividade" />
+                  <SelectValue placeholder="Selecione o tipo" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="ligacao">Ligação telefônica</SelectItem>
-                  <SelectItem value="email">Envio de e-mail</SelectItem>
-                  <SelectItem value="visita">Visita ao imóvel</SelectItem>
-                  <SelectItem value="reuniao">Reunião presencial</SelectItem>
-                  <SelectItem value="proposta">Apresentar proposta</SelectItem>
+                  <SelectItem value="ligacao">Ligação Telefônica</SelectItem>
+                  <SelectItem value="email">Envio de E-mail</SelectItem>
+                  <SelectItem value="visita">Visita ao Imóvel</SelectItem>
+                  <SelectItem value="reuniao">Reunião Presencial</SelectItem>
+                  <SelectItem value="proposta">Apresentar Proposta</SelectItem>
                   <SelectItem value="whatsapp">Contato via WhatsApp</SelectItem>
                   <SelectItem value="followup">Follow-up</SelectItem>
                 </SelectContent>
               </Select>
             </div>
-            
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <Label htmlFor="data">Data</Label>
-                <Input
-                  id="data"
-                  type="date"
-                  value={activityData.data.toISOString().split('T')[0]}
-                  onChange={(e) => setActivityData({...activityData, data: new Date(e.target.value)})}
-                  min={new Date().toISOString().split('T')[0]}
+                <Label htmlFor="activityDate">Data</Label>
+                <Input 
+                  type="date" 
+                  value={newActivity.data}
+                  onChange={(e) => setNewActivity({...newActivity, data: e.target.value})}
                 />
               </div>
               <div>
-                <Label htmlFor="hora">Hora</Label>
-                <Input
-                  id="hora"
-                  type="time"
-                  value={activityData.hora}
-                  onChange={(e) => setActivityData({...activityData, hora: e.target.value})}
+                <Label htmlFor="activityTime">Hora</Label>
+                <Input 
+                  type="time" 
+                  value={newActivity.hora}
+                  onChange={(e) => setNewActivity({...newActivity, hora: e.target.value})}
                 />
               </div>
             </div>
-            
             <div>
-              <Label htmlFor="descricao">Descrição</Label>
-              <Textarea
-                id="descricao"
-                placeholder="Descreva os detalhes da atividade..."
-                value={activityData.descricao}
-                onChange={(e) => setActivityData({...activityData, descricao: e.target.value})}
+              <Label htmlFor="activityDescription">Descrição</Label>
+              <Textarea 
+                placeholder="Descreva a atividade..."
                 rows={3}
+                value={newActivity.descricao}
+                onChange={(e) => setNewActivity({...newActivity, descricao: e.target.value})}
               />
             </div>
           </div>
@@ -1273,272 +1011,14 @@ export function LeadDetalhes() {
             <Button variant="outline" onClick={() => setShowActivityModal(false)}>
               Cancelar
             </Button>
-            <Button onClick={handleScheduleActivity} disabled={!activityData.descricao.trim()}>
-              Agendar Atividade
+            <Button onClick={handleSaveNewActivity} disabled={!newActivity.descricao.trim()}>
+              Salvar Atividade
             </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
 
-      {/* Modal para Editar Lead */}
-      <Dialog open={showEditModal} onOpenChange={setShowEditModal}>
-        <DialogContent className="sm:max-w-[600px]">
-          <DialogHeader>
-            <DialogTitle>Editar Lead</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="budget">Orçamento</Label>
-                <Input
-                  id="budget"
-                  placeholder="Ex: R$ 300.000 - R$ 400.000"
-                  value={editData.budget}
-                  onChange={(e) => setEditData({...editData, budget: e.target.value})}
-                />
-              </div>
-              <div>
-                <Label htmlFor="timeline">Prazo</Label>
-                <Input
-                  id="timeline"
-                  placeholder="Ex: 1-2 meses"
-                  value={editData.timeline}
-                  onChange={(e) => setEditData({...editData, timeline: e.target.value})}
-                />
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="source">Origem</Label>
-                <Select value={editData.source} onValueChange={(value) => setEditData({...editData, source: value})}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Selecione a origem" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="Website">Website</SelectItem>
-                    <SelectItem value="Redes Sociais">Redes Sociais</SelectItem>
-                    <SelectItem value="Indicação">Indicação</SelectItem>
-                    <SelectItem value="Telefone">Telefone</SelectItem>
-                    <SelectItem value="E-mail">E-mail</SelectItem>
-                    <SelectItem value="Outros">Outros</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div>
-                <Label htmlFor="assignedTo">Responsável</Label>
-                <Select value={editData.assignedTo} onValueChange={(value) => setEditData({...editData, assignedTo: value})}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Selecione o responsável" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {corretores.map((corretor) => (
-                      <SelectItem key={corretor.id} value={corretor.id}>
-                        {corretor.nome}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-
-            <div className="flex items-center space-x-2">
-              <input
-                type="checkbox"
-                id="financing"
-                checked={editData.financing}
-                onChange={(e) => setEditData({...editData, financing: e.target.checked})}
-              />
-              <Label htmlFor="financing">Financiamento</Label>
-            </div>
-
-            <div>
-              <Label htmlFor="tags">Tags</Label>
-              <div className="flex gap-2 mt-2">
-                <Input
-                  placeholder="Adicionar nova tag..."
-                  value={newEditTag}
-                  onChange={(e) => setNewEditTag(e.target.value)}
-                  onKeyPress={(e) => e.key === 'Enter' && handleAddEditTag()}
-                  className="flex-1"
-                />
-                <Button onClick={handleAddEditTag} disabled={!newEditTag.trim()}>
-                  <Plus className="h-4 w-4" />
-                </Button>
-              </div>
-              <div className="flex flex-wrap gap-2 mt-2">
-                {editData.tags.map((tag, index) => (
-                  <Badge key={index} variant="secondary" className="text-xs">
-                    {tag}
-                    <button
-                      type="button"
-                      className="ml-1 text-xs hover:text-red-600"
-                      onClick={() => setEditData({...editData, tags: editData.tags.filter((_, i) => i !== index)})}
-                    >
-                      ×
-                    </button>
-                  </Badge>
-                ))}
-              </div>
-            </div>
-
-            <div>
-              <Label htmlFor="priorities">Prioridades</Label>
-              <div className="flex flex-wrap gap-2 mt-2">
-                {['Localização', 'Segurança', 'Transporte', 'Área', 'Preço', 'Conservação'].map((priority) => (
-                  <Badge
-                    key={priority}
-                    variant={editData.priorities.includes(priority) ? "default" : "outline"}
-                    className="cursor-pointer"
-                    onClick={() => {
-                      if (editData.priorities.includes(priority)) {
-                        setEditData({...editData, priorities: editData.priorities.filter(p => p !== priority)});
-                      } else {
-                        setEditData({...editData, priorities: [...editData.priorities, priority]});
-                      }
-                    }}
-                  >
-                    {priority}
-                  </Badge>
-                ))}
-              </div>
-            </div>
-
-            <div>
-              <Label htmlFor="notes">Observações</Label>
-              <Textarea
-                id="notes"
-                placeholder="Digite suas observações..."
-                value={editData.notes}
-                onChange={(e) => setEditData({...editData, notes: e.target.value})}
-                rows={4}
-              />
-            </div>
-          </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setShowEditModal(false)}>
-              Cancelar
-            </Button>
-            <Button onClick={handleSaveEdit}>
-              Salvar
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-      <Dialog open={showEditNoteModal} onOpenChange={setShowEditNoteModal}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Editar Nota</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4">
-            <div>
-              <Label htmlFor="edit-nota">Editar nota</Label>
-              <Textarea
-                id="edit-nota"
-                placeholder="Edite sua nota aqui..."
-                value={editingNote?.content || ''}
-                onChange={(e) => setEditingNote(editingNote ? {...editingNote, content: e.target.value} : null)}
-                rows={4}
-              />
-            </div>
-          </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setShowEditNoteModal(false)}>
-              Cancelar
-            </Button>
-            <Button onClick={handleSaveEditNote}>
-              Salvar
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-
-      {/* Modal para Adicionar Documento */}
-      <Dialog open={showAddDocumentModal} onOpenChange={setShowAddDocumentModal}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Adicionar Documento</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4">
-            <div>
-              <Label htmlFor="nome-documento">Nome do documento</Label>
-              <Input
-                id="nome-documento"
-                placeholder="Digite o nome do documento..."
-                value={newDocument.nome}
-                onChange={(e) => setNewDocument({...newDocument, nome: e.target.value})}
-              />
-            </div>
-            <div>
-              <Label htmlFor="arquivo">Arquivo</Label>
-              <Input
-                id="arquivo"
-                type="file"
-                onChange={(e) => setNewDocument({...newDocument, arquivo: e.target.files?.[0] || null})}
-              />
-            </div>
-          </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setShowAddDocumentModal(false)}>
-              Cancelar
-            </Button>
-            <Button onClick={handleAddDocument} disabled={!newDocument.nome || !newDocument.arquivo}>
-              Adicionar
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-
-      {/* Modal para Gerenciar Tags */}
-      <Dialog open={showTagsModal} onOpenChange={setShowTagsModal}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Gerenciar Tags</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4">
-            <div>
-              <Label htmlFor="nova-tag">Adicionar nova tag</Label>
-              <div className="flex gap-2">
-                <Input
-                  id="nova-tag"
-                  placeholder="Digite uma nova tag..."
-                  value={newTag}
-                  onChange={(e) => setNewTag(e.target.value)}
-                  onKeyPress={(e) => e.key === 'Enter' && handleAddTag()}
-                />
-                <Button onClick={handleAddTag} disabled={!newTag.trim()}>
-                  <Plus className="h-4 w-4" />
-                </Button>
-              </div>
-            </div>
-            <div>
-              <Label>Tags atuais</Label>
-              <div className="flex flex-wrap gap-2 mt-2">
-                {lead?.tags?.map((tag, index) => (
-                  <div key={index} className="flex items-center gap-1 bg-secondary rounded-full px-3 py-1">
-                    <span className="text-sm">{tag}</span>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="h-4 w-4 p-0 hover:bg-transparent"
-                      onClick={() => handleRemoveTag(tag)}
-                    >
-                      <Trash2 className="h-3 w-3" />
-                    </Button>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-          <DialogFooter>
-            <Button onClick={() => setShowTagsModal(false)}>
-              Fechar
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-
-      {/* Modal para Detalhes da Atividade */}
+      {/* Modal de Detalhes da Atividade */}
       <Dialog open={showActivityDetailsModal} onOpenChange={setShowActivityDetailsModal}>
         <DialogContent>
           <DialogHeader>
@@ -1546,46 +1026,42 @@ export function LeadDetalhes() {
           </DialogHeader>
           <div className="space-y-4">
             <div>
-              <Label htmlFor="nota-atividade">Nota sobre a atividade</Label>
+              <Label htmlFor="activityNote">Nota da Atividade</Label>
               <Textarea
-                id="nota-atividade"
-                placeholder="Adicione uma nota sobre esta atividade..."
+                id="activityNote"
                 value={activityNote}
                 onChange={(e) => setActivityNote(e.target.value)}
                 rows={3}
+                placeholder="Adicione notas sobre esta atividade..."
               />
             </div>
             <div>
-              <Label>Avaliação da atividade</Label>
-              <div className="flex gap-4 mt-2">
-                <label className="flex items-center gap-2">
-                  <input
-                    type="radio"
-                    value="boa"
-                    checked={activityRating === 'boa'}
-                    onChange={(e) => setActivityRating(e.target.value as 'boa' | 'ruim')}
-                  />
-                  <span>Boa</span>
-                </label>
-                <label className="flex items-center gap-2">
-                  <input
-                    type="radio"
-                    value="ruim"
-                    checked={activityRating === 'ruim'}
-                    onChange={(e) => setActivityRating(e.target.value as 'boa' | 'ruim')}
-                  />
-                  <span>Ruim</span>
-                </label>
-                <label className="flex items-center gap-2">
-                  <input
-                    type="radio"
-                    value=""
-                    checked={activityRating === null}
-                    onChange={() => setActivityRating(null)}
-                  />
-                  <span>Não avaliada</span>
-                </label>
+              <Label>Avaliação</Label>
+              <div className="flex gap-2 mt-2">
+                <Button
+                  variant={activityRating === 'boa' ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => setActivityRating('boa')}
+                >
+                  😊 Boa
+                </Button>
+                <Button
+                  variant={activityRating === 'ruim' ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => setActivityRating('ruim')}
+                >
+                  😞 Ruim
+                </Button>
               </div>
+            </div>
+            <div>
+              <Label htmlFor="nextActivity">Próxima Atividade</Label>
+              <Input
+                id="nextActivity"
+                value={nextActivity}
+                onChange={(e) => setNextActivity(e.target.value)}
+                placeholder="Descreva a próxima atividade..."
+              />
             </div>
           </div>
           <DialogFooter>
@@ -1598,45 +1074,76 @@ export function LeadDetalhes() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    {/* Modal para Enviar Imóveis */}
-      <Dialog open={showSendModal} onOpenChange={setShowSendModal}>
+
+      {/* Modal de Adicionar Documento */}
+      <Dialog open={showAddDocumentModal} onOpenChange={setShowAddDocumentModal}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Enviar Imóveis Selecionados</DialogTitle>
+            <DialogTitle>Adicionar Documento</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
             <div>
-              <Label>Selecione o método de envio</Label>
-              <div className="flex gap-4 mt-2">
-                <label className="flex items-center gap-2">
-                  <input
-                    type="radio"
-                    value="email"
-                    checked={sendMethod === 'email'}
-                    onChange={(e) => setSendMethod(e.target.value as 'email' | 'whatsapp')}
-                  />
-                  <span>E-mail</span>
-                </label>
-                <label className="flex items-center gap-2">
-                  <input
-                    type="radio"
-                    value="whatsapp"
-                    checked={sendMethod === 'whatsapp'}
-                    onChange={(e) => setSendMethod(e.target.value as 'email' | 'whatsapp')}
-                  />
-                  <span>WhatsApp</span>
-                </label>
-              </div>
+              <Label htmlFor="documentName">Nome do Documento</Label>
+              <Input
+                id="documentName"
+                value={newDocument.nome}
+                onChange={(e) => setNewDocument({...newDocument, nome: e.target.value})}
+                placeholder="Digite o nome do documento..."
+              />
             </div>
-            
             <div>
-              <Label>Imóveis selecionados ({selectedProperties.length})</Label>
-              <div className="space-y-2 mt-2 max-h-40 overflow-y-auto">
-                {imoveisInteresse.filter(imovel => selectedProperties.includes(imovel.id)).map((imovel) => (
-                  <div key={imovel.id} className="text-sm p-2 bg-muted rounded">
-                    <span className="font-medium">{imovel.titulo}</span> - {imovel.valor}
-                  </div>
-                ))}
+              <Label htmlFor="documentFile">Arquivo</Label>
+              <Input
+                id="documentFile"
+                type="file"
+                onChange={(e) => setNewDocument({...newDocument, arquivo: e.target.files?.[0] || null})}
+              />
+              <p className="text-sm text-muted-foreground mt-1">
+                Formatos permitidos: PDF, DOC, DOCX, XLS, XLSX, PPT, PPTX, TXT, PNG, JPG, JPEG
+                <br />
+                Tamanho máximo: 10MB
+              </p>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowAddDocumentModal(false)}>
+              Cancelar
+            </Button>
+            <Button onClick={handleAddDocument}>
+              Adicionar
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Modal de Envio */}
+      <Dialog open={showSendModal} onOpenChange={setShowSendModal}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Enviar Imóveis</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <Label>Métodos de Envio</Label>
+              <div className="space-y-2 mt-2">
+                <div className="flex items-center space-x-2">
+                  <input
+                    type="checkbox"
+                    id="email"
+                    checked={sendMethods.email}
+                    onChange={(e) => setSendMethods({...sendMethods, email: e.target.checked})}
+                  />
+                  <Label htmlFor="email">E-mail</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <input
+                    type="checkbox"
+                    id="whatsapp"
+                    checked={sendMethods.whatsapp}
+                    onChange={(e) => setSendMethods({...sendMethods, whatsapp: e.target.checked})}
+                  />
+                  <Label htmlFor="whatsapp">WhatsApp</Label>
+                </div>
               </div>
             </div>
           </div>
@@ -1644,33 +1151,457 @@ export function LeadDetalhes() {
             <Button variant="outline" onClick={() => setShowSendModal(false)}>
               Cancelar
             </Button>
-            <Button onClick={handleConfirmSend}>
+            <Button onClick={handleSendProperties}>
               Enviar
             </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    {/* Modal para Confirmar Exclusão de Documento */}
-      <Dialog open={deleteConfirmModal.show} onOpenChange={(show) => setDeleteConfirmModal({...deleteConfirmModal, show})}>
+
+      {/* Modal de Editar Lead */}
+      <Dialog open={showEditModal} onOpenChange={setShowEditModal}>
+        <DialogContent className="sm:max-w-[600px] max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Editar Lead</DialogTitle>
+            <DialogDescription>
+              Edite as informações de {lead?.name}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="leadBudget">Orçamento</Label>
+                <Input 
+                  id="leadBudget"
+                  placeholder="Ex: R$ 300.000 - R$ 400.000"
+                  value={lead?.value || ''}
+                  disabled
+                />
+              </div>
+              <div>
+                <Label htmlFor="leadDeadline">Prazo</Label>
+                <Input 
+                  id="leadDeadline"
+                  placeholder="Ex: 1-2 meses"
+                  disabled
+                />
+              </div>
+            </div>
+            
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="leadSource">Origem</Label>
+                <Input 
+                  id="leadSource"
+                  value={lead?.source || ''}
+                  disabled
+                />
+              </div>
+              <div>
+                <Label htmlFor="leadAgent">Responsável</Label>
+                <Input 
+                  id="leadAgent"
+                  value={lead?.assignedTo || ''}
+                  disabled
+                />
+              </div>
+            </div>
+
+            <div className="flex items-center space-x-2">
+              <input
+                type="checkbox"
+                id="financing"
+                disabled
+              />
+              <Label htmlFor="financing">Financiamento</Label>
+            </div>
+
+            <div>
+              <Label>Tags</Label>
+              <div className="space-y-2">
+                <div className="flex gap-2">
+                  <Input
+                    placeholder="Adicionar nova tag..."
+                    value={newTag}
+                    onChange={(e) => setNewTag(e.target.value)}
+                    onKeyPress={(e) => e.key === 'Enter' && handleAddTag()}
+                  />
+                  <Button onClick={handleAddTag} disabled={!newTag.trim()}>
+                    Adicionar
+                  </Button>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {lead?.tags?.map((tag, index) => (
+                    <Badge key={index} variant="default" className="cursor-pointer" onClick={() => handleRemoveTag(tag)}>
+                      {tag} <X className="h-3 w-3 ml-1" />
+                    </Badge>
+                  ))}
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {availableTags.filter(tag => !lead?.tags?.includes(tag)).map((tag, index) => (
+                    <Badge 
+                      key={index} 
+                      variant="outline" 
+                      className="cursor-pointer hover:bg-primary hover:text-primary-foreground"
+                      onClick={() => {
+                        setNewTag(tag);
+                        handleAddTag();
+                      }}
+                    >
+                      + {tag}
+                    </Badge>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <Label>Prioridades</Label>
+              <div className="flex flex-wrap gap-2">
+                <Badge variant="outline" className="cursor-pointer hover:bg-green-100 hover:text-green-700">Localização</Badge>
+                <Badge variant="outline" className="cursor-pointer hover:bg-green-100 hover:text-green-700">Segurança</Badge>
+                <Badge variant="outline" className="cursor-pointer hover:bg-green-100 hover:text-green-700">Transporte</Badge>
+                <Badge variant="outline" className="cursor-pointer hover:bg-green-100 hover:text-green-700">Área</Badge>
+                <Badge variant="outline" className="cursor-pointer hover:bg-green-100 hover:text-green-700">Preço</Badge>
+                <Badge variant="outline" className="cursor-pointer hover:bg-green-100 hover:text-green-700">Conservação</Badge>
+              </div>
+            </div>
+
+            <div>
+              <Label htmlFor="leadNotes">Observações</Label>
+              <Textarea 
+                id="leadNotes"
+                placeholder="Adicione observações sobre este lead..."
+                rows={3}
+                value={lead?.notes || ''}
+                disabled
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowEditModal(false)}>
+              Cancelar
+            </Button>
+            <Button onClick={handleSaveLead}>
+              Salvar
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Modal de Mudar Corretor */}
+      <Dialog open={showChangeAgentModal} onOpenChange={setShowChangeAgentModal}>
+        <DialogContent className="sm:max-w-[400px]">
+          <DialogHeader>
+            <DialogTitle>Mudar Corretor</DialogTitle>
+            <DialogDescription>
+              Altere o corretor responsável por {lead?.name}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <Label>Corretor Atual</Label>
+              <div className="p-3 bg-gray-100 rounded-md">
+                <p className="font-medium">{lead?.assignedTo || 'Nenhum'}</p>
+              </div>
+            </div>
+            <div>
+              <Label htmlFor="newAgent">Novo Corretor</Label>
+              <Select value={selectedAgent} onValueChange={setSelectedAgent}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Selecione o novo corretor" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="JS">João Silva</SelectItem>
+                  <SelectItem value="MR">Maria Rodrigues</SelectItem>
+                  <SelectItem value="PC">Pedro Costa</SelectItem>
+                  <SelectItem value="AC">Ana Costa</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowChangeAgentModal(false)}>
+              Cancelar
+            </Button>
+            <Button onClick={handleChangeAgentSave} disabled={!selectedAgent || selectedAgent === lead?.assignedTo}>
+              Mudar Corretor
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Modal de Gerenciar Tags */}
+      <Dialog open={showTagsModal} onOpenChange={setShowTagsModal}>
+        <DialogContent className="sm:max-w-[600px]">
+          <DialogHeader>
+            <DialogTitle>Gerenciar Tags</DialogTitle>
+            <DialogDescription>
+              Adicione ou remova tags de {lead?.name}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <Label>Tags Atuais</Label>
+              <div className="flex flex-wrap gap-2 mt-2">
+                {lead?.tags?.map((tag, index) => (
+                  <Badge key={index} variant="default" className="cursor-pointer" onClick={() => handleRemoveTag(tag)}>
+                    {tag} <X className="h-3 w-3 ml-1" />
+                  </Badge>
+                ))}
+                {(!lead?.tags || lead.tags.length === 0) && (
+                  <p className="text-muted-foreground">Nenhuma tag cadastrada</p>
+                )}
+              </div>
+            </div>
+            <div>
+              <Label>Adicionar Nova Tag</Label>
+              <div className="flex gap-2 mt-2">
+                <Input
+                  placeholder="Digite uma nova tag..."
+                  value={newTag}
+                  onChange={(e) => setNewTag(e.target.value)}
+                  onKeyPress={(e) => e.key === 'Enter' && handleAddTag()}
+                />
+                <Button onClick={handleAddTag} disabled={!newTag.trim()}>
+                  Adicionar
+                </Button>
+              </div>
+            </div>
+            <div>
+              <Label>Tags Disponíveis</Label>
+              <div className="flex flex-wrap gap-2 mt-2">
+                {availableTags.filter(tag => !lead?.tags?.includes(tag)).map((tag, index) => (
+                  <Badge 
+                    key={index} 
+                    variant="outline" 
+                    className="cursor-pointer hover:bg-primary hover:text-primary-foreground"
+                    onClick={() => {
+                      setNewTag(tag);
+                      handleAddTag();
+                    }}
+                  >
+                    + {tag}
+                  </Badge>
+                ))}
+              </div>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button onClick={() => setShowTagsModal(false)}>
+              Fechar
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Modal de Adicionar Nota */}
+      <Dialog open={showAddNoteModal} onOpenChange={setShowAddNoteModal}>
+        <DialogContent className="sm:max-w-[600px]">
+          <DialogHeader>
+            <DialogTitle>Adicionar Nota</DialogTitle>
+            <DialogDescription>
+              Adicione uma nota ao histórico de {lead?.name}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <Label htmlFor="noteName">Nome da Nota (Opcional)</Label>
+              <Input
+                id="noteName"
+                placeholder="Ex: Contato inicial, Follow-up importante"
+                value={noteName}
+                onChange={(e) => setNoteName(e.target.value)}
+              />
+            </div>
+            <div>
+              <Label htmlFor="noteText">Nota</Label>
+              <Textarea 
+                id="noteText"
+                placeholder="Digite sua nota aqui..."
+                rows={4}
+                value={noteText}
+                onChange={(e) => setNoteText(e.target.value)}
+              />
+            </div>
+            <div>
+              <Label htmlFor="noteFile">Anexar Arquivo (Opcional)</Label>
+              <Input
+                id="noteFile"
+                type="file"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) {
+                    setNoteFile(file);
+                  }
+                }}
+                className="cursor-pointer"
+              />
+            </div>
+            {noteFile && (
+              <div className="p-4 bg-gray-50 rounded-lg">
+                <div className="flex items-center gap-3">
+                  <FileText className="h-8 w-8 text-muted-foreground" />
+                  <div>
+                    <p className="font-medium">{noteFile.name}</p>
+                    <p className="text-sm text-muted-foreground">
+                      Tamanho: {noteFile.size > 1024 * 1024 
+                        ? `${(noteFile.size / (1024 * 1024)).toFixed(1)} MB`
+                        : `${noteFile.size} KB`
+                      }
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      Tipo: {noteFile.type || 'Desconhecido'}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowAddNoteModal(false)}>
+              Cancelar
+            </Button>
+            <Button onClick={handleAddNoteSave} disabled={!noteText.trim()}>
+              Adicionar Nota
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Modal de Editar Nota */}
+      <Dialog open={showNoteEditModal} onOpenChange={setShowNoteEditModal}>
+        <DialogContent className="sm:max-w-[600px]">
+          <DialogHeader>
+            <DialogTitle>Editar Nota</DialogTitle>
+            <DialogDescription>
+              Edite a nota e gerencie os arquivos anexados
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <Label htmlFor="editingNoteName">Nome da Nota (Opcional)</Label>
+              <Input
+                id="editingNoteName"
+                placeholder="Ex: Contato inicial, Follow-up importante"
+                value={editingNoteName}
+                onChange={(e) => setEditingNoteName(e.target.value)}
+              />
+            </div>
+            <div>
+              <Label htmlFor="editingNoteText">Nota</Label>
+              <Textarea 
+                id="editingNoteText"
+                placeholder="Edite sua nota aqui..."
+                rows={4}
+                value={editingNoteText}
+                onChange={(e) => setEditingNoteText(e.target.value)}
+              />
+            </div>
+            <div>
+              <Label>Arquivos Anexados</Label>
+              <div className="space-y-2">
+                <Input
+                  type="file"
+                  multiple
+                  onChange={handleAddNoteFile}
+                  className="cursor-pointer"
+                />
+                {editingNoteFiles.length > 0 && (
+                  <div className="space-y-2">
+                    {editingNoteFiles.map((file, index) => (
+                      <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                        <div className="flex items-center gap-3">
+                          <FileText className="h-8 w-8 text-muted-foreground" />
+                          <div>
+                            <p className="font-medium">{file.name}</p>
+                            <p className="text-sm text-muted-foreground">
+                              {file.size > 1024 * 1024 
+                                ? `${(file.size / (1024 * 1024)).toFixed(1)} MB`
+                                : `${file.size} KB`
+                              }
+                            </p>
+                          </div>
+                        </div>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleRemoveNoteFile(index)}
+                          className="text-red-600 hover:text-red-700"
+                        >
+                          <X className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowNoteEditModal(false)}>
+              Cancelar
+            </Button>
+            <Button onClick={handleSaveNoteEdit} disabled={!editingNoteText.trim()}>
+              Salvar Nota
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Modal de Confirmação de Exclusão */}
+      <Dialog open={showDeleteActivityModal} onOpenChange={setShowDeleteActivityModal}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Confirmar Exclusão</DialogTitle>
+            <DialogDescription>
+              Tem certeza que deseja excluir esta {activityToDelete?.tipo === 'followup' ? 'nota' : 'atividade'}?
+            </DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
-            <p>Tem certeza que deseja excluir o documento <strong>"{deleteConfirmModal.documentName}"</strong>?</p>
-            <p className="text-sm text-muted-foreground">Esta ação não pode ser desfeita.</p>
+            <div className="p-4 bg-red-50 rounded-lg border border-red-200">
+              <div className="flex items-center gap-3">
+                <AlertTriangle className="h-5 w-5 text-red-600" />
+                <div>
+                  <p className="font-medium">Atenção!</p>
+                  <p className="text-sm text-red-700">
+                    Esta ação não pode ser desfeita.
+                  </p>
+                </div>
+              </div>
+            </div>
+            {activityToDelete && (
+              <div className="p-4 bg-gray-50 rounded-lg">
+                <p className="font-medium mb-2">
+                  {activityToDelete.tipo === 'followup' ? 'Nota' : 'Atividade'}:
+                </p>
+                <p className="text-sm text-muted-foreground mb-1">
+                  {activityToDelete.descricao}
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  Por {activityToDelete.usuario} em {new Date(activityToDelete.data).toLocaleDateString('pt-BR', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                  })}
+                </p>
+              </div>
+            )}
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setDeleteConfirmModal({show: false, documentId: '', documentName: ''})}>
+            <Button variant="outline" onClick={() => setShowDeleteActivityModal(false)}>
               Cancelar
             </Button>
-            <Button variant="destructive" onClick={confirmDeleteDocument}>
+            <Button variant="destructive" onClick={handleConfirmDelete}>
               Excluir
             </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    
-  </div>
+    </motion.div>
   );
-}
+};
+
+export default LeadDetalhes;

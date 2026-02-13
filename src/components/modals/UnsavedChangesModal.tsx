@@ -3,7 +3,6 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogDescription,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { AlertTriangle, X } from 'lucide-react';
@@ -24,8 +23,8 @@ export function UnsavedChangesModal({
   onCancel,
   title = 'Alterações não salvas',
   message = 'Você tem alterações não salvas. Tem certeza que deseja sair? Todas as alterações serão perdidas.',
-  confirmText = 'Sair sem salvar',
-  cancelText = 'Continuar editando'
+  confirmText = 'Continuar editando',
+  cancelText = 'Sair sem salvar'
 }: UnsavedChangesModalProps) {
   return (
     <Dialog open={open} onOpenChange={onCancel}>
@@ -39,24 +38,24 @@ export function UnsavedChangesModal({
           </div>
         </DialogHeader>
         
-        <DialogDescription className="text-gray-600 mt-2">
+        <div className="text-gray-600 mt-2">
           {message}
-        </DialogDescription>
+        </div>
 
         <div className="flex gap-3 mt-6">
           <Button
             variant="outline"
-            onClick={onCancel}
-            className="flex-1"
-          >
-            {cancelText}
-          </Button>
-          <Button
-            variant="destructive"
             onClick={onConfirm}
             className="flex-1"
           >
             {confirmText}
+          </Button>
+          <Button
+            variant="destructive"
+            onClick={onCancel}
+            className="flex-1"
+          >
+            {cancelText}
           </Button>
         </div>
       </DialogContent>

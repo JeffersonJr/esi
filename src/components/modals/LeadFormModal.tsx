@@ -23,16 +23,19 @@ interface Tag {
 }
 
 interface LeadData {
+  id?: string;
   name: string;
   emails: ContactInfo[];
   phones: ContactInfo[];
   property: string;
+  location: string;
+  searchType: 'compra' | 'venda' | 'investimento';
   value: string;
   source: string;
-  notes: string;
-  stage: string;
+  notes?: string;
+  stage?: string;
   assignedTo: string;
-  tags: string[];
+  tags?: string[];
 }
 
 interface LeadFormModalProps {
@@ -59,6 +62,8 @@ export function LeadFormModal({ open, onClose, onSubmit, lead }: LeadFormModalPr
     emails: [{ type: 'email', value: '', isPrimary: true }],
     phones: [{ type: 'phone', value: '', isPrimary: true }],
     property: '',
+    location: '',
+    searchType: 'compra',
     value: '',
     source: '',
     notes: '',
@@ -68,6 +73,7 @@ export function LeadFormModal({ open, onClose, onSubmit, lead }: LeadFormModalPr
   });
 
   const [newTag, setNewTag] = useState('');
+  const [tagSearch, setTagSearch] = useState('');
   const [availableTags, setAvailableTags] = useState<Tag[]>([
     { id: '1', name: 'Hot Lead', color: 'bg-red-500' },
     { id: '2', name: 'VIP', color: 'bg-purple-500' },
@@ -92,6 +98,8 @@ export function LeadFormModal({ open, onClose, onSubmit, lead }: LeadFormModalPr
         emails: lead.emails || [{ type: 'email', value: '', isPrimary: true }],
         phones: lead.phones || [{ type: 'phone', value: '', isPrimary: true }],
         property: lead.property || '',
+        location: lead.location || '',
+        searchType: lead.searchType || 'compra',
         value: lead.value || '',
         source: lead.source || '',
         notes: lead.notes || '',
@@ -100,13 +108,14 @@ export function LeadFormModal({ open, onClose, onSubmit, lead }: LeadFormModalPr
         tags: lead.tags || []
       };
       setFormData(leadData);
-      setOriginalData(leadData);
     } else {
       const emptyData: LeadData = {
         name: '',
         emails: [{ type: 'email', value: '', isPrimary: true }],
         phones: [{ type: 'phone', value: '', isPrimary: true }],
         property: '',
+        location: '',
+        searchType: 'compra',
         value: '',
         source: '',
         notes: '',
@@ -115,15 +124,17 @@ export function LeadFormModal({ open, onClose, onSubmit, lead }: LeadFormModalPr
         tags: []
       };
       setFormData(emptyData);
-      setOriginalData(emptyData);
     }
   }, [lead, open]);
 
-  const [originalData, setOriginalData] = useState<LeadData>({
+  // Store original data for unsaved changes detection
+  const [originalData] = useState<LeadData>({
     name: '',
     emails: [{ type: 'email', value: '', isPrimary: true }],
     phones: [{ type: 'phone', value: '', isPrimary: true }],
     property: '',
+    location: '',
+    searchType: 'compra',
     value: '',
     source: '',
     notes: '',
@@ -138,13 +149,22 @@ export function LeadFormModal({ open, onClose, onSubmit, lead }: LeadFormModalPr
     showModal,
     confirmNavigation,
     handleConfirm,
-    handleCancel
+    handleCancel,
+    handleCloseWithoutSaving
   } = useUnsavedChanges({ hasUnsavedChanges });
 
   const handleClose = () => {
-    if (confirmNavigation('')) {
+    if (hasUnsavedChanges) {
+      confirmNavigation('');
+    } else {
       onClose();
     }
+  };
+
+  // Handle close without saving from modal
+  const handleModalClose = () => {
+    handleCloseWithoutSaving();
+    onClose();
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -269,6 +289,11 @@ export function LeadFormModal({ open, onClose, onSubmit, lead }: LeadFormModalPr
       setNewTagName('');
     }
   };
+
+  const filteredTags = availableTags.filter(tag => 
+    tag.name.toLowerCase().includes(tagSearch.toLowerCase()) &&
+    !formData.tags.includes(tag.name)
+  );
 
   const deleteTag = (tagId: string) => {
     const tagToDelete = availableTags.find(tag => tag.id === tagId);
@@ -510,7 +535,7 @@ export function LeadFormModal({ open, onClose, onSubmit, lead }: LeadFormModalPr
 
             {/* Coluna Direita */}
             <div className="space-y-3">
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="property">Imóvel *</Label>
                   <Input
@@ -523,15 +548,40 @@ export function LeadFormModal({ open, onClose, onSubmit, lead }: LeadFormModalPr
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="value">Valor *</Label>
+                  <Label htmlFor="location">Localização</Label>
                   <Input
-                    id="value"
-                    name="value"
-                    value={formData.value}
+                    id="location"
+                    name="location"
+                    value={formData.location}
                     onChange={handleChange}
-                    required
-                    placeholder="Ex: R$ 350.000"
+                    placeholder="Ex: Centro, Zona Sul..."
                   />
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="value">Valor *</Label>
+                    <Input
+                      id="value"
+                      name="value"
+                      value={formData.value}
+                      onChange={handleChange}
+                      required
+                      placeholder="Ex: R$ 350.000"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="searchType">Tipo de Busca</Label>
+                    <Select value={formData.searchType} onValueChange={(value) => handleSelectChange('searchType', value)}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Selecione" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="compra">Compra</SelectItem>
+                        <SelectItem value="venda">Venda</SelectItem>
+                        <SelectItem value="investimento">Investimento</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
                 </div>
               </div>
 
@@ -572,11 +622,17 @@ export function LeadFormModal({ open, onClose, onSubmit, lead }: LeadFormModalPr
                     </div>
 
                     <div className="space-y-1">
-                      <p className="text-xs text-muted-foreground">Tags disponíveis:</p>
+                      <div className="flex items-center gap-2">
+                        <p className="text-xs text-muted-foreground">Tags disponíveis:</p>
+                        <Input
+                          placeholder="Pesquisar tags..."
+                          value={tagSearch}
+                          onChange={(e) => setTagSearch(e.target.value)}
+                          className="h-6 text-xs w-32"
+                        />
+                      </div>
                       <div className="flex flex-wrap gap-1 max-h-24 overflow-y-auto p-2 border rounded-md">
-                        {availableTags
-                          .filter(tag => !formData.tags.includes(tag.name))
-                          .map((tag) => (
+                        {filteredTags.map((tag) => (
                             <Badge
                               key={tag.id}
                               className={`${tag.color} text-white cursor-pointer hover:opacity-80`}
@@ -716,7 +772,7 @@ export function LeadFormModal({ open, onClose, onSubmit, lead }: LeadFormModalPr
         <UnsavedChangesModal
           open={showModal}
           onConfirm={handleConfirm}
-          onCancel={handleCancel}
+          onCancel={handleModalClose}
         />
       </DialogContent>
     </Dialog>
