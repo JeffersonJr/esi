@@ -40,14 +40,11 @@ export function useUnsavedChanges({
   }, [hasUnsavedChanges]);
 
   // Handle modal confirmation
-  const handleConfirm = useCallback((callback?: () => void) => {
+  const handleConfirm = useCallback(() => {
     setShowModal(false);
     if (nextLocation) {
       navigate(nextLocation);
       setNextLocation(null);
-    }
-    if (callback) {
-      callback();
     }
   }, [nextLocation, navigate]);
 

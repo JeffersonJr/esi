@@ -22,26 +22,24 @@ interface Tag {
   color: string;
 }
 
-interface Lead {
-  id: string;
+interface LeadData {
   name: string;
   emails: ContactInfo[];
   phones: ContactInfo[];
   property: string;
   value: string;
   source: string;
-  notes?: string;
-  stage?: string;
+  notes: string;
+  stage: string;
   assignedTo: string;
-  tags?: string[];
-  temperature?: 'cold' | 'warm' | 'hot';
+  tags: string[];
 }
 
 interface LeadFormModalProps {
   open: boolean;
   onClose: () => void;
-  onSubmit: (lead: Lead) => void;
-  lead?: Lead;
+  onSubmit: (lead: LeadData) => void;
+  lead?: LeadData;
 }
 
 const TAG_COLORS = [
@@ -56,8 +54,7 @@ const TAG_COLORS = [
 ];
 
 export function LeadFormModal({ open, onClose, onSubmit, lead }: LeadFormModalProps) {
-  const [formData, setFormData] = useState<Lead>({
-    id: '',
+  const [formData, setFormData] = useState<LeadData>({
     name: '',
     emails: [{ type: 'email', value: '', isPrimary: true }],
     phones: [{ type: 'phone', value: '', isPrimary: true }],
@@ -71,7 +68,6 @@ export function LeadFormModal({ open, onClose, onSubmit, lead }: LeadFormModalPr
   });
 
   const [newTag, setNewTag] = useState('');
-  const [tagSearch, setTagSearch] = useState('');
   const [availableTags, setAvailableTags] = useState<Tag[]>([
     { id: '1', name: 'Hot Lead', color: 'bg-red-500' },
     { id: '2', name: 'VIP', color: 'bg-purple-500' },
@@ -91,8 +87,7 @@ export function LeadFormModal({ open, onClose, onSubmit, lead }: LeadFormModalPr
 
   useEffect(() => {
     if (lead) {
-      const leadData: Lead = {
-        id: lead.id || '',
+      const leadData: LeadData = {
         name: lead.name || '',
         emails: lead.emails || [{ type: 'email', value: '', isPrimary: true }],
         phones: lead.phones || [{ type: 'phone', value: '', isPrimary: true }],
@@ -102,14 +97,12 @@ export function LeadFormModal({ open, onClose, onSubmit, lead }: LeadFormModalPr
         notes: lead.notes || '',
         stage: lead.stage || 'new',
         assignedTo: lead.assignedTo || 'JS',
-        tags: lead.tags || [],
-        temperature: lead.temperature
+        tags: lead.tags || []
       };
       setFormData(leadData);
       setOriginalData(leadData);
     } else {
-      const emptyData: Lead = {
-        id: '',
+      const emptyData: LeadData = {
         name: '',
         emails: [{ type: 'email', value: '', isPrimary: true }],
         phones: [{ type: 'phone', value: '', isPrimary: true }],
@@ -119,16 +112,14 @@ export function LeadFormModal({ open, onClose, onSubmit, lead }: LeadFormModalPr
         notes: '',
         stage: 'new',
         assignedTo: 'JS',
-        tags: [],
-        temperature: undefined
+        tags: []
       };
       setFormData(emptyData);
       setOriginalData(emptyData);
     }
   }, [lead, open]);
 
-  const [originalData, setOriginalData] = useState<Lead>({
-    id: '',
+  const [originalData, setOriginalData] = useState<LeadData>({
     name: '',
     emails: [{ type: 'email', value: '', isPrimary: true }],
     phones: [{ type: 'phone', value: '', isPrimary: true }],
@@ -138,8 +129,7 @@ export function LeadFormModal({ open, onClose, onSubmit, lead }: LeadFormModalPr
     notes: '',
     stage: 'new',
     assignedTo: 'JS',
-    tags: [],
-    temperature: undefined
+    tags: []
   });
 
   const hasUnsavedChanges = JSON.stringify(formData) !== JSON.stringify(originalData);
@@ -153,8 +143,6 @@ export function LeadFormModal({ open, onClose, onSubmit, lead }: LeadFormModalPr
 
   const handleClose = () => {
     if (confirmNavigation('')) {
-      handleConfirm(() => onClose());
-    } else {
       onClose();
     }
   };
@@ -175,18 +163,16 @@ export function LeadFormModal({ open, onClose, onSubmit, lead }: LeadFormModalPr
   };
 
   const addContact = (type: 'email' | 'phone' | 'mobile') => {
-    const contacts = type === 'email' ? formData.emails : formData.phones;
-    if (contacts.length >= 3) {
-      // Show toast notification
-      return;
+    const currentContacts = type === 'email' ? formData.emails : formData.phones;
+    if (currentContacts.length < 3) {
+      setFormData(prev => ({
+        ...prev,
+        [type === 'email' ? 'emails' : 'phones']: [
+          ...prev[type === 'email' ? 'emails' : 'phones'],
+          { type, value: '', isPrimary: false }
+        ]
+      }));
     }
-    setFormData(prev => ({
-      ...prev,
-      [type === 'email' ? 'emails' : 'phones']: [
-        ...prev[type === 'email' ? 'emails' : 'phones'],
-        { type, value: '', isPrimary: false }
-      ]
-    }));
   };
 
   const removeContact = (type: 'email' | 'phone' | 'mobile', index: number) => {
@@ -228,16 +214,6 @@ export function LeadFormModal({ open, onClose, onSubmit, lead }: LeadFormModalPr
 
   const addTag = () => {
     if (newTag.trim()) {
-      // Check if tag already exists
-      const existingTag = availableTags.find(tag => 
-        tag.name.toLowerCase() === newTag.trim().toLowerCase()
-      );
-      
-      if (existingTag) {
-        // Show toast notification that tag already exists
-        return;
-      }
-      
       const newTagObj: Tag = {
         id: Date.now().toString(),
         name: newTag.trim(),
@@ -352,8 +328,20 @@ export function LeadFormModal({ open, onClose, onSubmit, lead }: LeadFormModalPr
               {/* E-mails */}
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <Label>E-mails</Label>
-                  <Button type="button" variant="outline" size="sm" onClick={() => addContact('email')}>
+                  <div className="flex items-center gap-2">
+                    <Label>E-mails</Label>
+                    <span className="text-xs text-muted-foreground">
+                      ({formData.emails.length}/3)
+                    </span>
+                  </div>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => addContact('email')}
+                    disabled={formData.emails.length >= 3}
+                    title={formData.emails.length >= 3 ? 'Máximo de 3 emails permitidos' : 'Adicionar email'}
+                  >
                     <Plus className="h-3 w-3 mr-1" />
                     Add
                   </Button>
@@ -408,13 +396,32 @@ export function LeadFormModal({ open, onClose, onSubmit, lead }: LeadFormModalPr
               {/* Telefones */}
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <Label>Telefones</Label>
+                  <div className="flex items-center gap-2">
+                    <Label>Telefones</Label>
+                    <span className="text-xs text-muted-foreground">
+                      ({formData.phones.length}/3)
+                    </span>
+                  </div>
                   <div className="flex gap-1">
-                    <Button type="button" variant="outline" size="sm" onClick={() => addContact('phone')}>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => addContact('phone')}
+                      disabled={formData.phones.length >= 3}
+                      title={formData.phones.length >= 3 ? 'Máximo de 3 telefones permitidos' : 'Adicionar telefone'}
+                    >
                       <Phone className="h-3 w-3 mr-1" />
                       Tel
                     </Button>
-                    <Button type="button" variant="outline" size="sm" onClick={() => addContact('mobile')}>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => addContact('mobile')}
+                      disabled={formData.phones.length >= 3}
+                      title={formData.phones.length >= 3 ? 'Máximo de 3 telefones permitidos' : 'Adicionar celular'}
+                    >
                       <Smartphone className="h-3 w-3 mr-1" />
                       Cel
                     </Button>
@@ -566,16 +573,9 @@ export function LeadFormModal({ open, onClose, onSubmit, lead }: LeadFormModalPr
 
                     <div className="space-y-1">
                       <p className="text-xs text-muted-foreground">Tags disponíveis:</p>
-                      <Input
-                        placeholder="Buscar tags..."
-                        value={tagSearch}
-                        onChange={(e) => setTagSearch(e.target.value)}
-                        className="mb-2"
-                      />
                       <div className="flex flex-wrap gap-1 max-h-24 overflow-y-auto p-2 border rounded-md">
                         {availableTags
                           .filter(tag => !formData.tags.includes(tag.name))
-                          .filter(tag => tag.name.toLowerCase().includes(tagSearch.toLowerCase()))
                           .map((tag) => (
                             <Badge
                               key={tag.id}
