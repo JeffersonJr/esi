@@ -304,15 +304,15 @@ export function LeadFormModal({ open, onClose, onSubmit, lead }: LeadFormModalPr
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-[900px] max-h-[90vh] overflow-y-auto">
+      <DialogContent className="sm:max-w-[950px] max-h-[85vh] overflow-y-auto">
         <form onSubmit={handleSubmit}>
           <DialogHeader>
             <DialogTitle>{lead ? 'Editar Lead' : 'Novo Lead'}</DialogTitle>
           </DialogHeader>
           
-          <div className="grid grid-cols-2 gap-6 py-4">
+          <div className="grid grid-cols-2 gap-4 py-2">
             {/* Coluna Esquerda */}
-            <div className="space-y-4">
+            <div className="space-y-3">
               <div className="space-y-2">
                 <Label htmlFor="name">Nome *</Label>
                 <Input
@@ -346,20 +346,20 @@ export function LeadFormModal({ open, onClose, onSubmit, lead }: LeadFormModalPr
                     Add
                   </Button>
                 </div>
-                <div className="space-y-2 max-h-32 overflow-y-auto">
+                <div className="space-y-1">
                   {formData.emails.map((email, index) => (
-                    <div key={index} className="flex gap-2">
+                    <div key={index} className="flex gap-1">
                       <div className="flex-1 relative">
                         <Mail className="absolute left-2 top-1/2 transform -translate-y-1/2 h-3 w-3 text-gray-400" />
                         <Input
                           placeholder="E-mail"
                           value={email.value}
                           onChange={(e) => updateContact('email', index, e.target.value)}
-                          className="pl-8 pr-16 text-sm"
+                          className="pl-7 pr-14 text-xs h-8"
                         />
                         <div className="absolute right-1 top-1/2 transform -translate-y-1/2 flex gap-1">
                           {email.isPrimary && (
-                            <Badge variant="default" className="text-xs px-1">
+                            <Badge variant="default" className="text-xs px-1 h-5">
                               Principal
                             </Badge>
                           )}
@@ -382,7 +382,7 @@ export function LeadFormModal({ open, onClose, onSubmit, lead }: LeadFormModalPr
                           type="button"
                           variant="ghost"
                           size="sm"
-                          className="h-8 w-8 p-0"
+                          className="h-8 w-6 p-0"
                           onClick={() => removeContact('email', index)}
                         >
                           <X className="h-3 w-3" />
@@ -427,9 +427,9 @@ export function LeadFormModal({ open, onClose, onSubmit, lead }: LeadFormModalPr
                     </Button>
                   </div>
                 </div>
-                <div className="space-y-2 max-h-32 overflow-y-auto">
+                <div className="space-y-1">
                   {formData.phones.map((phone, index) => (
-                    <div key={index} className="flex gap-2">
+                    <div key={index} className="flex gap-1">
                       <div className="flex-1 relative">
                         {phone.type === 'phone' ? (
                           <Phone className="absolute left-2 top-1/2 transform -translate-y-1/2 h-3 w-3 text-gray-400" />
@@ -440,11 +440,11 @@ export function LeadFormModal({ open, onClose, onSubmit, lead }: LeadFormModalPr
                           placeholder={phone.type === 'phone' ? 'Telefone' : 'Celular'}
                           value={phone.value}
                           onChange={(e) => updateContact(phone.type, index, e.target.value)}
-                          className="pl-8 pr-16 text-sm"
+                          className="pl-7 pr-14 text-xs h-8"
                         />
                         <div className="absolute right-1 top-1/2 transform -translate-y-1/2 flex gap-1">
                           {phone.isPrimary && (
-                            <Badge variant="default" className="text-xs px-1">
+                            <Badge variant="default" className="text-xs px-1 h-5">
                               Principal
                             </Badge>
                           )}
@@ -467,7 +467,7 @@ export function LeadFormModal({ open, onClose, onSubmit, lead }: LeadFormModalPr
                           type="button"
                           variant="ghost"
                           size="sm"
-                          className="h-8 w-8 p-0"
+                          className="h-8 w-6 p-0"
                           onClick={() => removeContact(phone.type, index)}
                         >
                           <X className="h-3 w-3" />
@@ -509,7 +509,7 @@ export function LeadFormModal({ open, onClose, onSubmit, lead }: LeadFormModalPr
             </div>
 
             {/* Coluna Direita */}
-            <div className="space-y-4">
+            <div className="space-y-3">
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="property">Imóvel *</Label>
