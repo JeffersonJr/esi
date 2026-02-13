@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -39,7 +40,6 @@ import {
   Send,
   Search,
   Filter,
-  Plus,
   Users,
   Bot,
   User,
@@ -62,6 +62,9 @@ import {
   Mic,
   MicOff,
   VideoOff,
+  Sparkles,
+  Zap,
+  TrendingUp,
 } from 'lucide-react';
 
 interface Message {
@@ -92,6 +95,8 @@ interface Chat {
   priority: 'low' | 'medium' | 'high';
   source: 'website' | 'whatsapp' | 'email' | 'phone';
   propertyInterest?: string;
+  satisfaction?: number;
+  responseTime?: string;
 }
 
 const chats: Chat[] = [
@@ -109,6 +114,8 @@ const chats: Chat[] = [
     priority: 'high',
     source: 'website',
     propertyInterest: 'Apt 2 quartos - Centro',
+    satisfaction: 4.8,
+    responseTime: '2 min',
   },
   {
     id: '2',
@@ -123,34 +130,8 @@ const chats: Chat[] = [
     priority: 'medium',
     source: 'whatsapp',
     propertyInterest: 'Casa 3 quartos - Moema',
-  },
-  {
-    id: '3',
-    customerName: 'Ana Costa',
-    customerEmail: 'ana@email.com',
-    customerPhone: '(11) 77777-0003',
-    lastMessage: 'Obrigado pelo atendimento! Já fechei o contrato.',
-    lastMessageTime: 'Ontem',
-    status: 'closed',
-    unreadCount: 0,
-    assignedAgent: 'Maria Rodrigues',
-    tags: ['concluído', 'contrato'],
-    priority: 'low',
-    source: 'email',
-  },
-  {
-    id: '4',
-    customerName: 'Pedro Santos',
-    customerEmail: 'pedro@email.com',
-    customerPhone: '(11) 66666-0004',
-    lastMessage: 'Olá! Gostaria de agendar uma visita.',
-    lastMessageTime: '08:20',
-    status: 'bot',
-    unreadCount: 0,
-    tags: ['visita', 'agendamento'],
-    priority: 'medium',
-    source: 'website',
-    propertyInterest: 'Studio - Vila Mariana',
+    satisfaction: 4.5,
+    responseTime: '5 min',
   },
 ];
 
@@ -169,34 +150,12 @@ const messages: Message[] = [
     timestamp: '10:26',
     senderName: 'João Silva',
   },
-  {
-    id: '3',
-    text: 'Gostaria de saber o valor do condomínio e se o apartamento tem vaga de garagem.',
-    sender: 'user',
-    timestamp: '10:28',
-    senderName: 'Maria Santos',
-  },
-  {
-    id: '4',
-    text: 'Claro! O condomínio é R$ 450,00 e o apartamento tem 1 vaga de garagem coberta. Além disso, o prédio oferece segurança 24h, academia e área de lazer completa.',
-    sender: 'agent',
-    timestamp: '10:29',
-    senderName: 'João Silva',
-  },
-  {
-    id: '5',
-    text: 'Gostaria de saber mais sobre o apartamento no Centro',
-    sender: 'user',
-    timestamp: '10:30',
-    senderName: 'Maria Santos',
-  },
 ];
 
 const agents = [
-  { id: '1', name: 'João Silva', status: 'online', avatar: 'JS' },
-  { id: '2', name: 'Maria Rodrigues', status: 'online', avatar: 'MR' },
-  { id: '3', name: 'Pedro Santos', status: 'busy', avatar: 'PS' },
-  { id: '4', name: 'Ana Costa', status: 'offline', avatar: 'AC' },
+  { id: '1', name: 'João Silva', status: 'online', avatar: 'JS', rating: 4.8 },
+  { id: '2', name: 'Maria Rodrigues', status: 'online', avatar: 'MR', rating: 4.9 },
+  { id: '3', name: 'Pedro Santos', status: 'busy', avatar: 'PS', rating: 4.7 },
 ];
 
 const quickResponses = [
@@ -247,16 +206,6 @@ export function EsiChat() {
     }
   };
 
-  const getSourceIcon = (source: Chat['source']) => {
-    switch (source) {
-      case 'website': return <MessageCircle className="h-4 w-4" />;
-      case 'whatsapp': return <MessageCircle className="h-4 w-4 text-green-600" />;
-      case 'email': return <Mail className="h-4 w-4" />;
-      case 'phone': return <Phone className="h-4 w-4" />;
-      default: return <MessageCircle className="h-4 w-4" />;
-    }
-  };
-
   const filteredChats = chats.filter(chat => {
     const matchesSearch = chat.customerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          chat.lastMessage.toLowerCase().includes(searchTerm.toLowerCase());
@@ -266,28 +215,38 @@ export function EsiChat() {
 
   const handleSendMessage = () => {
     if (messageInput.trim()) {
-      // Aqui você enviaria a mensagem para o backend
       console.log('Sending message:', messageInput);
       setMessageInput('');
     }
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 p-6">
       <div className="max-w-7xl mx-auto space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">esi.chat</h1>
-            <p className="text-gray-600 mt-1">Sistema de atendimento ao cliente inteligente</p>
+            <div className="flex items-center space-x-3">
+              <div className="p-2 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl">
+                <MessageCircle className="h-6 w-6 text-white" />
+              </div>
+              <div>
+                <h1 className="text-3xl font-bold text-gray-900">esi.chat</h1>
+                <p className="text-gray-600 mt-1">Sistema de atendimento inteligente</p>
+              </div>
+            </div>
           </div>
           <div className="flex items-center space-x-3">
-            <Button variant="outline" size="sm">
+            <Button variant="outline" size="sm" className="bg-white/80 backdrop-blur">
+              <TrendingUp className="h-4 w-4 mr-2" />
+              Analytics
+            </Button>
+            <Button variant="outline" size="sm" className="bg-white/80 backdrop-blur">
               <Settings className="h-4 w-4 mr-2" />
               Configurações
             </Button>
-            <Button onClick={() => setShowNewChatModal(true)}>
-              <Plus className="h-4 w-4 mr-2" />
+            <Button className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700">
+              <Sparkles className="h-4 w-4 mr-2" />
               Nova Conversa
             </Button>
           </div>
@@ -301,14 +260,14 @@ export function EsiChat() {
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbPage>Apre.chat</BreadcrumbPage>
+              <BreadcrumbPage>esi.chat</BreadcrumbPage>
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>
 
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-          <Card>
+          <Card className="bg-white/80 backdrop-blur border-0 shadow-lg">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Conversas Ativas</CardTitle>
               <MessageCircle className="h-4 w-4 text-green-600" />
@@ -319,7 +278,7 @@ export function EsiChat() {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="bg-white/80 backdrop-blur border-0 shadow-lg">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Taxa de Resposta</CardTitle>
               <CheckCircle className="h-4 w-4 text-blue-600" />
@@ -330,7 +289,7 @@ export function EsiChat() {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="bg-white/80 backdrop-blur border-0 shadow-lg">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Satisfação</CardTitle>
               <Star className="h-4 w-4 text-yellow-600" />
@@ -341,7 +300,7 @@ export function EsiChat() {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="bg-white/80 backdrop-blur border-0 shadow-lg">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Agentes Online</CardTitle>
               <Users className="h-4 w-4 text-purple-600" />
@@ -356,8 +315,8 @@ export function EsiChat() {
         {/* Main Chat Interface */}
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
           {/* Chat List */}
-          <Card className="lg:col-span-1">
-            <CardHeader>
+          <Card className="lg:col-span-1 bg-white/80 backdrop-blur border-0 shadow-lg">
+            <CardHeader className="pb-3">
               <CardTitle className="text-lg">Conversas</CardTitle>
               <div className="space-y-2">
                 <div className="relative">
@@ -366,11 +325,11 @@ export function EsiChat() {
                     placeholder="Buscar conversas..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="pl-10"
+                    className="pl-10 bg-white/50"
                   />
                 </div>
                 <Select value={filterStatus} onValueChange={setFilterStatus}>
-                  <SelectTrigger>
+                  <SelectTrigger className="bg-white/50">
                     <SelectValue placeholder="Filtrar por status" />
                   </SelectTrigger>
                   <SelectContent>
@@ -389,15 +348,17 @@ export function EsiChat() {
                   {filteredChats.map((chat) => (
                     <div
                       key={chat.id}
-                      className={`p-3 rounded-lg cursor-pointer transition-colors ${
-                        selectedChat?.id === chat.id ? 'bg-blue-50 border border-blue-200' : 'hover:bg-gray-50'
+                      className={`p-3 rounded-xl cursor-pointer transition-all hover:shadow-md ${
+                        selectedChat?.id === chat.id 
+                          ? 'bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200' 
+                          : 'hover:bg-white/50'
                       }`}
                       onClick={() => setSelectedChat(chat)}
                     >
                       <div className="flex items-start justify-between mb-2">
                         <div className="flex items-center space-x-2">
                           <Avatar className="h-8 w-8">
-                            <AvatarFallback className="text-xs">
+                            <AvatarFallback className="text-xs bg-gradient-to-r from-blue-600 to-indigo-600 text-white">
                               {chat.customerName.split(' ').map(n => n[0]).join('')}
                             </AvatarFallback>
                           </Avatar>
@@ -418,13 +379,18 @@ export function EsiChat() {
                       <p className="text-sm text-gray-600 truncate mb-2">{chat.lastMessage}</p>
                       <div className="flex items-center justify-between">
                         <div className="flex items-center space-x-1">
-                          {getSourceIcon(chat.source)}
                           <Badge variant="outline" className={`text-xs ${getPriorityColor(chat.priority)}`}>
                             {chat.priority}
                           </Badge>
+                          {chat.satisfaction && (
+                            <div className="flex items-center space-x-1">
+                              <Star className="h-3 w-3 text-yellow-500 fill-current" />
+                              <span className="text-xs">{chat.satisfaction}</span>
+                            </div>
+                          )}
                         </div>
-                        {chat.assignedAgent && (
-                          <span className="text-xs text-gray-500">{chat.assignedAgent}</span>
+                        {chat.responseTime && (
+                          <span className="text-xs text-gray-500">{chat.responseTime}</span>
                         )}
                       </div>
                     </div>
@@ -435,14 +401,14 @@ export function EsiChat() {
           </Card>
 
           {/* Chat Area */}
-          <Card className="lg:col-span-3">
+          <Card className="lg:col-span-3 bg-white/80 backdrop-blur border-0 shadow-lg">
             {selectedChat ? (
               <>
-                <CardHeader className="border-b">
+                <CardHeader className="border-b border-gray-200 bg-gradient-to-r from-blue-50 to-indigo-50">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-3">
-                      <Avatar>
-                        <AvatarFallback>
+                      <Avatar className="h-10 w-10">
+                        <AvatarFallback className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white">
                           {selectedChat.customerName.split(' ').map(n => n[0]).join('')}
                         </AvatarFallback>
                       </Avatar>
@@ -463,17 +429,17 @@ export function EsiChat() {
                       </div>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <Button variant="outline" size="sm">
+                      <Button variant="outline" size="sm" className="bg-white/80">
                         <PhoneCall className="h-4 w-4 mr-2" />
                         Ligação
                       </Button>
-                      <Button variant="outline" size="sm" onClick={() => setIsVideoCall(!isVideoCall)}>
+                      <Button variant="outline" size="sm" className="bg-white/80" onClick={() => setIsVideoCall(!isVideoCall)}>
                         <Video className="h-4 w-4 mr-2" />
                         Vídeo
                       </Button>
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                          <Button variant="outline" size="sm">
+                          <Button variant="outline" size="sm" className="bg-white/80">
                             <MoreVertical className="h-4 w-4" />
                           </Button>
                         </DropdownMenuTrigger>
@@ -548,7 +514,7 @@ export function EsiChat() {
                           className={`flex ${message.sender === 'user' ? 'justify-end' : message.sender === 'bot' ? 'justify-center' : 'justify-start'}`}
                         >
                           {message.sender === 'bot' ? (
-                            <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 max-w-md">
+                            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-3 max-w-md">
                               <div className="flex items-center space-x-2 mb-1">
                                 <Bot className="h-4 w-4 text-blue-600" />
                                 <span className="text-xs font-medium text-blue-600">Assistente Virtual</span>
@@ -558,11 +524,11 @@ export function EsiChat() {
                           ) : (
                             <div className={`flex items-start space-x-2 max-w-md ${message.sender === 'user' ? 'flex-row-reverse space-x-reverse' : ''}`}>
                               <Avatar className="h-8 w-8">
-                                <AvatarFallback className="text-xs">
+                                <AvatarFallback className="text-xs bg-gradient-to-r from-blue-600 to-indigo-600 text-white">
                                   {message.sender === 'user' ? 'U' : message.senderAvatar || 'A'}
                                 </AvatarFallback>
                               </Avatar>
-                              <div className={`rounded-lg p-3 ${message.sender === 'user' ? 'bg-blue-600 text-white' : 'bg-gray-100'}`}>
+                              <div className={`rounded-xl p-3 ${message.sender === 'user' ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white' : 'bg-white border border-gray-200'}`}>
                                 {message.senderName && (
                                   <p className={`text-xs font-medium mb-1 ${message.sender === 'user' ? 'text-blue-100' : 'text-gray-600'}`}>
                                     {message.senderName}
@@ -582,7 +548,7 @@ export function EsiChat() {
                   </ScrollArea>
 
                   {/* Quick Responses */}
-                  <div className="border-t p-3">
+                  <div className="border-t p-3 bg-gradient-to-r from-blue-50 to-indigo-50">
                     <div className="flex flex-wrap gap-2 mb-3">
                       {quickResponses.map((response, index) => (
                         <Button
@@ -590,7 +556,7 @@ export function EsiChat() {
                           variant="outline"
                           size="sm"
                           onClick={() => setMessageInput(response)}
-                          className="text-xs"
+                          className="text-xs bg-white/80 hover:bg-white"
                         >
                           {response}
                         </Button>
@@ -599,7 +565,7 @@ export function EsiChat() {
 
                     {/* Message Input */}
                     <div className="flex items-end space-x-2">
-                      <Button variant="outline" size="sm">
+                      <Button variant="outline" size="sm" className="bg-white/80">
                         <Paperclip className="h-4 w-4" />
                       </Button>
                       <div className="flex-1">
@@ -608,19 +574,24 @@ export function EsiChat() {
                           value={messageInput}
                           onChange={(e) => setMessageInput(e.target.value)}
                           onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+                          className="bg-white/80"
                         />
                       </div>
-                      <Button variant="outline" size="sm">
+                      <Button variant="outline" size="sm" className="bg-white/80">
                         <Smile className="h-4 w-4" />
                       </Button>
                       <Button
                         variant={isRecording ? 'destructive' : 'outline'}
                         size="sm"
                         onClick={() => setIsRecording(!isRecording)}
+                        className="bg-white/80"
                       >
                         <Mic className="h-4 w-4" />
                       </Button>
-                      <Button onClick={handleSendMessage}>
+                      <Button 
+                        onClick={handleSendMessage}
+                        className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700"
+                      >
                         <Send className="h-4 w-4" />
                       </Button>
                     </div>
@@ -630,7 +601,9 @@ export function EsiChat() {
             ) : (
               <CardContent className="flex items-center justify-center h-[600px]">
                 <div className="text-center">
-                  <MessageCircle className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                  <div className="p-4 bg-gradient-to-r from-blue-100 to-indigo-100 rounded-2xl mb-4 inline-block">
+                    <MessageCircle className="h-12 w-12 text-blue-600" />
+                  </div>
                   <h3 className="text-lg font-medium text-gray-900 mb-2">Selecione uma conversa</h3>
                   <p className="text-gray-600">Escolha uma conversa da lista para começar a atender</p>
                 </div>
@@ -640,29 +613,40 @@ export function EsiChat() {
         </div>
 
         {/* Agents Status */}
-        <Card>
+        <Card className="bg-white/80 backdrop-blur border-0 shadow-lg">
           <CardHeader>
-            <CardTitle className="text-lg">Status dos Agentes</CardTitle>
+            <CardTitle className="text-lg flex items-center space-x-2">
+              <Zap className="h-5 w-5 text-yellow-600" />
+              <span>Agentes Conectados</span>
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
               {agents.map((agent) => (
-                <div key={agent.id} className="flex items-center space-x-3 p-3 border rounded-lg">
+                <div key={agent.id} className="flex items-center space-x-3 p-3 bg-white/50 rounded-xl border border-gray-200">
                   <div className="relative">
                     <Avatar className="h-10 w-10">
-                      <AvatarFallback>{agent.avatar}</AvatarFallback>
+                      <AvatarFallback className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white">
+                        {agent.avatar}
+                      </AvatarFallback>
                     </Avatar>
                     <div className={`absolute -bottom-1 -right-1 w-3 h-3 rounded-full border-2 border-white ${
                       agent.status === 'online' ? 'bg-green-500' :
                       agent.status === 'busy' ? 'bg-yellow-500' : 'bg-gray-500'
                     }`} />
                   </div>
-                  <div>
+                  <div className="flex-1">
                     <p className="font-medium">{agent.name}</p>
-                    <p className="text-sm text-gray-600">
-                      {agent.status === 'online' ? 'Online' :
-                       agent.status === 'busy' ? 'Ocupado' : 'Offline'}
-                    </p>
+                    <div className="flex items-center space-x-2 text-sm">
+                      <p className="text-gray-600">
+                        {agent.status === 'online' ? 'Online' :
+                         agent.status === 'busy' ? 'Ocupado' : 'Offline'}
+                      </p>
+                      <div className="flex items-center space-x-1">
+                        <Star className="h-3 w-3 text-yellow-500 fill-current" />
+                        <span>{agent.rating}</span>
+                      </div>
+                    </div>
                   </div>
                 </div>
               ))}
@@ -722,7 +706,7 @@ export function EsiChat() {
             <Button variant="outline" onClick={() => setShowNewChatModal(false)}>
               Cancelar
             </Button>
-            <Button onClick={() => setShowNewChatModal(false)}>
+            <Button onClick={() => setShowNewChatModal(false)} className="bg-gradient-to-r from-blue-600 to-indigo-600">
               Criar Conversa
             </Button>
           </DialogFooter>

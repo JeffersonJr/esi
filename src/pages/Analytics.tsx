@@ -4,7 +4,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
-import { TrendingUp, Users, Home, Target, DollarSign, Eye, MousePointer, Clock, BarChart3, ArrowRight, Medal } from 'lucide-react';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { TrendingUp, Users, Home, Target, DollarSign, Eye, MousePointer, Clock, BarChart3, ArrowRight, Medal, Key, CheckCircle, AlertCircle, Camera, Calendar } from 'lucide-react';
 
 // Medal component for ranking
 const getMedalIcon = (rank: number) => {
@@ -79,23 +80,13 @@ export function Analytics() {
       </div>
 
       <Tabs defaultValue="imoveis" className="w-full">
-        <TabsList className="grid w-full grid-cols-4">
-          <TabsTrigger value="imoveis">
-            <Home className="h-4 w-4 mr-2" />
-            Imóveis
-          </TabsTrigger>
-          <TabsTrigger value="clientes">
-            <Users className="h-4 w-4 mr-2" />
-            Clientes/Proprietários
-          </TabsTrigger>
-          <TabsTrigger value="site">
-            <Eye className="h-4 w-4 mr-2" />
-            Site
-          </TabsTrigger>
-          <TabsTrigger value="equipe">
-            <BarChart3 className="h-4 w-4 mr-2" />
-            Equipe
-          </TabsTrigger>
+        <TabsList className="grid w-full grid-cols-6">
+          <TabsTrigger value="vendas">Vendas</TabsTrigger>
+          <TabsTrigger value="locacoes">Locações</TabsTrigger>
+          <TabsTrigger value="imoveis">Imóveis</TabsTrigger>
+          <TabsTrigger value="clientes">Clientes</TabsTrigger>
+          <TabsTrigger value="solicitacoes">Solicitações</TabsTrigger>
+          <TabsTrigger value="vistorias">Vistorias</TabsTrigger>
         </TabsList>
 
         <TabsContent value="imoveis" className="space-y-6">
@@ -268,6 +259,185 @@ export function Analytics() {
                       }`}>
                         {item.conversao}% conv.
                       </span>
+                    </div>
+                  </div>
+                  <div className="h-2 bg-muted rounded-full overflow-hidden">
+                    <div
+                      className={`h-full ${item.cor} transition-all duration-500`}
+                      style={{ width: `${item.percentual}%` }}
+                    />
+                  </div>
+                </div>
+              ))}
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="solicitacoes" className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <Card className="hover:shadow-lg transition-shadow">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-medium text-muted-foreground flex items-center justify-between">
+                  Total de Solicitações
+                  <AlertCircle className="h-5 w-5 text-orange-600" />
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-3xl font-bold">156</div>
+                <p className="text-sm text-success mt-1">+18.2% vs mês anterior</p>
+              </CardContent>
+            </Card>
+
+            <Card className="hover:shadow-lg transition-shadow">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-medium text-muted-foreground flex items-center justify-between">
+                  Concluídas
+                  <CheckCircle className="h-5 w-5 text-green-600" />
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-3xl font-bold">142</div>
+                <p className="text-sm text-muted-foreground mt-1">91% taxa de conclusão</p>
+              </CardContent>
+            </Card>
+
+            <Card className="hover:shadow-lg transition-shadow">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-medium text-muted-foreground flex items-center justify-between">
+                  Em Andamento
+                  <Clock className="h-5 w-5 text-blue-600" />
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-3xl font-bold">12</div>
+                <p className="text-sm text-muted-foreground mt-1">7.7% do total</p>
+              </CardContent>
+            </Card>
+
+            <Card className="hover:shadow-lg transition-shadow">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-medium text-muted-foreground flex items-center justify-between">
+                  Tempo Médio
+                  <TrendingUp className="h-5 w-5 text-purple-600" />
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-3xl font-bold">24h</div>
+                <p className="text-sm text-success mt-1">-15% vs mês anterior</p>
+              </CardContent>
+            </Card>
+          </div>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Solicitações por Categoria</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Categoria</TableHead>
+                    <TableHead>Quantidade</TableHead>
+                    <TableHead>Percentual</TableHead>
+                    <TableHead>Tempo Médio</TableHead>
+                    <TableHead>Status</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {[
+                    { categoria: 'Manutenção', quantidade: 45, percentual: 28.8, tempo: '48h', status: 'Ativo' },
+                    { categoria: 'Visitas', quantidade: 38, percentual: 24.4, tempo: '2h', status: 'Ativo' },
+                    { categoria: 'Documentação', quantidade: 32, percentual: 20.5, tempo: '72h', status: 'Ativo' },
+                    { categoria: 'Reparos', quantidade: 28, percentual: 17.9, tempo: '24h', status: 'Ativo' },
+                    { categoria: 'Outros', quantidade: 13, percentual: 8.3, tempo: '12h', status: 'Ativo' },
+                  ].map((item, index) => (
+                    <TableRow key={item.categoria}>
+                      <TableCell className="font-medium">{item.categoria}</TableCell>
+                      <TableCell>{item.quantidade}</TableCell>
+                      <TableCell>{item.percentual}%</TableCell>
+                      <TableCell>{item.tempo}</TableCell>
+                      <TableCell>
+                        <Badge variant="default">{item.status}</Badge>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="vistorias" className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <Card className="hover:shadow-lg transition-shadow">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-medium text-muted-foreground flex items-center justify-between">
+                  Total de Vistorias
+                  <Camera className="h-5 w-5 text-indigo-600" />
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-3xl font-bold">89</div>
+                <p className="text-sm text-success mt-1">+12.5% vs mês anterior</p>
+              </CardContent>
+            </Card>
+
+            <Card className="hover:shadow-lg transition-shadow">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-medium text-muted-foreground flex items-center justify-between">
+                  Realizadas
+                  <CheckCircle className="h-5 w-5 text-green-600" />
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-3xl font-bold">76</div>
+                <p className="text-sm text-muted-foreground mt-1">85.4% conclusão</p>
+              </CardContent>
+            </Card>
+
+            <Card className="hover:shadow-lg transition-shadow">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-medium text-muted-foreground flex items-center justify-between">
+                  Agendadas
+                  <Calendar className="h-5 w-5 text-blue-600" />
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-3xl font-bold">13</div>
+                <p className="text-sm text-muted-foreground mt-1">14.6% pendentes</p>
+              </CardContent>
+            </Card>
+
+            <Card className="hover:shadow-lg transition-shadow">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-medium text-muted-foreground flex items-center justify-between">
+                  Score Médio
+                  <TrendingUp className="h-5 w-5 text-purple-600" />
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-3xl font-bold">4.7</div>
+                <p className="text-sm text-success mt-1">+0.3 vs mês anterior</p>
+              </CardContent>
+            </Card>
+          </div>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Vistorias por Status</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {[
+                { status: 'Concluídas', quantidade: 76, percentual: 85.4, cor: 'bg-green-500' },
+                { status: 'Agendadas', quantidade: 8, percentual: 9.0, cor: 'bg-blue-500' },
+                { status: 'Em Andamento', quantidade: 3, percentual: 3.4, cor: 'bg-yellow-500' },
+                { status: 'Canceladas', quantidade: 2, percentual: 2.2, cor: 'bg-red-500' },
+              ].map((item, index) => (
+                <div key={item.status} className="animate-slide-up" style={{ animationDelay: `${index * 100}ms` }}>
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm font-medium">{item.status}</span>
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm text-muted-foreground">{item.quantidade} vistorias ({item.percentual}%)</span>
                     </div>
                   </div>
                   <div className="h-2 bg-muted rounded-full overflow-hidden">

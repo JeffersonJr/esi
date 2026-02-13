@@ -20,8 +20,8 @@ import { Perfil } from './pages/Perfil';
 import { RecuperarSenha } from './pages/RecuperarSenha';
 import { VerificarCodigo } from './pages/VerificarCodigo';
 import { RedefinirSenha } from './pages/RedefinirSenha';
-import { ApBank } from './pages/ApBank';
-import { ApreChat } from './pages/ApreChat';
+import { EsiBank } from './pages/EsiBank';
+import { EsiChat } from './pages/EsiChat';
 import { AutomacaoImobiliaria } from './pages/AutomacaoImobiliaria';
 import { GestaoLocacoes } from './pages/GestaoLocacoes';
 import { GestaoFinanceira } from './pages/GestaoFinanceira';
@@ -55,8 +55,8 @@ function App() {
             <Route path="usuarios" element={<Usuarios />} />
             <Route path="equipes" element={<Equipes />} />
             <Route path="site" element={<EditorSite />} />
-            <Route path="apbank" element={<ApBank />} />
-            <Route path="aprechat" element={<ApreChat />} />
+            <Route path="esibank" element={<EsiBank />} />
+            <Route path="esichat" element={<EsiChat />} />
             <Route path="automacao" element={<AutomacaoImobiliaria />} />
             <Route path="locacoes" element={<GestaoLocacoes />} />
             <Route path="financeiro" element={<GestaoFinanceira />} />

@@ -6,6 +6,9 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Label } from '@/components/ui/label';
 import { MessageSquare, Plus, Search, Filter, Clock, CheckCircle, AlertCircle, User, Home, Wrench, PaintBucket, Droplets, Zap, Users, Calendar, MoreVertical, Eye, Edit, Trash2 } from 'lucide-react';
 
 const solicitacoes = [
@@ -24,8 +27,16 @@ const solicitacoes = [
   },
 ];
 
+const usuarios = [
+  { id: '1', nome: 'João Silva', cargo: 'Encanador', status: 'Disponível' },
+  { id: '2', nome: 'Maria Oliveira', cargo: 'Eletricista', status: 'Disponível' },
+  { id: '3', nome: 'Pedro Santos', cargo: 'Pintor', status: 'Ocupado' },
+];
+
 export function GestaoSolicitacoes() {
   const [searchTerm, setSearchTerm] = useState('');
+  const [showAtribuirModal, setShowAtribuirModal] = useState(false);
+  const [selectedSolicitacao, setSelectedSolicitacao] = useState(null);
 
   const getPrioridadeColor = (prioridade: string) => {
     switch (prioridade) {
@@ -174,8 +185,42 @@ export function GestaoSolicitacoes() {
                         <span className="font-medium">{solicitacao.imovel}</span>
                       </div>
                       <div className="flex items-center justify-between">
-                        <span className="text-gray-600">Previsão:</span>
-                        <span className="font-medium">{solicitacao.dataPrevista}</span>
+                        <span className="text-gray-600">Atribuído para:</span>
+                        <span className="font-medium">{solicitacao.atribuidoPara || 'Não atribuído'}</span>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center justify-between pt-2">
+                      <div className="flex items-center space-x-2 text-xs text-gray-500">
+                        <Calendar className="h-3 w-3" />
+                        <span>{solicitacao.dataSolicitacao}</span>
+                      </div>
+                      <div className="flex items-center space-x-1">
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          onClick={() => {
+                            setSelectedSolicitacao(solicitacao);
+                            setShowAtribuirModal(true);
+                          }}
+                        >
+                          <User className="h-3 w-3 mr-1" />
+                          Atribuir
+                        </Button>
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          onClick={() => {
+                            // Marcar como concluída
+                            solicitacao.status = 'Resolvido';
+                          }}
+                        >
+                          <CheckCircle className="h-3 w-3 mr-1" />
+                          Concluir
+                        </Button>
+                        <Button variant="outline" size="sm">
+                          <Eye className="h-3 w-3" />
+                        </Button>
                       </div>
                     </div>
 
@@ -198,6 +243,72 @@ export function GestaoSolicitacoes() {
           </TabsContent>
         </Tabs>
       </div>
+
+      {/* Modal Atribuir Solicitação */}
+      <Dialog open={showAtribuirModal} onOpenChange={setShowAtribuirModal}>
+        <DialogContent className="sm:max-w-[500px]">
+          <DialogHeader>
+            <DialogTitle>Atribuir Solicitação</DialogTitle>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="space-y-2">
+              <Label>Solicitação</Label>
+              <div className="p-3 bg-gray-50 rounded-lg">
+                <p className="font-medium">{selectedSolicitacao?.titulo}</p>
+                <p className="text-sm text-gray-600">{selectedSolicitacao?.descricao}</p>
+              </div>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="usuario">Atribuir para</Label>
+              <Select>
+                <SelectTrigger>
+                  <SelectValue placeholder="Selecione um usuário" />
+                </SelectTrigger>
+                <SelectContent>
+                  {usuarios.map((usuario) => (
+                    <SelectItem key={usuario.id} value={usuario.id}>
+                      <div className="flex items-center justify-between w-full">
+                        <span>{usuario.nome}</span>
+                        <div className="flex items-center space-x-2">
+                          <span className="text-sm text-gray-500">{usuario.cargo}</span>
+                          <Badge variant={usuario.status === 'Disponível' ? 'default' : 'secondary'}>
+                            {usuario.status}
+                          </Badge>
+                        </div>
+                      </div>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="prioridade">Prioridade</Label>
+              <Select>
+                <SelectTrigger>
+                  <SelectValue placeholder="Selecione a prioridade" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="baixa">Baixa</SelectItem>
+                  <SelectItem value="media">Média</SelectItem>
+                  <SelectItem value="alta">Alta</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="previsao">Previsão de Conclusão</Label>
+              <Input id="previsao" type="date" />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowAtribuirModal(false)}>
+              Cancelar
+            </Button>
+            <Button onClick={() => setShowAtribuirModal(false)}>
+              Atribuir
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

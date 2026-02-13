@@ -6,12 +6,16 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Label } from '@/components/ui/label';
 import { Camera, Plus, Search, Filter, Calendar, MapPin, Home, CheckCircle, AlertCircle, Clock, FileText, Download, Upload, Eye, Edit, Trash2, MoreVertical, Star, MessageSquare, Image as ImageIcon } from 'lucide-react';
 
 const vistorias = [
   {
     id: '1',
     imovel: 'Apartamento 2 Quartos - Centro',
+    imovelId: '1',
     tipo: 'Entrada',
     inquilino: 'Maria Santos',
     proprietario: 'João Silva',
@@ -22,8 +26,21 @@ const vistorias = [
   },
 ];
 
+const imoveisDisponiveis = [
+  { id: '1', titulo: 'Apartamento 2 Quartos - Centro', endereco: 'Rua das Flores, 123' },
+  { id: '2', titulo: 'Casa 3 Quartos - Jardim América', endereco: 'Av. Brasil, 456' },
+];
+
+const vistoriadores = [
+  { id: '1', nome: 'Pedro Santos', especialidade: 'Geral', status: 'Disponível' },
+  { id: '2', nome: 'Ana Oliveira', especialidade: 'Elétrica', status: 'Ocupado' },
+];
+
 export function SistemaVistoria() {
   const [searchTerm, setSearchTerm] = useState('');
+  const [showNovaVistoriaModal, setShowNovaVistoriaModal] = useState(false);
+  const [showEditarVistoriaModal, setShowEditarVistoriaModal] = useState(false);
+  const [selectedVistoria, setSelectedVistoria] = useState(null);
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -52,7 +69,7 @@ export function SistemaVistoria() {
             <h1 className="text-3xl font-bold text-gray-900">Sistema de Vistoria</h1>
             <p className="text-gray-600 mt-1">Gestão completa de vistorias de imóveis</p>
           </div>
-          <Button>
+          <Button onClick={() => setShowNovaVistoriaModal(true)}>
             <Plus className="h-4 w-4 mr-2" />
             Nova Vistoria
           </Button>
@@ -178,6 +195,17 @@ export function SistemaVistoria() {
                         <span className="text-xs text-gray-600">{vistoria.vistoriador}</span>
                       </div>
                       <div className="flex items-center space-x-2">
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          onClick={() => {
+                            setSelectedVistoria(vistoria);
+                            setShowEditarVistoriaModal(true);
+                          }}
+                        >
+                          <Edit className="h-4 w-4 mr-2" />
+                          Editar
+                        </Button>
                         <Button variant="outline" size="sm">
                           <Eye className="h-4 w-4 mr-2" />
                           Ver
@@ -266,6 +294,163 @@ export function SistemaVistoria() {
           </TabsContent>
         </Tabs>
       </div>
+
+      {/* Modal Nova Vistoria */}
+      <Dialog open={showNovaVistoriaModal} onOpenChange={setShowNovaVistoriaModal}>
+        <DialogContent className="sm:max-w-[600px]">
+          <DialogHeader>
+            <DialogTitle>Nova Vistoria</DialogTitle>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="imovel">Imóvel</Label>
+                <Select>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecione o imóvel" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {imoveisDisponiveis.map((imovel) => (
+                      <SelectItem key={imovel.id} value={imovel.id}>
+                        {imovel.titulo}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="tipo">Tipo de Vistoria</Label>
+                <Select>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecione o tipo" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="entrada">Entrada</SelectItem>
+                    <SelectItem value="saida">Saída</SelectItem>
+                    <SelectItem value="manutencao">Manutenção</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="data">Data Agendada</Label>
+                <Input id="data" type="date" />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="vistoriador">Vistoriador</Label>
+                <Select>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecione o vistoriador" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {vistoriadores.map((vistoriador) => (
+                      <SelectItem key={vistoriador.id} value={vistoriador.id}>
+                        <div className="flex items-center justify-between w-full">
+                          <span>{vistoriador.nome}</span>
+                          <div className="flex items-center space-x-2">
+                            <span className="text-sm text-gray-500">{vistoriador.especialidade}</span>
+                            <Badge variant={vistoriador.status === 'Disponível' ? 'default' : 'secondary'}>
+                              {vistoriador.status}
+                            </Badge>
+                          </div>
+                        </div>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="inquilino">Inquilino</Label>
+                <Input id="inquilino" placeholder="Nome do inquilino" />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="proprietario">Proprietário</Label>
+                <Input id="proprietario" placeholder="Nome do proprietário" />
+              </div>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="observacoes">Observações</Label>
+              <Input id="observacoes" placeholder="Observações da vistoria" />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowNovaVistoriaModal(false)}>
+              Cancelar
+            </Button>
+            <Button onClick={() => setShowNovaVistoriaModal(false)}>
+              Agendar Vistoria
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Modal Editar Vistoria */}
+      <Dialog open={showEditarVistoriaModal} onOpenChange={setShowEditarVistoriaModal}>
+        <DialogContent className="sm:max-w-[600px]">
+          <DialogHeader>
+            <DialogTitle>Editar Vistoria</DialogTitle>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="space-y-2">
+              <Label>Vistoria</Label>
+              <div className="p-3 bg-gray-50 rounded-lg">
+                <p className="font-medium">{selectedVistoria?.imovel}</p>
+                <p className="text-sm text-gray-600">{selectedVistoria?.dataAgendada}</p>
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="edit-data">Nova Data</Label>
+                <Input id="edit-data" type="date" />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="edit-status">Status</Label>
+                <Select>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecione o status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="agendado">Agendado</SelectItem>
+                    <SelectItem value="em-andamento">Em andamento</SelectItem>
+                    <SelectItem value="concluido">Concluído</SelectItem>
+                    <SelectItem value="cancelado">Cancelado</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="edit-vistoriador">Vistoriador</Label>
+              <Select>
+                <SelectTrigger>
+                  <SelectValue placeholder="Selecione o vistoriador" />
+                </SelectTrigger>
+                <SelectContent>
+                  {vistoriadores.map((vistoriador) => (
+                    <SelectItem key={vistoriador.id} value={vistoriador.id}>
+                      {vistoriador.nome}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="edit-observacoes">Observações</Label>
+              <Input id="edit-observacoes" placeholder="Observações da vistoria" />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowEditarVistoriaModal(false)}>
+              Cancelar
+            </Button>
+            <Button onClick={() => setShowEditarVistoriaModal(false)}>
+              Salvar Alterações
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
