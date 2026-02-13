@@ -22,24 +22,26 @@ interface Tag {
   color: string;
 }
 
-interface LeadData {
+interface Lead {
+  id: string;
   name: string;
   emails: ContactInfo[];
   phones: ContactInfo[];
   property: string;
   value: string;
   source: string;
-  notes: string;
-  stage: string;
+  notes?: string;
+  stage?: string;
   assignedTo: string;
-  tags: string[];
+  tags?: string[];
+  temperature?: 'cold' | 'warm' | 'hot';
 }
 
 interface LeadFormModalProps {
   open: boolean;
   onClose: () => void;
-  onSubmit: (lead: LeadData) => void;
-  lead?: LeadData;
+  onSubmit: (lead: Lead) => void;
+  lead?: Lead;
 }
 
 const TAG_COLORS = [
@@ -54,7 +56,8 @@ const TAG_COLORS = [
 ];
 
 export function LeadFormModal({ open, onClose, onSubmit, lead }: LeadFormModalProps) {
-  const [formData, setFormData] = useState<LeadData>({
+  const [formData, setFormData] = useState<Lead>({
+    id: '',
     name: '',
     emails: [{ type: 'email', value: '', isPrimary: true }],
     phones: [{ type: 'phone', value: '', isPrimary: true }],
@@ -88,7 +91,8 @@ export function LeadFormModal({ open, onClose, onSubmit, lead }: LeadFormModalPr
 
   useEffect(() => {
     if (lead) {
-      const leadData: LeadData = {
+      const leadData: Lead = {
+        id: lead.id || '',
         name: lead.name || '',
         emails: lead.emails || [{ type: 'email', value: '', isPrimary: true }],
         phones: lead.phones || [{ type: 'phone', value: '', isPrimary: true }],
@@ -98,12 +102,14 @@ export function LeadFormModal({ open, onClose, onSubmit, lead }: LeadFormModalPr
         notes: lead.notes || '',
         stage: lead.stage || 'new',
         assignedTo: lead.assignedTo || 'JS',
-        tags: lead.tags || []
+        tags: lead.tags || [],
+        temperature: lead.temperature
       };
       setFormData(leadData);
       setOriginalData(leadData);
     } else {
-      const emptyData: LeadData = {
+      const emptyData: Lead = {
+        id: '',
         name: '',
         emails: [{ type: 'email', value: '', isPrimary: true }],
         phones: [{ type: 'phone', value: '', isPrimary: true }],
@@ -113,14 +119,16 @@ export function LeadFormModal({ open, onClose, onSubmit, lead }: LeadFormModalPr
         notes: '',
         stage: 'new',
         assignedTo: 'JS',
-        tags: []
+        tags: [],
+        temperature: undefined
       };
       setFormData(emptyData);
       setOriginalData(emptyData);
     }
   }, [lead, open]);
 
-  const [originalData, setOriginalData] = useState<LeadData>({
+  const [originalData, setOriginalData] = useState<Lead>({
+    id: '',
     name: '',
     emails: [{ type: 'email', value: '', isPrimary: true }],
     phones: [{ type: 'phone', value: '', isPrimary: true }],
@@ -130,7 +138,8 @@ export function LeadFormModal({ open, onClose, onSubmit, lead }: LeadFormModalPr
     notes: '',
     stage: 'new',
     assignedTo: 'JS',
-    tags: []
+    tags: [],
+    temperature: undefined
   });
 
   const hasUnsavedChanges = JSON.stringify(formData) !== JSON.stringify(originalData);
@@ -138,19 +147,13 @@ export function LeadFormModal({ open, onClose, onSubmit, lead }: LeadFormModalPr
   const {
     showModal,
     confirmNavigation,
-    handleConfirm: originalHandleConfirm,
+    handleConfirm,
     handleCancel
   } = useUnsavedChanges({ hasUnsavedChanges });
 
-  const handleConfirm = () => {
-    originalHandleConfirm();
-    // If there's no nextLocation, close the modal
-    onClose();
-  };
-
   const handleClose = () => {
-    if (hasUnsavedChanges) {
-      confirmNavigation('');
+    if (confirmNavigation('')) {
+      handleConfirm(() => onClose());
     } else {
       onClose();
     }
@@ -172,19 +175,18 @@ export function LeadFormModal({ open, onClose, onSubmit, lead }: LeadFormModalPr
   };
 
   const addContact = (type: 'email' | 'phone' | 'mobile') => {
-    const currentContacts = type === 'email' ? formData.emails : formData.phones;
-    if (currentContacts.length < 3) {
-      setFormData(prev => ({
-        ...prev,
-        [type === 'email' ? 'emails' : 'phones']: [
-          ...prev[type === 'email' ? 'emails' : 'phones'],
-          { type, value: '', isPrimary: false }
-        ]
-      }));
-    } else {
-      // Show toast message for limit reached
-      alert(`Limite de 3 ${type === 'email' ? 'e-mails' : 'telefones'} atingido`);
+    const contacts = type === 'email' ? formData.emails : formData.phones;
+    if (contacts.length >= 3) {
+      // Show toast notification
+      return;
     }
+    setFormData(prev => ({
+      ...prev,
+      [type === 'email' ? 'emails' : 'phones']: [
+        ...prev[type === 'email' ? 'emails' : 'phones'],
+        { type, value: '', isPrimary: false }
+      ]
+    }));
   };
 
   const removeContact = (type: 'email' | 'phone' | 'mobile', index: number) => {
@@ -227,12 +229,12 @@ export function LeadFormModal({ open, onClose, onSubmit, lead }: LeadFormModalPr
   const addTag = () => {
     if (newTag.trim()) {
       // Check if tag already exists
-      const tagExists = availableTags.some(tag => 
+      const existingTag = availableTags.find(tag => 
         tag.name.toLowerCase() === newTag.trim().toLowerCase()
       );
       
-      if (tagExists) {
-        alert('Esta tag já existe!');
+      if (existingTag) {
+        // Show toast notification that tag already exists
         return;
       }
       
@@ -572,10 +574,8 @@ export function LeadFormModal({ open, onClose, onSubmit, lead }: LeadFormModalPr
                       />
                       <div className="flex flex-wrap gap-1 max-h-24 overflow-y-auto p-2 border rounded-md">
                         {availableTags
-                          .filter(tag => 
-                            !formData.tags.includes(tag.name) &&
-                            tag.name.toLowerCase().includes(tagSearch.toLowerCase())
-                          )
+                          .filter(tag => !formData.tags.includes(tag.name))
+                          .filter(tag => tag.name.toLowerCase().includes(tagSearch.toLowerCase()))
                           .map((tag) => (
                             <Badge
                               key={tag.id}

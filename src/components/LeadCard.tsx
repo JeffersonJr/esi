@@ -14,12 +14,10 @@ import {
   Mail, 
   MessageCircle, 
   Calendar, 
-  Edit, 
   Eye, 
+  Edit, 
   Trash2,
-  Thermometer,
-  TrendingUp,
-  GripVertical
+  Thermometer 
 } from 'lucide-react';
 
 interface ContactInfo {
@@ -37,59 +35,32 @@ interface Lead {
   value: string;
   source: string;
   assignedTo: string;
-  notes?: string;
-  stage?: string;
-  lastContact?: string;
-  nextAction?: string;
   tags?: string[];
+  temperature?: 'cold' | 'warm' | 'hot';
 }
 
 interface LeadCardProps {
   lead: Lead;
+  isMobile: boolean;
   onOpenDetails: (lead: Lead) => void;
   onEdit: (lead: Lead) => void;
   onScheduleVisit: (lead: Lead) => void;
   onSendEmail: (lead: Lead) => void;
   onWhatsApp: (lead: Lead) => void;
   onDelete: (leadId: string) => void;
-  isMobile?: boolean;
-  provided?: {
-    innerRef: (element: HTMLElement | null) => void;
-    draggableProps: React.HTMLAttributes<HTMLElement>;
-    dragHandleProps: React.HTMLAttributes<HTMLElement>;
-  }; // Drag and drop provided props
-  isDragging?: boolean;
 }
 
-export function LeadCard({ 
-  lead, 
-  onOpenDetails, 
-  onEdit, 
-  onScheduleVisit, 
-  onSendEmail, 
-  onWhatsApp, 
-  onDelete,
-  isMobile = false,
-  provided,
-  isDragging = false
+export function LeadCard({
+  lead,
+  isMobile,
+  onOpenDetails,
+  onEdit,
+  onScheduleVisit,
+  onSendEmail,
+  onWhatsApp,
+  onDelete
 }: LeadCardProps) {
   const [isHovered, setIsHovered] = useState(false);
-
-  const getLeadTemperature = () => {
-    // Simple logic to determine lead temperature
-    const hotTags = ['Hot Lead', 'Urgente', 'Interesse Alto'];
-    const warmTags = ['VIP', 'Follow-up Necessário'];
-    
-    if (lead.tags?.some(tag => hotTags.includes(tag))) {
-      return { level: 'hot', color: 'bg-red-500', icon: TrendingUp, label: 'Quente' };
-    } else if (lead.tags?.some(tag => warmTags.includes(tag))) {
-      return { level: 'warm', color: 'bg-orange-500', icon: Thermometer, label: 'Morno' };
-    }
-    return { level: 'cold', color: 'bg-blue-500', icon: Thermometer, label: 'Frio' };
-  };
-
-  const temperature = getLeadTemperature();
-  const TemperatureIcon = temperature.icon;
 
   const primaryEmail = lead.emails?.find(email => email.isPrimary)?.value || lead.emails?.[0]?.value || '';
   const primaryPhone = lead.phones?.find(phone => phone.isPrimary)?.value || lead.phones?.[0]?.value || '';
@@ -109,30 +80,36 @@ export function LeadCard({
     return tagColors[tagName] || 'bg-gray-500';
   };
 
+  const getTemperatureColor = (temp?: string) => {
+    switch (temp) {
+      case 'hot': return 'bg-red-500';
+      case 'warm': return 'bg-orange-500';
+      case 'cold': return 'bg-blue-500';
+      default: return 'bg-gray-500';
+    }
+  };
+
+  const getTemperatureIcon = (temp?: string) => {
+    switch (temp) {
+      case 'hot': return '🔥';
+      case 'warm': return '🌡️';
+      case 'cold': return '❄️';
+      default: return '🌡️';
+    }
+  };
+
   return (
     <Card
-      ref={provided?.innerRef}
-      {...provided?.draggableProps}
-      className={`hover:shadow-lg transition-all duration-200 cursor-pointer relative group ${
-        isHovered ? 'transform -translate-y-1' : ''
-      } ${isDragging ? 'opacity-50 rotate-2 scale-105' : ''}`}
+      className={`hover:shadow-lg transition-all cursor-pointer relative ${
+        isHovered ? 'shadow-xl scale-105' : ''
+      }`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       onClick={() => onOpenDetails(lead)}
     >
-      {/* Temperature Indicator */}
-      <div className={`absolute top-2 right-2 ${temperature.color} text-white rounded-full p-1 opacity-80`}>
-        <TemperatureIcon className="h-3 w-3" />
-      </div>
-
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-2">
-            {provided && (
-              <div {...provided.dragHandleProps} className="cursor-grab active:cursor-grabbing">
-                <GripVertical className="h-5 w-5 text-muted-foreground" />
-              </div>
-            )}
             <Avatar className="h-8 w-8">
               <AvatarFallback className="bg-gradient-primary text-primary-foreground text-xs">
                 {lead.name.split(' ').map(n => n[0]).join('')}
@@ -161,10 +138,14 @@ export function LeadCard({
             </div>
           </div>
           
-          {/* Hover Actions */}
-          <div className={`transition-opacity duration-200 ${
-            isHovered ? 'opacity-100' : 'opacity-0'
-          }`}>
+          {/* Termômetro */}
+          <div className="flex items-center gap-2">
+            <div className={`flex items-center gap-1 px-2 py-1 rounded-full text-xs text-white ${getTemperatureColor(lead.temperature)}`}>
+              <span>{getTemperatureIcon(lead.temperature)}</span>
+              <span className="capitalize">{lead.temperature || 'warm'}</span>
+            </div>
+            
+            {/* Dropdown menu */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button 
@@ -178,23 +159,23 @@ export function LeadCard({
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 <DropdownMenuItem onClick={(e) => {
-                    e.stopPropagation();
-                    onOpenDetails(lead);
-                  }}>
+                  e.stopPropagation();
+                  onOpenDetails(lead);
+                }}>
                   <Eye className="h-4 w-4 mr-2" />
                   Ver detalhes
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={(e) => {
-                    e.stopPropagation();
-                    onEdit(lead);
-                  }}>
+                  e.stopPropagation();
+                  onEdit(lead);
+                }}>
                   <Edit className="h-4 w-4 mr-2" />
                   Editar
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={(e) => {
-                    e.stopPropagation();
-                    onScheduleVisit(lead);
-                  }}>
+                  e.stopPropagation();
+                  onScheduleVisit(lead);
+                }}>
                   <Calendar className="h-4 w-4 mr-2" />
                   Agendar atividade
                 </DropdownMenuItem>
@@ -222,7 +203,7 @@ export function LeadCard({
           <div className="text-primary font-semibold mt-1">{lead.value}</div>
         </div>
         
-        {/* Action Buttons - Always Visible */}
+        {/* Action buttons - sempre visíveis */}
         <div className="flex gap-2 pt-2">
           <Button 
             variant="outline" 
@@ -267,11 +248,6 @@ export function LeadCard({
             <AvatarFallback className="bg-muted text-xs">{lead.assignedTo}</AvatarFallback>
           </Avatar>
           <span className="text-xs text-muted-foreground">Responsável</span>
-          <div className="ml-auto">
-            <Badge variant="secondary" className="text-xs">
-              {temperature.label}
-            </Badge>
-          </div>
         </div>
       </CardContent>
     </Card>
