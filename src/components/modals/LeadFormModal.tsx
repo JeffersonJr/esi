@@ -329,15 +329,15 @@ export function LeadFormModal({ open, onClose, onSubmit, lead }: LeadFormModalPr
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-[950px] max-h-[85vh] overflow-y-auto">
+      <DialogContent className="sm:max-w-[1200px] max-h-[90vh] overflow-y-auto">
         <form onSubmit={handleSubmit}>
           <DialogHeader>
             <DialogTitle>{lead ? 'Editar Lead' : 'Novo Lead'}</DialogTitle>
           </DialogHeader>
           
-          <div className="grid grid-cols-2 gap-4 py-2">
-            {/* Coluna Esquerda */}
-            <div className="space-y-3">
+          <div className="grid grid-cols-3 gap-6 py-2">
+            {/* Coluna Esquerda - Informações Pessoais */}
+            <div className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="name">Nome *</Label>
                 <Input
@@ -367,7 +367,7 @@ export function LeadFormModal({ open, onClose, onSubmit, lead }: LeadFormModalPr
                     disabled={formData.emails.length >= 3}
                     title={formData.emails.length >= 3 ? 'Máximo de 3 emails permitidos' : 'Adicionar email'}
                   >
-                    <Plus className="h-3 w-3 mr-1" />
+                    <Mail className="h-3 w-3 mr-1" />
                     Add
                   </Button>
                 </div>
@@ -502,8 +502,61 @@ export function LeadFormModal({ open, onClose, onSubmit, lead }: LeadFormModalPr
                   ))}
                 </div>
               </div>
+            </div>
 
-              <div className="grid grid-cols-2 gap-4">
+            {/* Coluna Central - Informações do Imóvel */}
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="property">Imóvel *</Label>
+                <Input
+                  id="property"
+                  name="property"
+                  value={formData.property}
+                  onChange={handleChange}
+                  required
+                  placeholder="Ex: Apt 2 quartos"
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="location">Localização</Label>
+                <Input
+                  id="location"
+                  name="location"
+                  value={formData.location}
+                  onChange={handleChange}
+                  placeholder="Ex: Centro, Zona Sul..."
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-2">
+                  <Label htmlFor="value">Valor *</Label>
+                  <Input
+                    id="value"
+                    name="value"
+                    value={formData.value}
+                    onChange={handleChange}
+                    required
+                    placeholder="Ex: R$ 350.000"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="searchType">Tipo de Busca</Label>
+                  <Select value={formData.searchType} onValueChange={(value) => handleSelectChange('searchType', value)}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Selecione" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="compra">Compra</SelectItem>
+                      <SelectItem value="venda">Venda</SelectItem>
+                      <SelectItem value="investimento">Investimento</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-2">
                   <Label htmlFor="source">Origem *</Label>
                   <Select value={formData.source} onValueChange={(value) => handleSelectChange('source', value)} required>
@@ -533,57 +586,8 @@ export function LeadFormModal({ open, onClose, onSubmit, lead }: LeadFormModalPr
               </div>
             </div>
 
-            {/* Coluna Direita */}
-            <div className="space-y-3">
-              <div className="grid grid-cols-1 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="property">Imóvel *</Label>
-                  <Input
-                    id="property"
-                    name="property"
-                    value={formData.property}
-                    onChange={handleChange}
-                    required
-                    placeholder="Ex: Apt 2 quartos"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="location">Localização</Label>
-                  <Input
-                    id="location"
-                    name="location"
-                    value={formData.location}
-                    onChange={handleChange}
-                    placeholder="Ex: Centro, Zona Sul..."
-                  />
-                </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="value">Valor *</Label>
-                    <Input
-                      id="value"
-                      name="value"
-                      value={formData.value}
-                      onChange={handleChange}
-                      required
-                      placeholder="Ex: R$ 350.000"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="searchType">Tipo de Busca</Label>
-                    <Select value={formData.searchType} onValueChange={(value) => handleSelectChange('searchType', value)}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Selecione" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="compra">Compra</SelectItem>
-                        <SelectItem value="venda">Venda</SelectItem>
-                        <SelectItem value="investimento">Investimento</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
-              </div>
+            {/* Coluna Direita - Tags e Observações */}
+            <div className="space-y-4">
 
               {/* Tags */}
               <div className="space-y-2">
