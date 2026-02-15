@@ -203,6 +203,7 @@ function ModernModal() {
                     { id: 'forms', label: 'Formulários', icon: Layout },
                     { id: 'data', label: 'Componentes de Dados', icon: Database },
                     { id: 'feedback', label: 'Feedback', icon: MessageSquare },
+                    { id: 'dialogs', label: 'Diálogos de Sistema', icon: AlertCircle },
                   ].map((item) => (
                     <button
                       key={item.id}
@@ -223,11 +224,12 @@ function ModernModal() {
           {/* Main Content */}
           <div className="col-span-9">
             <Tabs value={activeTab} onValueChange={setActiveTab}>
-              <TabsList className="grid w-full grid-cols-4">
+              <TabsList className="grid w-full grid-cols-5">
                 <TabsTrigger value="foundations">Fundações</TabsTrigger>
                 <TabsTrigger value="forms">Formulários</TabsTrigger>
                 <TabsTrigger value="data">Componentes de Dados</TabsTrigger>
                 <TabsTrigger value="feedback">Feedback</TabsTrigger>
+                <TabsTrigger value="dialogs">Diálogos de Sistema</TabsTrigger>
               </TabsList>
 
               {/* Fundações */}
@@ -453,6 +455,130 @@ function ModernModal() {
                             <div className="animate-spin h-4 w-4 border-2 border-primary border-t-transparent rounded-full" />
                             <p className="text-sm">Carregando...</p>
                           </div>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+
+              {/* Diálogos de Sistema */}
+              <TabsContent value="dialogs" className="space-y-6">
+                <div className="space-y-4">
+                  <h2 className="text-2xl font-bold">Diálogos de Sistema</h2>
+                  <p className="text-slate-600 dark:text-slate-400">
+                    Componentes reutilizáveis para diálogos críticos do sistema que garantem uma experiência consistente e segura.
+                  </p>
+                </div>
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <AlertCircle className="h-5 w-5 text-orange-500" />
+                      UnsavedChangesDialog - Confirmação de Alterações Não Salvas
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-6">
+                    <div className="space-y-4">
+                      <div>
+                        <h4 className="font-semibold mb-2">Objetivo</h4>
+                        <p className="text-sm text-slate-600 dark:text-slate-400">
+                          Evitar perda acidental de dados quando o usuário tenta sair de um formulário com alterações não salvas.
+                          Este é um padrão obrigatório para qualquer fluxo de edição ou cadastro na plataforma ESI.
+                        </p>
+                      </div>
+
+                      <div>
+                        <h4 className="font-semibold mb-2">Quando Usar</h4>
+                        <ul className="text-sm text-slate-600 dark:text-slate-400 space-y-1 list-disc list-inside">
+                          <li>Ao clicar em "Cancelar" em formulários com alterações</li>
+                          <li>Ao tentar navegar para outra página com dados não salvos</li>
+                          <li>Ao fechar modais de edição (leads, atividades, etc.)</li>
+                          <li>Em qualquer fluxo onde dados possam ser perdidos</li>
+                        </ul>
+                      </div>
+
+                      <div>
+                        <h4 className="font-semibold mb-2">Comportamento Padrão</h4>
+                        <div className="grid grid-cols-2 gap-4">
+                          <div className="p-4 border rounded-lg">
+                            <div className="flex items-center gap-2 mb-2">
+                              <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                                <Edit2 className="h-4 w-4 text-blue-600" />
+                              </div>
+                              <span className="font-medium text-blue-600">Continuar Editando</span>
+                            </div>
+                            <p className="text-xs text-slate-600">
+                              Mantém o usuário no modal/formulário com todas as alterações preservadas.
+                            </p>
+                          </div>
+                          <div className="p-4 border rounded-lg">
+                            <div className="flex items-center gap-2 mb-2">
+                              <div className="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center">
+                                <X className="h-4 w-4 text-red-600" />
+                              </div>
+                              <span className="font-medium text-red-600">Sair sem Salvar</span>
+                            </div>
+                            <p className="text-xs text-slate-600">
+                              Fecha o modal/formulário e descarta todas as alterações realizadas.
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div>
+                        <h4 className="font-semibold mb-2">Implementação</h4>
+                        <div className="space-y-3">
+                          <div className="bg-slate-50 dark:bg-slate-800 p-4 rounded-lg">
+                            <p className="text-xs font-mono text-slate-600 dark:text-slate-400 mb-2">
+                              1. Importe o hook e componente:
+                            </p>
+                            <pre className="text-xs bg-slate-900 text-slate-100 p-3 rounded overflow-x-auto">
+{`import { UnsavedChangesDialog } from '@/components/shared/UnsavedChangesDialog';
+import { useUnsavedChanges } from '@/hooks/use-unsaved-changes';`}
+                            </pre>
+                          </div>
+
+                          <div className="bg-slate-50 dark:bg-slate-800 p-4 rounded-lg">
+                            <p className="text-xs font-mono text-slate-600 dark:text-slate-400 mb-2">
+                              2. Configure o hook no componente:
+                            </p>
+                            <pre className="text-xs bg-slate-900 text-slate-100 p-3 rounded overflow-x-auto">
+{`const unsavedChanges = useUnsavedChanges();
+
+// Marcar como dirty quando houver alterações
+unsavedChanges.markAsDirty();
+
+// Tentar sair com confirmação
+unsavedChanges.handleExitAttempt(() => {
+  setShowModal(false);
+});`}
+                            </pre>
+                          </div>
+
+                          <div className="bg-slate-50 dark:bg-slate-800 p-4 rounded-lg">
+                            <p className="text-xs font-mono text-slate-600 dark:text-slate-400 mb-2">
+                              3. Adicione o componente ao final:
+                            </p>
+                            <pre className="text-xs bg-slate-900 text-slate-100 p-3 rounded overflow-x-auto">
+{`<UnsavedChangesDialog
+  open={unsavedChanges.showUnsavedChangesDialog}
+  onContinueEditing={unsavedChanges.handleContinueEditing}
+  onExitWithoutSaving={unsavedChanges.handleExitWithoutSaving}
+/>`}
+                            </pre>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div>
+                        <h4 className="font-semibold mb-2">Exemplos de Uso</h4>
+                        <div className="space-y-2">
+                          <Badge variant="outline">Editar Lead</Badge>
+                          <Badge variant="outline">Novo Lead</Badge>
+                          <Badge variant="outline">Detalhes da Atividade</Badge>
+                          <Badge variant="outline">Configurações</Badge>
+                          <Badge variant="outline">Formulários em Geral</Badge>
                         </div>
                       </div>
                     </div>
