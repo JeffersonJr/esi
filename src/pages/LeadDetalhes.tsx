@@ -1876,12 +1876,6 @@ export default function LeadDetalhes() {
                                     No Show
                                   </Badge>
                                 )}
-                                {isActivity && item.avaliacao === 'boa' && (
-                                  <span className="text-2xl">😊</span>
-                                )}
-                                {isActivity && item.avaliacao === 'ruim' && (
-                                  <span className="text-2xl">😞</span>
-                                )}
                                 {/* Ações no canto superior direito */}
                                 <div className="flex gap-1">
                                   {isActivity && (
@@ -1958,7 +1952,15 @@ export default function LeadDetalhes() {
                                       {item.resultado && (
                                         <div>
                                           <p className="text-[10px] font-bold text-slate-400 uppercase mb-1">Resultado</p>
-                                          <p className="text-sm text-slate-700">{item.resultado}</p>
+                                          <p className="text-sm text-slate-700 flex items-center gap-2">
+                                            {isActivity && item.avaliacao === 'boa' && (
+                                              <span className="text-lg">😊</span>
+                                            )}
+                                            {isActivity && item.avaliacao === 'ruim' && (
+                                              <span className="text-lg">😞</span>
+                                            )}
+                                            {item.resultado}
+                                          </p>
                                         </div>
                                       )}
                                       {item.proximoPasso && (
