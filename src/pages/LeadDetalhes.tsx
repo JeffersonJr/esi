@@ -329,7 +329,8 @@ export default function LeadDetalhes() {
     tipo: 'ligacao',
     data: new Date(),
     hora: '14:00',
-    descricao: ''
+    descricao: '',
+    notasDetalhadas: ''
   });
   const [historico, setHistorico] = useState<HistoricoAtendimento[]>(historicoAtendimento);
   const [editData, setEditData] = useState({
@@ -1368,7 +1369,7 @@ export default function LeadDetalhes() {
   };
 
   const handleScheduleActivity = () => {
-    if (lead && activityData.descricao.trim()) {
+    if (lead && activityData.notasDetalhadas.trim()) {
       const novaAtividade: HistoricoAtendimento = {
         id: Date.now().toString(),
         nome: activityData.nome || `${activityData.tipo.charAt(0).toUpperCase() + activityData.tipo.slice(1)}`,
@@ -1376,6 +1377,7 @@ export default function LeadDetalhes() {
         tipo: activityData.tipo as HistoricoAtendimento['tipo'],
         descricao: activityData.descricao,
         usuario: 'Usuário Atual',
+        notaAtividade: activityData.notasDetalhadas,
         editavel: true
       };
       
@@ -1452,7 +1454,8 @@ export default function LeadDetalhes() {
         tipo: 'ligacao',
         data: new Date(),
         hora: '14:00',
-        descricao: ''
+        descricao: '',
+        notasDetalhadas: ''
       });
     }
   };
@@ -1844,6 +1847,9 @@ export default function LeadDetalhes() {
                     <div className="space-y-4">
                       {historico.map((item, index) => {
                         const Icon = getTipoIcon(item.tipo);
+                        const isActivity = item.tipo !== 'followup';
+                        const isNote = item.tipo === 'followup';
+
                         return (
                           <div key={item.id} className={`border rounded-lg p-6 space-y-4 ${item.noShow ? 'ring-2 ring-orange-400 bg-orange-50' : ''}`}>
                             {/* Cabeçalho */}
@@ -1867,86 +1873,64 @@ export default function LeadDetalhes() {
                                     No Show
                                   </Badge>
                                 )}
-                                {item.avaliacao === 'boa' && (
+                                {isActivity && item.avaliacao === 'boa' && (
                                   <span className="text-2xl">😊</span>
                                 )}
-                                {item.avaliacao === 'ruim' && (
+                                {isActivity && item.avaliacao === 'ruim' && (
                                   <span className="text-2xl">😞</span>
                                 )}
                               </div>
                             </div>
-                            <div className="space-y-3">
-                              {item.notaAtividade && (
-                                <div>
-                                  <p className="text-slate-600 text-sm leading-relaxed">
-                                    {item.notaAtividade}
-                                  </p>
-                                  {item.anexos && item.anexos.length > 0 && (
-                                    <div className="flex items-center gap-1 mt-2">
-                                      <Badge variant="outline" className="text-xs">
-                                        <Paperclip className="h-3 w-3 mr-1" />
-                                        {item.anexos.length} anexo(s)
-                                      </Badge>
-                                    </div>
-                                  )}
-                                </div>
-                              )}
 
-                              {(item.resultado || item.proximoPasso) && (
-                                <div className="bg-slate-50 rounded-lg p-4 space-y-3">
-                                  {item.resultado && (
-                                    <div>
-                                      <p className="text-[10px] font-bold text-slate-400 uppercase mb-1">Resultado</p>
-                                      <p className="text-sm text-slate-700">{item.resultado}</p>
-                                    </div>
-                                  )}
-                                  {item.proximoPasso && (
-                                    <div>
-                                      <p className="text-[10px] font-bold text-slate-400 uppercase mb-1">Próximo Passo</p>
-                                      <p className="text-sm text-slate-700">{item.proximoPasso}</p>
-                                    </div>
-                                  )}
-                                </div>
-                              )}
-                            </div>
-
-                            <p className="text-sm">
-                              {item.descricao}
-                            </p>
-
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                              {item.resultado && (
-                                <div>
-                                  <span className="font-medium text-green-600">Resultado:</span>
-                                  <p className="text-muted-foreground">{item.resultado}</p>
-                                </div>
-                              )}
-                              {item.proximoPasso && (
-                                <div>
-                                  <span className="font-medium text-blue-600">Próximo passo:</span>
-                                  <div className="flex items-center gap-2 mt-1">
-                                    <p className="text-muted-foreground">{item.proximoPasso}</p>
-                                    <Button 
-                                      variant="ghost" 
-                                      size="sm" 
-                                      onClick={() => handleCreateActivityFromNextStep(item.proximoPasso!)}
-                                      className="h-6 px-2 text-xs"
-                                    >
-                                      <Plus className="h-3 w-3 mr-1" />
-                                      Criar
-                                    </Button>
+                            {/* Conteúdo Principal - Diferenciado */}
+                            {isActivity ? (
+                              // Card de Atividade (rico em dados)
+                              <div className="space-y-3">
+                                {item.notaAtividade && (
+                                  <div>
+                                    <p className="text-slate-600 text-sm leading-relaxed">
+                                      {item.notaAtividade}
+                                    </p>
+                                    {item.anexos && item.anexos.length > 0 && (
+                                      <div className="flex items-center gap-1 mt-2">
+                                        <Badge variant="outline" className="text-xs">
+                                          <Paperclip className="h-3 w-3 mr-1" />
+                                          {item.anexos.length} anexo(s)
+                                        </Badge>
+                                      </div>
+                                    )}
                                   </div>
-                                </div>
-                              )}
-                            </div>
+                                )}
 
-                            {item.anexos && item.anexos.length > 0 && (
-                              <div className="flex items-center gap-2 text-sm">
-                                <FileText className="h-4 w-4" />
-                                <span>Anexos:</span>
-                                <div className="flex gap-2">
-                                  {item.anexos.map((anexo, idx) => (
-                                    <Badge key={idx} variant="outline" className="text-xs">
+                                {/* Seção de Desfecho - apenas para atividades */}
+                                {(item.resultado || item.proximoPasso) && (
+                                  <div className="bg-slate-50 rounded-lg p-4 space-y-3">
+                                    {item.resultado && (
+                                      <div>
+                                        <p className="text-[10px] font-bold text-slate-400 uppercase mb-1">Resultado</p>
+                                        <p className="text-sm text-slate-700">{item.resultado}</p>
+                                      </div>
+                                    )}
+                                    {item.proximoPasso && (
+                                      <div>
+                                        <p className="text-[10px] font-bold text-slate-400 uppercase mb-1">Próximo Passo</p>
+                                        <p className="text-sm text-slate-700">{item.proximoPasso}</p>
+                                      </div>
+                                    )}
+                                  </div>
+                                )}
+                              </div>
+                            ) : (
+                              // Card de Nota (simples e direto)
+                              <div className="space-y-3">
+                                <p className="text-slate-700 text-sm leading-relaxed">
+                                  {item.descricao}
+                                </p>
+                                {item.anexos && item.anexos.length > 0 && (
+                                  <div className="flex items-center gap-1 mt-2">
+                                    <Badge variant="outline" className="text-xs">
+                                      <Paperclip className="h-3 w-3 mr-1" />
+                                      {item.anexos.length} anexo(s)
                                       {anexo}
                                     </Badge>
                                   ))}
@@ -2295,12 +2279,22 @@ export default function LeadDetalhes() {
                 rows={3}
               />
             </div>
+            <div>
+              <Label htmlFor="notas-detalhadas">Notas detalhadas da atividade</Label>
+              <Textarea
+                id="notas-detalhadas"
+                placeholder="Descreva os detalhes, observações e informações importantes sobre esta atividade..."
+                value={activityData.notasDetalhadas}
+                onChange={(e) => setActivityData({...activityData, notasDetalhadas: e.target.value})}
+                rows={4}
+              />
+            </div>
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setShowActivityModal(false)}>
               Cancelar
             </Button>
-            <Button onClick={handleScheduleActivity} disabled={!activityData.nome.trim() || !activityData.descricao.trim()}>
+            <Button onClick={handleScheduleActivity} disabled={!activityData.nome.trim() || !activityData.notasDetalhadas.trim()}>
               Agendar Atividade
             </Button>
           </DialogFooter>
