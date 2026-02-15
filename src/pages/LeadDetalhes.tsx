@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Separator } from '@/components/ui/separator';
-import { X, Plus, Calendar, Mail, Phone, MessageSquare, MessageCircle, User, MapPin, Home, DollarSign, Building, Clock, MoreHorizontal, MoreVertical, Search, Filter, Edit, Trash2, ChevronDown, Eye, ArrowLeft, Target, StickyNote, Send, FileText, Download, Star, CheckCircle, AlertCircle, Users, Briefcase, Tag, Activity, UserCheck, TrendingUp, Car } from 'lucide-react';
+import { X, Plus, Calendar, Mail, Phone, MessageSquare, MessageCircle, User, MapPin, Home, DollarSign, Building, Clock, MoreHorizontal, MoreVertical, Search, Filter, Edit, Trash2, ChevronDown, Eye, ArrowLeft, Target, StickyNote, Send, FileText, Download, Star, CheckCircle, AlertCircle, Users, Briefcase, Tag, Activity, UserCheck, TrendingUp, Car, Paperclip } from 'lucide-react';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { ActivityEditModal } from '@/components/modals/ActivityEditModal';
@@ -1845,51 +1845,36 @@ export default function LeadDetalhes() {
                       {historico.map((item, index) => {
                         const Icon = getTipoIcon(item.tipo);
                         return (
-                          <div key={item.id} className={`border rounded-lg p-4 space-y-3 ${item.noShow ? 'ring-2 ring-orange-400 bg-orange-50' : ''}`}>
-                            <div className="flex items-start justify-between">
-                              <div className="flex items-center gap-3">
-                                <div className={`p-2 rounded-full ${getTipoColor(item.tipo)}`}>
-                                  <Icon className="h-4 w-4" />
+                          <div key={item.id} className={`border rounded-lg p-6 space-y-4 ${item.noShow ? 'ring-2 ring-orange-400 bg-orange-50' : ''}`}>
+                            {/* Cabeçalho */}
+                            <div className="flex justify-between items-start">
+                              <div className="flex-1">
+                                <div className="flex items-center gap-2 mb-1">
+                                  <Icon className="h-4 w-4 text-slate-500" />
+                                  <h3 className="font-bold text-slate-900">
+                                    {item.nome || item.tipo.charAt(0).toUpperCase() + item.tipo.slice(1)}
+                                  </h3>
                                 </div>
-                                <div>
-                                  <div className="flex items-center gap-2 flex-wrap">
-                                    {item.nome ? (
-                                      <h4 className="font-medium">{item.nome}</h4>
-                                    ) : (
-                                      <h4 className="font-medium capitalize">{item.tipo}</h4>
-                                    )}
-                                    {item.tipo === 'followup' ? (
-                                      <Badge variant="secondary" className="text-xs bg-blue-100 text-blue-700">
-                                        <StickyNote className="h-3 w-3 mr-1" />
-                                        Nota
-                                      </Badge>
-                                    ) : (
-                                      <Badge variant="secondary" className="text-xs bg-green-100 text-green-700">
-                                        <Activity className="h-3 w-3 mr-1" />
-                                        {item.tipo.charAt(0).toUpperCase() + item.tipo.slice(1)}
-                                      </Badge>
-                                    )}
-                                    {item.noShow && (
-                                      <Badge variant="outline" className="bg-orange-100 text-orange-700 border-orange-300">
-                                        <User className="h-3 w-3 mr-1" />
-                                        No Show
-                                      </Badge>
-                                    )}
-                                    <Badge variant="outline" className="text-xs">
-                                      {format(new Date(item.data), "dd/MM/yyyy 'às' HH:mm", { locale: ptBR })}
-                                    </Badge>
-                                    {item.avaliacao && (
-                                      <Badge variant={item.avaliacao === 'boa' ? 'default' : 'destructive'} className="text-xs">
-                                        {item.avaliacao === 'boa' ? 'Boa' : 'Ruim'}
-                                      </Badge>
-                                    )}
-                                  </div>
-                                  <p className="text-sm text-muted-foreground">
-                                    Por {item.usuario}
-                                    {item.duracao && ` • ${item.duracao}`}
-                                  </p>
-                                </div>
+                                <p className="text-xs text-slate-400">
+                                  {format(new Date(item.data), "dd/MM/yyyy 'às' HH:mm", { locale: ptBR })}
+                                  {item.usuario && ` • ${item.usuario}`}
+                                </p>
                               </div>
+                              <div className="flex items-center gap-2">
+                                {item.noShow && (
+                                  <Badge variant="outline" className="bg-orange-100 text-orange-700 border-orange-300 text-xs">
+                                    <User className="h-3 w-3 mr-1" />
+                                    No Show
+                                  </Badge>
+                                )}
+                                {item.avaliacao === 'boa' && (
+                                  <span className="text-2xl">😊</span>
+                                )}
+                                {item.avaliacao === 'ruim' && (
+                                  <span className="text-2xl">😞</span>
+                                )}
+                              </div>
+                            </div>
                               <div className="flex gap-1">
                                 {/* Apenas atividades podem ter notas adicionadas */}
                                 {item.tipo !== 'followup' && (
