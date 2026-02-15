@@ -668,9 +668,9 @@ const handleConfirmVisit = (visitData: VisitData) => {
                     <h3 className={`font-semibold text-sm px-3 py-1 rounded-full ${stage.color}`}>
                       {stage.title}
                     </h3>
-                    <span className="text-xs text-muted-foreground">
+                    <Badge variant="secondary" className="rounded-full text-xs px-2 py-0.5 h-5 flex items-center justify-center">
                       {getFilteredLeads()[stage.id]?.length || 0}
-                    </span>
+                    </Badge>
                   </div>
                 </div>
                 <Droppable droppableId={stage.id}>
