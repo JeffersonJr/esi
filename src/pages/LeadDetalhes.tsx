@@ -468,25 +468,59 @@ export default function LeadDetalhes() {
       // Cria animação visual de transferência
       const createTransferAnimation = () => {
         const animation = document.createElement('div');
-        animation.className = 'fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg z-50 flex items-center gap-2';
+        animation.className = 'fixed top-4 right-4 bg-gradient-to-r from-blue-500 to-green-500 text-white px-6 py-3 rounded-xl shadow-xl z-50 flex items-center gap-3 transform translate-x-full transition-transform duration-300 ease-out';
         animation.innerHTML = `
-          <div class="flex items-center gap-2">
-            <div class="w-2 h-2 bg-white rounded-full animate-pulse"></div>
-            <span class="text-sm font-medium">Alterando corretor...</span>
+          <div class="flex items-center gap-3">
+            <div class="relative">
+              <div class="w-3 h-3 bg-white rounded-full animate-ping"></div>
+              <div class="w-3 h-3 bg-white rounded-full animate-pulse absolute top-0"></div>
+            </div>
+            <div class="flex flex-col">
+              <span class="text-sm font-bold">Transferindo Lead</span>
+              <span class="text-xs opacity-90">Alterando responsável...</span>
+            </div>
+            <div class="flex gap-1">
+              <div class="w-1 h-4 bg-white rounded-full animate-pulse" style="animation-delay: 0.1s"></div>
+              <div class="w-1 h-4 bg-white rounded-full animate-pulse" style="animation-delay: 0.2s"></div>
+              <div class="w-1 h-4 bg-white rounded-full animate-pulse" style="animation-delay: 0.3s"></div>
+            </div>
           </div>
         `;
         document.body.appendChild(animation);
         
-        // Remove após 2 segundos
+        // Animação de entrada
         setTimeout(() => {
-          animation.style.transition = 'opacity 0.3s ease-out';
+          animation.style.transform = 'translateX(0)';
+        }, 100);
+        
+        // Animação de sucesso após 1.5 segundos
+        setTimeout(() => {
+          animation.className = 'fixed top-4 right-4 bg-gradient-to-r from-green-500 to-emerald-500 text-white px-6 py-3 rounded-xl shadow-xl z-50 flex items-center gap-3 transform transition-all duration-300 ease-out';
+          animation.innerHTML = `
+            <div class="flex items-center gap-3">
+              <div class="w-6 h-6 bg-white rounded-full flex items-center justify-center">
+                <svg class="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                </svg>
+              </div>
+              <div class="flex flex-col">
+                <span class="text-sm font-bold">Transferência Concluída!</span>
+                <span class="text-xs opacity-90">Lead atribuído com sucesso</span>
+              </div>
+            </div>
+          `;
+        }, 1500);
+        
+        // Remove após 3 segundos
+        setTimeout(() => {
+          animation.style.transform = 'translateX(100%)';
           animation.style.opacity = '0';
           setTimeout(() => {
             if (document.body.contains(animation)) {
               document.body.removeChild(animation);
             }
           }, 300);
-        }, 2000);
+        }, 3000);
       };
       
       // Dispara animação
