@@ -229,13 +229,32 @@ export function Funil() {
     destStage: string;
   } | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
-  const [filters, setFilters] = useState({
+  const [filters, setFilters] = useState<{
+    nomeLead: string;
+    corretor: string;
+    valorMin: string;
+    valorMax: string;
+    regiao: string;
+    imovel: string;
+    origem: string;
+    tags: string[];
+    stage: string;
+    dataMin: string;
+    dataMax: string;
+    contatoRealizado: boolean;
+  }>({
     nomeLead: '',
     corretor: '',
     valorMin: '',
     valorMax: '',
     regiao: '',
-    imovel: ''
+    imovel: '',
+    origem: '',
+    tags: [],
+    stage: '',
+    dataMin: '',
+    dataMax: '',
+    contatoRealizado: false
   });
   const isMobile = useMediaQuery('(max-width: 768px)');
   const navigate = useNavigate();
@@ -415,7 +434,13 @@ const handleConfirmVisit = (visitData: VisitData) => {
       valorMin: '',
       valorMax: '',
       regiao: '',
-      imovel: ''
+      imovel: '',
+      origem: '',
+      tags: [],
+      stage: '',
+      dataMin: '',
+      dataMax: '',
+      contatoRealizado: false
     });
     setSearchTerm('');
   };
@@ -439,6 +464,10 @@ const handleConfirmVisit = (visitData: VisitData) => {
         const matchesCorretor = filters.corretor === '' || lead.assignedTo === filters.corretor;
         const matchesRegiao = filters.regiao === '' || lead.property.toLowerCase().includes(filters.regiao.toLowerCase());
         const matchesImovel = filters.imovel === '' || lead.property.toLowerCase().includes(filters.imovel.toLowerCase());
+        const matchesOrigem = filters.origem === '' || lead.source === filters.origem;
+        const matchesStage = filters.stage === '' || lead.stage === filters.stage;
+        const matchesTags = filters.tags.length === 0 || (lead.tags && filters.tags.some(tag => lead.tags.includes(tag)));
+        const matchesContato = !filters.contatoRealizado || (filters.contatoRealizado && lead.lastContact && lead.lastContact !== '');
         
         // Filtro de valor
         let matchesValor = true;
@@ -452,7 +481,20 @@ const handleConfirmVisit = (visitData: VisitData) => {
           }
         }
         
-        return matchesSearch && matchesNome && matchesCorretor && matchesRegiao && matchesImovel && matchesValor;
+        // Filtro de data
+        let matchesData = true;
+        if (filters.dataMin || filters.dataMax) {
+          const leadDate = new Date(lead.createdAt);
+          if (filters.dataMin) {
+            matchesData = leadDate >= new Date(filters.dataMin);
+          }
+          if (filters.dataMax) {
+            matchesData = matchesData && leadDate <= new Date(filters.dataMax);
+          }
+        }
+        
+        return matchesSearch && matchesNome && matchesCorretor && matchesRegiao && matchesImovel && 
+               matchesOrigem && matchesStage && matchesTags && matchesContato && matchesValor && matchesData;
       });
       
       if (filteredStageLeads.length > 0) {
@@ -932,6 +974,42 @@ const handleConfirmVisit = (visitData: VisitData) => {
               </Select>
             </div>
 
+            <div>
+              <Label htmlFor="origem">Origem do Lead</Label>
+              <Select value={filters.origem} onValueChange={(value) => setFilters({...filters, origem: value})}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Todas as origens" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="">Todas as origens</SelectItem>
+                  <SelectItem value="Website">Website</SelectItem>
+                  <SelectItem value="Indicação">Indicação</SelectItem>
+                  <SelectItem value="Redes Sociais">Redes Sociais</SelectItem>
+                  <SelectItem value="Telefone">Telefone</SelectItem>
+                  <SelectItem value="Email">Email</SelectItem>
+                  <SelectItem value="Evento">Evento</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div>
+              <Label htmlFor="stage">Estágio do Funil</Label>
+              <Select value={filters.stage} onValueChange={(value) => setFilters({...filters, stage: value})}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Todos os estágios" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="">Todos os estágios</SelectItem>
+                  <SelectItem value="new">Novo Lead</SelectItem>
+                  <SelectItem value="contact">Contato Realizado</SelectItem>
+                  <SelectItem value="visit">Visita Agendada</SelectItem>
+                  <SelectItem value="proposal">Proposta Enviada</SelectItem>
+                  <SelectItem value="negotiation">Em Negociação</SelectItem>
+                  <SelectItem value="closed">Fechado</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <Label htmlFor="valorMin">Valor Mínimo</Label>
@@ -954,6 +1032,28 @@ const handleConfirmVisit = (visitData: VisitData) => {
               </div>
             </div>
 
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="dataMin">Data Inicial</Label>
+                <Input
+                  id="dataMin"
+                  type="date"
+                  value={filters.dataMin}
+                  onChange={(e) => setFilters({...filters, dataMin: e.target.value})}
+                />
+              </div>
+              
+              <div>
+                <Label htmlFor="dataMax">Data Final</Label>
+                <Input
+                  id="dataMax"
+                  type="date"
+                  value={filters.dataMax}
+                  onChange={(e) => setFilters({...filters, dataMax: e.target.value})}
+                />
+              </div>
+            </div>
+
             <div>
               <Label htmlFor="regiao">Região de Interesse</Label>
               <Input
@@ -972,6 +1072,19 @@ const handleConfirmVisit = (visitData: VisitData) => {
                 value={filters.imovel}
                 onChange={(e) => setFilters({...filters, imovel: e.target.value})}
               />
+            </div>
+
+            <div className="flex items-center space-x-2">
+              <input
+                type="checkbox"
+                id="contatoRealizado"
+                checked={filters.contatoRealizado}
+                onChange={(e) => setFilters({...filters, contatoRealizado: e.target.checked})}
+                className="rounded border-gray-300"
+              />
+              <Label htmlFor="contatoRealizado" className="text-sm">
+                    Apenas leads com contato realizado
+              </Label>
             </div>
           </div>
           <DialogFooter>
