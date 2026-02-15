@@ -2181,7 +2181,7 @@ export default function LeadDetalhes() {
                 
                 <div className="space-y-3">
                   {imoveisInteresse.map((imovel) => (
-                    <div key={imovel.id} className="border rounded-lg p-4 hover:shadow-md transition-shadow">
+                    <div key={imovel.id} className="border rounded-lg p-4 hover:shadow-md hover:border-cyan-200 transition-all duration-200 hover:shadow-lg">
                       <div className="flex items-start gap-4">
                         <input
                           type="checkbox"
@@ -2190,12 +2190,14 @@ export default function LeadDetalhes() {
                           className="mt-1"
                         />
                         
-                        <div className="w-32 h-24 rounded-lg overflow-hidden flex-shrink-0">
-                          <img
-                            src={imovel.imagens[0]}
-                            alt={imovel.titulo}
-                            className="w-full h-full object-cover"
-                          />
+                        <div className="w-32 h-24 rounded-md overflow-hidden flex-shrink-0">
+                          <div className="w-full h-full relative">
+                            <img
+                              src={imovel.imagens[0]}
+                              alt={imovel.titulo}
+                              className="w-full h-full object-cover"
+                            />
+                          </div>
                         </div>
                         
                         <div className="flex-1">
@@ -2203,24 +2205,24 @@ export default function LeadDetalhes() {
                             <div className="flex-1">
                               <h3 className="font-semibold">{imovel.titulo}</h3>
                               <p className="text-sm text-muted-foreground">{imovel.endereco}</p>
-                              <p className="text-lg font-bold text-primary mt-1">{imovel.valor}</p>
+                              <p className="text-cyan-600 font-bold text-lg mt-1">{imovel.valor}</p>
                               
-                              <div className="flex gap-4 mt-3 text-sm">
-                                <span className="flex items-center gap-1">
-                                  <Home className="h-4 w-4" />
-                                  {imovel.quartos} quartos
+                              <div className="flex gap-6 mt-3 text-sm">
+                                <span className="flex items-center gap-2">
+                                  <Home className="h-4 w-4 text-slate-500" />
+                                  <span>{imovel.quartos} quartos</span>
                                 </span>
-                                <span className="flex items-center gap-1">
-                                  <DollarSign className="h-4 w-4" />
-                                  {imovel.area} m²
+                                <span className="flex items-center gap-2">
+                                  <DollarSign className="h-4 w-4 text-slate-500" />
+                                  <span>{imovel.area} m²</span>
                                 </span>
-                                <span className="flex items-center gap-1">
-                                  <Car className="h-4 w-4" />
-                                  {imovel.vagas} vagas
+                                <span className="flex items-center gap-2">
+                                  <Car className="h-4 w-4 text-slate-500" />
+                                  <span>{imovel.vagas} vagas</span>
                                 </span>
                               </div>
                               
-                              <p className="text-sm text-muted-foreground mt-2">{imovel.descricao}</p>
+                              <p className="text-sm text-muted-foreground mt-2 line-clamp-2">{imovel.descricao}</p>
                               
                               <div className="flex gap-2 ml-4">
                               <Button 
@@ -2232,8 +2234,9 @@ export default function LeadDetalhes() {
                                 Ver
                               </Button>
                               <Button 
-                                variant="outline" 
+                                variant="default" 
                                 size="sm" 
+                                className="bg-cyan-500 hover:bg-cyan-600 text-white"
                                 onClick={() => handleScheduleVisit(imovel)}
                               >
                                 <Calendar className="h-4 w-4 mr-1" />
