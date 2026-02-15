@@ -68,6 +68,7 @@ interface ImovelInteresse {
 
 interface HistoricoAtendimento {
   id: string;
+  nome?: string;
   data: string;
   hora?: string;
   tipo: 'ligacao' | 'email' | 'visita' | 'proposta' | 'reuniao' | 'whatsapp' | 'followup';
@@ -315,6 +316,7 @@ export default function LeadDetalhes() {
   const [newNoteAttachment, setNewNoteAttachment] = useState<File | null>(null);
   const [selectedCorretor, setSelectedCorretor] = useState('');
   const [activityData, setActivityData] = useState({
+    nome: '',
     tipo: 'ligacao',
     data: new Date(),
     hora: '14:00',
@@ -1231,6 +1233,7 @@ export default function LeadDetalhes() {
   const handleScheduleVisit = (property: ImovelInteresse) => {
     setActivityData({
       ...activityData,
+      nome: `Visita - ${property.titulo}`,
       tipo: 'visita',
       descricao: `Visita ao imóvel: ${property.titulo}`
     });
@@ -1281,6 +1284,7 @@ export default function LeadDetalhes() {
       
       setActivityData({
         ...activityData,
+        nome: 'Visita Múltipla',
         tipo: 'visita',
         descricao: descricao
       });
@@ -1309,6 +1313,7 @@ export default function LeadDetalhes() {
     if (lead && activityData.descricao.trim()) {
       const novaAtividade: HistoricoAtendimento = {
         id: Date.now().toString(),
+        nome: activityData.nome || `${activityData.tipo.charAt(0).toUpperCase() + activityData.tipo.slice(1)}`,
         data: activityData.data.toISOString(),
         tipo: activityData.tipo as HistoricoAtendimento['tipo'],
         descricao: activityData.descricao,
@@ -1385,6 +1390,7 @@ export default function LeadDetalhes() {
       
       setShowActivityModal(false);
       setActivityData({
+        nome: '',
         tipo: 'ligacao',
         data: new Date(),
         hora: '14:00',
@@ -1407,6 +1413,7 @@ export default function LeadDetalhes() {
     
     setActivityData({
       ...activityData,
+      nome: `${activityType.charAt(0).toUpperCase() + activityType.slice(1)} - ${nextStep}`,
       tipo: activityType,
       descricao: `Realizar ${activityType} - ${nextStep}`
     });
@@ -1843,7 +1850,12 @@ export default function LeadDetalhes() {
                               </div>
                             </div>
                             
-                            <p className="text-sm">{item.descricao}</p>
+                            <p className="text-sm">
+                              {item.nome && (
+                                <span className="font-medium text-blue-600">{item.nome}: </span>
+                              )}
+                              {item.descricao}
+                            </p>
                             
                             {item.notaAtividade && (
                               <div className="bg-muted p-2 rounded text-sm">
@@ -2174,6 +2186,15 @@ export default function LeadDetalhes() {
           </DialogHeader>
           <div className="space-y-4">
             <div>
+              <Label htmlFor="nome-atividade">Nome da Atividade</Label>
+              <Input
+                id="nome-atividade"
+                placeholder="Dê um nome para esta atividade..."
+                value={activityData.nome}
+                onChange={(e) => setActivityData({...activityData, nome: e.target.value})}
+              />
+            </div>
+            <div>
               <Label htmlFor="tipo-atividade">Tipo de Atividade</Label>
               <Select value={activityData.tipo} onValueChange={(value) => setActivityData({...activityData, tipo: value})}>
                 <SelectTrigger>
@@ -2228,7 +2249,7 @@ export default function LeadDetalhes() {
             <Button variant="outline" onClick={() => setShowActivityModal(false)}>
               Cancelar
             </Button>
-            <Button onClick={handleScheduleActivity} disabled={!activityData.descricao.trim()}>
+            <Button onClick={handleScheduleActivity} disabled={!activityData.nome.trim() || !activityData.descricao.trim()}>
               Agendar Atividade
             </Button>
           </DialogFooter>
