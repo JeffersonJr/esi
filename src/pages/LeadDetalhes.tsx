@@ -1370,12 +1370,36 @@ export default function LeadDetalhes() {
 
   const handleScheduleVisit = (property: ImovelInteresse) => {
     setActivityData({
-      ...activityData,
       nome: `Visita - ${property.titulo}`,
       tipo: 'visita',
-      descricao: `Visita ao imóvel: ${property.titulo}`
+      data: new Date(),
+      hora: '14:00',
+      descricao: `Visita ao imóvel: ${property.titulo}`,
+      notasDetalhadas: ''
     });
     setShowActivityModal(true);
+  };
+
+  const handleScheduleMultipleVisits = () => {
+    if (selectedProperties.length > 0) {
+      // Criar descrição com todos os imóveis selecionados
+      const selectedImoveis = imoveisInteresse.filter(imovel => 
+        selectedProperties.includes(imovel.id)
+      );
+      
+      const imoveisList = selectedImoveis.map(imovel => `• ${imovel.titulo}`).join('\n');
+      const descricao = `Visita múltipla - Imóveis selecionados:\n${imoveisList}`;
+      
+      setActivityData({
+        nome: 'Visita Múltipla',
+        tipo: 'visita',
+        data: new Date(),
+        hora: '14:00',
+        descricao: descricao,
+        notasDetalhadas: ''
+      });
+      setShowActivityModal(true);
+    }
   };
 
   const handlePropertySelection = (propertyId: string) => {
@@ -1407,26 +1431,6 @@ export default function LeadDetalhes() {
   const handleSendProperties = () => {
     if (selectedProperties.length > 0) {
       setShowSendModal(true);
-    }
-  };
-
-  const handleScheduleMultipleVisits = () => {
-    if (selectedProperties.length > 0) {
-      // Criar descrição com todos os imóveis selecionados
-      const selectedImoveis = imoveisInteresse.filter(imovel => 
-        selectedProperties.includes(imovel.id)
-      );
-      
-      const imoveisList = selectedImoveis.map(imovel => `• ${imovel.titulo}`).join('\n');
-      const descricao = `Visita múltipla - Imóveis selecionados:\n${imoveisList}`;
-      
-      setActivityData({
-        ...activityData,
-        nome: 'Visita Múltipla',
-        tipo: 'visita',
-        descricao: descricao
-      });
-      setShowActivityModal(true);
     }
   };
 
@@ -2230,6 +2234,7 @@ export default function LeadDetalhes() {
                               <Button 
                                 variant="outline" 
                                 size="sm" 
+                                onClick={() => handleScheduleVisit(imovel)}
                               >
                                 <Calendar className="h-4 w-4 mr-1" />
                                 Visitar
