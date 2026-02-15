@@ -1794,8 +1794,24 @@ export default function LeadDetalhes() {
                                   <Icon className="h-4 w-4" />
                                 </div>
                                 <div>
-                                  <div className="flex items-center gap-2">
+                                  <div className="flex items-center gap-2 flex-wrap">
                                     <h4 className="font-medium capitalize">{item.tipo}</h4>
+                                    {item.tipo === 'followup' ? (
+                                      <Badge variant="secondary" className="text-xs bg-blue-100 text-blue-700">
+                                        <StickyNote className="h-3 w-3 mr-1" />
+                                        Nota
+                                      </Badge>
+                                    ) : (
+                                      <Badge variant="secondary" className="text-xs bg-green-100 text-green-700">
+                                        <Activity className="h-3 w-3 mr-1" />
+                                        Atividade
+                                      </Badge>
+                                    )}
+                                    {item.nome && (
+                                      <Badge variant="outline" className="text-xs bg-slate-100 text-slate-700 border-slate-300 max-w-xs truncate">
+                                        {item.nome}
+                                      </Badge>
+                                    )}
                                     {item.noShow && (
                                       <Badge variant="outline" className="bg-orange-100 text-orange-700 border-orange-300">
                                         <User className="h-3 w-3 mr-1" />
@@ -1851,8 +1867,15 @@ export default function LeadDetalhes() {
                             </div>
                             
                             <p className="text-sm">
-                              {item.nome && (
-                                <span className="font-medium text-blue-600">{item.nome}: </span>
+                              {item.nome && item.tipo === 'followup' && (
+                                <div className="font-medium text-blue-700 mb-1 p-2 bg-blue-50 rounded border-l-4 border-blue-400">
+                                  📋 {item.nome}
+                                </div>
+                              )}
+                              {item.nome && item.tipo !== 'followup' && (
+                                <div className="font-medium text-slate-700 mb-1 p-2 bg-slate-50 rounded border-l-4 border-blue-400">
+                                  📝 {item.nome}
+                                </div>
                               )}
                               {item.descricao}
                             </p>
