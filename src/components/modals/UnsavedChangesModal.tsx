@@ -45,14 +45,14 @@ export function UnsavedChangesModal({
         <div className="flex gap-3 mt-6">
           <Button
             variant="outline"
-            onClick={onConfirm}
+            onClick={onCancel}
             className="flex-1"
           >
             {confirmText}
           </Button>
           <Button
             variant="destructive"
-            onClick={onCancel}
+            onClick={onConfirm}
             className="flex-1"
           >
             {cancelText}

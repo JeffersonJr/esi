@@ -22,6 +22,8 @@ import html2canvas from 'html2canvas';
 import { useRef } from 'react';
 import { TagManager } from '@/components/shared/TagManager';
 import { DEFAULT_TAGS, TAG_COLORS } from '@/components/shared/tagConstants';
+import { UnsavedChangesDialog } from '@/components/shared/UnsavedChangesDialog';
+import { useUnsavedChanges } from '@/hooks/use-unsaved-changes';
 
 interface Lead {
   id: string;
@@ -309,8 +311,8 @@ export default function LeadDetalhes() {
   const [showActivityEditModal, setShowActivityEditModal] = useState(false);
   const [selectedActivity, setSelectedActivity] = useState<HistoricoAtendimento | null>(null);
   const [newNote, setNewNote] = useState('');
-  const [newNoteResultado, setNewNoteResultado] = useState('');
-  const [newNoteProximoPasso, setNewNoteProximoPasso] = useState('');
+  const [newNoteName, setNewNoteName] = useState('');
+  const [newNoteAttachment, setNewNoteAttachment] = useState<File | null>(null);
   const [selectedCorretor, setSelectedCorretor] = useState('');
   const [activityData, setActivityData] = useState({
     tipo: 'ligacao',
@@ -347,6 +349,9 @@ export default function LeadDetalhes() {
   ]);
   const [deleteConfirmModal, setDeleteConfirmModal] = useState<{show: boolean, documentId: string, documentName: string}>({show: false, documentId: '', documentName: ''});
   const [editingNote, setEditingNote] = useState<{id: string, content: string} | null>(null);
+  const [editingNoteName, setEditingNoteName] = useState('');
+  const [editingNoteContent, setEditingNoteContent] = useState('');
+  const [editingNoteAttachment, setEditingNoteAttachment] = useState<File | null>(null);
   const [documentos, setDocumentos] = useState<Documento[]>(documentosMock);
   const [newDocument, setNewDocument] = useState({nome: '', arquivo: null as File | null});
   const [leadTags, setLeadTags] = useState<string[]>([]);
@@ -361,6 +366,8 @@ export default function LeadDetalhes() {
   const [nextActivity, setNextActivity] = useState('');
   const [availableActivityTags, setAvailableActivityTags] = useState(DEFAULT_TAGS);
 
+  const unsavedChanges = useUnsavedChanges();
+
   const corretores = [
     { id: 'JS', nome: 'João Silva', avatar: 'JS', color: 'bg-blue-500' },
     { id: 'MR', nome: 'Maria Rodrigues', avatar: 'MR', color: 'bg-pink-500' },
@@ -372,6 +379,32 @@ export default function LeadDetalhes() {
     if (lead) {
       const cleanPhone = lead.phone.replace(/\D/g, '');
       window.open(`https://wa.me/55${cleanPhone}`, '_blank');
+    }
+  };
+
+  const handleNavigateWithConfirmation = (path: string) => {
+    if (showEditModal && unsavedChanges.hasUnsavedChanges) {
+      unsavedChanges.handleExitAttempt(() => {
+        setShowEditModal(false);
+        navigate(path);
+      });
+    } else if (showEditModal) {
+      // Se está no modal de edição mas não há alterações, apenas fecha o modal
+      setShowEditModal(false);
+    } else {
+      // Se não está no modal de edição, navega normalmente
+      navigate(path);
+    }
+  };
+
+  const handleCancelEdit = () => {
+    if (unsavedChanges.hasUnsavedChanges) {
+      unsavedChanges.handleExitAttempt(() => {
+        setShowEditModal(false);
+      });
+    } else {
+      // Se não há alterações, apenas fecha o modal
+      setShowEditModal(false);
     }
   };
 
@@ -436,46 +469,79 @@ export default function LeadDetalhes() {
   };
 
   const handleAddNote = () => {
-    if (lead && newNote.trim()) {
+    if (lead && newNoteName.trim()) {
+      const noteTitle = newNoteName.trim();
+      const noteContent = newNote.trim() || 'Sem descrição';
+      
       const novaNota: HistoricoAtendimento = {
         id: Date.now().toString(),
         data: new Date().toISOString(),
         tipo: 'followup',
-        descricao: newNote,
+        descricao: `${noteTitle}: ${noteContent}`,
         usuario: 'Usuário Atual',
-        resultado: newNoteResultado.trim() || undefined,
-        proximoPasso: newNoteProximoPasso.trim() || undefined,
-        editavel: true
+        editavel: true,
+        anexos: newNoteAttachment ? [newNoteAttachment.name] : undefined
       };
       
       setHistorico([novaNota, ...historico]);
       
       const updatedLead = {
         ...lead,
-        notes: lead.notes ? `${lead.notes}\n\n${new Date().toLocaleDateString('pt-BR')} - ${newNote}` : `${new Date().toLocaleDateString('pt-BR')} - ${newNote}`
+        notes: lead.notes ? `${lead.notes}\n\n${new Date().toLocaleDateString('pt-BR')} - ${noteTitle}` : `${new Date().toLocaleDateString('pt-BR')} - ${noteTitle}`
       };
       setLead(updatedLead);
       setShowNoteModal(false);
+      setNewNoteName('');
       setNewNote('');
-      setNewNoteResultado('');
-      setNewNoteProximoPasso('');
+      setNewNoteAttachment(null);
+      
+      toast({
+        title: "✅ Nota adicionada com sucesso!",
+        description: `A nota "${noteTitle}" foi adicionada ao histórico.`,
+        variant: "success",
+      });
     }
   };
 
   const handleEditNote = (noteId: string, currentContent: string) => {
+    // Extrair nome e conteúdo do formato "Nome: Conteúdo"
+    const parts = currentContent.split(':');
+    const name = parts[0] || '';
+    const content = parts.slice(1).join(':').trim() || '';
+    
     setEditingNote({id: noteId, content: currentContent});
+    setEditingNoteName(name);
+    setEditingNoteContent(content);
+    setEditingNoteAttachment(null);
     setShowEditNoteModal(true);
   };
 
   const handleSaveEditNote = () => {
-    if (editingNote) {
+    if (editingNote && editingNoteName.trim()) {
+      const noteTitle = editingNoteName.trim();
+      const noteContent = editingNoteContent.trim() || 'Sem descrição';
+      const newDescription = `${noteTitle}: ${noteContent}`;
+      
       setHistorico(historico.map(item => 
         item.id === editingNote.id 
-          ? {...item, descricao: editingNote.content}
+          ? {
+              ...item, 
+              descricao: newDescription,
+              anexos: editingNoteAttachment ? [editingNoteAttachment.name] : item.anexos
+            }
           : item
       ));
       setShowEditNoteModal(false);
       setEditingNote(null);
+      setEditingNoteName('');
+      setEditingNoteContent('');
+      setEditingNoteAttachment(null);
+      
+      toast({
+        title: "✅ Nota atualizada com sucesso!",
+        description: `A nota "${noteTitle}" foi atualizada.`,
+        variant: "success",
+      });
     }
   };
 
@@ -1351,16 +1417,19 @@ export default function LeadDetalhes() {
     if (newEditTag.trim() && !editData.tags.includes(newEditTag.trim())) {
       setEditData({...editData, tags: [...editData.tags, newEditTag.trim()]});
       setNewEditTag('');
+      unsavedChanges.markAsDirty();
     }
   };
 
   const removeEditTag = (tagToRemove: string) => {
     setEditData({...editData, tags: editData.tags.filter(tag => tag !== tagToRemove)});
+    unsavedChanges.markAsDirty();
   };
 
   const addAvailableEditTag = (tag: { id: string; name: string; color: string }) => {
     if (!editData.tags.includes(tag.name)) {
       setEditData({...editData, tags: [...editData.tags, tag.name]});
+      unsavedChanges.markAsDirty();
     }
   };
 
@@ -1407,6 +1476,7 @@ export default function LeadDetalhes() {
         priorities: lead.priorities || [],
         notes: lead.notes || ''
       });
+      unsavedChanges.markAsClean();
       setShowEditModal(true);
     }
   };
@@ -1425,6 +1495,7 @@ export default function LeadDetalhes() {
         notes: editData.notes
       };
       setLead(updatedLead);
+      unsavedChanges.markAsClean();
       setShowEditModal(false);
     }
   };
@@ -1470,7 +1541,7 @@ export default function LeadDetalhes() {
       <div className="bg-white border-b border-gray-200 px-6 py-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <Button variant="ghost" onClick={() => navigate('/funil')} className="gap-2">
+            <Button variant="ghost" onClick={() => handleNavigateWithConfirmation('/funil')} className="gap-2">
               <ArrowLeft className="h-4 w-4" />
               Voltar
             </Button>
@@ -1740,30 +1811,34 @@ export default function LeadDetalhes() {
                                 </div>
                               </div>
                               <div className="flex gap-1">
-                                <Button 
-                                  variant="ghost" 
-                                  size="sm" 
-                                  onClick={() => handleActivityDetails(item)}
-                                >
-                                  <StickyNote className="h-4 w-4" />
-                                </Button>
+                                {/* Apenas atividades podem ter notas adicionadas */}
+                                {item.tipo !== 'followup' && (
+                                  <Button 
+                                    variant="ghost" 
+                                    size="sm" 
+                                    onClick={() => handleActivityDetails(item)}
+                                  >
+                                    <StickyNote className="h-4 w-4" />
+                                  </Button>
+                                )}
+                                {/* Notas podem ser editadas */}
+                                {item.tipo === 'followup' && item.editavel && (
+                                  <Button 
+                                    variant="ghost" 
+                                    size="sm" 
+                                    onClick={() => handleEditNote(item.id, item.descricao)}
+                                  >
+                                    <Edit className="h-4 w-4" />
+                                  </Button>
+                                )}
                                 {item.editavel && (
-                                  <>
-                                    <Button 
-                                      variant="ghost" 
-                                      size="sm" 
-                                      onClick={() => handleEditNote(item.id, item.descricao)}
-                                    >
-                                      <Edit className="h-4 w-4" />
-                                    </Button>
-                                    <Button 
-                                      variant="ghost" 
-                                      size="sm" 
-                                      onClick={() => handleDeleteNote(item.id)}
-                                    >
-                                      <Trash2 className="h-4 w-4" />
-                                    </Button>
-                                  </>
+                                  <Button 
+                                    variant="ghost" 
+                                    size="sm" 
+                                    onClick={() => handleDeleteNote(item.id)}
+                                  >
+                                    <Trash2 className="h-4 w-4" />
+                                  </Button>
                                 )}
                               </div>
                             </div>
@@ -2174,7 +2249,10 @@ export default function LeadDetalhes() {
                   id="budget"
                   placeholder="Ex: R$ 300.000 - R$ 400.000"
                   value={editData.budget}
-                  onChange={(e) => setEditData({...editData, budget: e.target.value})}
+                  onChange={(e) => {
+                    setEditData({...editData, budget: e.target.value});
+                    unsavedChanges.markAsDirty();
+                  }}
                 />
               </div>
               <div>
@@ -2183,7 +2261,10 @@ export default function LeadDetalhes() {
                   id="timeline"
                   placeholder="Ex: 1-2 meses"
                   value={editData.timeline}
-                  onChange={(e) => setEditData({...editData, timeline: e.target.value})}
+                  onChange={(e) => {
+                    setEditData({...editData, timeline: e.target.value});
+                    unsavedChanges.markAsDirty();
+                  }}
                 />
               </div>
             </div>
@@ -2191,7 +2272,10 @@ export default function LeadDetalhes() {
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <Label htmlFor="source">Origem</Label>
-                <Select value={editData.source} onValueChange={(value) => setEditData({...editData, source: value})}>
+                <Select value={editData.source} onValueChange={(value) => {
+                    setEditData({...editData, source: value});
+                    unsavedChanges.markAsDirty();
+                  }}>
                   <SelectTrigger>
                     <SelectValue placeholder="Selecione a origem" />
                   </SelectTrigger>
@@ -2207,7 +2291,10 @@ export default function LeadDetalhes() {
               </div>
               <div>
                 <Label htmlFor="assignedTo">Responsável</Label>
-                <Select value={editData.assignedTo} onValueChange={(value) => setEditData({...editData, assignedTo: value})}>
+                <Select value={editData.assignedTo} onValueChange={(value) => {
+                    setEditData({...editData, assignedTo: value});
+                    unsavedChanges.markAsDirty();
+                  }}>
                   <SelectTrigger>
                     <SelectValue placeholder="Selecione o responsável" />
                   </SelectTrigger>
@@ -2227,7 +2314,10 @@ export default function LeadDetalhes() {
                 type="checkbox"
                 id="financing"
                 checked={editData.financing}
-                onChange={(e) => setEditData({...editData, financing: e.target.checked})}
+                onChange={(e) => {
+                  setEditData({...editData, financing: e.target.checked});
+                  unsavedChanges.markAsDirty();
+                }}
               />
               <Label htmlFor="financing">Financiamento</Label>
             </div>
@@ -2299,6 +2389,7 @@ export default function LeadDetalhes() {
                       } else {
                         setEditData({...editData, priorities: [...editData.priorities, priority]});
                       }
+                      unsavedChanges.markAsDirty();
                     }}
                   >
                     {priority}
@@ -2313,13 +2404,16 @@ export default function LeadDetalhes() {
                 id="notes"
                 placeholder="Digite suas observações..."
                 value={editData.notes}
-                onChange={(e) => setEditData({...editData, notes: e.target.value})}
+                onChange={(e) => {
+                  setEditData({...editData, notes: e.target.value});
+                  unsavedChanges.markAsDirty();
+                }}
                 rows={4}
               />
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setShowEditModal(false)}>
+            <Button variant="outline" onClick={handleCancelEdit}>
               Cancelar
             </Button>
             <Button onClick={handleSaveEdit}>
@@ -2329,27 +2423,62 @@ export default function LeadDetalhes() {
         </DialogContent>
       </Dialog>
       <Dialog open={showEditNoteModal} onOpenChange={setShowEditNoteModal}>
-        <DialogContent>
+        <DialogContent className="max-w-md">
           <DialogHeader>
-            <DialogTitle>Editar Nota</DialogTitle>
+            <DialogTitle className="flex items-center gap-2">
+              <Edit className="h-5 w-5 text-blue-500" />
+              Editar Nota
+            </DialogTitle>
+            <div className="text-sm text-muted-foreground mt-2">
+              Edite os dados da nota.
+            </div>
           </DialogHeader>
           <div className="space-y-4">
             <div>
-              <Label htmlFor="edit-nota">Editar nota</Label>
+              <Label htmlFor="edit-noteName">Nome da Nota</Label>
+              <Input
+                id="edit-noteName"
+                placeholder="Dê um nome para esta nota..."
+                value={editingNoteName}
+                onChange={(e) => setEditingNoteName(e.target.value)}
+              />
+            </div>
+            <div>
+              <Label htmlFor="edit-note">Nota</Label>
               <Textarea
-                id="edit-nota"
-                placeholder="Edite sua nota aqui..."
-                value={editingNote?.content || ''}
-                onChange={(e) => setEditingNote(editingNote ? {...editingNote, content: e.target.value} : null)}
+                id="edit-note"
+                placeholder="Digite sua nota aqui..."
+                value={editingNoteContent}
+                onChange={(e) => setEditingNoteContent(e.target.value)}
                 rows={4}
               />
             </div>
+            <div>
+              <Label htmlFor="edit-attachment">Anexos</Label>
+              <Input
+                id="edit-attachment"
+                type="file"
+                onChange={(e) => setEditingNoteAttachment(e.target.files?.[0] || null)}
+                className="file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+              />
+              {editingNoteAttachment && (
+                <p className="text-xs text-muted-foreground mt-1">
+                  Novo arquivo: {editingNoteAttachment.name} ({(editingNoteAttachment.size / 1024).toFixed(1)} KB)
+                </p>
+              )}
+            </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setShowEditNoteModal(false)}>
+            <Button variant="outline" onClick={() => {
+              setShowEditNoteModal(false);
+              setEditingNote(null);
+              setEditingNoteName('');
+              setEditingNoteContent('');
+              setEditingNoteAttachment(null);
+            }}>
               Cancelar
             </Button>
-            <Button onClick={handleSaveEditNote}>
+            <Button onClick={handleSaveEditNote} disabled={!editingNoteName.trim()}>
               Salvar
             </Button>
           </DialogFooter>
@@ -2722,6 +2851,15 @@ export default function LeadDetalhes() {
           </DialogHeader>
           <div className="space-y-4">
             <div>
+              <Label htmlFor="noteName">Nome da Nota</Label>
+              <Input
+                id="noteName"
+                placeholder="Dê um nome para esta nota..."
+                value={newNoteName}
+                onChange={(e) => setNewNoteName(e.target.value)}
+              />
+            </div>
+            <div>
               <Label htmlFor="note">Nota</Label>
               <Textarea
                 id="note"
@@ -2732,34 +2870,38 @@ export default function LeadDetalhes() {
               />
             </div>
             <div>
-              <Label htmlFor="resultado">Resultado (opcional)</Label>
+              <Label htmlFor="attachment">Anexos</Label>
               <Input
-                id="resultado"
-                placeholder="Qual foi o resultado desta atividade?"
-                value={newNoteResultado}
-                onChange={(e) => setNewNoteResultado(e.target.value)}
+                id="attachment"
+                type="file"
+                onChange={(e) => setNewNoteAttachment(e.target.files?.[0] || null)}
+                className="file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
               />
-            </div>
-            <div>
-              <Label htmlFor="proximoPasso">Próximo Passo (opcional)</Label>
-              <Input
-                id="proximoPasso"
-                placeholder="Qual é o próximo passo a ser tomado?"
-                value={newNoteProximoPasso}
-                onChange={(e) => setNewNoteProximoPasso(e.target.value)}
-              />
+              {newNoteAttachment && (
+                <p className="text-xs text-muted-foreground mt-1">
+                  Arquivo selecionado: {newNoteAttachment.name} ({(newNoteAttachment.size / 1024).toFixed(1)} KB)
+                </p>
+              )}
             </div>
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setShowNoteModal(false)}>
               Cancelar
             </Button>
-            <Button onClick={handleAddNote} disabled={!newNote.trim()}>
+            <Button onClick={handleAddNote} disabled={!newNoteName.trim()}>
               Adicionar Nota
             </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Modal de Confirmação - Sair sem Salvar */}
+      <UnsavedChangesDialog
+        open={unsavedChanges.showUnsavedChangesDialog}
+        onOpenChange={() => {}} // Não faz nada para não interferir nos botões
+        onContinueEditing={unsavedChanges.handleContinueEditing}
+        onExitWithoutSaving={unsavedChanges.handleExitWithoutSaving}
+      />
 
   </div>
   );
