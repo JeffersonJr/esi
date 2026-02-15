@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Separator } from '@/components/ui/separator';
-import { X, Plus, Calendar, Mail, Phone, MessageSquare, MessageCircle, User, MapPin, Home, DollarSign, Building, Clock, MoreHorizontal, MoreVertical, Search, Filter, Edit, Trash2, ChevronDown, Eye, ArrowLeft, Target, StickyNote, Send, FileText, Download, Star, CheckCircle, AlertCircle, Users, Briefcase, Tag } from 'lucide-react';
+import { X, Plus, Calendar, Mail, Phone, MessageSquare, MessageCircle, User, MapPin, Home, DollarSign, Building, Clock, MoreHorizontal, MoreVertical, Search, Filter, Edit, Trash2, ChevronDown, Eye, ArrowLeft, Target, StickyNote, Send, FileText, Download, Star, CheckCircle, AlertCircle, Users, Briefcase, Tag, Activity, UserCheck, TrendingUp, Car } from 'lucide-react';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { ActivityEditModal } from '@/components/modals/ActivityEditModal';
@@ -46,6 +46,22 @@ interface Lead {
   timeline?: string;
   priorities?: string[];
   tags?: string[];
+}
+
+interface ImovelInteresse {
+  id: string;
+  titulo: string;
+  tipo: string;
+  endereco: string;
+  valor: string;
+  area: string;
+  quartos: number;
+  banheiros: number;
+  vagas: number;
+  descricao: string;
+  status: string;
+  match: number;
+  imagens: string[];
 }
 
 interface HistoricoAtendimento {
@@ -345,10 +361,10 @@ export default function LeadDetalhes() {
   const [availableActivityTags, setAvailableActivityTags] = useState(DEFAULT_TAGS);
 
   const corretores = [
-    { id: 'JS', nome: 'João Silva' },
-    { id: 'MR', nome: 'Maria Rodrigues' },
-    { id: 'PS', nome: 'Pedro Santos' },
-    { id: 'AC', nome: 'Ana Costa' }
+    { id: 'JS', nome: 'João Silva', avatar: 'JS', color: 'bg-blue-500' },
+    { id: 'MR', nome: 'Maria Rodrigues', avatar: 'MR', color: 'bg-pink-500' },
+    { id: 'PS', nome: 'Pedro Santos', avatar: 'PS', color: 'bg-green-500' },
+    { id: 'AC', nome: 'Ana Costa', avatar: 'AC', color: 'bg-purple-500' }
   ];
 
   const handleWhatsApp = () => {
@@ -561,7 +577,7 @@ export default function LeadDetalhes() {
     window.open(`/imoveis/detalhes/${propertyId}`, '_blank');
   };
 
-  const generateVisitReport = async (property: any, activityData: any) => {
+  const generateVisitReport = async (property: ImovelInteresse, activityData: HistoricoAtendimento) => {
     if (!lead) return;
 
     // Criar conteúdo HTML para a ficha de visita com layout profissional
