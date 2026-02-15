@@ -1882,6 +1882,32 @@ export default function LeadDetalhes() {
                                 {isActivity && item.avaliacao === 'ruim' && (
                                   <span className="text-2xl">😞</span>
                                 )}
+                                {/* Ações no canto superior direito */}
+                                <div className="flex gap-1">
+                                  {isActivity && (
+                                    <Button 
+                                      variant="ghost" 
+                                      size="sm" 
+                                      onClick={() => handleActivityDetails(item)}
+                                    >
+                                      <StickyNote className="h-4 w-4" />
+                                    </Button>
+                                  )}
+                                  <Button 
+                                    variant="ghost" 
+                                    size="sm" 
+                                    onClick={() => handleEditHistoryItem(item)}
+                                  >
+                                    <Edit className="h-4 w-4" />
+                                  </Button>
+                                  <Button 
+                                    variant="ghost" 
+                                    size="sm" 
+                                    onClick={() => handleDeleteHistoryItem(item.id)}
+                                  >
+                                    <Trash2 className="h-4 w-4" />
+                                  </Button>
+                                </div>
                               </div>
                             </div>
 
@@ -1895,11 +1921,31 @@ export default function LeadDetalhes() {
                                       {item.notaAtividade}
                                     </p>
                                     {item.anexos && item.anexos.length > 0 && (
-                                      <div className="flex items-center gap-1 mt-2">
-                                        <Badge variant="outline" className="text-xs">
-                                          <Paperclip className="h-3 w-3 mr-1" />
-                                          {item.anexos.length} anexo(s)
-                                        </Badge>
+                                      <div className="flex items-center gap-2 mt-2">
+                                        <div className="flex items-center gap-1">
+                                          <Badge variant="outline" className="text-xs">
+                                            <Paperclip className="h-3 w-3 mr-1" />
+                                            {item.anexos.length} anexo(s)
+                                          </Badge>
+                                          {item.anexos.map((anexo, index) => (
+                                            <Button
+                                              key={index}
+                                              variant="ghost"
+                                              size="sm"
+                                              className="h-6 px-2 text-xs"
+                                              onClick={() => {
+                                                // Simular download do arquivo
+                                                const link = document.createElement('a');
+                                                link.href = '#'; // Aqui seria o URL real do arquivo
+                                                link.download = anexo;
+                                                link.click();
+                                              }}
+                                              title={`Baixar ${anexo}`}
+                                            >
+                                              <Download className="h-3 w-3" />
+                                            </Button>
+                                          ))}
+                                        </div>
                                       </div>
                                     )}
                                   </div>
@@ -1907,19 +1953,21 @@ export default function LeadDetalhes() {
 
                                 {/* Seção de Desfecho - apenas para atividades com nota */}
                                 {item.notaAtividade && (item.resultado || item.proximoPasso) && (
-                                  <div className="bg-slate-50 rounded-lg p-4 space-y-3">
-                                    {item.resultado && (
-                                      <div>
-                                        <p className="text-[10px] font-bold text-slate-400 uppercase mb-1">Resultado</p>
-                                        <p className="text-sm text-slate-700">{item.resultado}</p>
-                                      </div>
-                                    )}
-                                    {item.proximoPasso && (
-                                      <div>
-                                        <p className="text-[10px] font-bold text-slate-400 uppercase mb-1">Próximo Passo</p>
-                                        <p className="text-sm text-slate-700">{item.proximoPasso}</p>
-                                      </div>
-                                    )}
+                                  <div className="bg-slate-50 rounded-lg p-4">
+                                    <div className="grid grid-cols-2 gap-4">
+                                      {item.resultado && (
+                                        <div>
+                                          <p className="text-[10px] font-bold text-slate-400 uppercase mb-1">Resultado</p>
+                                          <p className="text-sm text-slate-700">{item.resultado}</p>
+                                        </div>
+                                      )}
+                                      {item.proximoPasso && (
+                                        <div>
+                                          <p className="text-[10px] font-bold text-slate-400 uppercase mb-1">Próximo Passo</p>
+                                          <p className="text-sm text-slate-700">{item.proximoPasso}</p>
+                                        </div>
+                                      )}
+                                    </div>
                                   </div>
                                 )}
                               </div>
@@ -1982,33 +2030,7 @@ export default function LeadDetalhes() {
                               </div>
                             )}
                             {/* Rodapé */}
-                            <div className="flex justify-between items-center pt-2 border-t border-slate-100">
-                              <div className="flex gap-1">
-                                {/* Apenas atividades podem ter notas adicionadas */}
-                                {isActivity && (
-                                  <Button 
-                                    variant="ghost" 
-                                    size="sm" 
-                                    onClick={() => handleActivityDetails(item)}
-                                  >
-                                    <StickyNote className="h-4 w-4" />
-                                  </Button>
-                                )}
-                                <Button 
-                                  variant="ghost" 
-                                  size="sm" 
-                                  onClick={() => handleEditHistoryItem(item)}
-                                >
-                                  <Edit className="h-4 w-4" />
-                                </Button>
-                                <Button 
-                                  variant="ghost" 
-                                  size="sm" 
-                                  onClick={() => handleDeleteHistoryItem(item.id)}
-                                >
-                                  <Trash2 className="h-4 w-4" />
-                                </Button>
-                              </div>
+                            <div className="flex justify-end items-center pt-2 border-t border-slate-100">
                               {isActivity && item.notaAtividade && (
                                 <Button 
                                   variant="ghost" 
