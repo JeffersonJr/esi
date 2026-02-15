@@ -334,6 +334,41 @@ export default function LeadDetalhes() {
     notasDetalhadas: ''
   });
   const [historico, setHistorico] = useState<HistoricoAtendimento[]>(historicoAtendimento);
+  
+  // Estado global para documentos sincronizados
+  const [globalDocuments, setGlobalDocuments] = useState<Array<{
+    id: string;
+    nome: string;
+    data: string;
+    origem: 'Atividade' | 'Nota';
+    arquivo: File;
+  }>>([]);
+  
+  // Função para sincronizar documentos com o estado global
+  const syncDocumentToGlobal = (file: File, origem: 'Atividade' | 'Nota', itemId: string) => {
+    const newDocument = {
+      id: `${itemId}-${file.name}`,
+      nome: file.name,
+      data: new Date().toISOString(),
+      origem,
+      arquivo: file
+    };
+    
+    setGlobalDocuments(prev => {
+      // Verificar se o documento já existe para evitar duplicatas
+      const exists = prev.some(doc => doc.id === newDocument.id);
+      if (!exists) {
+        return [...prev, newDocument];
+      }
+      return prev;
+    });
+  };
+  
+  // Função para remover documentos em cascata
+  const removeDocumentsFromGlobal = (itemId: string) => {
+    setGlobalDocuments(prev => prev.filter(doc => !doc.id.startsWith(itemId)));
+  };
+  
   const [editData, setEditData] = useState({
     budget: '',
     financing: false,
