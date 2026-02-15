@@ -9,17 +9,13 @@ import { Badge } from '@/components/ui/badge';
 import { useUnsavedChanges } from '@/hooks/useUnsavedChanges';
 import { UnsavedChangesModal } from '@/components/modals/UnsavedChangesModal';
 import { X, Plus, Mail, Phone, Smartphone, Palette, Edit2, Trash2 } from 'lucide-react';
+import { TagManager } from '@/components/shared/TagManager';
+import { DEFAULT_TAGS, TAG_COLORS, Tag } from '@/components/shared/tagConstants';
 
 interface ContactInfo {
   type: 'email' | 'phone' | 'mobile';
   value: string;
   isPrimary?: boolean;
-}
-
-interface Tag {
-  id: string;
-  name: string;
-  color: string;
 }
 
 interface LeadData {
@@ -45,17 +41,6 @@ interface LeadFormModalProps {
   lead?: LeadData;
 }
 
-const TAG_COLORS = [
-  { name: 'Vermelho', value: 'bg-red-500' },
-  { name: 'Laranja', value: 'bg-orange-500' },
-  { name: 'Amarelo', value: 'bg-yellow-500' },
-  { name: 'Verde', value: 'bg-green-500' },
-  { name: 'Azul', value: 'bg-blue-500' },
-  { name: 'Roxo', value: 'bg-purple-500' },
-  { name: 'Rosa', value: 'bg-pink-500' },
-  { name: 'Cinza', value: 'bg-gray-500' },
-];
-
 export function LeadFormModal({ open, onClose, onSubmit, lead }: LeadFormModalProps) {
   const [formData, setFormData] = useState<LeadData>({
     name: '',
@@ -72,24 +57,7 @@ export function LeadFormModal({ open, onClose, onSubmit, lead }: LeadFormModalPr
     tags: []
   });
 
-  const [newTag, setNewTag] = useState('');
-  const [tagSearch, setTagSearch] = useState('');
-  const [availableTags, setAvailableTags] = useState<Tag[]>([
-    { id: '1', name: 'Hot Lead', color: 'bg-red-500' },
-    { id: '2', name: 'VIP', color: 'bg-purple-500' },
-    { id: '3', name: 'Primeira Compra', color: 'bg-blue-500' },
-    { id: '4', name: 'Investidor', color: 'bg-green-500' },
-    { id: '5', name: 'Financiamento', color: 'bg-orange-500' },
-    { id: '6', name: 'Aluguel', color: 'bg-yellow-500' },
-    { id: '7', name: 'Interesse Alto', color: 'bg-red-500' },
-    { id: '8', name: 'Follow-up Necessário', color: 'bg-orange-500' },
-    { id: '9', name: 'Urgente', color: 'bg-red-500' },
-  ]);
-
-  const [tagEditMode, setTagEditMode] = useState(false);
-  const [editingTag, setEditingTag] = useState<Tag | null>(null);
-  const [newTagName, setNewTagName] = useState('');
-  const [selectedTagColor, setSelectedTagColor] = useState('bg-blue-500');
+  const [availableTags, setAvailableTags] = useState<Tag[]>(DEFAULT_TAGS);
 
   const agents = [
     { id: 'JS', name: 'João Silva' },
@@ -224,85 +192,6 @@ export function LeadFormModal({ open, onClose, onSubmit, lead }: LeadFormModalPr
       }));
     }
   };
-
-  const addTag = () => {
-    if (newTag.trim() && !formData.tags?.includes(newTag.trim())) {
-      const newTagObj: Tag = {
-        id: Date.now().toString(),
-        name: newTag.trim(),
-        color: selectedTagColor
-      };
-      setAvailableTags(prev => [...prev, newTagObj]);
-      setFormData(prev => ({
-        ...prev,
-        tags: [...(prev.tags || []), newTag.trim()]
-      }));
-      setNewTag('');
-    }
-  };
-
-  const removeTag = (tagToRemove: string) => {
-    setFormData(prev => ({
-      ...prev,
-      tags: prev.tags?.filter(tag => tag !== tagToRemove) || []
-    }));
-  };
-
-  const addAvailableTag = (tag: Tag) => {
-    if (!formData.tags?.includes(tag.name)) {
-      setFormData(prev => ({
-        ...prev,
-        tags: [...(prev.tags || []), tag.name]
-      }));
-    }
-  };
-
-  const startTagEdit = (tag: Tag) => {
-    setEditingTag(tag);
-    setNewTagName(tag.name);
-    setSelectedTagColor(tag.color);
-  };
-
-  const saveTagEdit = () => {
-    if (editingTag && newTagName.trim()) {
-      setAvailableTags(prev => prev.map(tag => 
-        tag.id === editingTag.id 
-          ? { ...tag, name: newTagName.trim(), color: selectedTagColor }
-          : tag
-      ));
-      
-      if (formData.tags?.includes(editingTag.name)) {
-        setFormData(prev => ({
-          ...prev,
-          tags: prev.tags?.map(tag => tag === editingTag.name ? newTagName.trim() : tag) || []
-        }));
-      }
-      
-      setEditingTag(null);
-      setNewTagName('');
-    }
-  };
-
-  const cancelTagEdit = () => {
-    setEditingTag(null);
-    setNewTagName('');
-  };
-
-  const deleteTag = (tagId: string) => {
-    const tagToDelete = availableTags.find(tag => tag.id === tagId);
-    if (tagToDelete) {
-      setAvailableTags(prev => prev.filter(tag => tag.id !== tagId));
-      setFormData(prev => ({
-        ...prev,
-        tags: prev.tags?.filter(tag => tag !== tagToDelete.name) || []
-      }));
-    }
-  };
-
-  const filteredTags = availableTags.filter(tag => 
-    tag.name.toLowerCase().includes(tagSearch.toLowerCase()) &&
-    !formData.tags?.includes(tag.name)
-  );
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -641,129 +530,15 @@ export function LeadFormModal({ open, onClose, onSubmit, lead }: LeadFormModalPr
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
                     <Label className="text-sm font-medium">Tags</Label>
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => setTagEditMode(!tagEditMode)}
-                      className="text-slate-400 hover:text-slate-600 h-6 px-2"
-                    >
-                      <Edit2 className="h-3 w-3 mr-1" />
-                      {tagEditMode ? 'Voltar' : 'Editar'}
-                    </Button>
                   </div>
                   
-                  {!tagEditMode ? (
-                    <div className="space-y-3">
-                      <div className="flex flex-wrap gap-2 min-h-[32px] p-3 bg-white rounded-md border border-slate-200">
-                        {formData.tags?.length === 0 ? (
-                          <span className="text-sm text-slate-400">Clique nas tags abaixo para adicionar</span>
-                        ) : (
-                          formData.tags.map((tagName) => {
-                            const tag = availableTags.find(t => t.name === tagName);
-                            return (
-                              <Badge 
-                                key={tagName} 
-                                className={`${tag?.color || 'bg-slate-200'} text-white text-xs px-2 py-1 rounded-full`}
-                              >
-                                {tagName}
-                                <button
-                                  type="button"
-                                  className="ml-1 hover:opacity-80"
-                                  onClick={() => removeTag(tagName)}
-                                >
-                                  ×
-                                </button>
-                              </Badge>
-                            );
-                          })
-                        )}
-                      </div>
-
-                      <div className="space-y-2">
-                        <div className="flex items-center justify-between">
-                          <p className="text-xs text-slate-400">Tags disponíveis:</p>
-                          <Input
-                            placeholder="Pesquisar..."
-                            value={tagSearch}
-                            onChange={(e) => setTagSearch(e.target.value)}
-                            className="h-7 text-xs w-32 border-slate-200"
-                          />
-                        </div>
-                        <div className="flex flex-wrap gap-2 max-h-32 overflow-y-auto p-3 bg-white rounded-md border border-slate-200">
-                          {filteredTags.map((tag) => (
-                            <Badge
-                              key={tag.id}
-                              className={`${tag.color} text-white text-xs px-2 py-1 rounded-full cursor-pointer hover:opacity-80`}
-                              onClick={() => addAvailableTag(tag)}
-                            >
-                              {tag.name}
-                            </Badge>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="space-y-2 max-h-48 overflow-y-auto">
-                      {availableTags.map((tag) => (
-                        <div key={tag.id} className="flex items-center gap-2 p-2 bg-white rounded-md border border-slate-200">
-                          {editingTag?.id === tag.id ? (
-                            <>
-                              <Input
-                                value={newTagName}
-                                onChange={(e) => setNewTagName(e.target.value)}
-                                className="flex-1 h-7 text-xs border-slate-200"
-                              />
-                              <Select value={selectedTagColor} onValueChange={setSelectedTagColor}>
-                                <SelectTrigger className="w-20 h-7 text-xs">
-                                  <SelectValue />
-                                </SelectTrigger>
-                                <SelectContent>
-                                  {TAG_COLORS.map((color) => (
-                                    <SelectItem key={color.value} value={color.value}>
-                                      <div className="flex items-center gap-2">
-                                        <div className={`w-3 h-3 rounded-full ${color.value}`} />
-                                        {color.name}
-                                      </div>
-                                    </SelectItem>
-                                  ))}
-                                </SelectContent>
-                              </Select>
-                              <Button type="button" size="sm" onClick={saveTagEdit} className="h-7 text-xs">
-                                Salvar
-                              </Button>
-                              <Button type="button" variant="ghost" size="sm" onClick={cancelTagEdit} className="h-7 text-xs">
-                                Cancelar
-                              </Button>
-                            </>
-                          ) : (
-                            <>
-                              <div className={`w-3 h-3 rounded-full ${tag.color}`} />
-                              <span className="flex-1 text-xs">{tag.name}</span>
-                              <Button
-                                type="button"
-                                variant="ghost"
-                                size="sm"
-                                onClick={() => startTagEdit(tag)}
-                                className="h-6 w-6 p-0"
-                              >
-                                <Edit2 className="h-3 w-3" />
-                              </Button>
-                              <Button
-                                type="button"
-                                variant="ghost"
-                                size="sm"
-                                onClick={() => deleteTag(tag.id)}
-                                className="h-6 w-6 p-0 text-red-500 hover:text-red-700"
-                              >
-                                <Trash2 className="h-3 w-3" />
-                              </Button>
-                            </>
-                          )}
-                        </div>
-                      ))}
-                    </div>
-                  )}
+                  <TagManager
+                    selectedTags={formData.tags || []}
+                    availableTags={availableTags}
+                    onUpdate={(tags) => setFormData(prev => ({ ...prev, tags }))}
+                    onUpdateAvailableTags={setAvailableTags}
+                    showEditMode={true}
+                  />
                 </div>
 
                 {/* Observações */}
