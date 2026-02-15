@@ -303,6 +303,13 @@ export default function LeadDetalhes() {
   const [lead, setLead] = useState<Lead | null>(null);
   const [loading, setLoading] = useState(true);
   const [showAssignModal, setShowAssignModal] = useState(false);
+  
+  // Debug para identificar quando o modal está sendo aberto
+  useEffect(() => {
+    if (showAssignModal) {
+      console.log('Modal de assign foi aberto. Stack trace:', new Error().stack);
+    }
+  }, [showAssignModal]);
   const [showNoteModal, setShowNoteModal] = useState(false);
   const [showActivityModal, setShowActivityModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
