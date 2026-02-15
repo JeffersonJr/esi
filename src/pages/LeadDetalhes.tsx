@@ -2519,166 +2519,215 @@ export default function LeadDetalhes() {
               Adicione notas, tags e marque como destaque.
             </DialogDescription>
           </DialogHeader>
-          <div className="space-y-6">
-            {/* Notas detalhadas */}
-            <div className="space-y-2">
-              <Label htmlFor="nota-atividade">Notas detalhadas da atividade</Label>
-              <Textarea
-                id="nota-atividade"
-                placeholder="Descreva em detalhes como foi esta atividade..."
-                value={activityNote}
-                onChange={(e) => setActivityNote(e.target.value)}
-                rows={4}
-              />
-            </div>
-
-            {/* Resultado e Próximo Passo lado a lado */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="resultado">Resultado</Label>
-                <Input
-                  id="resultado"
-                  placeholder="Qual foi o resultado desta atividade?"
-                  value={activityResultado}
-                  onChange={(e) => setActivityResultado(e.target.value)}
+          <div className="grid grid-cols-12 gap-6 py-6">
+            {/* Colunas 1-7: Conteúdo Principal */}
+            <div className="col-span-7 space-y-6">
+              {/* Notas detalhadas em destaque */}
+              <div>
+                <h3 className="text-slate-400 uppercase text-xs font-semibold mb-3">Notas Detalhadas</h3>
+                <Textarea
+                  id="nota-atividade"
+                  placeholder="Descreva em detalhes como foi esta atividade..."
+                  value={activityNote}
+                  onChange={(e) => setActivityNote(e.target.value)}
+                  rows={6}
+                  className="border-slate-200 resize-none"
                 />
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="proximo-passo">Próximo Passo</Label>
-                <Input
-                  id="proximo-passo"
-                  placeholder="Qual é o próximo passo a ser tomado?"
-                  value={activityProximoPasso}
-                  onChange={(e) => setActivityProximoPasso(e.target.value)}
-                />
-              </div>
-            </div>
 
-            {/* Avaliação e Visibilidade lado a lado */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {/* Avaliação */}
-              <div className="space-y-2">
-                <Label>Avaliação da atividade</Label>
-                <div className="flex gap-4 mt-2">
-                  <label className="flex items-center gap-2">
-                    <input
-                      type="radio"
-                      value="boa"
-                      checked={activityRating === 'boa'}
-                      onChange={(e) => setActivityRating(e.target.value as 'boa' | 'ruim')}
-                    />
-                    <span>Boa</span>
-                  </label>
-                  <label className="flex items-center gap-2">
-                    <input
-                      type="radio"
-                      value="ruim"
-                      checked={activityRating === 'ruim'}
-                      onChange={(e) => setActivityRating(e.target.value as 'boa' | 'ruim')}
-                    />
-                    <span>Ruim</span>
-                  </label>
-                  <label className="flex items-center gap-2">
-                    <input
-                      type="radio"
-                      value=""
-                      checked={activityRating === null}
-                      onChange={() => setActivityRating(null)}
-                    />
-                    <span>Não avaliada</span>
-                  </label>
-                </div>
-              </div>
-
-              {/* Visibilidade */}
-              <div className="space-y-2">
-                <Label>Visibilidade</Label>
-                <div className="flex items-center gap-2">
-                  <input
-                    type="checkbox"
-                    id="show-activity"
-                    checked={isActivityShowcased}
-                    onChange={(e) => setIsActivityShowcased(e.target.checked)}
-                    className="rounded border-gray-300"
+              {/* Resultado e Próximo Passo lado a lado */}
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="resultado" className="text-sm font-medium">Resultado</Label>
+                  <Input
+                    id="resultado"
+                    placeholder="Qual foi o resultado desta atividade?"
+                    value={activityResultado}
+                    onChange={(e) => setActivityResultado(e.target.value)}
+                    className="border-slate-200"
                   />
-                  <Label htmlFor="show-activity" className="text-sm">
-                    Marcar como "No Show" (lead não compareceu)
-                  </Label>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="proximo-passo" className="text-sm font-medium">Próximo Passo</Label>
+                  <Input
+                    id="proximo-passo"
+                    placeholder="Qual é o próximo passo a ser tomado?"
+                    value={activityProximoPasso}
+                    onChange={(e) => setActivityProximoPasso(e.target.value)}
+                    className="border-slate-200"
+                  />
+                </div>
+              </div>
+
+              {/* Tags da Atividade */}
+              <div>
+                <h3 className="text-slate-400 uppercase text-xs font-semibold mb-3">Tags da Atividade</h3>
+                <div className="space-y-4">
+                  {/* Tags selecionadas em formato chips */}
+                  <div className="flex flex-wrap gap-2 min-h-[40px] p-3 bg-white rounded-lg border border-slate-200">
+                    {activityTags.length === 0 ? (
+                      <span className="text-sm text-slate-400">Clique nas tags abaixo para adicionar</span>
+                    ) : (
+                      activityTags.map((tagName) => {
+                        const tag = availableActivityTags.find(t => t.name === tagName);
+                        return (
+                          <Badge 
+                            key={tagName} 
+                            className={`${tag?.color || 'bg-slate-400'} text-white px-3 py-1 rounded-full text-sm cursor-pointer hover:opacity-80 transition-opacity`}
+                          >
+                            {tagName}
+                            <X 
+                              className="h-3 w-3 ml-1 hover:text-red-200" 
+                              onClick={() => removeActivityTag(tagName)} 
+                            />
+                          </Badge>
+                        );
+                      })
+                    )}
+                  </div>
+
+                  {/* Tags disponíveis */}
+                  <div className="space-y-2">
+                    <p className="text-xs text-slate-400">Tags disponíveis:</p>
+                    <div className="flex flex-wrap gap-2 max-h-32 overflow-y-auto p-3 bg-white rounded-lg border border-slate-200">
+                      {availableActivityTags
+                        .filter(tag => !activityTags.includes(tag.name))
+                        .map((tag) => (
+                          <Badge
+                            key={tag.id}
+                            className={`${tag.color} text-white px-3 py-1 rounded-full text-sm cursor-pointer hover:opacity-80 transition-opacity`}
+                            onClick={() => addAvailableActivityTag(tag)}
+                          >
+                            {tag.name}
+                          </Badge>
+                        ))}
+                    </div>
+                  </div>
+
+                  {/* Input para adicionar nova tag */}
+                  <div className="flex gap-2">
+                    <Input
+                      placeholder="Nova tag..."
+                      value={newActivityTag}
+                      onChange={(e) => setNewActivityTag(e.target.value)}
+                      className="flex-1 border-slate-200"
+                      onKeyPress={(e) => {
+                        if (e.key === 'Enter') {
+                          e.preventDefault();
+                          addActivityTag();
+                        }
+                      }}
+                    />
+                    <Select value={selectedActivityTagColor} onValueChange={setSelectedActivityTagColor}>
+                      <SelectTrigger className="w-32 border-slate-200">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {ACTIVITY_TAG_COLORS.map((color) => (
+                          <SelectItem key={color.value} value={color.value}>
+                            <div className="flex items-center gap-2">
+                              <div className={`w-3 h-3 rounded-full ${color.value}`} />
+                              {color.name}
+                            </div>
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      onClick={addActivityTag} 
+                      disabled={!newActivityTag.trim()}
+                      className="border-slate-200 hover:bg-slate-50"
+                    >
+                      <Plus className="h-3 w-3" />
+                    </Button>
+                  </div>
                 </div>
               </div>
             </div>
 
-            {/* Tags */}
-            <div className="space-y-2">
-              <Label>Tags da Atividade</Label>
-              <div className="space-y-2">
-                <div className="flex flex-wrap gap-1 min-h-[32px] p-2 border rounded-md bg-muted/20">
-                  {activityTags.length === 0 ? (
-                    <span className="text-sm text-muted-foreground">Clique nas tags abaixo para adicionar</span>
-                  ) : (
-                    activityTags.map((tagName) => {
-                      const tag = availableActivityTags.find(t => t.name === tagName);
-                      return (
-                        <Badge 
-                          key={tagName} 
-                          className={`${tag?.color || 'bg-gray-500'} text-white cursor-pointer gap-1`}
-                        >
-                          {tagName}
-                          <X className="h-3 w-3 hover:text-red-200" onClick={() => removeActivityTag(tagName)} />
-                        </Badge>
-                      );
-                    })
-                  )}
-                </div>
-
-                <div className="space-y-1">
-                  <p className="text-xs text-muted-foreground">Tags disponíveis:</p>
-                  <div className="flex flex-wrap gap-1 max-h-24 overflow-y-auto p-2 border rounded-md">
-                    {availableActivityTags
-                      .filter(tag => !activityTags.includes(tag.name))
-                      .map((tag) => (
-                        <Badge
-                          key={tag.id}
-                          className={`${tag.color} text-white cursor-pointer hover:opacity-80`}
-                          onClick={() => addAvailableActivityTag(tag)}
-                        >
-                          {tag.name}
-                        </Badge>
-                      ))}
+            {/* Colunas 8-12: Box Lateral */}
+            <div className="col-span-5">
+              <div className="bg-slate-50/50 rounded-lg p-6 space-y-6">
+                <h3 className="text-slate-400 uppercase text-xs font-semibold mb-4">Configurações</h3>
+                
+                {/* Avaliação com Emojis */}
+                <div>
+                  <h4 className="text-slate-400 uppercase text-xs font-medium mb-3">Avaliação</h4>
+                  <div className="flex justify-center gap-4 p-4 bg-white rounded-lg border border-slate-200">
+                    <button
+                      type="button"
+                      onClick={() => setActivityRating('boa')}
+                      className={`flex flex-col items-center gap-2 p-3 rounded-lg transition-all ${
+                        activityRating === 'boa' 
+                          ? 'bg-green-50 border-2 border-green-300 shadow-sm' 
+                          : 'hover:bg-gray-50 border-2 border-transparent'
+                      }`}
+                    >
+                      <span className="text-3xl">😊</span>
+                      <span className="text-xs text-slate-600">Boa</span>
+                    </button>
+                    
+                    <button
+                      type="button"
+                      onClick={() => setActivityRating(null)}
+                      className={`flex flex-col items-center gap-2 p-3 rounded-lg transition-all ${
+                        activityRating === null 
+                          ? 'bg-gray-50 border-2 border-gray-300 shadow-sm' 
+                          : 'hover:bg-gray-50 border-2 border-transparent'
+                      }`}
+                    >
+                      <span className="text-3xl">😐</span>
+                      <span className="text-xs text-slate-600">Neutra</span>
+                    </button>
+                    
+                    <button
+                      type="button"
+                      onClick={() => setActivityRating('ruim')}
+                      className={`flex flex-col items-center gap-2 p-3 rounded-lg transition-all ${
+                        activityRating === 'ruim' 
+                          ? 'bg-red-50 border-2 border-red-300 shadow-sm' 
+                          : 'hover:bg-gray-50 border-2 border-transparent'
+                      }`}
+                    >
+                      <span className="text-3xl">😞</span>
+                      <span className="text-xs text-slate-600">Ruim</span>
+                    </button>
                   </div>
                 </div>
 
-                <div className="flex gap-2">
-                  <Input
-                    placeholder="Nova tag..."
-                    value={newActivityTag}
-                    onChange={(e) => setNewActivityTag(e.target.value)}
-                    className="flex-1"
-                    onKeyPress={(e) => {
-                      if (e.key === 'Enter') {
-                        e.preventDefault();
-                        addActivityTag();
-                      }
-                    }}
-                  />
-                  <Select value={selectedActivityTagColor} onValueChange={setSelectedActivityTagColor}>
-                    <SelectTrigger className="w-32">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {ACTIVITY_TAG_COLORS.map((color) => (
-                        <SelectItem key={color.value} value={color.value}>
-                          <div className="flex items-center gap-2">
-                            <div className={`w-3 h-3 rounded-full ${color.value}`} />
-                            {color.name}
-                          </div>
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <Button variant="outline" size="sm" onClick={addActivityTag} disabled={!newActivityTag.trim()}>
-                    <Plus className="h-3 w-3" />
-                  </Button>
+                {/* No Show */}
+                <div>
+                  <h4 className="text-slate-400 uppercase text-xs font-medium mb-3">Visibilidade</h4>
+                  <div className="flex items-center gap-3 p-4 bg-white rounded-lg border border-slate-200">
+                    <input
+                      type="checkbox"
+                      id="show-activity"
+                      checked={isActivityShowcased}
+                      onChange={(e) => setIsActivityShowcased(e.target.checked)}
+                      className="rounded border-slate-300 w-4 h-4"
+                    />
+                    <Label htmlFor="show-activity" className="text-sm text-slate-700 cursor-pointer">
+                      Marcar como "No Show"
+                    </Label>
+                  </div>
+                </div>
+
+                {/* Responsável */}
+                <div>
+                  <h4 className="text-slate-400 uppercase text-xs font-medium mb-3">Responsável</h4>
+                  <div className="p-4 bg-white rounded-lg border border-slate-200">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 bg-cyan-500 rounded-full flex items-center justify-center text-white font-semibold">
+                        JS
+                      </div>
+                      <div>
+                        <p className="font-medium text-slate-900">João Silva</p>
+                        <p className="text-xs text-slate-500">Corretor responsável</p>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -2687,7 +2736,7 @@ export default function LeadDetalhes() {
             <Button variant="outline" onClick={() => setShowActivityDetailsModal(false)}>
               Cancelar
             </Button>
-            <Button onClick={handleSaveActivityDetails}>
+            <Button onClick={handleSaveActivityDetails} className="bg-cyan-500 hover:bg-cyan-600">
               Salvar Detalhes
             </Button>
           </DialogFooter>
