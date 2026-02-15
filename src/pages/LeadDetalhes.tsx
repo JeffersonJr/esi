@@ -318,7 +318,8 @@ export default function LeadDetalhes() {
     tipo: 'ligacao' as HistoricoAtendimento['tipo'],
     data: new Date(),
     hora: '14:00',
-    descricao: ''
+    descricao: '',
+    notasDetalhadas: ''
   });
   const [newNote, setNewNote] = useState('');
   const [newNoteName, setNewNoteName] = useState('');
@@ -568,7 +569,8 @@ export default function LeadDetalhes() {
       tipo: item.tipo,
       data: new Date(item.data),
       hora: item.hora || '14:00',
-      descricao: item.descricao
+      descricao: item.descricao,
+      notasDetalhadas: item.notaAtividade || ''
     });
     setShowEditHistoryModal(true);
   };
@@ -581,7 +583,8 @@ export default function LeadDetalhes() {
         tipo: editHistoryData.tipo,
         data: editHistoryData.data.toISOString(),
         hora: editHistoryData.hora,
-        descricao: editHistoryData.descricao
+        descricao: editHistoryData.descricao,
+        notaAtividade: editHistoryData.notasDetalhadas
       };
       
       setHistorico(historico.map(item => 
@@ -1902,8 +1905,8 @@ export default function LeadDetalhes() {
                                   </div>
                                 )}
 
-                                {/* Seção de Desfecho - apenas para atividades */}
-                                {(item.resultado || item.proximoPasso) && (
+                                {/* Seção de Desfecho - apenas para atividades com nota */}
+                                {item.notaAtividade && (item.resultado || item.proximoPasso) && (
                                   <div className="bg-slate-50 rounded-lg p-4 space-y-3">
                                     {item.resultado && (
                                       <div>
@@ -1978,6 +1981,52 @@ export default function LeadDetalhes() {
                                 </div>
                               </div>
                             )}
+                            {/* Rodapé */}
+                            <div className="flex justify-between items-center pt-2 border-t border-slate-100">
+                              <div className="flex gap-1">
+                                {/* Apenas atividades podem ter notas adicionadas */}
+                                {isActivity && (
+                                  <Button 
+                                    variant="ghost" 
+                                    size="sm" 
+                                    onClick={() => handleActivityDetails(item)}
+                                  >
+                                    <StickyNote className="h-4 w-4" />
+                                  </Button>
+                                )}
+                                <Button 
+                                  variant="ghost" 
+                                  size="sm" 
+                                  onClick={() => handleEditHistoryItem(item)}
+                                >
+                                  <Edit className="h-4 w-4" />
+                                </Button>
+                                <Button 
+                                  variant="ghost" 
+                                  size="sm" 
+                                  onClick={() => handleDeleteHistoryItem(item.id)}
+                                >
+                                  <Trash2 className="h-4 w-4" />
+                                </Button>
+                              </div>
+                              {isActivity && item.notaAtividade && (
+                                <Button 
+                                  variant="ghost" 
+                                  size="sm" 
+                                  className="text-cyan-600 hover:text-cyan-700 hover:bg-cyan-50"
+                                  onClick={() => {
+                                    setActivityData({
+                                      ...activityData,
+                                      tipo: 'followup',
+                                      descricao: `Follow-up: ${item.notaAtividade.substring(0, 50)}...`
+                                    });
+                                    setShowActivityModal(true);
+                                  }}
+                                >
+                                  + Marcar próxima atividade
+                                </Button>
+                              )}
+                            </div>
                           </div>
                         );
                       })}
@@ -3018,6 +3067,16 @@ export default function LeadDetalhes() {
                   onChange={(e) => setEditHistoryData({...editHistoryData, hora: e.target.value})}
                 />
               </div>
+            </div>
+            <div>
+              <Label htmlFor="edit-notas-atividade">Nota da Atividade</Label>
+              <Textarea
+                id="edit-notas-atividade"
+                placeholder="Descreva os detalhes, observações e informações importantes sobre esta atividade..."
+                value={editHistoryData.notasDetalhadas || ''}
+                onChange={(e) => setEditHistoryData({...editHistoryData, notasDetalhadas: e.target.value})}
+                rows={4}
+              />
             </div>
             <div>
               <Label htmlFor="edit-descricao">Descrição</Label>
