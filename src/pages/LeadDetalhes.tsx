@@ -311,6 +311,15 @@ export default function LeadDetalhes() {
   const [showTagsModal, setShowTagsModal] = useState(false);
   const [showActivityEditModal, setShowActivityEditModal] = useState(false);
   const [selectedActivity, setSelectedActivity] = useState<HistoricoAtendimento | null>(null);
+  const [showEditHistoryModal, setShowEditHistoryModal] = useState(false);
+  const [editingHistoryItem, setEditingHistoryItem] = useState<HistoricoAtendimento | null>(null);
+  const [editHistoryData, setEditHistoryData] = useState({
+    nome: '',
+    tipo: 'ligacao' as HistoricoAtendimento['tipo'],
+    data: new Date(),
+    hora: '14:00',
+    descricao: ''
+  });
   const [newNote, setNewNote] = useState('');
   const [newNoteName, setNewNoteName] = useState('');
   const [newNoteAttachment, setNewNoteAttachment] = useState<File | null>(null);
@@ -549,6 +558,55 @@ export default function LeadDetalhes() {
 
   const handleDeleteNote = (noteId: string) => {
     setHistorico(historico.filter(item => item.id !== noteId));
+  };
+
+  const handleEditHistoryItem = (item: HistoricoAtendimento) => {
+    setEditingHistoryItem(item);
+    setEditHistoryData({
+      nome: item.nome || '',
+      tipo: item.tipo,
+      data: new Date(item.data),
+      hora: item.hora || '14:00',
+      descricao: item.descricao
+    });
+    setShowEditHistoryModal(true);
+  };
+
+  const handleSaveHistoryEdit = () => {
+    if (editingHistoryItem) {
+      const updatedItem: HistoricoAtendimento = {
+        ...editingHistoryItem,
+        nome: editHistoryData.nome,
+        tipo: editHistoryData.tipo,
+        data: editHistoryData.data.toISOString(),
+        hora: editHistoryData.hora,
+        descricao: editHistoryData.descricao
+      };
+      
+      setHistorico(historico.map(item => 
+        item.id === editingHistoryItem.id ? updatedItem : item
+      ));
+      
+      setShowEditHistoryModal(false);
+      setEditingHistoryItem(null);
+      
+      toast({
+        title: "✅ Item atualizado com sucesso!",
+        description: `O item "${editHistoryData.nome || editHistoryData.tipo}" foi atualizado.`,
+        variant: "success",
+      });
+    }
+  };
+
+  const handleDeleteHistoryItem = (itemId: string) => {
+    const item = historico.find(h => h.id === itemId);
+    setHistorico(historico.filter(item => item.id !== itemId));
+    
+    toast({
+      title: "🗑️ Item removido",
+      description: `O item "${item?.nome || item?.tipo}" foi removido do histórico.`,
+      variant: "default",
+    });
   };
 
   const handleAddDocument = () => {
@@ -1843,21 +1901,22 @@ export default function LeadDetalhes() {
                                     <StickyNote className="h-4 w-4" />
                                   </Button>
                                 )}
-                                {/* Notas podem ser editadas */}
-                                {item.tipo === 'followup' && item.editavel && (
-                                  <Button 
-                                    variant="ghost" 
-                                    size="sm" 
-                                    onClick={() => handleEditNote(item.id, item.descricao)}
-                                  >
-                                    <Edit className="h-4 w-4" />
-                                  </Button>
-                                )}
+                                {/* Editar qualquer item do histórico */}
                                 {item.editavel && (
                                   <Button 
                                     variant="ghost" 
                                     size="sm" 
-                                    onClick={() => handleDeleteNote(item.id)}
+                                    onClick={() => handleEditHistoryItem(item)}
+                                  >
+                                    <Edit className="h-4 w-4" />
+                                  </Button>
+                                )}
+                                {/* Remover qualquer item do histórico */}
+                                {item.editavel && (
+                                  <Button 
+                                    variant="ghost" 
+                                    size="sm" 
+                                    onClick={() => handleDeleteHistoryItem(item.id)}
                                   >
                                     <Trash2 className="h-4 w-4" />
                                   </Button>
@@ -2923,6 +2982,90 @@ export default function LeadDetalhes() {
             </Button>
             <Button onClick={handleAddNote} disabled={!newNoteName.trim()}>
               Adicionar Nota
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Modal para Editar Item do Histórico */}
+      <Dialog open={showEditHistoryModal} onOpenChange={setShowEditHistoryModal}>
+        <DialogContent className="sm:max-w-[500px]">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Edit className="h-5 w-5 text-blue-500" />
+              Editar Item do Histórico
+            </DialogTitle>
+            <div className="text-sm text-muted-foreground mt-2">
+              Edite as informações do item selecionado.
+            </div>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <Label htmlFor="edit-nome">Nome</Label>
+              <Input
+                id="edit-nome"
+                placeholder="Dê um nome para este item..."
+                value={editHistoryData.nome}
+                onChange={(e) => setEditHistoryData({...editHistoryData, nome: e.target.value})}
+              />
+            </div>
+            <div>
+              <Label htmlFor="edit-tipo">Tipo</Label>
+              <Select value={editHistoryData.tipo} onValueChange={(value) => setEditHistoryData({...editHistoryData, tipo: value as HistoricoAtendimento['tipo']})}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Selecione o tipo" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="ligacao">Ligação telefônica</SelectItem>
+                  <SelectItem value="email">Envio de e-mail</SelectItem>
+                  <SelectItem value="visita">Visita ao imóvel</SelectItem>
+                  <SelectItem value="reuniao">Reunião presencial</SelectItem>
+                  <SelectItem value="proposta">Proposta comercial</SelectItem>
+                  <SelectItem value="whatsapp">Mensagem WhatsApp</SelectItem>
+                  <SelectItem value="followup">Nota/Registro</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="edit-data">Data</Label>
+                <Input
+                  id="edit-data"
+                  type="date"
+                  value={editHistoryData.data.toISOString().split('T')[0]}
+                  onChange={(e) => setEditHistoryData({...editHistoryData, data: new Date(e.target.value)})}
+                />
+              </div>
+              <div>
+                <Label htmlFor="edit-hora">Hora</Label>
+                <Input
+                  id="edit-hora"
+                  type="time"
+                  value={editHistoryData.hora}
+                  onChange={(e) => setEditHistoryData({...editHistoryData, hora: e.target.value})}
+                />
+              </div>
+            </div>
+            <div>
+              <Label htmlFor="edit-descricao">Descrição</Label>
+              <Textarea
+                id="edit-descricao"
+                placeholder="Descreva os detalhes..."
+                value={editHistoryData.descricao}
+                onChange={(e) => setEditHistoryData({...editHistoryData, descricao: e.target.value})}
+                rows={3}
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => {
+              setShowEditHistoryModal(false);
+              setEditingHistoryItem(null);
+            }}>
+              Cancelar
+            </Button>
+            <Button onClick={handleSaveHistoryEdit} disabled={!editHistoryData.descricao.trim()}>
+              Salvar Alterações
             </Button>
           </DialogFooter>
         </DialogContent>
