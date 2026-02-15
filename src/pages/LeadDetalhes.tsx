@@ -1875,46 +1875,45 @@ export default function LeadDetalhes() {
                                 )}
                               </div>
                             </div>
-                              <div className="flex gap-1">
-                                {/* Apenas atividades podem ter notas adicionadas */}
-                                {item.tipo !== 'followup' && (
-                                  <Button 
-                                    variant="ghost" 
-                                    size="sm" 
-                                    onClick={() => handleActivityDetails(item)}
-                                  >
-                                    <StickyNote className="h-4 w-4" />
-                                  </Button>
-                                )}
-                                {/* Editar qualquer item do histórico */}
-                                <Button 
-                                  variant="ghost" 
-                                  size="sm" 
-                                  onClick={() => handleEditHistoryItem(item)}
-                                >
-                                  <Edit className="h-4 w-4" />
-                                </Button>
-                                {/* Remover qualquer item do histórico */}
-                                <Button 
-                                  variant="ghost" 
-                                  size="sm" 
-                                  onClick={() => handleDeleteHistoryItem(item.id)}
-                                >
-                                  <Trash2 className="h-4 w-4" />
-                                </Button>
-                              </div>
+                            <div className="space-y-3">
+                              {item.notaAtividade && (
+                                <div>
+                                  <p className="text-slate-600 text-sm leading-relaxed">
+                                    {item.notaAtividade}
+                                  </p>
+                                  {item.anexos && item.anexos.length > 0 && (
+                                    <div className="flex items-center gap-1 mt-2">
+                                      <Badge variant="outline" className="text-xs">
+                                        <Paperclip className="h-3 w-3 mr-1" />
+                                        {item.anexos.length} anexo(s)
+                                      </Badge>
+                                    </div>
+                                  )}
+                                </div>
+                              )}
+
+                              {(item.resultado || item.proximoPasso) && (
+                                <div className="bg-slate-50 rounded-lg p-4 space-y-3">
+                                  {item.resultado && (
+                                    <div>
+                                      <p className="text-[10px] font-bold text-slate-400 uppercase mb-1">Resultado</p>
+                                      <p className="text-sm text-slate-700">{item.resultado}</p>
+                                    </div>
+                                  )}
+                                  {item.proximoPasso && (
+                                    <div>
+                                      <p className="text-[10px] font-bold text-slate-400 uppercase mb-1">Próximo Passo</p>
+                                      <p className="text-sm text-slate-700">{item.proximoPasso}</p>
+                                    </div>
+                                  )}
+                                </div>
+                              )}
                             </div>
-                            
+
                             <p className="text-sm">
                               {item.descricao}
                             </p>
-                            
-                            {item.notaAtividade && (
-                              <div className="bg-muted p-2 rounded text-sm">
-                                <span className="font-medium">Nota sobre atividade:</span> {item.notaAtividade}
-                              </div>
-                            )}
-                            
+
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                               {item.resultado && (
                                 <div>
