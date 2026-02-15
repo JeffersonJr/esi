@@ -67,6 +67,7 @@ interface ImovelInteresse {
 interface HistoricoAtendimento {
   id: string;
   data: string;
+  hora?: string;
   tipo: 'ligacao' | 'email' | 'visita' | 'proposta' | 'reuniao' | 'whatsapp' | 'followup';
   descricao: string;
   usuario: string;
@@ -839,7 +840,7 @@ export default function LeadDetalhes() {
                 </div>
                 <div class="info-row">
                   <span class="info-label">Data:</span>
-                  <span class="info-value">${activityData.data.toLocaleDateString('pt-BR')}</span>
+                  <span class="info-value">${new Date(activityData.data).toLocaleDateString('pt-BR')}</span>
                 </div>
                 <div class="info-row">
                   <span class="info-label">Horário:</span>
@@ -1161,7 +1162,7 @@ export default function LeadDetalhes() {
     }, 500);
   };
 
-  const handleScheduleVisit = (property: any) => {
+  const handleScheduleVisit = (property: ImovelInteresse) => {
     setActivityData({
       ...activityData,
       tipo: 'visita',
@@ -1243,7 +1244,7 @@ export default function LeadDetalhes() {
       const novaAtividade: HistoricoAtendimento = {
         id: Date.now().toString(),
         data: activityData.data.toISOString(),
-        tipo: activityData.tipo as any,
+        tipo: activityData.tipo as HistoricoAtendimento['tipo'],
         descricao: activityData.descricao,
         usuario: 'Usuário Atual',
         editavel: true
@@ -1253,7 +1254,7 @@ export default function LeadDetalhes() {
       
       const updatedLead = {
         ...lead,
-        nextAction: `${activityData.tipo} agendada para ${activityData.data.toLocaleDateString('pt-BR')} às ${activityData.hora}`
+        nextAction: `${activityData.tipo} agendada para ${new Date(activityData.data).toLocaleDateString('pt-BR')} às ${activityData.hora}`
       };
       setLead(updatedLead);
       
@@ -1267,7 +1268,21 @@ export default function LeadDetalhes() {
           
           selectedImoveis.forEach((property, index) => {
             setTimeout(() => {
-              generateVisitReport(property, activityData);
+              const completeActivityData: HistoricoAtendimento = {
+                id: Date.now().toString(),
+                data: activityData.data.toISOString(),
+                hora: activityData.hora,
+                tipo: activityData.tipo as HistoricoAtendimento['tipo'],
+                descricao: activityData.descricao,
+                usuario: 'Usuário Atual',
+                resultado: undefined,
+                proximoPasso: undefined,
+                notaAtividade: undefined,
+                avaliacao: null,
+                tags: [],
+                noShow: false
+              };
+              generateVisitReport(property, completeActivityData);
             }, index * 1000); // Gerar com intervalo de 1 segundo
           });
           
@@ -1282,7 +1297,21 @@ export default function LeadDetalhes() {
             const propertyTitle = propertyMatch[1];
             const property = imoveisInteresse.find(p => p.titulo === propertyTitle);
             if (property) {
-              generateVisitReport(property, activityData);
+              const completeActivityData: HistoricoAtendimento = {
+                id: Date.now().toString(),
+                data: activityData.data.toISOString(),
+                hora: activityData.hora,
+                tipo: activityData.tipo as HistoricoAtendimento['tipo'],
+                descricao: activityData.descricao,
+                usuario: 'Usuário Atual',
+                resultado: undefined,
+                proximoPasso: undefined,
+                notaAtividade: undefined,
+                avaliacao: null,
+                tags: [],
+                noShow: false
+              };
+              generateVisitReport(property, completeActivityData);
             }
           }
         }
@@ -1671,7 +1700,7 @@ export default function LeadDetalhes() {
                 <Card>
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2">
-                      <History className="h-5 w-5" />
+                      <Activity className="h-5 w-5" />
                       Histórico de Atendimento
                     </CardTitle>
                   </CardHeader>
