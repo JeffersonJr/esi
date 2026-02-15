@@ -539,37 +539,24 @@ const handleConfirmVisit = (visitData: VisitData) => {
     // Remove do estágio de origem
     const [removed] = sourceLeads.splice(source.index, 1);
     
-    // Verifica se está mudando de corretor (diferente assignedTo)
-    const isChangingAgent = destLeads.length > 0 && destLeads[0].assignedTo !== removed.assignedTo;
+    // Move normalmente - não há verificação de transferência ao mover entre colunas
+    destLeads.splice(destination.index, 0, removed);
     
-    if (isChangingAgent) {
-      // Abre modal de transferência
-      setLeadToTransfer({
-        lead: removed,
-        sourceStage,
-        destStage
-      });
-      setTransferModalOpen(true);
-    } else {
-      // Move normalmente (mesmo corretor)
-      destLeads.splice(destination.index, 0, removed);
-      
-      // Atualiza o estado
-      newLeads[sourceStage] = sourceLeads;
-      newLeads[destStage] = destLeads;
-      
-      setLeads(newLeads);
+    // Atualiza o estado
+    newLeads[sourceStage] = sourceLeads;
+    newLeads[destStage] = destLeads;
+    
+    setLeads(newLeads);
 
-      // Mostra toast de sucesso simples
-      const sourceStageName = stages.find(s => s.id === sourceStage)?.title;
-      const destStageName = stages.find(s => s.id === destStage)?.title;
-      
-      toast({
-        title: "Lead movido com sucesso!",
-        description: `${removed.name} foi movido(a) de "${sourceStageName}" para "${destStageName}".`,
-        variant: "success",
-      });
-    }
+    // Mostra toast de sucesso simples
+    const sourceStageName = stages.find(s => s.id === sourceStage)?.title;
+    const destStageName = stages.find(s => s.id === destStage)?.title;
+    
+    toast({
+      title: "Lead movido com sucesso!",
+      description: `${removed.name} foi movido(a) de "${sourceStageName}" para "${destStageName}".`,
+      variant: "success",
+    });
   };
 
   // Handle transfer confirmation
