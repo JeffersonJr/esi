@@ -6,37 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Separator } from '@/components/ui/separator';
-import { 
-  ArrowLeft, 
-  Mail, 
-  Phone, 
-  Calendar, 
-  MapPin, 
-  Home, 
-  User, 
-  Clock, 
-  FileText, 
-  MessageCircle,
-  Edit,
-  Trash2,
-  Eye,
-  Download,
-  Send,
-  History,
-  Building,
-  DollarSign,
-  Star,
-  TrendingUp,
-  Activity,
-  Target,
-  Plus,
-  UserCheck,
-  MoreVertical,
-  Car,
-  StickyNote,
-  Tag,
-  X
-} from 'lucide-react';
+import { X, Plus, Calendar, Mail, Phone, MessageSquare, MessageCircle, User, MapPin, Home, DollarSign, Building, Clock, MoreHorizontal, MoreVertical, Search, Filter, Edit, Trash2, ChevronDown, Eye, ArrowLeft, Target, StickyNote, Send, FileText, Download, Star, CheckCircle, AlertCircle, Users, Briefcase, Tag } from 'lucide-react';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { ActivityEditModal } from '@/components/modals/ActivityEditModal';
@@ -50,6 +20,8 @@ import { toast } from '@/hooks/use-toast';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import { useRef } from 'react';
+import { TagManager } from '@/components/shared/TagManager';
+import { DEFAULT_TAGS, TAG_COLORS } from '@/components/shared/tagConstants';
 
 interface Lead {
   id: string;
@@ -368,35 +340,9 @@ export default function LeadDetalhes() {
   const [activityProximoPasso, setActivityProximoPasso] = useState('');
   const [showActivityDetailsModal, setShowActivityDetailsModal] = useState(false);
   const [activityTags, setActivityTags] = useState<string[]>([]);
-  const [newActivityTag, setNewActivityTag] = useState('');
   const [isActivityShowcased, setIsActivityShowcased] = useState(false);
   const [nextActivity, setNextActivity] = useState('');
-  const [selectedActivityTagColor, setSelectedActivityTagColor] = useState('bg-blue-500');
-  const [availableActivityTags, setAvailableActivityTags] = useState([
-    { id: '1', name: 'Hot Lead', color: 'bg-red-500' },
-    { id: '2', name: 'VIP', color: 'bg-purple-500' },
-    { id: '3', name: 'Primeira Compra', color: 'bg-blue-500' },
-    { id: '4', name: 'Investidor', color: 'bg-green-500' },
-    { id: '5', name: 'Financiamento', color: 'bg-orange-500' },
-    { id: '6', name: 'Aluguel', color: 'bg-yellow-500' },
-    { id: '7', name: 'Interesse Alto', color: 'bg-red-500' },
-    { id: '8', name: 'Follow-up Necessário', color: 'bg-orange-500' },
-    { id: '9', name: 'Urgente', color: 'bg-red-500' },
-    { id: '10', name: 'Visita Agendada', color: 'bg-blue-500' },
-    { id: '11', name: 'Proposta Enviada', color: 'bg-green-500' },
-    { id: '12', name: 'Em Negociação', color: 'bg-purple-500' },
-  ]);
-
-  const ACTIVITY_TAG_COLORS = [
-    { name: 'Vermelho', value: 'bg-red-500' },
-    { name: 'Laranja', value: 'bg-orange-500' },
-    { name: 'Amarelo', value: 'bg-yellow-500' },
-    { name: 'Verde', value: 'bg-green-500' },
-    { name: 'Azul', value: 'bg-blue-500' },
-    { name: 'Roxo', value: 'bg-purple-500' },
-    { name: 'Rosa', value: 'bg-pink-500' },
-    { name: 'Cinza', value: 'bg-gray-500' },
-  ];
+  const [availableActivityTags, setAvailableActivityTags] = useState(DEFAULT_TAGS);
 
   const corretores = [
     { id: 'JS', nome: 'João Silva' },
@@ -608,32 +554,7 @@ export default function LeadDetalhes() {
     setActivityRating(activity.avaliacao || null);
     setActivityResultado(activity.resultado || '');
     setActivityProximoPasso(activity.proximoPasso || '');
-    setActivityTags(activity.tags || []);
-    setIsActivityShowcased(activity.noShow || false);
     setShowActivityDetailsModal(true);
-  };
-
-  const addActivityTag = () => {
-    if (newActivityTag.trim()) {
-      const newTagObj = {
-        id: Date.now().toString(),
-        name: newActivityTag.trim(),
-        color: selectedActivityTagColor
-      };
-      setAvailableActivityTags(prev => [...prev, newTagObj]);
-      setActivityTags(prev => [...prev, newActivityTag.trim()]);
-      setNewActivityTag('');
-    }
-  };
-
-  const removeActivityTag = (tagToRemove: string) => {
-    setActivityTags(activityTags.filter(tag => tag !== tagToRemove));
-  };
-
-  const addAvailableActivityTag = (tag: { id: string; name: string; color: string }) => {
-    if (!activityTags.includes(tag.name)) {
-      setActivityTags(prev => [...prev, tag.name]);
-    }
   };
 
   const handleViewProperty = (propertyId: string) => {
@@ -2562,88 +2483,13 @@ export default function LeadDetalhes() {
               {/* Tags da Atividade */}
               <div>
                 <h3 className="text-slate-400 uppercase text-xs font-semibold mb-3">Tags da Atividade</h3>
-                <div className="space-y-4">
-                  {/* Tags selecionadas em formato chips */}
-                  <div className="flex flex-wrap gap-2 min-h-[40px] p-3 bg-white rounded-lg border border-slate-200">
-                    {activityTags.length === 0 ? (
-                      <span className="text-sm text-slate-400">Clique nas tags abaixo para adicionar</span>
-                    ) : (
-                      activityTags.map((tagName) => {
-                        const tag = availableActivityTags.find(t => t.name === tagName);
-                        return (
-                          <Badge 
-                            key={tagName} 
-                            className={`${tag?.color || 'bg-slate-400'} text-white px-3 py-1 rounded-full text-sm cursor-pointer hover:opacity-80 transition-opacity`}
-                          >
-                            {tagName}
-                            <X 
-                              className="h-3 w-3 ml-1 hover:text-red-200" 
-                              onClick={() => removeActivityTag(tagName)} 
-                            />
-                          </Badge>
-                        );
-                      })
-                    )}
-                  </div>
-
-                  {/* Tags disponíveis */}
-                  <div className="space-y-2">
-                    <p className="text-xs text-slate-400">Tags disponíveis:</p>
-                    <div className="flex flex-wrap gap-2 max-h-32 overflow-y-auto p-3 bg-white rounded-lg border border-slate-200">
-                      {availableActivityTags
-                        .filter(tag => !activityTags.includes(tag.name))
-                        .map((tag) => (
-                          <Badge
-                            key={tag.id}
-                            className={`${tag.color} text-white px-3 py-1 rounded-full text-sm cursor-pointer hover:opacity-80 transition-opacity`}
-                            onClick={() => addAvailableActivityTag(tag)}
-                          >
-                            {tag.name}
-                          </Badge>
-                        ))}
-                    </div>
-                  </div>
-
-                  {/* Input para adicionar nova tag */}
-                  <div className="flex gap-2">
-                    <Input
-                      placeholder="Nova tag..."
-                      value={newActivityTag}
-                      onChange={(e) => setNewActivityTag(e.target.value)}
-                      className="flex-1 border-slate-200"
-                      onKeyPress={(e) => {
-                        if (e.key === 'Enter') {
-                          e.preventDefault();
-                          addActivityTag();
-                        }
-                      }}
-                    />
-                    <Select value={selectedActivityTagColor} onValueChange={setSelectedActivityTagColor}>
-                      <SelectTrigger className="w-32 border-slate-200">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {ACTIVITY_TAG_COLORS.map((color) => (
-                          <SelectItem key={color.value} value={color.value}>
-                            <div className="flex items-center gap-2">
-                              <div className={`w-3 h-3 rounded-full ${color.value}`} />
-                              {color.name}
-                            </div>
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
-                      onClick={addActivityTag} 
-                      disabled={!newActivityTag.trim()}
-                      className="border-slate-200 hover:bg-slate-50"
-                    >
-                      <Plus className="h-3 w-3" />
-                    </Button>
-                  </div>
-                </div>
+                <TagManager
+                  selectedTags={activityTags}
+                  availableTags={availableActivityTags}
+                  onUpdate={(tags) => setActivityTags(tags)}
+                  onUpdateAvailableTags={setAvailableActivityTags}
+                  showEditMode={false}
+                />
               </div>
             </div>
 
