@@ -2182,70 +2182,75 @@ export default function LeadDetalhes() {
                 <div className="space-y-3">
                   {imoveisInteresse.map((imovel) => (
                     <div key={imovel.id} className="border rounded-lg p-4 hover:shadow-md hover:border-cyan-200 transition-all duration-200 hover:shadow-lg">
-                      <div className="flex items-start gap-4">
-                        <input
-                          type="checkbox"
-                          checked={selectedProperties.includes(imovel.id)}
-                          onChange={() => handlePropertySelection(imovel.id)}
-                          className="mt-1"
-                        />
-                        
-                        <div className="w-32 h-24 rounded-md overflow-hidden flex-shrink-0">
-                          <div className="w-full h-full relative">
-                            <img
-                              src={imovel.imagens[0]}
-                              alt={imovel.titulo}
-                              className="w-full h-full object-cover"
-                            />
-                          </div>
-                        </div>
-                        
-                        <div className="flex-1">
-                          <div className="flex justify-between items-start">
-                            <div className="flex-1">
-                              <h3 className="font-semibold">{imovel.titulo}</h3>
-                              <p className="text-sm text-muted-foreground">{imovel.endereco}</p>
-                              <p className="text-cyan-600 font-bold text-lg mt-1">{imovel.valor}</p>
-                              
-                              <div className="flex gap-6 mt-3 text-sm">
-                                <span className="flex items-center gap-2">
-                                  <Home className="h-4 w-4 text-slate-500" />
-                                  <span>{imovel.quartos} quartos</span>
-                                </span>
-                                <span className="flex items-center gap-2">
-                                  <DollarSign className="h-4 w-4 text-slate-500" />
-                                  <span>{imovel.area} m²</span>
-                                </span>
-                                <span className="flex items-center gap-2">
-                                  <Car className="h-4 w-4 text-slate-500" />
-                                  <span>{imovel.vagas} vagas</span>
-                                </span>
-                              </div>
-                              
-                              <p className="text-sm text-muted-foreground mt-2 line-clamp-2">{imovel.descricao}</p>
-                              
-                              <div className="flex gap-2 ml-4">
-                              <Button 
-                                variant="outline" 
-                                size="sm" 
-                                onClick={() => handleViewProperty(imovel.id)}
-                              >
-                                <Eye className="h-4 w-4 mr-1" />
-                                Ver
-                              </Button>
-                              <Button 
-                                variant="default" 
-                                size="sm" 
-                                className="bg-cyan-500 hover:bg-cyan-600 text-white"
-                                onClick={() => handleScheduleVisit(imovel)}
-                              >
-                                <Calendar className="h-4 w-4 mr-1" />
-                                Visitar
-                              </Button>
-                              </div>
+                      {/* Header com botões */}
+                      <div className="flex justify-between items-start mb-3">
+                        <div className="flex items-start gap-4">
+                          <input
+                            type="checkbox"
+                            checked={selectedProperties.includes(imovel.id)}
+                            onChange={() => handlePropertySelection(imovel.id)}
+                            className="mt-1"
+                          />
+                          
+                          <div className="w-32 h-24 rounded-md overflow-hidden flex-shrink-0">
+                            <div className="w-full h-full relative">
+                              <img
+                                src={imovel.imagens[0]}
+                                alt={imovel.titulo}
+                                className="w-full h-full object-cover"
+                              />
                             </div>
                           </div>
+                          
+                          <div className="flex-1">
+                            <h3 className="font-semibold">{imovel.titulo}</h3>
+                            <p className="text-sm text-muted-foreground">{imovel.endereco}</p>
+                            <p className="text-cyan-600 font-bold text-lg mt-1">{imovel.valor}</p>
+                          </div>
                         </div>
+                        
+                        {/* Botões de ação no canto superior direito */}
+                        <div className="flex gap-2">
+                          <Button 
+                            variant="outline" 
+                            size="sm" 
+                            onClick={() => handleViewProperty(imovel.id)}
+                          >
+                            <Eye className="h-4 w-4 mr-1" />
+                            Ver
+                          </Button>
+                          <Button 
+                            variant="default" 
+                            size="sm" 
+                            className="bg-cyan-500 hover:bg-cyan-600 text-white"
+                            onClick={() => handleScheduleVisit(imovel)}
+                          >
+                            <Calendar className="h-4 w-4 mr-1" />
+                            Visitar
+                          </Button>
+                        </div>
+                      </div>
+                      
+                      {/* Conteúdo centralizado */}
+                      <div className="flex flex-col items-center justify-center py-4 space-y-3">
+                        <div className="flex gap-6 text-sm text-center">
+                          <span className="flex items-center gap-2">
+                            <Home className="h-4 w-4 text-slate-500" />
+                            <span>{imovel.quartos} quartos</span>
+                          </span>
+                          <span className="flex items-center gap-2">
+                            <DollarSign className="h-4 w-4 text-slate-500" />
+                            <span>{imovel.area} m²</span>
+                          </span>
+                          <span className="flex items-center gap-2">
+                            <Car className="h-4 w-4 text-slate-500" />
+                            <span>{imovel.vagas} vagas</span>
+                          </span>
+                        </div>
+                        
+                        <p className="text-sm text-muted-foreground text-center line-clamp-2 max-w-md">
+                          {imovel.descricao}
+                        </p>
                       </div>
                     </div>
                   ))}
