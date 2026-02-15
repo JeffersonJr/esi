@@ -1931,10 +1931,9 @@ export default function LeadDetalhes() {
                                     <Badge variant="outline" className="text-xs">
                                       <Paperclip className="h-3 w-3 mr-1" />
                                       {item.anexos.length} anexo(s)
-                                      {anexo}
                                     </Badge>
-                                  ))}
-                                </div>
+                                  </div>
+                                )}
                               </div>
                             )}
 
