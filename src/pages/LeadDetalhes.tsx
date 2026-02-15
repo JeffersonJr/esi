@@ -1902,25 +1902,21 @@ export default function LeadDetalhes() {
                                   </Button>
                                 )}
                                 {/* Editar qualquer item do histórico */}
-                                {item.editavel && (
-                                  <Button 
-                                    variant="ghost" 
-                                    size="sm" 
-                                    onClick={() => handleEditHistoryItem(item)}
-                                  >
-                                    <Edit className="h-4 w-4" />
-                                  </Button>
-                                )}
+                                <Button 
+                                  variant="ghost" 
+                                  size="sm" 
+                                  onClick={() => handleEditHistoryItem(item)}
+                                >
+                                  <Edit className="h-4 w-4" />
+                                </Button>
                                 {/* Remover qualquer item do histórico */}
-                                {item.editavel && (
-                                  <Button 
-                                    variant="ghost" 
-                                    size="sm" 
-                                    onClick={() => handleDeleteHistoryItem(item.id)}
-                                  >
-                                    <Trash2 className="h-4 w-4" />
-                                  </Button>
-                                )}
+                                <Button 
+                                  variant="ghost" 
+                                  size="sm" 
+                                  onClick={() => handleDeleteHistoryItem(item.id)}
+                                >
+                                  <Trash2 className="h-4 w-4" />
+                                </Button>
                               </div>
                             </div>
                             
