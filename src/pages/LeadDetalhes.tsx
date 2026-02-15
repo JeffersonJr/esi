@@ -2115,31 +2115,16 @@ export default function LeadDetalhes() {
                                   size="sm" 
                                   className="text-cyan-600 hover:text-cyan-700 hover:bg-cyan-50"
                                   onClick={() => {
-                                    // Criar uma nova atividade baseada na atividade atual
-                                    const newActivity: HistoricoAtendimento = {
-                                      id: Date.now().toString(),
-                                      nome: `Follow-up: ${item.nome}`,
-                                      tipo: 'followup',
-                                      data: new Date().toISOString(),
-                                      descricao: `Follow-up: ${item.notaAtividade.substring(0, 50)}...`,
-                                      usuario: 'Usuário Atual',
-                                      notaAtividade: '',
-                                      resultado: '',
-                                      proximoPasso: '',
-                                      avaliacao: null,
-                                      tags: [],
-                                      noShow: false,
-                                      editavel: true
-                                    };
-                                    
-                                    // Abrir modal de detalhes com a nova atividade
-                                    setSelectedActivity(newActivity);
-                                    setActivityNote('');
-                                    setActivityRating(null);
-                                    setActivityResultado('');
-                                    setActivityProximoPasso('');
-                                    setActivityTags([]);
-                                    setShowActivityDetailsModal(true);
+                                    // Resetar dados para nova atividade
+                                    setActivityData({
+                                      nome: '',
+                                      tipo: 'ligacao',
+                                      data: new Date(),
+                                      hora: '14:00',
+                                      descricao: '',
+                                      notasDetalhadas: ''
+                                    });
+                                    setShowActivityModal(true);
                                   }}
                                 >
                                   + Marcar próxima atividade
