@@ -15,18 +15,22 @@ import { ThemeToggle } from '@/components/ui/theme-toggle';
 import { useNavigate } from 'react-router-dom';
 import { toast } from '@/hooks/use-toast';
 
-export function Header() {
+interface HeaderProps {
+  mobileMenuTrigger?: React.ReactNode;
+}
+
+export function Header({ mobileMenuTrigger }: HeaderProps) {
   const navigate = useNavigate();
 
   const handleLogout = () => {
     localStorage.removeItem('isAuthenticated');
     localStorage.removeItem('user');
-    
+
     toast({
       title: "Logout realizado",
       description: "Você foi deslogado com sucesso.",
     });
-    
+
     navigate('/login');
   };
 
@@ -38,20 +42,24 @@ export function Header() {
     navigate('/configuracoes');
   };
   return (
-    <header className="h-16 border-b border-border bg-card px-6 flex items-center justify-between">
+    <header className="h-16 border-b border-border bg-card px-4 md:px-6 flex items-center justify-between">
       <div className="flex items-center flex-1 max-w-xl">
-        <div className="relative w-full">
+        {mobileMenuTrigger}
+        <div className="relative w-full hidden md:block">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
             placeholder="Buscar contatos, imóveis, atividades..."
             className="pl-10 bg-background"
           />
         </div>
+        <Button variant="ghost" size="icon" className="md:hidden">
+          <Search className="h-5 w-5" />
+        </Button>
       </div>
 
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-2 md:gap-4">
         <ThemeToggle />
-        
+
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" size="icon" className="relative">
@@ -113,6 +121,6 @@ export function Header() {
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-    </header>
+    </header >
   );
 }

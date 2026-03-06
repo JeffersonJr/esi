@@ -23,13 +23,13 @@ const mockProperties = [
 const calculateMetrics = (daysThreshold: number) => {
   const now = new Date();
   const thresholdDate = new Date(now.getTime() - (daysThreshold * 24 * 60 * 60 * 1000));
-  
+
   const total = mockProperties.length;
   const ativos = mockProperties.filter(p => p.status === 'ativo').length;
   const rascunhos = mockProperties.filter(p => p.status === 'rascunho').length;
   const desatualizados = mockProperties.filter(p => p.lastUpdated < thresholdDate).length;
   const ativosIncompletos = mockProperties.filter(p => p.status === 'ativo' && p.completeness < 80).length;
-  
+
   return { total, ativos, rascunhos, desatualizados, ativosIncompletos };
 };
 
@@ -95,7 +95,7 @@ const funilData = [
   { stage: 'Visita Agendada', count: 24, color: 'bg-primary-600' },
   { stage: 'Proposta Enviada', count: 18, color: 'bg-primary-700' },
   { stage: 'Negociação', count: 12, color: 'bg-primary-800' },
-  { stage: 'Fechado', count: 8, color: 'bg-success' },
+  { stage: 'Fechado', count: 8, color: 'bg-primary-900' },
 ];
 
 export function Dashboard() {
@@ -134,7 +134,7 @@ export function Dashboard() {
       change: '+2.3%',
       trend: 'up',
       icon: Target,
-      color: 'text-purple-600',
+      color: 'text-primary',
       subtitle: 'Leads → Negócios',
       period: 'Este mês',
       needsAttention: parseFloat(newMetricsData.conversionRate) < 3,
@@ -146,7 +146,7 @@ export function Dashboard() {
       change: '+5.7%',
       trend: 'up',
       icon: DollarSign,
-      color: 'text-green-600',
+      color: 'text-success',
       period: 'Este mês',
       needsAttention: false,
       onClick: handleAverageTicketClick,
@@ -157,7 +157,7 @@ export function Dashboard() {
       change: '+12.1%',
       trend: 'up',
       icon: Star,
-      color: 'text-yellow-600',
+      color: 'text-warning',
       period: 'Este mês',
       needsAttention: parseInt(newMetricsData.qualifiedLeads) < 100,
       onClick: handleQualifiedLeadsClick,
@@ -168,7 +168,7 @@ export function Dashboard() {
       change: '+8.4%',
       trend: 'up',
       icon: Activity,
-      color: 'text-blue-600',
+      color: 'text-primary-600',
       subtitle: 'R$ 2.4M / R$ 3M',
       period: 'Este mês',
       needsAttention: parseFloat(newMetricsData.monthlyProgress) < 80,
@@ -210,7 +210,7 @@ export function Dashboard() {
     setHasChanges(false);
     // Here you would normally save to backend
     console.log('Settings saved:', { daysThreshold });
-    
+
     // Show success toast
     toast({
       title: "Configurações salvas",
@@ -260,14 +260,14 @@ export function Dashboard() {
       title: 'Total de Imóveis',
       value: propertyMetrics.total.toString(),
       icon: FileText,
-      color: 'text-blue-600',
+      color: 'text-primary',
       onClick: handleTotalPropertiesClick,
     },
     {
       title: 'Imóveis Desatualizados',
       value: propertyMetrics.desatualizados.toString(),
       icon: Clock,
-      color: 'text-orange-600',
+      color: 'text-warning',
       subtitle: `> ${daysThreshold} dias`,
       onClick: handleOutdatedPropertiesClick,
     },
@@ -275,14 +275,14 @@ export function Dashboard() {
       title: 'Rascunhos',
       value: propertyMetrics.rascunhos.toString(),
       icon: FileText,
-      color: 'text-gray-600',
+      color: 'text-muted-foreground',
       onClick: handleDraftsClick,
     },
     {
       title: 'Ativos Incompletos',
       value: propertyMetrics.ativosIncompletos.toString(),
       icon: AlertTriangle,
-      color: 'text-red-600',
+      color: 'text-destructive',
       subtitle: '< 80% completo',
       onClick: handleIncompleteActiveClick,
     },
@@ -293,21 +293,21 @@ export function Dashboard() {
       {/* Welcome Section */}
       <Card className="bg-gradient-to-r from-primary to-primary-600 text-primary-foreground">
         <CardContent className="p-6">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
               <div className="flex items-center gap-2 mb-2">
                 <GreetingIcon className="h-6 w-6" />
-                <h1 className="text-2xl font-bold">{greeting.text}, {userName}!</h1>
+                <h1 className="text-xl md:text-2xl font-bold">{greeting.text}, {userName}!</h1>
               </div>
-              <p className="text-primary-foreground/90">
+              <p className="text-sm md:text-base text-primary-foreground/90">
                 Aqui está o resumo do seu dia e as métricas mais importantes do seu negócio.
               </p>
             </div>
-            <div className="text-right">
-              <div className="text-3xl font-bold">
+            <div className="text-left md:text-right">
+              <div className="text-xl md:text-3xl font-bold">
                 {new Date().toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' })}
               </div>
-              <div className="text-primary-foreground/80">
+              <div className="text-sm md:text-base text-primary-foreground/80">
                 {new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
               </div>
             </div>
@@ -325,30 +325,30 @@ export function Dashboard() {
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-            <div className="text-center p-4 bg-blue-50 rounded-lg">
-              <div className="text-2xl font-bold text-blue-600">{daySummary.newLeads}</div>
-              <div className="text-sm text-blue-600">Novos Leads</div>
+            <div className="text-center p-4 bg-primary/10 rounded-lg">
+              <div className="text-2xl font-bold text-primary">{daySummary.newLeads}</div>
+              <div className="text-sm text-primary">Novos Leads</div>
             </div>
-            <div className="text-center p-4 bg-green-50 rounded-lg">
-              <div className="text-2xl font-bold text-green-600">{daySummary.scheduledVisits}</div>
-              <div className="text-sm text-green-600">Visitas</div>
+            <div className="text-center p-4 bg-success/10 rounded-lg">
+              <div className="text-2xl font-bold text-success">{daySummary.scheduledVisits}</div>
+              <div className="text-sm text-success">Visitas</div>
             </div>
-            <div className="text-center p-4 bg-yellow-50 rounded-lg">
-              <div className="text-2xl font-bold text-yellow-600">{daySummary.pendingProposals}</div>
-              <div className="text-sm text-yellow-600">Propostas</div>
+            <div className="text-center p-4 bg-warning/10 rounded-lg">
+              <div className="text-2xl font-bold text-warning">{daySummary.pendingProposals}</div>
+              <div className="text-sm text-warning">Propostas</div>
             </div>
-            <div className="text-center p-4 bg-red-50 rounded-lg">
-              <div className="text-2xl font-bold text-red-600">{daySummary.urgentTasks}</div>
-              <div className="text-sm text-red-600">Urgentes</div>
+            <div className="text-center p-4 bg-destructive/10 rounded-lg">
+              <div className="text-2xl font-bold text-destructive">{daySummary.urgentTasks}</div>
+              <div className="text-sm text-destructive">Urgentes</div>
             </div>
-            <div className="text-center p-4 bg-purple-50 rounded-lg">
-              <div className="text-2xl font-bold text-purple-600">
+            <div className="text-center p-4 bg-accent/10 rounded-lg">
+              <div className="text-2xl font-bold text-accent">
                 {new Intl.NumberFormat('pt-BR', {
                   style: 'currency',
                   currency: 'BRL',
                 }).format(daySummary.todayRevenue)}
               </div>
-              <div className="text-sm text-purple-600">Faturamento</div>
+              <div className="text-sm text-accent">Faturamento</div>
             </div>
           </div>
         </CardContent>
@@ -361,8 +361,8 @@ export function Dashboard() {
           const TrendIcon = metric.trend === 'up' ? ArrowUpRight : ArrowDownRight;
 
           return (
-            <Card 
-              key={metric.title} 
+            <Card
+              key={metric.title}
               className={cn("hover:shadow-lg transition-shadow cursor-pointer hover:bg-gray-50", metric.needsAttention && "border-red-200 bg-red-50/30")}
               onClick={metric.onClick}
             >
@@ -401,7 +401,7 @@ export function Dashboard() {
                       <TrendIcon className="h-4 w-4 mr-1" />
                       {metric.change}
                     </div>
-                    <div 
+                    <div
                       className="flex items-center gap-1 mt-2 text-sm text-primary hover:text-primary/80 transition-colors"
                       onClick={(e) => {
                         e.stopPropagation();
@@ -475,15 +475,15 @@ export function Dashboard() {
               <Label htmlFor="daysThreshold" className="text-sm text-muted-foreground">
                 dias
               </Label>
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 size="sm"
                 onClick={handleSave}
                 disabled={!hasChanges}
                 className={cn(
                   "transition-all duration-200",
-                  hasChanges 
-                    ? "bg-primary text-primary-foreground hover:bg-primary/90" 
+                  hasChanges
+                    ? "bg-primary text-primary-foreground hover:bg-primary/90"
                     : "opacity-50 cursor-not-allowed"
                 )}
               >
@@ -498,8 +498,8 @@ export function Dashboard() {
               const Icon = metric.icon;
 
               return (
-                <Card 
-                  key={metric.title} 
+                <Card
+                  key={metric.title}
                   className="hover:shadow-md transition-shadow cursor-pointer hover:bg-gray-50"
                   onClick={metric.onClick}
                 >
@@ -511,7 +511,7 @@ export function Dashboard() {
                         {metric.subtitle && (
                           <p className="text-xs text-muted-foreground mt-1">{metric.subtitle}</p>
                         )}
-                        <div 
+                        <div
                           className="flex items-center gap-1 mt-2 text-sm text-primary hover:text-primary/80 transition-colors"
                           onClick={(e) => {
                             e.stopPropagation();
@@ -537,8 +537,8 @@ export function Dashboard() {
           <CardHeader>
             <div className="flex items-center justify-between">
               <CardTitle>Funil de Vendas</CardTitle>
-              <Button 
-                variant="ghost" 
+              <Button
+                variant="ghost"
                 size="sm"
                 onClick={() => navigate('/funil-vendas')}
                 className="text-primary hover:text-primary/80 transition-colors"
@@ -553,7 +553,7 @@ export function Dashboard() {
               {funilData.map((stage, index) => {
                 const previousCount = index > 0 ? funilData[index - 1].count : stage.count;
                 const conversionRate = index > 0 ? ((stage.count / previousCount) * 100).toFixed(1) : null;
-                
+
                 return (
                   <div key={stage.stage} className="animate-slide-up" style={{ animationDelay: `${index * 100}ms` }}>
                     <div className="flex items-center justify-between mb-2">
@@ -564,8 +564,8 @@ export function Dashboard() {
                           <span className={cn(
                             "text-xs px-2 py-1 rounded",
                             parseFloat(conversionRate) >= 70 ? "bg-green-100 text-green-700" :
-                            parseFloat(conversionRate) >= 50 ? "bg-yellow-100 text-yellow-700" :
-                            "bg-red-100 text-red-700"
+                              parseFloat(conversionRate) >= 50 ? "bg-yellow-100 text-yellow-700" :
+                                "bg-red-100 text-red-700"
                           )}>
                             {conversionRate}%
                           </span>
@@ -589,8 +589,8 @@ export function Dashboard() {
           <CardHeader>
             <div className="flex items-center justify-between">
               <CardTitle>Atividades Recentes</CardTitle>
-              <Button 
-                variant="ghost" 
+              <Button
+                variant="ghost"
                 size="sm"
                 onClick={() => navigate('/funil-vendas?filter=ultimos-30-dias')}
                 className="text-primary hover:text-primary/80 transition-colors"

@@ -54,38 +54,36 @@ export function Sidebar() {
     <aside
       className={cn(
         'relative flex flex-col bg-card border-r border-border transition-all duration-300',
-        collapsed ? 'w-20' : 'w-64'
+        collapsed ? 'w-20' : 'w-20 lg:w-64'
       )}
     >
       <div className="flex items-center justify-between p-6 border-b border-border">
-        {!collapsed && (
-          <div className="flex items-center justify-center w-full">
+        {(!collapsed) && (
+          <div className="flex items-center justify-center w-full lg:block hidden">
             <div className="w-full h-auto flex items-center justify-center px-4">
-              <img 
-                src="/logoesi.svg" 
-                alt="ESI Logo" 
+              <img
+                src="/logoesi.svg"
+                alt="ESI Logo"
                 className="w-full h-auto object-contain"
                 onError={(e) => {
-                  // Fallback para texto se a imagem não carregar
                   const target = e.target as HTMLImageElement;
                   target.style.display = 'none';
-                  target.parentElement!.innerHTML = '<div class="w-32 h-32 bg-gradient-primary rounded-lg flex items-center justify-center"><span class="text-primary-foreground font-bold text-4xl">E</span></div>';
+                  target.parentElement!.innerHTML = '<div class="w-12 h-12 bg-primary text-primary-foreground rounded-lg flex items-center justify-center mx-auto"><span class="font-bold text-2xl">E</span></div>';
                 }}
               />
             </div>
           </div>
         )}
-        {collapsed && (
-          <div className="w-14 h-14 flex items-center justify-center mx-auto">
-            <img 
-              src="/logominimal.svg" 
-              alt="ESI Logo" 
+        {(collapsed || true) && (
+          <div className={cn("w-14 h-14 items-center justify-center mx-auto", collapsed ? "flex" : "flex lg:hidden")}>
+            <img
+              src="/logominimal.svg"
+              alt="ESI Logo"
               className="w-full h-full object-contain"
               onError={(e) => {
-                // Fallback para texto se a imagem não carregar
                 const target = e.target as HTMLImageElement;
                 target.style.display = 'none';
-                target.parentElement!.innerHTML = '<div class="w-14 h-14 bg-gradient-primary rounded-lg flex items-center justify-center"><span class="text-primary-foreground font-bold text-lg">E</span></div>';
+                target.parentElement!.innerHTML = '<div class="w-10 h-10 bg-primary text-primary-foreground rounded-lg flex items-center justify-center transition-all"><span class="font-bold text-lg">E</span></div>';
               }}
             />
           </div>
@@ -95,7 +93,7 @@ export function Sidebar() {
       <Button
         variant="ghost"
         size="icon"
-        className="absolute -right-3 top-24 z-10 h-6 w-6 rounded-full border border-border bg-background shadow-md hover:bg-muted"
+        className="absolute -right-3 top-24 z-10 h-6 w-6 rounded-full border border-border bg-background shadow-md hover:bg-muted hidden lg:flex"
         onClick={() => setCollapsed(!collapsed)}
       >
         {collapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
@@ -112,18 +110,18 @@ export function Sidebar() {
                 variant={isActive ? 'default' : 'ghost'}
                 className={cn(
                   'w-full justify-start gap-3 transition-all',
-                  collapsed && 'justify-center px-2',
+                  (collapsed) ? 'justify-center px-2' : 'justify-center lg:justify-start px-2 lg:px-4',
                   isActive && 'bg-primary text-primary-foreground shadow-md'
                 )}
               >
                 <Icon className="h-5 w-5 flex-shrink-0" />
-                {!collapsed && <span>{item.label}</span>}
+                {!collapsed && <span className="hidden lg:inline">{item.label}</span>}
               </Button>
             </Link>
           );
         })}
       </nav>
-      
+
       <div className="p-4 border-t border-border">
         <div className="text-center text-xs text-muted-foreground">
         </div>
