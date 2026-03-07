@@ -1,8 +1,8 @@
-import { useState, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useCallback, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { 
+import {
   Calendar,
   Mail,
   Phone,
@@ -23,8 +23,11 @@ import {
   Edit,
   Trash2,
   ChevronDown,
-  Eye
+  Eye,
+  TrendingUp,
 } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { cn } from '@/lib/utils';
 import { LeadDetailsModal } from '@/components/modals/LeadDetailsModal';
 import { LeadFormModal } from '@/components/modals/LeadFormModal';
 import { DeleteReasonModal } from '@/components/modals/DeleteReasonModal';
@@ -52,17 +55,25 @@ import { ScheduleVisitModal } from '@/components/modals/ScheduleVisitModal';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
 
 import { Lead, DeleteReason, DeletedLead } from '@/types/lead';
 
 const stages = [
-  { id: 'new', title: 'Novo Lead', color: 'bg-primary-100 text-primary-700 dark:bg-primary-900 dark:text-primary-100' },
-  { id: 'contact', title: 'Contato Realizado', color: 'bg-accent/10 text-accent dark:bg-accent/20' },
-  { id: 'visit', title: 'Visita Agendada', color: 'bg-warning/10 text-warning dark:bg-warning/20' },
-  { id: 'proposal', title: 'Proposta Enviada', color: 'bg-primary/10 text-primary dark:bg-primary/20' },
-  { id: 'negotiation', title: 'Negociação', color: 'bg-accent/20 text-accent dark:bg-accent/30' },
-  { id: 'closed', title: 'Fechado', color: 'bg-success/10 text-success dark:bg-success/20' },
-  { id: 'lost', title: 'Perdido', color: 'bg-destructive/10 text-destructive dark:bg-destructive/20' },
+  { id: 'new', title: 'Novo Lead', color: 'bg-primary-500/10 text-primary-600 dark:bg-primary-500/20 dark:text-primary-400' },
+  { id: 'contact', title: 'Contato Realizado', color: 'bg-accent/10 text-accent dark:bg-accent/20 dark:text-accent' },
+  { id: 'visit', title: 'Visita Agendada', color: 'bg-warning/10 text-warning dark:bg-warning/20 dark:text-warning' },
+  { id: 'proposal', title: 'Proposta Enviada', color: 'bg-primary/10 text-primary dark:bg-primary/20 dark:text-primary' },
+  { id: 'negotiation', title: 'Negociação', color: 'bg-accent/20 text-accent dark:bg-accent/30 dark:text-accent' },
+  { id: 'closed', title: 'Fechado', color: 'bg-success/10 text-success dark:bg-success/20 dark:text-success' },
+  { id: 'lost', title: 'Perdido', color: 'bg-destructive/10 text-destructive dark:bg-destructive/20 dark:text-destructive' },
 ];
 
 const AGENTS = [
@@ -79,132 +90,132 @@ const createLeadWithDates = (lead: Omit<Lead, 'createdAt' | 'updatedAt'>): Lead 
 
 const initialLeads: Record<string, Lead[]> = {
   new: [
-    createLeadWithDates({ 
-      id: '1', 
-      name: 'Maria Santos', 
-      emails: [{ type: 'email', value: 'maria@email.com', isPrimary: true }], 
-      phones: [{ type: 'phone', value: '11 99999-0001', isPrimary: true }], 
-      property: 'Apt 2 quartos', 
+    createLeadWithDates({
+      id: '1',
+      name: 'Maria Santos',
+      emails: [{ type: 'email', value: 'maria@email.com', isPrimary: true }],
+      phones: [{ type: 'phone', value: '11 99999-0001', isPrimary: true }],
+      property: 'Apt 2 quartos',
       location: 'Vila Mariana',
       searchType: 'compra',
-      value: 'R$ 350.000', 
-      source: 'Site', 
+      value: 'R$ 350.000',
+      source: 'Site',
       assignedTo: 'JS',
       tags: ['Hot Lead', 'Primeira Compra']
     }),
-    createLeadWithDates({ 
-      id: '2', 
-      name: 'Carlos Oliveira', 
-      emails: [{ type: 'email', value: 'carlos@email.com', isPrimary: true }], 
-      phones: [{ type: 'mobile', value: '11 99999-0002', isPrimary: true }], 
-      property: 'Casa 3 quartos', 
+    createLeadWithDates({
+      id: '2',
+      name: 'Carlos Oliveira',
+      emails: [{ type: 'email', value: 'carlos@email.com', isPrimary: true }],
+      phones: [{ type: 'mobile', value: '11 99999-0002', isPrimary: true }],
+      property: 'Casa 3 quartos',
       location: 'Moema',
       searchType: 'investimento',
-      value: 'R$ 580.000', 
-      source: 'Facebook', 
+      value: 'R$ 580.000',
+      source: 'Facebook',
       assignedTo: 'MR',
       tags: ['Investidor']
     }),
   ],
   contact: [
-    createLeadWithDates({ 
-      id: '3', 
-      name: 'João Silva', 
-      emails: [{ type: 'email', value: 'joao@email.com', isPrimary: true }], 
-      phones: [{ type: 'phone', value: '11 99999-0003', isPrimary: true }], 
-      property: 'Cobertura', 
+    createLeadWithDates({
+      id: '3',
+      name: 'João Silva',
+      emails: [{ type: 'email', value: 'joao@email.com', isPrimary: true }],
+      phones: [{ type: 'phone', value: '11 99999-0003', isPrimary: true }],
+      property: 'Cobertura',
       location: 'Alto de Pinheiros',
       searchType: 'venda',
-      value: 'R$ 1.200.000', 
-      source: 'Indicação', 
+      value: 'R$ 1.200.000',
+      source: 'Indicação',
       assignedTo: 'JS',
       tags: ['VIP']
     }),
   ],
   visit: [
-    createLeadWithDates({ 
-      id: '4', 
-      name: 'Ana Costa', 
-      emails: [{ type: 'email', value: 'ana@email.com', isPrimary: true }], 
-      phones: [{ type: 'mobile', value: '11 99999-0004', isPrimary: true }], 
-      property: 'Apt 3 quartos', 
+    createLeadWithDates({
+      id: '4',
+      name: 'Ana Costa',
+      emails: [{ type: 'email', value: 'ana@email.com', isPrimary: true }],
+      phones: [{ type: 'mobile', value: '11 99999-0004', isPrimary: true }],
+      property: 'Apt 3 quartos',
       location: 'Brooklin',
       searchType: 'compra',
-      value: 'R$ 450.000', 
-      source: 'Instagram', 
+      value: 'R$ 450.000',
+      source: 'Instagram',
       assignedTo: 'MR',
       tags: ['Aluguel']
     }),
-    createLeadWithDates({ 
-      id: '5', 
-      name: 'Pedro Souza', 
-      emails: [{ type: 'email', value: 'pedro@email.com', isPrimary: true }], 
-      phones: [{ type: 'phone', value: '11 99999-0005', isPrimary: true }], 
-      property: 'Casa condomínio', 
+    createLeadWithDates({
+      id: '5',
+      name: 'Pedro Souza',
+      emails: [{ type: 'email', value: 'pedro@email.com', isPrimary: true }],
+      phones: [{ type: 'phone', value: '11 99999-0005', isPrimary: true }],
+      property: 'Casa condomínio',
       location: 'Santo Amaro',
       searchType: 'compra',
-      value: 'R$ 720.000', 
-      source: 'Site', 
+      value: 'R$ 720.000',
+      source: 'Site',
       assignedTo: 'JS',
       tags: ['Financiamento']
     }),
   ],
   proposal: [
-    createLeadWithDates({ 
-      id: '6', 
-      name: 'Fernanda Lima', 
-      emails: [{ type: 'email', value: 'fernanda@email.com', isPrimary: true }], 
-      phones: [{ type: 'mobile', value: '11 99999-0006', isPrimary: true }], 
-      property: 'Apt 4 quartos', 
+    createLeadWithDates({
+      id: '6',
+      name: 'Fernanda Lima',
+      emails: [{ type: 'email', value: 'fernanda@email.com', isPrimary: true }],
+      phones: [{ type: 'mobile', value: '11 99999-0006', isPrimary: true }],
+      property: 'Apt 4 quartos',
       location: 'Pinheiros',
       searchType: 'compra',
-      value: 'R$ 650.000', 
-      source: 'Portal', 
+      value: 'R$ 650.000',
+      source: 'Portal',
       assignedTo: 'MR',
       tags: ['Interesse Alto']
     }),
   ],
   negotiation: [
-    createLeadWithDates({ 
-      id: '7', 
-      name: 'Roberto Alves', 
-      emails: [{ type: 'email', value: 'roberto@email.com', isPrimary: true }], 
-      phones: [{ type: 'phone', value: '11 99999-0007', isPrimary: true }], 
-      property: 'Casa térrea', 
+    createLeadWithDates({
+      id: '7',
+      name: 'Roberto Alves',
+      emails: [{ type: 'email', value: 'roberto@email.com', isPrimary: true }],
+      phones: [{ type: 'phone', value: '11 99999-0007', isPrimary: true }],
+      property: 'Casa térrea',
       location: 'Jabaquara',
       searchType: 'venda',
-      value: 'R$ 480.000', 
-      source: 'Site', 
+      value: 'R$ 480.000',
+      source: 'Site',
       assignedTo: 'JS',
       tags: ['Follow-up Necessário']
     }),
   ],
   closed: [
-    createLeadWithDates({ 
-      id: '8', 
-      name: 'Juliana Rocha', 
-      emails: [{ type: 'email', value: 'juliana@email.com', isPrimary: true }], 
-      phones: [{ type: 'mobile', value: '11 99999-0008', isPrimary: true }], 
-      property: 'Cobertura duplex', 
+    createLeadWithDates({
+      id: '8',
+      name: 'Juliana Rocha',
+      emails: [{ type: 'email', value: 'juliana@email.com', isPrimary: true }],
+      phones: [{ type: 'mobile', value: '11 99999-0008', isPrimary: true }],
+      property: 'Cobertura duplex',
       location: 'Morumbi',
       searchType: 'investimento',
-      value: 'R$ 950.000', 
-      source: 'Indicação', 
+      value: 'R$ 950.000',
+      source: 'Indicação',
       assignedTo: 'MR',
       tags: ['VIP', 'Hot Lead']
     }),
   ],
   lost: [
-    createLeadWithDates({ 
-      id: '9', 
-      name: 'Lucas Mendes', 
-      emails: [{ type: 'email', value: 'lucas@email.com', isPrimary: true }], 
-      phones: [{ type: 'phone', value: '11 99999-0009', isPrimary: true }], 
-      property: 'Kitnet', 
+    createLeadWithDates({
+      id: '9',
+      name: 'Lucas Mendes',
+      emails: [{ type: 'email', value: 'lucas@email.com', isPrimary: true }],
+      phones: [{ type: 'phone', value: '11 99999-0009', isPrimary: true }],
+      property: 'Kitnet',
       location: 'São Caetano',
       searchType: 'compra',
-      value: 'R$ 180.000', 
-      source: 'Telefone', 
+      value: 'R$ 180.000',
+      source: 'Telefone',
       assignedTo: 'JS',
       tags: []
     }),
@@ -258,6 +269,34 @@ export function Funil() {
   });
   const isMobile = useMediaQuery('(max-width: 768px)');
   const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const action = params.get('action');
+    if (action === 'novo-lead' || action === 'nova-proposta') {
+      const initialStage = action === 'nova-proposta' ? 'proposal' : 'new';
+      setEditingLead({
+        id: '',
+        name: '',
+        emails: [{ type: 'email', value: '', isPrimary: true }],
+        phones: [{ type: 'phone', value: '', isPrimary: true }],
+        property: '',
+        location: '',
+        searchType: 'compra',
+        value: '',
+        source: '',
+        assignedTo: 'JS',
+        stage: initialStage,
+        tags: [],
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      });
+      setFormOpen(true);
+      // Clean up the URL
+      navigate(location.pathname, { replace: true });
+    }
+  }, [location, navigate]);
 
   const handleOpenDetails = useCallback((lead: Lead) => {
     navigate(`/leads/${lead.id}`);
@@ -317,28 +356,28 @@ export function Funil() {
       // Update existing lead
       setLeads(prevLeads => {
         const newLeads = { ...prevLeads };
-        
+
         // Remove from current stage
         for (const stage in newLeads) {
           newLeads[stage] = newLeads[stage].filter(l => l.id !== editingLead.id);
         }
-        
+
         // Add to new stage (or same stage if not changed)
         const stage = leadData.stage || 'new';
         const updatedLead = { ...editingLead, ...leadData };
-        
+
         if (!newLeads[stage]) {
           newLeads[stage] = [];
         }
-        
+
         newLeads[stage].push(updatedLead);
-        
+
         toast({
           title: "Lead atualizado com sucesso!",
           description: `As alterações em ${leadData.name} foram salvas.`,
           variant: "success",
         });
-        
+
         return newLeads;
       });
     } else {
@@ -348,7 +387,7 @@ export function Funil() {
         id: Date.now().toString(),
         stage: leadData.stage || 'new',
       };
-      
+
       setLeads(prevLeads => {
         const stage = newLead.stage || 'new';
         return {
@@ -356,14 +395,14 @@ export function Funil() {
           [stage]: [...(prevLeads[stage] || []), newLead],
         };
       });
-      
+
       toast({
         title: "Lead adicionado com sucesso!",
         description: `${leadData.name} foi adicionado ao funil.`,
         variant: "success",
       });
     }
-    
+
     setFormOpen(false);
     setEditingLead(null);
   };
@@ -379,12 +418,12 @@ export function Funil() {
   };
 
   interface VisitData {
-  activity: string;
-  date: string;
-  time: string;
-}
+    activity: string;
+    date: string;
+    time: string;
+  }
 
-const handleConfirmVisit = (visitData: VisitData) => {
+  const handleConfirmVisit = (visitData: VisitData) => {
     // Update lead with visit information
     if (selectedLead) {
       const updatedLead = {
@@ -392,19 +431,19 @@ const handleConfirmVisit = (visitData: VisitData) => {
         nextAction: `${visitData.activity} agendada para ${visitData.date} às ${visitData.time}`,
         lastContact: new Date().toISOString(),
       };
-      
+
       // Update the lead in the appropriate stage
       setLeads(prev => ({
         ...prev,
-        [selectedLead.stage || 'new']: prev[selectedLead.stage || 'new'].map(lead => 
+        [selectedLead.stage || 'new']: prev[selectedLead.stage || 'new'].map(lead =>
           lead.id === selectedLead.id ? updatedLead : lead
         )
       }));
-      
+
       // Show success message
       alert(`${visitData.activity} agendada com sucesso para ${selectedLead.name}!`);
     }
-    
+
     setScheduleOpen(false);
   };
 
@@ -453,12 +492,12 @@ const handleConfirmVisit = (visitData: VisitData) => {
         // Filtro de busca
         const primaryEmail = lead.emails?.find(email => email.isPrimary)?.value || lead.emails?.[0]?.value || '';
         const primaryPhone = lead.phones?.find(phone => phone.isPrimary)?.value || lead.phones?.[0]?.value || '';
-        
-        const matchesSearch = searchTerm === '' || 
+
+        const matchesSearch = searchTerm === '' ||
           lead.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
           primaryEmail.toLowerCase().includes(searchTerm.toLowerCase()) ||
           lead.property.toLowerCase().includes(searchTerm.toLowerCase());
-        
+
         // Filtros específicos
         const matchesNome = filters.nomeLead === '' || lead.name.toLowerCase().includes(filters.nomeLead.toLowerCase());
         const matchesCorretor = filters.corretor === '' || lead.assignedTo === filters.corretor;
@@ -468,7 +507,7 @@ const handleConfirmVisit = (visitData: VisitData) => {
         const matchesStage = filters.stage === '' || lead.stage === filters.stage;
         const matchesTags = filters.tags.length === 0 || (lead.tags && filters.tags.some(tag => lead.tags.includes(tag)));
         const matchesContato = !filters.contatoRealizado || (filters.contatoRealizado && lead.lastContact && lead.lastContact !== '');
-        
+
         // Filtro de valor
         let matchesValor = true;
         if (filters.valorMin || filters.valorMax) {
@@ -480,7 +519,7 @@ const handleConfirmVisit = (visitData: VisitData) => {
             matchesValor = matchesValor && valorNumerico <= parseInt(filters.valorMax.replace(/[^0-9]/g, ''));
           }
         }
-        
+
         // Filtro de data
         let matchesData = true;
         if (filters.dataMin || filters.dataMax) {
@@ -492,17 +531,17 @@ const handleConfirmVisit = (visitData: VisitData) => {
             matchesData = matchesData && leadDate <= new Date(filters.dataMax);
           }
         }
-        
-        return matchesSearch && matchesNome && matchesCorretor && matchesRegiao && matchesImovel && 
-               matchesOrigem && matchesStage && matchesTags && matchesContato && matchesValor && matchesData;
+
+        return matchesSearch && matchesNome && matchesCorretor && matchesRegiao && matchesImovel &&
+          matchesOrigem && matchesStage && matchesTags && matchesContato && matchesValor && matchesData;
       });
-      
+
       if (filteredStageLeads.length > 0) {
         acc[stage] = filteredStageLeads;
       }
       return acc;
     }, {} as Record<string, Lead[]>);
-    
+
     return filteredLeads;
   };
 
@@ -525,7 +564,7 @@ const handleConfirmVisit = (visitData: VisitData) => {
 
     // Obtém os dados filtrados atuais
     const filteredLeadsData = getFilteredLeads();
-    
+
     // Se não houver leads no estágio de origem nos dados filtrados, cancela
     if (!filteredLeadsData[sourceStage] || filteredLeadsData[sourceStage].length === 0) {
       return;
@@ -538,20 +577,20 @@ const handleConfirmVisit = (visitData: VisitData) => {
 
     // Remove do estágio de origem
     const [removed] = sourceLeads.splice(source.index, 1);
-    
+
     // Move normalmente - não há verificação de transferência ao mover entre colunas
     destLeads.splice(destination.index, 0, removed);
-    
+
     // Atualiza o estado
     newLeads[sourceStage] = sourceLeads;
     newLeads[destStage] = destLeads;
-    
+
     setLeads(newLeads);
 
     // Mostra toast de sucesso simples
     const sourceStageName = stages.find(s => s.id === sourceStage)?.title;
     const destStageName = stages.find(s => s.id === destStage)?.title;
-    
+
     toast({
       title: "Lead movido com sucesso!",
       description: `${removed.name} foi movido(a) de "${sourceStageName}" para "${destStageName}".`,
@@ -564,10 +603,10 @@ const handleConfirmVisit = (visitData: VisitData) => {
     if (!leadToTransfer) return;
 
     const { lead, sourceStage, destStage } = leadToTransfer;
-    
+
     // Atualiza o lead com o novo corretor
     const updatedLead = { ...lead, assignedTo: newAgentId };
-    
+
     // Cria cópias dos arrays
     const newLeads = { ...leads };
     const sourceLeads = [...newLeads[sourceStage]];
@@ -578,7 +617,7 @@ const handleConfirmVisit = (visitData: VisitData) => {
     if (leadIndex !== -1) {
       sourceLeads.splice(leadIndex, 1);
     }
-    
+
     // Adiciona ao estágio de destino com o novo corretor
     destLeads.splice(0, 0, updatedLead);
 
@@ -593,7 +632,7 @@ const handleConfirmVisit = (visitData: VisitData) => {
     const destStageName = stages.find(s => s.id === destStage)?.title;
     const oldAgent = AGENTS.find(agent => agent.id === lead.assignedTo);
     const newAgent = AGENTS.find(agent => agent.id === newAgentId);
-    
+
     // Cria elemento de animação visual
     const createTransferAnimation = () => {
       const animation = document.createElement('div');
@@ -605,7 +644,7 @@ const handleConfirmVisit = (visitData: VisitData) => {
         </div>
       `;
       document.body.appendChild(animation);
-      
+
       // Remove após 2 segundos
       setTimeout(() => {
         animation.style.transition = 'opacity 0.3s ease-out';
@@ -613,10 +652,10 @@ const handleConfirmVisit = (visitData: VisitData) => {
         setTimeout(() => document.body.removeChild(animation), 300);
       }, 2000);
     };
-    
+
     // Dispara animação
     createTransferAnimation();
-    
+
     // Mostra toast detalhado após um pequeno delay
     setTimeout(() => {
       toast({
@@ -646,10 +685,27 @@ const handleConfirmVisit = (visitData: VisitData) => {
 
   return (
     <div className="space-y-6 animate-fade-in h-full flex flex-col">
+      <Breadcrumb>
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink href="/" className="flex items-center gap-1">
+              <Home className="h-4 w-4" /> Dashboard
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbPage>Funil de Vendas</BreadcrumbPage>
+          </BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
+
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl md:text-3xl font-bold">Funil de Vendas</h1>
-          <p className="text-muted-foreground text-sm md:text-base">Gerencie seus leads e oportunidades</p>
+          <h1 className="text-2xl md:text-3xl font-bold tracking-tight">Funil de Vendas</h1>
+          <p className="text-muted-foreground text-sm flex items-center gap-2">
+            <TrendingUp className="h-4 w-4 text-success" />
+            Gerencie seus leads e oportunidades em tempo real
+          </p>
         </div>
         <div className="flex gap-2">
           <div className="relative flex-1 max-w-xs">
@@ -661,7 +717,7 @@ const handleConfirmVisit = (visitData: VisitData) => {
               className="pl-10"
             />
           </div>
-          <Button 
+          <Button
             variant="outline"
             className="gap-2"
             onClick={() => setFilterModalOpen(true)}
@@ -674,7 +730,7 @@ const handleConfirmVisit = (visitData: VisitData) => {
               </span>
             )}
           </Button>
-          <Button 
+          <Button
             className="gap-2"
             onClick={() => {
               setEditingLead(null);
@@ -690,202 +746,199 @@ const handleConfirmVisit = (visitData: VisitData) => {
       <DragDropContext onDragEnd={onDragEnd}>
         <div className="flex-1 overflow-x-auto pb-6">
           <div className="flex gap-4 h-full overflow-x-auto pb-4">
-            {stages.map((stage) => (
-              <div key={stage.id} className="flex-shrink-0 w-72 md:w-80 flex flex-col">
-                <div className="mb-4">
-                  <div className="flex items-center justify-between mb-2">
-                    <h3 className={`font-semibold text-sm px-3 py-1 rounded-full ${stage.color}`}>
-                      {stage.title}
-                    </h3>
-                    <Badge variant="secondary" className="rounded-full text-xs px-2 py-0.5 h-5 flex items-center justify-center">
-                      {getFilteredLeads()[stage.id]?.length || 0}
-                    </Badge>
+            {stages.map((stage) => {
+              const stageLeads = getFilteredLeads()[stage.id] || [];
+              const totalValue = stageLeads.reduce((sum, lead) => {
+                const val = parseInt(lead.value.replace(/[^0-9]/g, '')) || 0;
+                return sum + val;
+              }, 0);
+
+              return (
+                <div key={stage.id} className="flex-shrink-0 w-72 md:w-80 flex flex-col h-full">
+                  <div className="mb-4 bg-card/40 p-3 rounded-xl border border-border/50 backdrop-blur-sm">
+                    <div className="flex items-center justify-between mb-2">
+                      <h3 className={`font-bold text-xs px-3 py-1 rounded-full uppercase tracking-wider ${stage.color}`}>
+                        {stage.title}
+                      </h3>
+                      <Badge variant="secondary" className="rounded-full text-[10px] font-bold px-2 py-0.5 h-5 flex items-center justify-center bg-background/50">
+                        {stageLeads.length}
+                      </Badge>
+                    </div>
+                    <div className="text-[10px] font-bold text-muted-foreground flex items-center gap-1">
+                      <DollarSign className="h-3 w-3" />
+                      {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(totalValue)}
+                    </div>
                   </div>
-                </div>
-                <Droppable droppableId={stage.id}>
-                  {(provided, snapshot) => (
-                    <div
-                      ref={provided.innerRef}
-                      {...provided.droppableProps}
-                      className={`space-y-3 flex-1 overflow-y-auto rounded-lg p-2 transition-colors ${
-                        snapshot.isDraggingOver ? 'bg-primary/5 border-2 border-dashed border-primary' : ''
-                      }`}
-                    >
-                      {getFilteredLeads()[stage.id]?.map((lead, index) => (
-                        <Draggable key={lead.id} draggableId={lead.id} index={index}>
-                          {(provided, snapshot) => (
-                            <Card
-                              ref={provided.innerRef}
-                              {...provided.draggableProps}
-                              {...provided.dragHandleProps}
-                              className={`hover:shadow-lg transition-all cursor-grab active:cursor-grabbing group relative ${
-                                snapshot.isDragging ? 'shadow-2xl rotate-2 scale-105' : ''
-                              }`}
-                              onClick={() => handleOpenDetails(lead)}
-                            >
-                              <CardHeader className="pb-3">
-                                <div className="flex items-start justify-between relative">
-                                  <div className="flex items-center gap-2 flex-1 min-w-0">
-                                    <Avatar className="h-8 w-8 flex-shrink-0">
-                                      <AvatarFallback className="bg-gradient-primary text-primary-foreground text-xs">
-                                        {lead.name.split(' ').map(n => n[0]).join('')}
-                                      </AvatarFallback>
-                                    </Avatar>
-                                    <div className="flex-1 min-w-0">
-                                      <CardTitle className="text-sm truncate">{lead.name}</CardTitle>
-                                      <Badge variant="outline" className="mt-1 text-xs">
-                                        {lead.source}
-                                      </Badge>
+                  <Droppable droppableId={stage.id}>
+                    {(provided, snapshot) => (
+                      <div
+                        ref={provided.innerRef}
+                        {...provided.droppableProps}
+                        className={`space-y-3 flex-1 overflow-y-auto rounded-lg p-2 transition-colors ${snapshot.isDraggingOver ? 'bg-primary/5 border-2 border-dashed border-primary' : ''
+                          }`}
+                      >
+                        {stageLeads.map((lead, index) => (
+                          <Draggable key={lead.id} draggableId={lead.id} index={index}>
+                            {(provided, snapshot) => (
+                              <div
+                                ref={provided.innerRef}
+                                {...provided.draggableProps}
+                                {...provided.dragHandleProps}
+                                className="group focus:outline-none"
+                              >
+                                <motion.div
+                                  layout
+                                  initial={{ opacity: 0, y: 20 }}
+                                  animate={{ opacity: 1, y: 0 }}
+                                  transition={{ duration: 0.2, delay: index * 0.05 }}
+                                >
+                                  <Card
+                                    className={cn(
+                                      "hover:shadow-xl transition-all cursor-grab active:cursor-grabbing relative overflow-hidden border-border/50",
+                                      snapshot.isDragging ? 'shadow-2xl rotate-2 scale-105 z-50 ring-2 ring-primary' : '',
+                                      "hover:border-primary/30"
+                                    )}
+                                    onClick={() => handleOpenDetails(lead)}
+                                  >
+                                    {/* Progress gradient top border */}
+                                    {stage.id === 'closed' && (
+                                      <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-success via-emerald-400 to-success" />
+                                    )}
+
+                                    <CardHeader className="pb-3 pt-4">
+                                      <div className="flex items-start justify-between relative">
+                                        <div className="flex items-center gap-3 flex-1 min-w-0">
+                                          <Avatar className="h-9 w-9 flex-shrink-0 ring-2 ring-background shadow-sm">
+                                            <AvatarFallback className="bg-gradient-to-br from-primary to-primary-700 text-white text-xs font-bold">
+                                              {lead.name.split(' ').map(n => n[0]).join('')}
+                                            </AvatarFallback>
+                                          </Avatar>
+                                          <div className="flex-1 min-w-0">
+                                            <CardTitle className="text-sm font-bold truncate group-hover:text-primary transition-colors">{lead.name}</CardTitle>
+                                            <div className="flex items-center gap-2 mt-1">
+                                              <Badge variant="secondary" className="text-[9px] font-bold h-4 px-1 bg-muted/50 border-none">
+                                                {lead.source}
+                                              </Badge>
+                                              <div className="flex items-center gap-1 text-[9px] font-bold text-muted-foreground">
+                                                <Clock className="h-3 w-3" />
+                                                {index + 1}d
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+
+                                        {/* Hover Actions */}
+                                        <div className="absolute top-0 right-0 flex gap-1 opacity-0 group-hover:opacity-100 transition-all transform group-hover:translate-x-0 translate-x-4 bg-background/95 backdrop-blur-sm rounded-lg p-1 shadow-xl z-10 border border-border">
+                                          <Button
+                                            size="icon"
+                                            variant="ghost"
+                                            className="h-8 w-8 hover:bg-primary/10 hover:text-primary"
+                                            onClick={(e) => {
+                                              e.stopPropagation();
+                                              handleOpenDetails(lead);
+                                            }}
+                                          >
+                                            <Eye className="h-4 w-4" />
+                                          </Button>
+                                          <Button
+                                            size="icon"
+                                            variant="ghost"
+                                            className="h-8 w-8 hover:bg-primary/10 hover:text-primary"
+                                            onClick={(e) => {
+                                              e.stopPropagation();
+                                              handleEditLead(lead);
+                                            }}
+                                          >
+                                            <Edit className="h-4 w-4" />
+                                          </Button>
+                                          <Button
+                                            size="icon"
+                                            variant="ghost"
+                                            className="h-8 w-8 text-destructive hover:bg-destructive/10 hover:text-destructive"
+                                            onClick={(e) => {
+                                              e.stopPropagation();
+                                              handleDeleteLead(lead);
+                                            }}
+                                          >
+                                            <Trash2 className="h-4 w-4" />
+                                          </Button>
+                                        </div>
+                                      </div>
+                                    </CardHeader>
+                                    <CardContent className="space-y-3 pb-4">
+                                      <div className="space-y-1">
+                                        <div className="text-xs font-medium text-muted-foreground flex items-center gap-1">
+                                          <Home className="h-3 w-3" />
+                                          {lead.property}
+                                        </div>
+                                        <div className="text-lg font-extrabold text-primary tracking-tight">
+                                          {lead.value}
+                                        </div>
+                                      </div>
+
+                                      <div className="flex gap-1 pt-1">
+                                        <Button
+                                          variant="secondary"
+                                          size="icon"
+                                          className="h-8 w-8 rounded-lg hover:bg-success hover:text-white transition-all shadow-none ring-0 border border-border/50 bg-muted/80 text-foreground/80"
+                                          onClick={(e) => {
+                                            e.stopPropagation();
+                                            handleWhatsApp(lead);
+                                          }}
+                                        >
+                                          <MessageCircle className="h-4 w-4" />
+                                        </Button>
+                                        <Button
+                                          variant="secondary"
+                                          size="icon"
+                                          className="h-8 w-8 rounded-lg hover:bg-primary hover:text-white transition-all shadow-none ring-0 border border-border/50 bg-muted/80 text-foreground/80"
+                                          onClick={(e) => {
+                                            e.stopPropagation();
+                                            handleSendEmail(lead);
+                                          }}
+                                        >
+                                          <Mail className="h-4 w-4" />
+                                        </Button>
+                                        <Button
+                                          variant="secondary"
+                                          size="icon"
+                                          className="h-8 w-8 rounded-lg hover:bg-warning hover:text-white transition-all shadow-none ring-0 border border-border/50 bg-muted/80 text-foreground/80"
+                                          onClick={(e) => {
+                                            e.stopPropagation();
+                                            handleScheduleVisit(lead);
+                                          }}
+                                        >
+                                          <Calendar className="h-4 w-4" />
+                                        </Button>
+                                      </div>
+
                                       {/* Tags */}
                                       {lead.tags && lead.tags.length > 0 && (
-                                        <div className="flex flex-wrap gap-1 mt-1">
-                                          {lead.tags.slice(0, 2).map((tag) => {
-                                            // Define colors for common tags
-                                            const getTagColor = (tagName: string) => {
-                                              const tagColors: Record<string, string> = {
-                                                'Hot Lead': 'bg-red-500',
-                                                'VIP': 'bg-purple-500',
-                                                'Primeira Compra': 'bg-blue-500',
-                                                'Investidor': 'bg-green-500',
-                                                'Financiamento': 'bg-orange-500',
-                                                'Aluguel': 'bg-yellow-500',
-                                                'Interesse Alto': 'bg-red-500',
-                                                'Follow-up Necessário': 'bg-orange-500',
-                                                'Urgente': 'bg-red-500',
-                                              };
-                                              return tagColors[tagName] || 'bg-gray-500';
-                                            };
-                                            
-                                            return (
-                                              <Badge key={tag} className={`${getTagColor(tag)} text-white text-xs`}>
-                                                {tag}
-                                              </Badge>
-                                            );
-                                          })}
-                                          {lead.tags.length > 2 && (
-                                            <Badge variant="secondary" className="text-xs">
-                                              +{lead.tags.length - 2}
+                                        <div className="flex flex-wrap gap-1 mt-2">
+                                          {lead.tags.slice(0, 2).map((tag) => (
+                                            <Badge
+                                              key={tag}
+                                              className="bg-primary/10 text-primary-600 dark:text-primary-400 border border-primary/20 text-[9px] font-bold hover:bg-primary/20 transition-colors shadow-none"
+                                            >
+                                              {tag}
                                             </Badge>
-                                          )}
+                                          ))}
                                         </div>
                                       )}
-                                    </div>
-                                  </div>
-                                  {/* Hover Actions - Posicionados absolutamente sobre o conteúdo */}
-                                  <div className="absolute top-0 right-0 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity bg-white/90 backdrop-blur-sm rounded-md p-1 shadow-lg z-10">
-                                    <Button
-                                      size="icon"
-                                      variant="ghost"
-                                      className="h-7 w-7"
-                                      onClick={(e) => {
-                                        e.stopPropagation();
-                                        handleOpenDetails(lead);
-                                      }}
-                                      title="Ver detalhes"
-                                    >
-                                      <Eye className="h-3 w-3" />
-                                    </Button>
-                                    <Button
-                                      size="icon"
-                                      variant="ghost"
-                                      className="h-7 w-7"
-                                      onClick={(e) => {
-                                        e.stopPropagation();
-                                        handleEditLead(lead);
-                                      }}
-                                      title="Editar"
-                                    >
-                                      <Edit className="h-3 w-3" />
-                                    </Button>
-                                    <Button
-                                      size="icon"
-                                      variant="ghost"
-                                      className="h-7 w-7"
-                                      onClick={(e) => {
-                                        e.stopPropagation();
-                                        handleScheduleVisit(lead);
-                                      }}
-                                      title="Agendar atividade"
-                                    >
-                                      <Calendar className="h-3 w-3" />
-                                    </Button>
-                                    <Button
-                                      size="icon"
-                                      variant="ghost"
-                                      className="h-7 w-7 text-destructive hover:text-destructive"
-                                      onClick={(e) => {
-                                        e.stopPropagation();
-                                        handleDeleteLead(lead);
-                                      }}
-                                      title="Excluir"
-                                    >
-                                      <Trash2 className="h-3 w-3" />
-                                    </Button>
-                                  </div>
-                                </div>
-                              </CardHeader>
-                              <CardContent className="space-y-2">
-                                <div className="text-sm">
-                                  <div className="font-medium text-foreground">{lead.property}</div>
-                                  <div className="text-primary font-semibold mt-1">{lead.value}</div>
-                                </div>
-                                <div className="flex gap-2 pt-2 justify-between items-center">
-                                  <div className="flex gap-2">
-                                    <Button 
-                                      variant="outline" 
-                                      size={isMobile ? 'sm' : 'icon'} 
-                                      className={`${isMobile ? 'gap-2' : 'h-8 w-8'}`}
-                                      onClick={(e) => {
-                                        e.stopPropagation();
-                                        handleSendEmail(lead);
-                                      }}
-                                    >
-                                      <Mail className="h-4 w-4" />
-                                      {isMobile && <span>E-mail</span>}
-                                    </Button>
-                                    <Button 
-                                      variant="outline" 
-                                      size={isMobile ? 'sm' : 'icon'} 
-                                      className={`${isMobile ? 'gap-2' : 'h-8 w-8'}`}
-                                      onClick={(e) => {
-                                        e.stopPropagation();
-                                        handleWhatsApp(lead);
-                                      }}
-                                    >
-                                      <MessageCircle className="h-4 w-4" />
-                                      {isMobile && <span>WhatsApp</span>}
-                                    </Button>
-                                    <Button 
-                                      variant="outline" 
-                                      size={isMobile ? 'sm' : 'icon'} 
-                                      className={`${isMobile ? 'gap-2' : 'h-8 w-8'}`}
-                                      onClick={(e) => {
-                                        e.stopPropagation();
-                                        handleCreateActivity(lead);
-                                      }}
-                                    >
-                                      <Calendar className="h-4 w-4" />
-                                      {isMobile && <span>Atividade</span>}
-                                    </Button>
-                                  </div>
-                                </div>
-                                <div className="flex items-center gap-2 pt-2 border-t border-border">
-                                  <Avatar className="h-6 w-6">
-                                    <AvatarFallback className="bg-muted text-xs">{lead.assignedTo}</AvatarFallback>
-                                  </Avatar>
-                                  <span className="text-xs text-muted-foreground">Responsável</span>
-                                </div>
-                              </CardContent>
-                            </Card>
-                          )}
-                        </Draggable>
-                      ))}
-                      {provided.placeholder}
-                    </div>
-                  )}
-                </Droppable>
-              </div>
-            ))}
+                                    </CardContent>
+                                  </Card>
+                                </motion.div>
+                              </div>
+                            )}
+                          </Draggable>
+                        ))}
+                        {provided.placeholder}
+                      </div>
+                    )}
+                  </Droppable>
+                </div>
+              )
+            })}
           </div>
         </div>
       </DragDropContext>
@@ -909,7 +962,7 @@ const handleConfirmVisit = (visitData: VisitData) => {
           handleScheduleVisit(selectedLead!);
         }}
       />
-      
+
       <LeadFormModal
         open={formOpen}
         onClose={() => {
@@ -919,7 +972,7 @@ const handleConfirmVisit = (visitData: VisitData) => {
         onSubmit={handleSaveLead}
         lead={editingLead}
       />
-      
+
       <ScheduleVisitModal
         open={scheduleOpen}
         onClose={() => setScheduleOpen(false)}
@@ -943,13 +996,13 @@ const handleConfirmVisit = (visitData: VisitData) => {
                 id="nomeLead"
                 placeholder="Buscar por nome..."
                 value={filters.nomeLead}
-                onChange={(e) => setFilters({...filters, nomeLead: e.target.value})}
+                onChange={(e) => setFilters({ ...filters, nomeLead: e.target.value })}
               />
             </div>
-            
+
             <div>
               <Label htmlFor="corretor">Corretor Responsável</Label>
-              <Select value={filters.corretor} onValueChange={(value) => setFilters({...filters, corretor: value})}>
+              <Select value={filters.corretor} onValueChange={(value) => setFilters({ ...filters, corretor: value })}>
                 <SelectTrigger>
                   <SelectValue placeholder="Todos" />
                 </SelectTrigger>
@@ -963,7 +1016,7 @@ const handleConfirmVisit = (visitData: VisitData) => {
 
             <div>
               <Label htmlFor="origem">Origem do Lead</Label>
-              <Select value={filters.origem} onValueChange={(value) => setFilters({...filters, origem: value})}>
+              <Select value={filters.origem} onValueChange={(value) => setFilters({ ...filters, origem: value })}>
                 <SelectTrigger>
                   <SelectValue placeholder="Todas as origens" />
                 </SelectTrigger>
@@ -981,7 +1034,7 @@ const handleConfirmVisit = (visitData: VisitData) => {
 
             <div>
               <Label htmlFor="stage">Estágio do Funil</Label>
-              <Select value={filters.stage} onValueChange={(value) => setFilters({...filters, stage: value})}>
+              <Select value={filters.stage} onValueChange={(value) => setFilters({ ...filters, stage: value })}>
                 <SelectTrigger>
                   <SelectValue placeholder="Todos os estágios" />
                 </SelectTrigger>
@@ -1004,17 +1057,17 @@ const handleConfirmVisit = (visitData: VisitData) => {
                   id="valorMin"
                   placeholder="R$ 0"
                   value={filters.valorMin}
-                  onChange={(e) => setFilters({...filters, valorMin: e.target.value})}
+                  onChange={(e) => setFilters({ ...filters, valorMin: e.target.value })}
                 />
               </div>
-              
+
               <div>
                 <Label htmlFor="valorMax">Valor Máximo</Label>
                 <Input
                   id="valorMax"
                   placeholder="R$ 0"
                   value={filters.valorMax}
-                  onChange={(e) => setFilters({...filters, valorMax: e.target.value})}
+                  onChange={(e) => setFilters({ ...filters, valorMax: e.target.value })}
                 />
               </div>
             </div>
@@ -1026,17 +1079,17 @@ const handleConfirmVisit = (visitData: VisitData) => {
                   id="dataMin"
                   type="date"
                   value={filters.dataMin}
-                  onChange={(e) => setFilters({...filters, dataMin: e.target.value})}
+                  onChange={(e) => setFilters({ ...filters, dataMin: e.target.value })}
                 />
               </div>
-              
+
               <div>
                 <Label htmlFor="dataMax">Data Final</Label>
                 <Input
                   id="dataMax"
                   type="date"
                   value={filters.dataMax}
-                  onChange={(e) => setFilters({...filters, dataMax: e.target.value})}
+                  onChange={(e) => setFilters({ ...filters, dataMax: e.target.value })}
                 />
               </div>
             </div>
@@ -1047,7 +1100,7 @@ const handleConfirmVisit = (visitData: VisitData) => {
                 id="regiao"
                 placeholder="Ex: Centro, Zona Sul..."
                 value={filters.regiao}
-                onChange={(e) => setFilters({...filters, regiao: e.target.value})}
+                onChange={(e) => setFilters({ ...filters, regiao: e.target.value })}
               />
             </div>
 
@@ -1057,7 +1110,7 @@ const handleConfirmVisit = (visitData: VisitData) => {
                 id="imovel"
                 placeholder="Ex: Apartamento, Casa..."
                 value={filters.imovel}
-                onChange={(e) => setFilters({...filters, imovel: e.target.value})}
+                onChange={(e) => setFilters({ ...filters, imovel: e.target.value })}
               />
             </div>
 
@@ -1066,11 +1119,11 @@ const handleConfirmVisit = (visitData: VisitData) => {
                 type="checkbox"
                 id="contatoRealizado"
                 checked={filters.contatoRealizado}
-                onChange={(e) => setFilters({...filters, contatoRealizado: e.target.checked})}
+                onChange={(e) => setFilters({ ...filters, contatoRealizado: e.target.checked })}
                 className="rounded border-gray-300"
               />
               <Label htmlFor="contatoRealizado" className="text-sm">
-                    Apenas leads com contato realizado
+                Apenas leads com contato realizado
               </Label>
             </div>
           </div>

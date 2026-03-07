@@ -1,163 +1,263 @@
 import { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Label } from '@/components/ui/label';
-import { Home, Users, Calendar, DollarSign, FileText, Plus, Search, Filter, Eye, Edit, Trash2, MoreVertical, CheckCircle, AlertCircle, Clock, TrendingUp, Download, Building, User, Mail, Phone, MapPin } from 'lucide-react';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import {
+  Building2, Users, FileText, DollarSign, ArrowUpRight, ArrowDownRight,
+  Calendar, Search, Filter, MoreVertical, CheckCircle, Clock,
+  Plus, Download, FileSignature, AlertCircle, ChevronRight, Layout, Home
+} from 'lucide-react';
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
 
 const contratos = [
-  {
-    id: '1',
-    imovel: 'Apartamento 2 Quartos - Centro',
-    imovelId: '1',
-    inquilino: 'Maria Santos',
-    inquilinoId: '1',
-    proprietario: 'João Silva',
-    proprietarioId: '1',
-    valorAluguel: 'R$ 1.800',
-    valorCondominio: 'R$ 320',
-    valorIPTU: 'R$ 85',
-    dataInicio: '01/01/2024',
-    dataFim: '31/12/2024',
-    status: 'Ativo',
-    proximoVencimento: '05/01/2025',
-    diaVencimento: 5,
-  },
+  { id: 'LOC-2024-001', imovel: 'Apto 2 Quartos - Centro', inquilino: 'João Silva', proprietario: 'Maria Oliveira', valor: 2500, vencimento: 'Dia 10', status: 'Ativo' },
+  { id: 'LOC-2024-002', imovel: 'Casa 3 Quartos - Vila Nova', inquilino: 'Pedro Santos', proprietario: 'José Pereira', valor: 4200, vencimento: 'Dia 05', status: 'Inadimplente' },
+  { id: 'LOC-2024-003', imovel: 'Studio Moderno - Jardins', inquilino: 'Ana Beatriz', proprietario: 'Carlos Eduardo', valor: 3100, vencimento: 'Dia 15', status: 'Ativo' },
 ];
 
-const imoveisDisponiveis = [
-  { id: '1', titulo: 'Apartamento 2 Quartos - Centro', endereco: 'Rua das Flores, 123', valorAluguel: 'R$ 1.800' },
-  { id: '2', titulo: 'Casa 3 Quartos - Jardim América', endereco: 'Av. Brasil, 456', valorAluguel: 'R$ 2.500' },
-];
-
-const inquilinos = [
-  { id: '1', nome: 'Maria Santos', email: 'maria@email.com', telefone: '(11) 99999-0001', cpf: '123.456.789-00' },
-  { id: '2', nome: 'Carlos Oliveira', email: 'carlos@email.com', telefone: '(11) 88888-0002', cpf: '987.654.321-00' },
+const negociacoes = [
+  { etapa: 'Proposta', count: 12, color: 'bg-blue-500' },
+  { etapa: 'Análise de Crédito', count: 5, color: 'bg-amber-500' },
+  { etapa: 'Contrato', count: 3, color: 'bg-indigo-500' },
+  { etapa: 'Vistoria', count: 2, color: 'bg-emerald-500' },
 ];
 
 export function GestaoLocacoes() {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [showNovoContratoModal, setShowNovoContratoModal] = useState(false);
-  const [selectedTab, setSelectedTab] = useState('ativos');
+  const [activeTab, setActiveTab] = useState('dashboard');
+  const [showNovoContrato, setShowNovoContrato] = useState(false);
+
+  const formatCurrency = (value: number) => {
+    return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
+  };
+
+  const getStatusBadge = (status: string) => {
+    switch (status) {
+      case 'Ativo': return <Badge className="bg-emerald-100 text-emerald-700 border-none">Ativo</Badge>;
+      case 'Inadimplente': return <Badge className="bg-rose-100 text-rose-700 border-none">Inadimplente</Badge>;
+      case 'Encerrado': return <Badge className="bg-slate-100 text-slate-700 border-none">Encerrado</Badge>;
+      default: return <Badge variant="outline">{status}</Badge>;
+    }
+  };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
-      <div className="max-w-7xl mx-auto space-y-6">
-        <div className="flex items-center justify-between">
+    <div className="font-sans">
+      <div className="max-w-[1400px] mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+        <Breadcrumb className="mb-4 sm:mb-6">
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink href="/" className="flex items-center gap-1">
+                <Home className="h-4 w-4" /> Dashboard
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbPage>Gestão de Locações</BreadcrumbPage>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
+
+        {/* Header */}
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Gestão de Locações</h1>
-            <p className="text-gray-600 mt-1">Controle completo de contratos de aluguel</p>
+            <h1 className="text-3xl font-bold text-slate-800 tracking-tight">Gestão de Locações</h1>
+            <p className="text-slate-500 mt-1 font-medium">Contratos, repasses e fluxo de inadimplência em tempo real.</p>
           </div>
-          <Button onClick={() => setShowNovoContratoModal(true)}>
-            <Plus className="h-4 w-4 mr-2" />
-            Novo Contrato
-          </Button>
+          <div className="flex items-center gap-3">
+            <Button onClick={() => setShowNovoContrato(true)} className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold shadow-sm h-11">
+              <Plus className="h-4 w-4 mr-2" /> Novo Contrato
+            </Button>
+          </div>
         </div>
 
+        {/* Dashboard Stats */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Contratos Ativos</CardTitle>
-              <Home className="h-4 w-4 text-green-600" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">24</div>
-              <p className="text-xs text-gray-600">3 vencem este mês</p>
+          <Card className="border-none shadow-sm bg-white">
+            <CardContent className="p-6">
+              <div className="flex justify-between items-start mb-4">
+                <div className="w-12 h-12 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center">
+                  <FileText className="h-6 w-6" />
+                </div>
+                <Badge className="bg-indigo-100 text-indigo-700 border-none">+12%</Badge>
+              </div>
+              <h3 className="text-3xl font-black text-slate-800 tracking-tight mb-1">142</h3>
+              <p className="text-sm font-bold text-slate-600 uppercase tracking-wider">Contratos Ativos</p>
             </CardContent>
           </Card>
 
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Faturamento Mensal</CardTitle>
-              <DollarSign className="h-4 w-4 text-blue-600" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">R$ 43.200</div>
-              <p className="text-xs text-gray-600">+5,2% vs mês anterior</p>
+          <Card className="border-none shadow-sm bg-white">
+            <CardContent className="p-6">
+              <div className="flex justify-between items-start mb-4">
+                <div className="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+                  <DollarSign className="h-6 w-6" />
+                </div>
+              </div>
+              <h3 className="text-3xl font-black text-slate-800 tracking-tight mb-1">{formatCurrency(452000)}</h3>
+              <p className="text-sm font-bold text-slate-600 uppercase tracking-wider">Receita Mensal</p>
             </CardContent>
           </Card>
 
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Taxa de Ocupação</CardTitle>
-              <TrendingUp className="h-4 w-4 text-purple-600" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">92%</div>
-              <p className="text-xs text-gray-600">2 imóveis disponíveis</p>
+          <Card className="border-none shadow-sm bg-white">
+            <CardContent className="p-6">
+              <div className="flex justify-between items-start mb-4">
+                <div className="w-12 h-12 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center">
+                  <AlertCircle className="h-6 w-6" />
+                </div>
+                <Badge className="bg-rose-100 text-rose-700 border-none">Alerta</Badge>
+              </div>
+              <h3 className="text-3xl font-black text-slate-800 tracking-tight mb-1">4.2%</h3>
+              <p className="text-sm font-bold text-slate-600 uppercase tracking-wider">Inadimplência</p>
             </CardContent>
           </Card>
 
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Inadimplência</CardTitle>
-              <AlertCircle className="h-4 w-4 text-red-600" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">4,2%</div>
-              <p className="text-xs text-gray-600">1 contrato em atraso</p>
+          <Card className="border-none shadow-sm bg-white">
+            <CardContent className="p-6">
+              <div className="flex justify-between items-start mb-4">
+                <div className="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
+                  <Building2 className="h-6 w-6" />
+                </div>
+              </div>
+              <h3 className="text-3xl font-black text-slate-800 tracking-tight mb-1">15</h3>
+              <p className="text-sm font-bold text-slate-600 uppercase tracking-wider">Vago / Disponível</p>
             </CardContent>
           </Card>
         </div>
 
-        <Tabs defaultValue="contratos" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4">
-            <TabsTrigger value="contratos">Contratos</TabsTrigger>
-            <TabsTrigger value="vencimentos">Vencimentos</TabsTrigger>
-            <TabsTrigger value="manutencao">Manutenção</TabsTrigger>
-            <TabsTrigger value="relatorios">Relatórios</TabsTrigger>
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <TabsList className="bg-slate-100/50 p-1 rounded-xl h-12 w-full md:w-auto mb-6">
+            <TabsTrigger value="dashboard" className="rounded-lg px-6 font-bold data-[state=active]:bg-white data-[state=active]:shadow-sm data-[state=active]:text-indigo-600">Dashboard</TabsTrigger>
+            <TabsTrigger value="contratos" className="rounded-lg px-6 font-bold data-[state=active]:bg-white data-[state=active]:shadow-sm data-[state=active]:text-indigo-600">Contratos</TabsTrigger>
+            <TabsTrigger value="negociacoes" className="rounded-lg px-6 font-bold data-[state=active]:bg-white data-[state=active]:shadow-sm data-[state=active]:text-indigo-600">Negociações</TabsTrigger>
           </TabsList>
 
-          <TabsContent value="contratos" className="space-y-6">
-            <div className="flex items-center space-x-4">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-                <Input
-                  placeholder="Buscar contratos..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10 w-80"
-                />
-              </div>
-              <Button variant="outline" size="sm">
-                <Filter className="h-4 w-4 mr-2" />
-                Filtros
-              </Button>
+          <TabsContent value="dashboard" className="space-y-6">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              {/* Funil de Locação */}
+              <Card className="lg:col-span-2 border-none shadow-sm">
+                <CardHeader>
+                  <CardTitle className="text-lg font-bold text-slate-800">Pipeline de Locação</CardTitle>
+                  <CardDescription>Fluxo de novos contratos em andamento.</CardDescription>
+                </CardHeader>
+                <CardContent className="flex flex-col md:flex-row gap-4 py-6">
+                  {negociacoes.map((item, i) => (
+                    <div key={i} className="flex-1 flex flex-col items-center gap-3">
+                      <div className={`w-full h-2 rounded-full ${item.color} opacity-20`} />
+                      <div className="flex flex-col items-center">
+                        <span className="text-2xl font-black text-slate-800">{item.count}</span>
+                        <span className="text-[10px] text-slate-500 font-bold uppercase text-center">{item.etapa}</span>
+                      </div>
+                    </div>
+                  ))}
+                </CardContent>
+              </Card>
+
+              {/* Repasses do Dia */}
+              <Card className="border-none shadow-sm bg-indigo-600 text-white overflow-hidden relative">
+                <CardHeader>
+                  <CardTitle className="text-lg font-bold">Resumo de Repasses</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <div className="flex justify-between items-center text-sm border-b border-indigo-500/50 pb-2">
+                      <span className="font-medium">Total a Repassar (Hoje)</span>
+                      <span className="font-bold">R$ 15.200,00</span>
+                    </div>
+                    <div className="flex justify-between items-center text-sm border-b border-indigo-500/50 pb-2">
+                      <span className="font-medium">Aguardando Recebimento</span>
+                      <span className="font-bold">R$ 8.450,00</span>
+                    </div>
+                    <Button variant="outline" className="w-full bg-white/10 border-white/20 text-white hover:bg-white/20 font-bold">
+                      Conciliar Repasses
+                    </Button>
+                  </div>
+                </CardContent>
+                <div className="absolute -bottom-4 -right-4 opacity-10">
+                  <ArrowUpRight className="h-32 w-32" />
+                </div>
+              </Card>
             </div>
 
-            <Card>
+            {/* Inquilinos em Atraso */}
+            <Card className="border-none shadow-sm">
+              <CardHeader className="flex flex-row items-center justify-between pb-2">
+                <div>
+                  <CardTitle className="text-lg font-bold text-slate-800 text-rose-600 flex items-center gap-2">
+                    <AlertCircle className="h-5 w-5" /> Inadimplência e Ações
+                  </CardTitle>
+                </div>
+                <Button variant="ghost" size="sm" className="font-bold text-indigo-600">Ver Todos</Button>
+              </CardHeader>
+              <CardContent>
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Contrato</TableHead>
+                      <TableHead>Atraso</TableHead>
+                      <TableHead>Valor</TableHead>
+                      <TableHead>Última Ação</TableHead>
+                      <TableHead className="text-right">Ação</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    <TableRow>
+                      <TableCell className="font-bold">Pedro Santos (Vila Nova)</TableCell>
+                      <TableCell><Badge className="bg-rose-100 text-rose-700">08 dias</Badge></TableCell>
+                      <TableCell className="font-bold">R$ 4.200,00</TableCell>
+                      <TableCell className="text-xs text-slate-500">Notificação via Zap enviada</TableCell>
+                      <TableCell className="text-right">
+                        <Button size="sm" variant="outline" className="text-rose-600 border-rose-100 hover:bg-rose-50">Cobrar</Button>
+                      </TableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="contratos" className="space-y-6">
+            <Card className="border-none shadow-sm overflow-hidden">
               <Table>
-                <TableHeader>
+                <TableHeader className="bg-slate-50">
                   <TableRow>
-                    <TableHead>Imóvel</TableHead>
-                    <TableHead>Inquilino</TableHead>
-                    <TableHead>Proprietário</TableHead>
+                    <TableHead>ID / Imóvel</TableHead>
+                    <TableHead>Partes</TableHead>
                     <TableHead>Valor</TableHead>
                     <TableHead>Vencimento</TableHead>
                     <TableHead>Status</TableHead>
-                    <TableHead className="text-right">Ações</TableHead>
+                    <TableHead className="text-right">Ação</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {contratos.map((contrato) => (
-                    <TableRow key={contrato.id}>
-                      <TableCell className="font-medium">{contrato.imovel}</TableCell>
-                      <TableCell>{contrato.inquilino}</TableCell>
-                      <TableCell>{contrato.proprietario}</TableCell>
-                      <TableCell>{contrato.valorAluguel}</TableCell>
-                      <TableCell>{contrato.proximoVencimento}</TableCell>
+                  {contratos.map((loc) => (
+                    <TableRow key={loc.id}>
                       <TableCell>
-                        <Badge variant="default">{contrato.status}</Badge>
+                        <div className="font-bold text-slate-800">{loc.imovel}</div>
+                        <div className="text-[10px] font-mono text-slate-400 uppercase">{loc.id}</div>
                       </TableCell>
+                      <TableCell className="text-xs">
+                        <p><strong>Inq:</strong> {loc.inquilino}</p>
+                        <p><strong>Prop:</strong> {loc.proprietario}</p>
+                      </TableCell>
+                      <TableCell className="font-bold text-slate-700">{formatCurrency(loc.valor)}</TableCell>
+                      <TableCell className="text-sm font-medium text-slate-600">{loc.vencimento}</TableCell>
+                      <TableCell>{getStatusBadge(loc.status)}</TableCell>
                       <TableCell className="text-right">
-                        <Button variant="ghost" size="sm">
-                          <MoreVertical className="h-4 w-4" />
-                        </Button>
+                        <Button variant="ghost" size="icon"><MoreVertical className="h-4 w-4" /></Button>
                       </TableCell>
                     </TableRow>
                   ))}
@@ -165,115 +265,59 @@ export function GestaoLocacoes() {
               </Table>
             </Card>
           </TabsContent>
+
+          <TabsContent value="negociacoes" className="m-0 p-12 text-center text-slate-500 bg-white rounded-2xl border border-dashed border-slate-200 font-medium">
+            O fluxo de negociações (Kanban) virá aqui.
+          </TabsContent>
         </Tabs>
       </div>
 
-      {/* Modal Novo Contrato */}
-      <Dialog open={showNovoContratoModal} onOpenChange={setShowNovoContratoModal}>
-        <DialogContent className="sm:max-w-[600px]">
-          <DialogHeader>
-            <DialogTitle>Criar Novo Contrato de Locação</DialogTitle>
-          </DialogHeader>
-          <div className="grid gap-4 py-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="imovel">Imóvel</Label>
-                <Select>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Selecione o imóvel" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {imoveisDisponiveis.map((imovel) => (
-                      <SelectItem key={imovel.id} value={imovel.id}>
-                        {imovel.titulo} - {imovel.valorAluguel}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="inquilino">Inquilino</Label>
-                <Select>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Selecione o inquilino" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {inquilinos.map((inquilino) => (
-                      <SelectItem key={inquilino.id} value={inquilino.id}>
-                        {inquilino.nome}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
+      <Dialog open={showNovoContrato} onOpenChange={setShowNovoContrato}>
+        <DialogContent className="sm:max-w-[700px] p-0 overflow-hidden">
+          <div className="bg-indigo-600 p-6 text-white flex justify-between items-center">
+            <div>
+              <DialogTitle className="text-xl font-bold">Gerador Rápido de Contrato</DialogTitle>
+              <p className="text-indigo-100 mt-1 text-sm font-medium">Preencha os dados básicos. O sistema esi.chat cuidará da redação.</p>
             </div>
+            <FileSignature className="h-10 w-10 text-indigo-300 opacity-50" />
+          </div>
+          <div className="p-6 grid gap-6">
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="dataInicio">Data de Início</Label>
-                <Input id="dataInicio" type="date" />
+                <Label className="font-bold">Imóvel</Label>
+                <Input placeholder="Código ou Endereço" className="bg-slate-50 h-11" />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="dataFim">Data de Término</Label>
-                <Input id="dataFim" type="date" />
+                <Label className="font-bold">Inquilino</Label>
+                <Input placeholder="Nome ou CPF" className="bg-slate-50 h-11" />
               </div>
             </div>
             <div className="grid grid-cols-3 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="valorAluguel">Valor Aluguel</Label>
-                <Input id="valorAluguel" placeholder="R$ 0,00" />
+                <Label className="font-bold">Aluguel (R$)</Label>
+                <Input type="number" placeholder="0.00" className="bg-slate-50 h-11" />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="valorCondominio">Condomínio</Label>
-                <Input id="valorCondominio" placeholder="R$ 0,00" />
+                <Label className="font-bold">Vencimento</Label>
+                <Input type="number" placeholder="Dia" className="bg-slate-50 h-11" />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="valorIPTU">IPTU</Label>
-                <Input id="valorIPTU" placeholder="R$ 0,00" />
-              </div>
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="diaVencimento">Dia de Vencimento</Label>
+                <Label className="font-bold">Caução / Garantia</Label>
                 <Select>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Selecione o dia" />
-                  </SelectTrigger>
+                  <SelectTrigger className="bg-slate-50 h-11"><SelectValue placeholder="Selecione" /></SelectTrigger>
                   <SelectContent>
-                    {Array.from({ length: 31 }, (_, i) => (
-                      <SelectItem key={i + 1} value={String(i + 1)}>
-                        Dia {i + 1}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="garantia">Tipo de Garantia</Label>
-                <Select>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Selecione" />
-                  </SelectTrigger>
-                  <SelectContent>
+                    <SelectItem value="caucao">Caução</SelectItem>
                     <SelectItem value="fiador">Fiador</SelectItem>
                     <SelectItem value="seguro">Seguro Fiança</SelectItem>
-                    <SelectItem value="caucao">Caução</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="observacoes">Observações</Label>
-              <Input id="observacoes" placeholder="Observações do contrato" />
+            <div className="flex justify-end gap-3 mt-4">
+              <Button variant="ghost" onClick={() => setShowNovoContrato(false)} className="font-bold">Cancelar</Button>
+              <Button className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold h-11 px-8">Gerar Laudo e Contrato</Button>
             </div>
           </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setShowNovoContratoModal(false)}>
-              Cancelar
-            </Button>
-            <Button onClick={() => setShowNovoContratoModal(false)}>
-              Criar Contrato
-            </Button>
-          </DialogFooter>
         </DialogContent>
       </Dialog>
     </div>

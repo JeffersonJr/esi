@@ -16,6 +16,14 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Textarea } from '@/components/ui/textarea';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
 import { toast } from '@/hooks/use-toast';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
@@ -303,7 +311,7 @@ export default function LeadDetalhes() {
   const [lead, setLead] = useState<Lead | null>(null);
   const [loading, setLoading] = useState(true);
   const [showAssignModal, setShowAssignModal] = useState(false);
-  
+
   // Debug para identificar quando o modal está sendo aberto
   useEffect(() => {
     if (showAssignModal) {
@@ -341,7 +349,7 @@ export default function LeadDetalhes() {
     notasDetalhadas: ''
   });
   const [historico, setHistorico] = useState<HistoricoAtendimento[]>(historicoAtendimento);
-  
+
   // Estado global para documentos sincronizados
   const [globalDocuments, setGlobalDocuments] = useState<Array<{
     id: string;
@@ -350,7 +358,7 @@ export default function LeadDetalhes() {
     origem: 'Atividade' | 'Nota';
     arquivo: File;
   }>>([]);
-  
+
   // Função para sincronizar documentos com o estado global
   const syncDocumentToGlobal = (file: File, origem: 'Atividade' | 'Nota', itemId: string) => {
     const newDocument = {
@@ -360,7 +368,7 @@ export default function LeadDetalhes() {
       origem,
       arquivo: file
     };
-    
+
     setGlobalDocuments(prev => {
       // Verificar se o documento já existe para evitar duplicatas
       const exists = prev.some(doc => doc.id === newDocument.id);
@@ -370,12 +378,12 @@ export default function LeadDetalhes() {
       return prev;
     });
   };
-  
+
   // Função para remover documentos em cascata
   const removeDocumentsFromGlobal = (itemId: string) => {
     setGlobalDocuments(prev => prev.filter(doc => !doc.id.startsWith(itemId)));
   };
-  
+
   const [editData, setEditData] = useState({
     budget: '',
     financing: false,
@@ -402,13 +410,13 @@ export default function LeadDetalhes() {
     { id: '8', name: 'Follow-up Necessário', color: 'bg-orange-500' },
     { id: '9', name: 'Urgente', color: 'bg-red-500' },
   ]);
-  const [deleteConfirmModal, setDeleteConfirmModal] = useState<{show: boolean, documentId: string, documentName: string}>({show: false, documentId: '', documentName: ''});
-  const [editingNote, setEditingNote] = useState<{id: string, content: string} | null>(null);
+  const [deleteConfirmModal, setDeleteConfirmModal] = useState<{ show: boolean, documentId: string, documentName: string }>({ show: false, documentId: '', documentName: '' });
+  const [editingNote, setEditingNote] = useState<{ id: string, content: string } | null>(null);
   const [editingNoteName, setEditingNoteName] = useState('');
   const [editingNoteContent, setEditingNoteContent] = useState('');
   const [editingNoteAttachment, setEditingNoteAttachment] = useState<File | null>(null);
   const [documentos, setDocumentos] = useState<Documento[]>(documentosMock);
-  const [newDocument, setNewDocument] = useState({nome: '', arquivo: null as File | null});
+  const [newDocument, setNewDocument] = useState({ nome: '', arquivo: null as File | null });
   const [leadTags, setLeadTags] = useState<string[]>([]);
   const [newTag, setNewTag] = useState('');
   const [activityNote, setActivityNote] = useState('');
@@ -487,12 +495,12 @@ export default function LeadDetalhes() {
           </div>
         `;
         document.body.appendChild(animation);
-        
+
         // Animação de entrada
         setTimeout(() => {
           animation.style.transform = 'translateX(0)';
         }, 100);
-        
+
         // Animação de sucesso após 1.5 segundos
         setTimeout(() => {
           animation.className = 'fixed top-4 right-4 bg-gradient-to-r from-green-500 to-emerald-500 text-white px-6 py-3 rounded-xl shadow-xl z-50 flex items-center gap-3 transform transition-all duration-300 ease-out';
@@ -510,7 +518,7 @@ export default function LeadDetalhes() {
             </div>
           `;
         }, 1500);
-        
+
         // Remove após 3 segundos
         setTimeout(() => {
           animation.style.transform = 'translateX(100%)';
@@ -522,19 +530,19 @@ export default function LeadDetalhes() {
           }, 300);
         }, 3000);
       };
-      
+
       // Dispara animação
       createTransferAnimation();
-      
+
       // Atualiza o lead
       setLead({ ...lead, assignedTo: selectedCorretor });
       setShowAssignModal(false);
       setSelectedCorretor('');
-      
+
       // Encontra informações dos corretores
       const oldCorretor = corretores.find(c => c.id === lead.assignedTo);
       const newCorretor = corretores.find(c => c.id === selectedCorretor);
-      
+
       // Mostra toast após um pequeno delay
       setTimeout(() => {
         toast({
@@ -561,7 +569,7 @@ export default function LeadDetalhes() {
     if (lead && newNoteName.trim()) {
       const noteTitle = newNoteName.trim();
       const noteContent = newNote.trim() || 'Sem descrição';
-      
+
       const novaNota: HistoricoAtendimento = {
         id: Date.now().toString(),
         data: new Date().toISOString(),
@@ -571,9 +579,9 @@ export default function LeadDetalhes() {
         editavel: true,
         anexos: newNoteAttachment ? [newNoteAttachment.name] : undefined
       };
-      
+
       setHistorico([novaNota, ...historico]);
-      
+
       const updatedLead = {
         ...lead,
         notes: lead.notes ? `${lead.notes}\n\n${new Date().toLocaleDateString('pt-BR')} - ${noteTitle}` : `${new Date().toLocaleDateString('pt-BR')} - ${noteTitle}`
@@ -583,7 +591,7 @@ export default function LeadDetalhes() {
       setNewNoteName('');
       setNewNote('');
       setNewNoteAttachment(null);
-      
+
       toast({
         title: "✅ Nota adicionada com sucesso!",
         description: `A nota "${noteTitle}" foi adicionada ao histórico.`,
@@ -597,8 +605,8 @@ export default function LeadDetalhes() {
     const parts = currentContent.split(':');
     const name = parts[0] || '';
     const content = parts.slice(1).join(':').trim() || '';
-    
-    setEditingNote({id: noteId, content: currentContent});
+
+    setEditingNote({ id: noteId, content: currentContent });
     setEditingNoteName(name);
     setEditingNoteContent(content);
     setEditingNoteAttachment(null);
@@ -610,14 +618,14 @@ export default function LeadDetalhes() {
       const noteTitle = editingNoteName.trim();
       const noteContent = editingNoteContent.trim() || 'Sem descrição';
       const newDescription = `${noteTitle}: ${noteContent}`;
-      
-      setHistorico(historico.map(item => 
-        item.id === editingNote.id 
+
+      setHistorico(historico.map(item =>
+        item.id === editingNote.id
           ? {
-              ...item, 
-              descricao: newDescription,
-              anexos: editingNoteAttachment ? [editingNoteAttachment.name] : item.anexos
-            }
+            ...item,
+            descricao: newDescription,
+            anexos: editingNoteAttachment ? [editingNoteAttachment.name] : item.anexos
+          }
           : item
       ));
       setShowEditNoteModal(false);
@@ -625,7 +633,7 @@ export default function LeadDetalhes() {
       setEditingNoteName('');
       setEditingNoteContent('');
       setEditingNoteAttachment(null);
-      
+
       toast({
         title: "✅ Nota atualizada com sucesso!",
         description: `A nota "${noteTitle}" foi atualizada.`,
@@ -662,14 +670,14 @@ export default function LeadDetalhes() {
         descricao: editHistoryData.descricao,
         notaAtividade: editHistoryData.notasDetalhadas
       };
-      
-      setHistorico(historico.map(item => 
+
+      setHistorico(historico.map(item =>
         item.id === editingHistoryItem.id ? updatedItem : item
       ));
-      
+
       setShowEditHistoryModal(false);
       setEditingHistoryItem(null);
-      
+
       toast({
         title: "✅ Item atualizado com sucesso!",
         description: `O item "${editHistoryData.nome || editHistoryData.tipo}" foi atualizado.`,
@@ -681,7 +689,7 @@ export default function LeadDetalhes() {
   const handleDeleteHistoryItem = (itemId: string) => {
     const item = historico.find(h => h.id === itemId);
     setHistorico(historico.filter(item => item.id !== itemId));
-    
+
     toast({
       title: "🗑️ Item removido",
       description: `O item "${item?.nome || item?.tipo}" foi removido do histórico.`,
@@ -694,7 +702,7 @@ export default function LeadDetalhes() {
       // Validar formato do arquivo
       const allowedFormats = ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'txt', 'png', 'jpg', 'jpeg'];
       const fileExtension = newDocument.arquivo.name.split('.').pop()?.toLowerCase();
-      
+
       if (!fileExtension || !allowedFormats.includes(fileExtension)) {
         toast({
           title: "Formato inválido",
@@ -703,7 +711,7 @@ export default function LeadDetalhes() {
         });
         return;
       }
-      
+
       // Validar tamanho do arquivo (10 MB = 10 * 1024 * 1024 bytes)
       const maxSize = 10 * 1024 * 1024;
       if (newDocument.arquivo.size > maxSize) {
@@ -714,7 +722,7 @@ export default function LeadDetalhes() {
         });
         return;
       }
-      
+
       const documento: Documento = {
         id: Date.now().toString(),
         nome: newDocument.nome,
@@ -723,9 +731,9 @@ export default function LeadDetalhes() {
         tipo: fileExtension || 'unknown'
       };
       setDocumentos([documento, ...documentos]);
-      setNewDocument({nome: '', arquivo: null});
+      setNewDocument({ nome: '', arquivo: null });
       setShowAddDocumentModal(false);
-      
+
       toast({
         title: "Documento adicionado",
         description: `${documento.nome} foi adicionado com sucesso.`,
@@ -734,15 +742,15 @@ export default function LeadDetalhes() {
   };
 
   const handleDeleteDocument = (documentId: string, documentName: string) => {
-    setDeleteConfirmModal({show: true, documentId, documentName});
+    setDeleteConfirmModal({ show: true, documentId, documentName });
   };
 
   const confirmDeleteDocument = () => {
     if (deleteConfirmModal.documentId) {
       const documentName = deleteConfirmModal.documentName;
       setDocumentos(documentos.filter(doc => doc.id !== deleteConfirmModal.documentId));
-      setDeleteConfirmModal({show: false, documentId: '', documentName: ''});
-      
+      setDeleteConfirmModal({ show: false, documentId: '', documentName: '' });
+
       toast({
         title: "Documento excluído",
         description: `${documentName} foi removido com sucesso.`,
@@ -1146,14 +1154,14 @@ export default function LeadDetalhes() {
         useCORS: true,
         allowTaint: true
       });
-      
+
       const imgData = canvas.toDataURL('image/png');
       const pdf = new jsPDF({
         orientation: 'portrait',
         unit: 'mm',
         format: 'a4'
       });
-      
+
       const imgWidth = 210;
       const pageHeight = 297;
       const imgHeight = (canvas.height * imgWidth) / canvas.width;
@@ -1161,20 +1169,20 @@ export default function LeadDetalhes() {
       const position = 0;
 
       pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-      
+
       // Salvar o PDF
       const fileName = `ficha-visita-${lead.name.replace(/\s+/g, '-')}-${new Date().toISOString().split('T')[0]}.pdf`;
-      
+
       // Abrir PDF em nova guia
       const pdfBlob = pdf.output('blob');
       const pdfUrl = URL.createObjectURL(pdfBlob);
       const newWindow = window.open(pdfUrl, '_blank');
-      
+
       // Limpar URL object após um tempo para liberar memória
       setTimeout(() => {
         URL.revokeObjectURL(pdfUrl);
       }, 1000);
-      
+
       // Adicionar aos documentos do lead
       const visitReport: Documento = {
         id: Date.now().toString(),
@@ -1183,14 +1191,14 @@ export default function LeadDetalhes() {
         data: new Date().toLocaleDateString('pt-BR'),
         tipo: 'pdf'
       };
-      
+
       setDocumentos([visitReport, ...documentos]);
-      
+
       toast({
         title: "Termo de visita gerado",
         description: "O termo foi aberto em nova guia e adicionado aos documentos para download.",
       });
-      
+
     } catch (error) {
       console.error('Erro ao gerar PDF:', error);
       toast({
@@ -1213,7 +1221,7 @@ export default function LeadDetalhes() {
     window.document.body.appendChild(link);
     link.click();
     window.document.body.removeChild(link);
-    
+
     toast({
       title: "Download iniciado",
       description: `Baixando ${document.nome}`,
@@ -1225,12 +1233,12 @@ export default function LeadDetalhes() {
       title: "Abrindo documento",
       description: `Preparando ${document.nome} para visualização...`,
     });
-    
+
     // Criar conteúdo de exemplo para demonstração
     setTimeout(() => {
       let content = '';
       let mimeType = '';
-      
+
       // Gerar conteúdo baseado no tipo de arquivo
       switch (document.tipo) {
         case 'pdf':
@@ -1274,7 +1282,7 @@ export default function LeadDetalhes() {
           `;
           mimeType = 'text/html';
           break;
-          
+
         case 'doc':
         case 'docx':
           content = `
@@ -1291,7 +1299,7 @@ export default function LeadDetalhes() {
           `;
           mimeType = 'text/plain;charset=utf-8';
           break;
-          
+
         case 'xls':
         case 'xlsx':
           content = `
@@ -1311,7 +1319,7 @@ export default function LeadDetalhes() {
           `;
           mimeType = 'text/plain;charset=utf-8';
           break;
-          
+
         case 'txt':
           content = `
             Arquivo de Texto: ${document.nome}
@@ -1328,7 +1336,7 @@ export default function LeadDetalhes() {
           `;
           mimeType = 'text/plain;charset=utf-8';
           break;
-          
+
         case 'png':
         case 'jpg':
         case 'jpeg':
@@ -1350,17 +1358,17 @@ export default function LeadDetalhes() {
           `;
           mimeType = 'image/svg+xml;charset=utf-8';
           break;
-          
+
         default:
           content = `Documento: ${document.nome}\nData: ${document.data}\nTamanho: ${document.tamanho}\nCaracteres especiais: ç ã õ á é í ó ú`;
           mimeType = 'text/plain;charset=utf-8';
       }
-      
+
       // Criar blob e abrir em nova guia
       const blob = new Blob([content], { type: mimeType });
       const url = URL.createObjectURL(blob);
       window.open(url, '_blank');
-      
+
       // Limpar URL após alguns segundos
       setTimeout(() => {
         URL.revokeObjectURL(url);
@@ -1383,13 +1391,13 @@ export default function LeadDetalhes() {
   const handleScheduleMultipleVisits = () => {
     if (selectedProperties.length > 0) {
       // Criar descrição com todos os imóveis selecionados
-      const selectedImoveis = imoveisInteresse.filter(imovel => 
+      const selectedImoveis = imoveisInteresse.filter(imovel =>
         selectedProperties.includes(imovel.id)
       );
-      
+
       const imoveisList = selectedImoveis.map(imovel => `• ${imovel.titulo}`).join('\n');
       const descricao = `Visita múltipla - Imóveis selecionados:\n${imoveisList}`;
-      
+
       setActivityData({
         nome: 'Visita Múltipla',
         tipo: 'visita',
@@ -1403,8 +1411,8 @@ export default function LeadDetalhes() {
   };
 
   const handlePropertySelection = (propertyId: string) => {
-    setSelectedProperties(prev => 
-      prev.includes(propertyId) 
+    setSelectedProperties(prev =>
+      prev.includes(propertyId)
         ? prev.filter(id => id !== propertyId)
         : [...prev, propertyId]
     );
@@ -1435,10 +1443,10 @@ export default function LeadDetalhes() {
   };
 
   const handleConfirmSend = () => {
-    const selectedImoveis = imoveisInteresse.filter(imovel => 
+    const selectedImoveis = imoveisInteresse.filter(imovel =>
       selectedProperties.includes(imovel.id)
     );
-    
+
     if (sendMethod === 'email') {
       const imoveisText = selectedImoveis.map(imovel => `${imovel.titulo} - ${imovel.valor}`).join('\n');
       window.open(`mailto:${lead.email}?subject=Imóveis de Interesse&body=${encodeURIComponent(imoveisText)}`, '_blank');
@@ -1447,7 +1455,7 @@ export default function LeadDetalhes() {
       const whatsappMessage = `Olá ${lead.name}, aqui estão os imóveis que selecionei para você:\n\n${message}`;
       window.open(`https://wa.me/55${lead.phone.replace(/\D/g, '')}?text=${encodeURIComponent(whatsappMessage)}`, '_blank');
     }
-    
+
     setShowSendModal(false);
   };
 
@@ -1463,23 +1471,23 @@ export default function LeadDetalhes() {
         notaAtividade: activityData.notasDetalhadas,
         editavel: true
       };
-      
+
       setHistorico([novaAtividade, ...historico]);
-      
+
       const updatedLead = {
         ...lead,
         nextAction: `${activityData.tipo} agendada para ${new Date(activityData.data).toLocaleDateString('pt-BR')} às ${activityData.hora}`
       };
       setLead(updatedLead);
-      
+
       // Gerar ficha de visita se for uma visita
       if (activityData.tipo === 'visita') {
         if (activityData.descricao.includes('Visita múltipla')) {
           // Para visitas múltiplas, gerar ficha para cada imóvel selecionado
-          const selectedImoveis = imoveisInteresse.filter(imovel => 
+          const selectedImoveis = imoveisInteresse.filter(imovel =>
             selectedProperties.includes(imovel.id)
           );
-          
+
           selectedImoveis.forEach((property, index) => {
             setTimeout(() => {
               const completeActivityData: HistoricoAtendimento = {
@@ -1499,7 +1507,7 @@ export default function LeadDetalhes() {
               generateVisitReport(property, completeActivityData);
             }, index * 1000); // Gerar com intervalo de 1 segundo
           });
-          
+
           toast({
             title: "Visitas múltiplas agendadas",
             description: `Gerando ${selectedImoveis.length} fichas de visita...`,
@@ -1530,7 +1538,7 @@ export default function LeadDetalhes() {
           }
         }
       }
-      
+
       setShowActivityModal(false);
       setActivityData({
         nome: '',
@@ -1546,7 +1554,7 @@ export default function LeadDetalhes() {
   const handleCreateActivityFromNextStep = (nextStep: string) => {
     // Extrair o tipo de atividade do próximo passo
     let activityType = 'ligacao'; // padrão
-    
+
     if (nextStep.toLowerCase().includes('ligacao')) activityType = 'ligacao';
     else if (nextStep.toLowerCase().includes('email')) activityType = 'email';
     else if (nextStep.toLowerCase().includes('visita')) activityType = 'visita';
@@ -1554,7 +1562,7 @@ export default function LeadDetalhes() {
     else if (nextStep.toLowerCase().includes('proposta')) activityType = 'proposta';
     else if (nextStep.toLowerCase().includes('whatsapp')) activityType = 'whatsapp';
     else if (nextStep.toLowerCase().includes('followup')) activityType = 'followup';
-    
+
     setActivityData({
       ...activityData,
       nome: `${activityType.charAt(0).toUpperCase() + activityType.slice(1)} - ${nextStep}`,
@@ -1566,42 +1574,42 @@ export default function LeadDetalhes() {
 
   const handleAddEditTag = () => {
     if (newEditTag.trim() && !editData.tags.includes(newEditTag.trim())) {
-      setEditData({...editData, tags: [...editData.tags, newEditTag.trim()]});
+      setEditData({ ...editData, tags: [...editData.tags, newEditTag.trim()] });
       setNewEditTag('');
       unsavedChanges.markAsDirty();
     }
   };
 
   const removeEditTag = (tagToRemove: string) => {
-    setEditData({...editData, tags: editData.tags.filter(tag => tag !== tagToRemove)});
+    setEditData({ ...editData, tags: editData.tags.filter(tag => tag !== tagToRemove) });
     unsavedChanges.markAsDirty();
   };
 
   const addAvailableEditTag = (tag: { id: string; name: string; color: string }) => {
     if (!editData.tags.includes(tag.name)) {
-      setEditData({...editData, tags: [...editData.tags, tag.name]});
+      setEditData({ ...editData, tags: [...editData.tags, tag.name] });
       unsavedChanges.markAsDirty();
     }
   };
 
-  const filteredEditTags = editAvailableTags.filter(tag => 
+  const filteredEditTags = editAvailableTags.filter(tag =>
     tag.name.toLowerCase().includes(editTagSearch.toLowerCase()) &&
     !editData.tags.includes(tag.name)
   );
 
   const handleSaveActivityDetails = () => {
     if (selectedActivity) {
-      setHistorico(historico.map(item => 
-        item.id === selectedActivity.id 
+      setHistorico(historico.map(item =>
+        item.id === selectedActivity.id
           ? {
-              ...item,
-              notaAtividade: activityNote,
-              avaliacao: activityRating,
-              resultado: activityResultado.trim() || undefined,
-              proximoPasso: activityProximoPasso.trim() || undefined,
-              tags: activityTags,
-              noShow: isActivityShowcased
-            }
+            ...item,
+            notaAtividade: activityNote,
+            avaliacao: activityRating,
+            resultado: activityResultado.trim() || undefined,
+            proximoPasso: activityProximoPasso.trim() || undefined,
+            tags: activityTags,
+            noShow: isActivityShowcased
+          }
           : item
       ));
       setShowActivityDetailsModal(false);
@@ -1653,7 +1661,7 @@ export default function LeadDetalhes() {
 
 
 
-  
+
   useEffect(() => {
     // Simular carregamento dos dados do lead
     setTimeout(() => {
@@ -1688,6 +1696,23 @@ export default function LeadDetalhes() {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      <Breadcrumb className="mb-4 sm:mb-6">
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink href="/" className="flex items-center gap-1">
+              <Home className="h-4 w-4" /> Dashboard
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbLink href="/funil">Funil de Vendas</BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbPage>{lead.name}</BreadcrumbPage>
+          </BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
       {/* Header */}
       <div className="bg-white border-b border-gray-200 px-6 py-4">
         <div className="flex items-center justify-between">
@@ -1959,24 +1984,24 @@ export default function LeadDetalhes() {
                                 {/* Ações no canto superior direito */}
                                 <div className="flex gap-1">
                                   {isActivity && (
-                                    <Button 
-                                      variant="ghost" 
-                                      size="sm" 
+                                    <Button
+                                      variant="ghost"
+                                      size="sm"
                                       onClick={() => handleActivityDetails(item)}
                                     >
                                       <StickyNote className="h-4 w-4" />
                                     </Button>
                                   )}
-                                  <Button 
-                                    variant="ghost" 
-                                    size="sm" 
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
                                     onClick={() => handleEditHistoryItem(item)}
                                   >
                                     <Edit className="h-4 w-4" />
                                   </Button>
-                                  <Button 
-                                    variant="ghost" 
-                                    size="sm" 
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
                                     onClick={() => handleDeleteHistoryItem(item.id)}
                                   >
                                     <Trash2 className="h-4 w-4" />
@@ -2114,9 +2139,9 @@ export default function LeadDetalhes() {
                             {/* Rodapé */}
                             <div className="flex justify-end items-center pt-2 border-t border-slate-100">
                               {isActivity && item.notaAtividade && (
-                                <Button 
-                                  variant="ghost" 
-                                  size="sm" 
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
                                   className="text-cyan-600 hover:text-cyan-700 hover:bg-cyan-50"
                                   onClick={() => {
                                     // Resetar dados para nova atividade
@@ -2158,18 +2183,18 @@ export default function LeadDetalhes() {
                     </span>
                   </div>
                   <div className="flex gap-2">
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
+                    <Button
+                      variant="outline"
+                      size="sm"
                       onClick={handleScheduleMultipleVisits}
                       disabled={selectedProperties.length === 0}
                     >
                       <Calendar className="h-4 w-4 mr-1" />
                       Visitar ({selectedProperties.length})
                     </Button>
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
+                    <Button
+                      variant="outline"
+                      size="sm"
                       onClick={handleSendProperties}
                       disabled={selectedProperties.length === 0}
                     >
@@ -2178,7 +2203,7 @@ export default function LeadDetalhes() {
                     </Button>
                   </div>
                 </div>
-                
+
                 <div className="space-y-3">
                   {imoveisInteresse.map((imovel) => (
                     <div key={imovel.id} className="border rounded-lg p-4 hover:shadow-md hover:border-cyan-200 transition-all duration-200 hover:shadow-lg">
@@ -2191,7 +2216,7 @@ export default function LeadDetalhes() {
                             onChange={() => handlePropertySelection(imovel.id)}
                             className="mt-1"
                           />
-                          
+
                           <div className="w-32 h-24 rounded-md overflow-hidden flex-shrink-0">
                             <div className="w-full h-full relative">
                               <img
@@ -2201,27 +2226,27 @@ export default function LeadDetalhes() {
                               />
                             </div>
                           </div>
-                          
+
                           <div className="flex-1">
                             <h3 className="font-semibold">{imovel.titulo}</h3>
                             <p className="text-sm text-muted-foreground">{imovel.endereco}</p>
                             <p className="text-cyan-600 font-bold text-lg mt-1">{imovel.valor}</p>
                           </div>
                         </div>
-                        
+
                         {/* Botões de ação no canto superior direito */}
                         <div className="flex gap-2">
-                          <Button 
-                            variant="outline" 
-                            size="sm" 
+                          <Button
+                            variant="outline"
+                            size="sm"
                             onClick={() => handleViewProperty(imovel.id)}
                           >
                             <Eye className="h-4 w-4 mr-1" />
                             Ver
                           </Button>
-                          <Button 
-                            variant="default" 
-                            size="sm" 
+                          <Button
+                            variant="default"
+                            size="sm"
                             className="bg-cyan-500 hover:bg-cyan-600 text-white"
                             onClick={() => handleScheduleVisit(imovel)}
                           >
@@ -2230,7 +2255,7 @@ export default function LeadDetalhes() {
                           </Button>
                         </div>
                       </div>
-                      
+
                       {/* Conteúdo centralizado */}
                       <div className="flex flex-col items-center justify-center py-4 space-y-3">
                         <div className="flex gap-6 text-sm text-center">
@@ -2247,7 +2272,7 @@ export default function LeadDetalhes() {
                             <span>{imovel.vagas} vagas</span>
                           </span>
                         </div>
-                        
+
                         <p className="text-sm text-muted-foreground text-center line-clamp-2 max-w-md">
                           {imovel.descricao}
                         </p>
@@ -2286,25 +2311,25 @@ export default function LeadDetalhes() {
                               </div>
                             </div>
                             <div className="flex gap-1">
-                              <Button 
-                                variant="ghost" 
+                              <Button
+                                variant="ghost"
                                 size="sm"
                                 onClick={() => handleDownloadDocument(doc)}
                                 title="Baixar documento"
                               >
                                 <Download className="h-4 w-4" />
                               </Button>
-                              <Button 
-                                variant="ghost" 
+                              <Button
+                                variant="ghost"
                                 size="sm"
                                 onClick={() => handleViewDocument(doc)}
                                 title="Visualizar documento"
                               >
                                 <Eye className="h-4 w-4" />
                               </Button>
-                              <Button 
-                                variant="ghost" 
-                                size="sm" 
+                              <Button
+                                variant="ghost"
+                                size="sm"
                                 onClick={() => handleDeleteDocument(doc.id, doc.nome)}
                                 className="text-red-600 hover:text-red-700"
                                 title="Excluir documento"
@@ -2391,12 +2416,12 @@ export default function LeadDetalhes() {
                 id="nome-atividade"
                 placeholder="Dê um nome para esta atividade..."
                 value={activityData.nome}
-                onChange={(e) => setActivityData({...activityData, nome: e.target.value})}
+                onChange={(e) => setActivityData({ ...activityData, nome: e.target.value })}
               />
             </div>
             <div>
               <Label htmlFor="tipo-atividade">Tipo de Atividade</Label>
-              <Select value={activityData.tipo} onValueChange={(value) => setActivityData({...activityData, tipo: value})}>
+              <Select value={activityData.tipo} onValueChange={(value) => setActivityData({ ...activityData, tipo: value })}>
                 <SelectTrigger>
                   <SelectValue placeholder="Selecione o tipo de atividade" />
                 </SelectTrigger>
@@ -2411,7 +2436,7 @@ export default function LeadDetalhes() {
                 </SelectContent>
               </Select>
             </div>
-            
+
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <Label htmlFor="data">Data</Label>
@@ -2419,7 +2444,7 @@ export default function LeadDetalhes() {
                   id="data"
                   type="date"
                   value={activityData.data.toISOString().split('T')[0]}
-                  onChange={(e) => setActivityData({...activityData, data: new Date(e.target.value)})}
+                  onChange={(e) => setActivityData({ ...activityData, data: new Date(e.target.value) })}
                   min={new Date().toISOString().split('T')[0]}
                 />
               </div>
@@ -2429,18 +2454,18 @@ export default function LeadDetalhes() {
                   id="hora"
                   type="time"
                   value={activityData.hora}
-                  onChange={(e) => setActivityData({...activityData, hora: e.target.value})}
+                  onChange={(e) => setActivityData({ ...activityData, hora: e.target.value })}
                 />
               </div>
             </div>
-            
+
             <div>
               <Label htmlFor="descricao">Descrição</Label>
               <Textarea
                 id="descricao"
                 placeholder="Descreva os detalhes da atividade..."
                 value={activityData.descricao}
-                onChange={(e) => setActivityData({...activityData, descricao: e.target.value})}
+                onChange={(e) => setActivityData({ ...activityData, descricao: e.target.value })}
                 rows={3}
               />
             </div>
@@ -2450,7 +2475,7 @@ export default function LeadDetalhes() {
                 id="notas-detalhadas"
                 placeholder="Descreva os detalhes, observações e informações importantes sobre esta atividade..."
                 value={activityData.notasDetalhadas}
-                onChange={(e) => setActivityData({...activityData, notasDetalhadas: e.target.value})}
+                onChange={(e) => setActivityData({ ...activityData, notasDetalhadas: e.target.value })}
                 rows={4}
               />
             </div>
@@ -2481,7 +2506,7 @@ export default function LeadDetalhes() {
                   placeholder="Ex: R$ 300.000 - R$ 400.000"
                   value={editData.budget}
                   onChange={(e) => {
-                    setEditData({...editData, budget: e.target.value});
+                    setEditData({ ...editData, budget: e.target.value });
                     unsavedChanges.markAsDirty();
                   }}
                 />
@@ -2493,7 +2518,7 @@ export default function LeadDetalhes() {
                   placeholder="Ex: 1-2 meses"
                   value={editData.timeline}
                   onChange={(e) => {
-                    setEditData({...editData, timeline: e.target.value});
+                    setEditData({ ...editData, timeline: e.target.value });
                     unsavedChanges.markAsDirty();
                   }}
                 />
@@ -2504,9 +2529,9 @@ export default function LeadDetalhes() {
               <div>
                 <Label htmlFor="source">Origem</Label>
                 <Select value={editData.source} onValueChange={(value) => {
-                    setEditData({...editData, source: value});
-                    unsavedChanges.markAsDirty();
-                  }}>
+                  setEditData({ ...editData, source: value });
+                  unsavedChanges.markAsDirty();
+                }}>
                   <SelectTrigger>
                     <SelectValue placeholder="Selecione a origem" />
                   </SelectTrigger>
@@ -2523,9 +2548,9 @@ export default function LeadDetalhes() {
               <div>
                 <Label htmlFor="assignedTo">Responsável</Label>
                 <Select value={editData.assignedTo} onValueChange={(value) => {
-                    setEditData({...editData, assignedTo: value});
-                    unsavedChanges.markAsDirty();
-                  }}>
+                  setEditData({ ...editData, assignedTo: value });
+                  unsavedChanges.markAsDirty();
+                }}>
                   <SelectTrigger>
                     <SelectValue placeholder="Selecione o responsável" />
                   </SelectTrigger>
@@ -2546,7 +2571,7 @@ export default function LeadDetalhes() {
                 id="financing"
                 checked={editData.financing}
                 onChange={(e) => {
-                  setEditData({...editData, financing: e.target.checked});
+                  setEditData({ ...editData, financing: e.target.checked });
                   unsavedChanges.markAsDirty();
                 }}
               />
@@ -2563,8 +2588,8 @@ export default function LeadDetalhes() {
                     editData.tags.map((tagName) => {
                       const tag = editAvailableTags.find(t => t.name === tagName);
                       return (
-                        <Badge 
-                          key={tagName} 
+                        <Badge
+                          key={tagName}
                           className={`${tag?.color || 'bg-gray-500'} text-white cursor-pointer gap-1`}
                         >
                           {tagName}
@@ -2616,9 +2641,9 @@ export default function LeadDetalhes() {
                     className="cursor-pointer"
                     onClick={() => {
                       if (editData.priorities.includes(priority)) {
-                        setEditData({...editData, priorities: editData.priorities.filter(p => p !== priority)});
+                        setEditData({ ...editData, priorities: editData.priorities.filter(p => p !== priority) });
                       } else {
-                        setEditData({...editData, priorities: [...editData.priorities, priority]});
+                        setEditData({ ...editData, priorities: [...editData.priorities, priority] });
                       }
                       unsavedChanges.markAsDirty();
                     }}
@@ -2636,7 +2661,7 @@ export default function LeadDetalhes() {
                 placeholder="Digite suas observações..."
                 value={editData.notes}
                 onChange={(e) => {
-                  setEditData({...editData, notes: e.target.value});
+                  setEditData({ ...editData, notes: e.target.value });
                   unsavedChanges.markAsDirty();
                 }}
                 rows={4}
@@ -2729,17 +2754,17 @@ export default function LeadDetalhes() {
                 id="nome-documento"
                 placeholder="Digite o nome do documento..."
                 value={newDocument.nome}
-                onChange={(e) => setNewDocument({...newDocument, nome: e.target.value})}
+                onChange={(e) => setNewDocument({ ...newDocument, nome: e.target.value })}
               />
             </div>
-            
+
             <div>
               <Label htmlFor="arquivo">Arquivo</Label>
               <Input
                 id="arquivo"
                 type="file"
                 accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.png,.jpg,.jpeg"
-                onChange={(e) => setNewDocument({...newDocument, arquivo: e.target.files?.[0] || null})}
+                onChange={(e) => setNewDocument({ ...newDocument, arquivo: e.target.files?.[0] || null })}
               />
               <div className="mt-2 space-y-2">
                 <div className="text-sm text-muted-foreground">
@@ -2758,7 +2783,7 @@ export default function LeadDetalhes() {
                     <span className="px-2 py-1 bg-pink-100 text-pink-700 rounded text-xs">JPEG</span>
                   </div>
                 </div>
-                
+
                 <div className="text-sm text-muted-foreground">
                   <p className="font-medium mb-1">📏 <strong>Tamanho máximo:</strong></p>
                   <div className="flex items-center gap-2">
@@ -2766,7 +2791,7 @@ export default function LeadDetalhes() {
                     <span className="text-xs">por arquivo</span>
                   </div>
                 </div>
-                
+
                 <div className="text-xs text-amber-600 bg-amber-50 p-2 rounded">
                   <strong>⚠️ Importante:</strong> Documentos com formato ou tamanho inválido serão rejeitados.
                 </div>
@@ -2902,7 +2927,7 @@ export default function LeadDetalhes() {
             <div className="col-span-5">
               <div className="bg-slate-50/50 rounded-lg p-6 space-y-6">
                 <h3 className="text-slate-400 uppercase text-xs font-semibold mb-4">Configurações</h3>
-                
+
                 {/* Avaliação com Emojis */}
                 <div>
                   <h4 className="text-slate-400 uppercase text-xs font-medium mb-3">Avaliação</h4>
@@ -2910,37 +2935,34 @@ export default function LeadDetalhes() {
                     <button
                       type="button"
                       onClick={() => setActivityRating('boa')}
-                      className={`flex flex-col items-center gap-2 p-3 rounded-lg transition-all ${
-                        activityRating === 'boa' 
-                          ? 'bg-green-50 border-2 border-green-300 shadow-sm' 
-                          : 'hover:bg-gray-50 border-2 border-transparent'
-                      }`}
+                      className={`flex flex-col items-center gap-2 p-3 rounded-lg transition-all ${activityRating === 'boa'
+                        ? 'bg-green-50 border-2 border-green-300 shadow-sm'
+                        : 'hover:bg-gray-50 border-2 border-transparent'
+                        }`}
                     >
                       <span className="text-3xl">😊</span>
                       <span className="text-xs text-slate-600">Boa</span>
                     </button>
-                    
+
                     <button
                       type="button"
                       onClick={() => setActivityRating(null)}
-                      className={`flex flex-col items-center gap-2 p-3 rounded-lg transition-all ${
-                        activityRating === null 
-                          ? 'bg-gray-50 border-2 border-gray-300 shadow-sm' 
-                          : 'hover:bg-gray-50 border-2 border-transparent'
-                      }`}
+                      className={`flex flex-col items-center gap-2 p-3 rounded-lg transition-all ${activityRating === null
+                        ? 'bg-gray-50 border-2 border-gray-300 shadow-sm'
+                        : 'hover:bg-gray-50 border-2 border-transparent'
+                        }`}
                     >
                       <span className="text-3xl">😐</span>
                       <span className="text-xs text-slate-600">Neutra</span>
                     </button>
-                    
+
                     <button
                       type="button"
                       onClick={() => setActivityRating('ruim')}
-                      className={`flex flex-col items-center gap-2 p-3 rounded-lg transition-all ${
-                        activityRating === 'ruim' 
-                          ? 'bg-red-50 border-2 border-red-300 shadow-sm' 
-                          : 'hover:bg-gray-50 border-2 border-transparent'
-                      }`}
+                      className={`flex flex-col items-center gap-2 p-3 rounded-lg transition-all ${activityRating === 'ruim'
+                        ? 'bg-red-50 border-2 border-red-300 shadow-sm'
+                        : 'hover:bg-gray-50 border-2 border-transparent'
+                        }`}
                     >
                       <span className="text-3xl">😞</span>
                       <span className="text-xs text-slate-600">Ruim</span>
@@ -2993,7 +3015,7 @@ export default function LeadDetalhes() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    {/* Modal para Enviar Imóveis */}
+      {/* Modal para Enviar Imóveis */}
       <Dialog open={showSendModal} onOpenChange={setShowSendModal}>
         <DialogContent>
           <DialogHeader>
@@ -3025,7 +3047,7 @@ export default function LeadDetalhes() {
                 </label>
               </div>
             </div>
-            
+
             <div>
               <Label>Imóveis selecionados ({selectedProperties.length})</Label>
               <div className="space-y-2 mt-2 max-h-40 overflow-y-auto">
@@ -3047,8 +3069,8 @@ export default function LeadDetalhes() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    {/* Modal para Confirmar Exclusão de Documento */}
-      <Dialog open={deleteConfirmModal.show} onOpenChange={(show) => setDeleteConfirmModal({...deleteConfirmModal, show})}>
+      {/* Modal para Confirmar Exclusão de Documento */}
+      <Dialog open={deleteConfirmModal.show} onOpenChange={(show) => setDeleteConfirmModal({ ...deleteConfirmModal, show })}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Confirmar Exclusão</DialogTitle>
@@ -3058,7 +3080,7 @@ export default function LeadDetalhes() {
             <p className="text-sm text-muted-foreground">Esta ação não pode ser desfeita.</p>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setDeleteConfirmModal({show: false, documentId: '', documentName: ''})}>
+            <Button variant="outline" onClick={() => setDeleteConfirmModal({ show: false, documentId: '', documentName: '' })}>
               Cancelar
             </Button>
             <Button variant="destructive" onClick={confirmDeleteDocument}>
@@ -3067,7 +3089,7 @@ export default function LeadDetalhes() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    
+
       {/* Modal para Adicionar Nota */}
       <Dialog open={showNoteModal} onOpenChange={setShowNoteModal}>
         <DialogContent className="max-w-md">
@@ -3145,12 +3167,12 @@ export default function LeadDetalhes() {
                 id="edit-nome"
                 placeholder="Dê um nome para este item..."
                 value={editHistoryData.nome}
-                onChange={(e) => setEditHistoryData({...editHistoryData, nome: e.target.value})}
+                onChange={(e) => setEditHistoryData({ ...editHistoryData, nome: e.target.value })}
               />
             </div>
             <div>
               <Label htmlFor="edit-tipo">Tipo</Label>
-              <Select value={editHistoryData.tipo} onValueChange={(value) => setEditHistoryData({...editHistoryData, tipo: value as HistoricoAtendimento['tipo']})}>
+              <Select value={editHistoryData.tipo} onValueChange={(value) => setEditHistoryData({ ...editHistoryData, tipo: value as HistoricoAtendimento['tipo'] })}>
                 <SelectTrigger>
                   <SelectValue placeholder="Selecione o tipo" />
                 </SelectTrigger>
@@ -3172,7 +3194,7 @@ export default function LeadDetalhes() {
                   id="edit-data"
                   type="date"
                   value={editHistoryData.data.toISOString().split('T')[0]}
-                  onChange={(e) => setEditHistoryData({...editHistoryData, data: new Date(e.target.value)})}
+                  onChange={(e) => setEditHistoryData({ ...editHistoryData, data: new Date(e.target.value) })}
                 />
               </div>
               <div>
@@ -3181,7 +3203,7 @@ export default function LeadDetalhes() {
                   id="edit-hora"
                   type="time"
                   value={editHistoryData.hora}
-                  onChange={(e) => setEditHistoryData({...editHistoryData, hora: e.target.value})}
+                  onChange={(e) => setEditHistoryData({ ...editHistoryData, hora: e.target.value })}
                 />
               </div>
             </div>
@@ -3191,7 +3213,7 @@ export default function LeadDetalhes() {
                 id="edit-notas-atividade"
                 placeholder="Descreva os detalhes, observações e informações importantes sobre esta atividade..."
                 value={editHistoryData.notasDetalhadas || ''}
-                onChange={(e) => setEditHistoryData({...editHistoryData, notasDetalhadas: e.target.value})}
+                onChange={(e) => setEditHistoryData({ ...editHistoryData, notasDetalhadas: e.target.value })}
                 rows={4}
               />
             </div>
@@ -3201,7 +3223,7 @@ export default function LeadDetalhes() {
                 id="edit-descricao"
                 placeholder="Descreva os detalhes..."
                 value={editHistoryData.descricao}
-                onChange={(e) => setEditHistoryData({...editHistoryData, descricao: e.target.value})}
+                onChange={(e) => setEditHistoryData({ ...editHistoryData, descricao: e.target.value })}
                 rows={3}
               />
             </div>
@@ -3223,11 +3245,11 @@ export default function LeadDetalhes() {
       {/* Modal de Confirmação - Sair sem Salvar */}
       <UnsavedChangesDialog
         open={unsavedChanges.showUnsavedChangesDialog}
-        onOpenChange={() => {}} // Não faz nada para não interferir nos botões
+        onOpenChange={() => { }} // Não faz nada para não interferir nos botões
         onContinueEditing={unsavedChanges.handleContinueEditing}
         onExitWithoutSaving={unsavedChanges.handleExitWithoutSaving}
       />
 
-  </div>
+    </div>
   );
 }

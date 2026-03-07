@@ -1,152 +1,215 @@
 import { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Progress } from '@/components/ui/progress';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { DollarSign, TrendingUp, TrendingDown, Plus, Search, Filter, Download, Calendar, FileText, CreditCard, PiggyBank, Receipt, AlertCircle, CheckCircle } from 'lucide-react';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
+import {
+  DollarSign, TrendingUp, TrendingDown, Wallet, ArrowUpRight, ArrowDownRight,
+  Calendar, Search, Filter, MoreVertical, CheckCircle, Clock,
+  Plus, Download, FileText, PieChart, AlertCircle, Edit, Home
+} from 'lucide-react';
 
 const transacoes = [
-  {
-    id: '1',
-    descricao: 'Aluguel - Apt 302',
-    categoria: 'Receita',
-    valor: 'R$ 1.800,00',
-    data: '05/01/2025',
-    status: 'Pago',
-    tipo: 'Entrada',
-  },
+  { id: 'TRX-901', data: '22/Mai', descricao: 'Comissão Venda - Apto Jardins', categoria: 'Comissões', responsavel: 'Ana Souza', valor: 15400, tipo: 'Entrada', status: 'Conciliado' },
+  { id: 'TRX-902', data: '21/Mai', descricao: 'Repasse Aluguel - Casa Vila Nova', categoria: 'Repasses', responsavel: 'Sistema', valor: 3800, tipo: 'Saída', status: 'Pendente' },
+  { id: 'TRX-903', data: '20/Mai', descricao: 'Marketing Digital (Google Ads)', categoria: 'Despesas', responsavel: 'Marcos Silva', valor: 2500, tipo: 'Saída', status: 'Conciliado' },
+];
+
+const dreData = [
+  { item: 'Receita Bruta (Vendas + Locação)', valor: 85400 },
+  { item: '(-) Impostos e Taxas', valor: -12300 },
+  { item: '(=) Receita Líquida', valor: 73100 },
+  { item: '(-) Despesas Operacionais', valor: -25600 },
+  { item: '(-) Comissões Pagas', valor: -15400 },
+  { item: '(=) Lucro Operacional (EBITDA)', valor: 32100 },
 ];
 
 export function GestaoFinanceira() {
-  const [searchTerm, setSearchTerm] = useState('');
+  const [showNovaTransacao, setShowNovaTransacao] = useState(false);
+
+  const formatCurrency = (value: number) => {
+    return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
+  };
+
+  const getStatusBadge = (status: string) => {
+    switch (status) {
+      case 'Conciliado': return <Badge className="bg-emerald-100 text-emerald-700 border-none">Conciliado</Badge>;
+      case 'Pendente': return <Badge className="bg-amber-100 text-amber-700 border-none">Pendente</Badge>;
+      case 'Cancelado': return <Badge className="bg-rose-100 text-rose-700 border-none">Cancelado</Badge>;
+      default: return <Badge variant="outline">{status}</Badge>;
+    }
+  };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
-      <div className="max-w-7xl mx-auto space-y-6">
-        <div className="flex items-center justify-between">
+    <div className="space-y-6 pb-20 font-sans">
+      <div className="max-w-[1400px] mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+        <Breadcrumb className="mb-4 sm:mb-6">
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink href="/" className="flex items-center gap-1">
+                <Home className="h-4 w-4" /> Dashboard
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbPage>Financeiro</BreadcrumbPage>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
+
+        {/* Header */}
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Gestão Financeira</h1>
-            <p className="text-gray-600 mt-1">Controle completo das finanças da imobiliária</p>
+            <h1 className="text-3xl font-bold text-slate-800 tracking-tight">Gestão Financeira</h1>
+            <p className="text-slate-500 mt-1 font-medium">Fluxo de caixa corporativo, DRE e gestão de repasses da agência.</p>
           </div>
-          <Button>
-            <Plus className="h-4 w-4 mr-2" />
-            Nova Transação
-          </Button>
+          <div className="flex items-center gap-3">
+            <Button variant="outline" className="bg-white text-slate-700 font-semibold h-11 border-slate-200">
+              <Download className="h-4 w-4 mr-2" /> Exportar Relatórios
+            </Button>
+            <Button onClick={() => setShowNovaTransacao(true)} className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold shadow-sm h-11">
+              <Plus className="h-4 w-4 mr-2" /> Nova Movimentação
+            </Button>
+          </div>
         </div>
 
+        {/* Financial KPIs */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Receitas do Mês</CardTitle>
-              <TrendingUp className="h-4 w-4 text-green-600" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">R$ 45.678,90</div>
-              <p className="text-xs text-gray-600">+12,5% vs mês anterior</p>
+          <Card className="border-none shadow-sm">
+            <CardContent className="p-6">
+              <p className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">Saldo em Caixa</p>
+              <h3 className="text-2xl font-black text-slate-800 tracking-tight mb-2">{formatCurrency(124500)}</h3>
+              <div className="flex items-center text-xs text-emerald-600 font-bold">
+                <ArrowUpRight className="h-3 w-3 mr-1" /> +8.4% vs mês anterior
+              </div>
             </CardContent>
           </Card>
 
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Despesas do Mês</CardTitle>
-              <TrendingDown className="h-4 w-4 text-red-600" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">R$ 12.345,67</div>
-              <p className="text-xs text-gray-600">-3,1% vs mês anterior</p>
+          <Card className="border-none shadow-sm">
+            <CardContent className="p-6">
+              <p className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">Receita Prevista (30d)</p>
+              <h3 className="text-2xl font-black text-slate-800 tracking-tight mb-2">{formatCurrency(85400)}</h3>
+              <div className="flex items-center text-xs text-slate-400 font-bold">
+                Aguardando 12 transações
+              </div>
             </CardContent>
           </Card>
 
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Saldo Líquido</CardTitle>
-              <DollarSign className="h-4 w-4 text-blue-600" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">R$ 33.333,23</div>
-              <p className="text-xs text-gray-600">73% de margem</p>
+          <Card className="border-none shadow-sm">
+            <CardContent className="p-6">
+              <p className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">Contas a Pagar (7d)</p>
+              <h3 className="text-2xl font-black text-rose-600 tracking-tight mb-2">{formatCurrency(38900)}</h3>
+              <div className="flex items-center text-xs text-rose-500 font-bold">
+                <AlertCircle className="h-3 w-3 mr-1" /> 2 Faturas vencem amanhã
+              </div>
             </CardContent>
           </Card>
 
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Contas a Pagar</CardTitle>
-              <AlertCircle className="h-4 w-4 text-orange-600" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">R$ 8.456,32</div>
-              <p className="text-xs text-gray-600">5 vencem esta semana</p>
+          <Card className="border-none shadow-sm">
+            <CardContent className="p-6">
+              <p className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">Lançamentos Pendentes</p>
+              <h3 className="text-2xl font-black text-amber-600 tracking-tight mb-2">08</h3>
+              <div className="flex items-center text-xs text-amber-600 font-bold">
+                Requerem conciliação bancária
+              </div>
             </CardContent>
           </Card>
         </div>
 
-        <Tabs defaultValue="transacoes" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4">
-            <TabsTrigger value="transacoes">Transações</TabsTrigger>
-            <TabsTrigger value="contas">Contas a Pagar</TabsTrigger>
-            <TabsTrigger value="receber">Contas a Receber</TabsTrigger>
-            <TabsTrigger value="relatorios">Relatórios</TabsTrigger>
+        <Tabs defaultValue="visao-geral" className="w-full">
+          <TabsList className="bg-slate-100/50 p-1 rounded-xl h-12 w-full md:w-auto mb-6">
+            <TabsTrigger value="visao-geral" className="rounded-lg px-6 font-bold">Visão Geral</TabsTrigger>
+            <TabsTrigger value="movimentacoes" className="rounded-lg px-6 font-bold">Movimentações</TabsTrigger>
           </TabsList>
 
-          <TabsContent value="transacoes" className="space-y-6">
-            <div className="flex items-center space-x-4">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-                <Input
-                  placeholder="Buscar transações..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10 w-80"
-                />
-              </div>
-              <Button variant="outline" size="sm">
-                <Filter className="h-4 w-4 mr-2" />
-                Filtros
-              </Button>
-              <Button variant="outline" size="sm">
-                <Download className="h-4 w-4 mr-2" />
-                Exportar
-              </Button>
-            </div>
+          <TabsContent value="visao-geral" className="space-y-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* DRE Simplificado */}
+              <Card className="border-none shadow-sm">
+                <CardHeader>
+                  <CardTitle className="text-lg font-bold text-slate-800">DRE Simplificado</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-2">
+                  {dreData.map((row, idx) => (
+                    <div key={idx} className={`flex justify-between p-3 rounded-lg text-sm ${row.item.startsWith('(=)') ? 'font-bold bg-slate-100 text-slate-800' : 'text-slate-600 border-b border-slate-50'}`}>
+                      <span>{row.item}</span>
+                      <span className={row.valor < 0 ? 'text-rose-600' : 'text-emerald-600'}>
+                        {formatCurrency(Math.abs(row.valor))}
+                      </span>
+                    </div>
+                  ))}
+                </CardContent>
+              </Card>
 
-            <Card>
+              {/* Fluxo de Caixa Futuro */}
+              <Card className="border-none shadow-sm">
+                <CardHeader>
+                  <CardTitle className="text-lg font-bold text-slate-800">Projeção Futura (7 dias)</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  <div className="space-y-2">
+                    <div className="flex justify-between text-sm font-bold">
+                      <span className="text-emerald-600">A Receber</span>
+                      <span>R$ 52.400</span>
+                    </div>
+                    <Progress value={85} className="h-2 bg-slate-100" />
+                  </div>
+                  <div className="space-y-2">
+                    <div className="flex justify-between text-sm font-bold">
+                      <span className="text-rose-600">A Pagar</span>
+                      <span>R$ 38.900</span>
+                    </div>
+                    <Progress value={60} className="h-2 bg-slate-100" />
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="movimentacoes" className="m-0">
+            <Card className="border-none shadow-sm overflow-hidden">
               <Table>
-                <TableHeader>
+                <TableHeader className="bg-slate-50">
                   <TableRow>
-                    <TableHead>Data</TableHead>
+                    <TableHead>Data / ID</TableHead>
                     <TableHead>Descrição</TableHead>
                     <TableHead>Categoria</TableHead>
-                    <TableHead>Tipo</TableHead>
-                    <TableHead>Valor</TableHead>
+                    <TableHead>Responsável</TableHead>
+                    <TableHead className="text-right">Valor</TableHead>
                     <TableHead>Status</TableHead>
-                    <TableHead className="text-right">Ações</TableHead>
+                    <TableHead className="text-right">Ação</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {transacoes.map((transacao) => (
-                    <TableRow key={transacao.id}>
-                      <TableCell>{transacao.data}</TableCell>
-                      <TableCell className="font-medium">{transacao.descricao}</TableCell>
-                      <TableCell>{transacao.categoria}</TableCell>
+                  {transacoes.map((trx) => (
+                    <TableRow key={trx.id}>
                       <TableCell>
-                        <Badge variant={transacao.tipo === 'Entrada' ? 'default' : 'secondary'}>
-                          {transacao.tipo}
-                        </Badge>
+                        <div className="font-bold text-slate-800 text-xs">{trx.data}</div>
+                        <div className="text-[10px] text-slate-400 font-mono">{trx.id}</div>
                       </TableCell>
-                      <TableCell className={transacao.tipo === 'Entrada' ? 'text-green-600' : 'text-red-600'}>
-                        {transacao.tipo === 'Entrada' ? '+' : '-'} {transacao.valor}
-                      </TableCell>
-                      <TableCell>
-                        <Badge variant={transacao.status === 'Pago' ? 'default' : 'secondary'}>
-                          {transacao.status}
-                        </Badge>
-                      </TableCell>
+                      <TableCell className="font-bold text-slate-800 text-sm">{trx.descricao}</TableCell>
+                      <TableCell className="text-xs text-slate-600">{trx.categoria}</TableCell>
+                      <TableCell className="text-xs text-slate-600">{trx.responsavel}</TableCell>
+                      <TableCell className="text-right font-black text-slate-800">{formatCurrency(trx.valor)}</TableCell>
+                      <TableCell>{getStatusBadge(trx.status)}</TableCell>
                       <TableCell className="text-right">
-                        <Button variant="ghost" size="sm">
-                          <FileText className="h-4 w-4" />
-                        </Button>
+                        <Button variant="ghost" size="icon"><MoreVertical className="h-4 w-4" /></Button>
                       </TableCell>
                     </TableRow>
                   ))}
@@ -156,6 +219,41 @@ export function GestaoFinanceira() {
           </TabsContent>
         </Tabs>
       </div>
+
+      <Dialog open={showNovaTransacao} onOpenChange={setShowNovaTransacao}>
+        <DialogContent className="sm:max-w-[500px]">
+          <DialogHeader>
+            <DialogTitle>Nova Movimentação</DialogTitle>
+            <DialogDescription>Registre uma receita ou despesa no caixa da agência.</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 pt-4">
+            <div className="space-y-2">
+              <Label>Descrição</Label>
+              <Input placeholder="Ex: Pagamento de Software" className="bg-slate-50" />
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label>Valor (R$)</Label>
+                <Input type="number" placeholder="0.00" className="bg-slate-50" />
+              </div>
+              <div className="space-y-2">
+                <Label>Tipo</Label>
+                <Select>
+                  <SelectTrigger className="bg-slate-50"><SelectValue placeholder="Selecione" /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="entrada">Entrada (Receita)</SelectItem>
+                    <SelectItem value="saida">Saída (Despesa)</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            <div className="flex justify-end gap-3 mt-4">
+              <Button variant="ghost" onClick={() => setShowNovaTransacao(false)} className="font-bold">Cancelar</Button>
+              <Button className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-8">Salvar Lançamento</Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

@@ -1,84 +1,36 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { Progress } from '@/components/ui/progress';
+import { cn } from '@/lib/utils';
 import {
-  Plus,
-  Search,
-  Filter,
-  MapPin,
-  Bed,
-  Bath,
-  Maximize,
-  MoreVertical,
-  Edit,
-  Trash2,
-  Eye,
-  Home,
-  X,
-  Download,
-  Calendar,
-  TrendingUp,
-  DollarSign,
-  Users,
-  Star,
-  Camera,
-  Video,
-  Phone,
-  Mail,
-  Share2,
-  Heart,
-  BarChart3,
-  Building,
-  Key,
-  CheckCircle,
-  Clock,
-  AlertCircle,
-  FileText,
-  Image as ImageIcon,
-  Grid3x3,
-  List,
-  ArrowUpDown,
-  ArrowUpRight,
-  ArrowDownRight,
+  Plus, Search, MapPin, Bed, Bath, Maximize, MoreVertical, Edit, Trash2, Eye,
+  Home, Grid, List as ListIcon, SlidersHorizontal, X, Building, Car,
+  TrendingUp, DollarSign, CheckCircle, Tag
 } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
+  DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { ConfirmDeleteModal } from '@/components/modals/ConfirmDeleteModal';
 import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
+  Popover, PopoverContent, PopoverTrigger,
+} from '@/components/ui/popover';
+import {
+  Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
+} from '@/components/ui/select';
+import { Label } from '@/components/ui/label';
+import {
+  Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-} from "@/components/ui/dialog";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Label } from '@/components/ui/label';
+  Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter,
+} from '@/components/ui/dialog';
+import { useToast } from '@/hooks/use-toast';
 
-const imoveis = [
+// ─── Data ───────────────────────────────────────────────────────────
+const imoveisData = [
   {
     id: '1',
     titulo: 'Apartamento 2 Quartos - Centro',
@@ -86,33 +38,15 @@ const imoveis = [
     endereco: 'Rua das Flores, 123 - Centro, São Paulo',
     valor: 'R$ 350.000',
     valorAluguel: 'R$ 1.800',
-    quartos: 2,
-    banheiros: 1,
-    vagas: 1,
-    area: '65m²',
-    areaUtil: '58m²',
-    status: 'Disponível',
-    finalidade: 'Venda e Aluguel',
-    anoConstrucao: 2015,
-    andar: 3,
-    totalAndares: 8,
-    condominio: 'R$ 320',
-    iptu: 'R$ 85',
-    imagem: 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=400&h=300&fit=crop',
-    imagens: [
-      'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=400&h=300&fit=crop',
-      'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=400&h=300&fit=crop',
-    ],
-    proprietario: 'João Silva',
-    corretorResponsavel: 'Maria Santos',
-    dataCadastro: '15/01/2025',
-    visualizacoes: 245,
-    contatos: 18,
-    favoritos: 12,
+    quartos: 2, banheiros: 1, vagas: 1, area: '65m²',
+    status: 'Disponível', finalidade: 'Venda e Aluguel',
+    proprietario: 'João Silva', corretorResponsavel: 'Maria Santos',
+    dataCadastro: '15/01/2025', visualizacoes: 245, contatos: 18, favoritos: 12,
     destaque: true,
     caracteristicas: ['Sacada', 'Armários embutidos', 'Portaria 24h', 'Elevador'],
-    proximidades: ['Metro 500m', 'Supermercado 100m', 'Escola 200m', 'Hospital 800m'],
     descricao: 'Excelente apartamento no centro de São Paulo, próximo a comércio e transporte público.',
+    imagem: 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=600&h=400&fit=crop',
+    condominio: 'R$ 320', iptu: 'R$ 85',
   },
   {
     id: '2',
@@ -121,32 +55,15 @@ const imoveis = [
     endereco: 'Av. Brasil, 456 - Jardim América, Santos',
     valor: 'R$ 580.000',
     valorAluguel: 'R$ 2.500',
-    quartos: 3,
-    banheiros: 2,
-    vagas: 2,
-    area: '120m²',
-    areaUtil: '110m²',
-    areaTerreno: '250m²',
-    status: 'Disponível',
-    finalidade: 'Venda',
-    anoConstrucao: 2010,
-    condominio: 'N/A',
-    iptu: 'R$ 180',
-    imagem: 'https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=400&h=300&fit=crop',
-    imagens: [
-      'https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=400&h=300&fit=crop',
-      'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=400&h=300&fit=crop',
-    ],
-    proprietario: 'Carlos Oliveira',
-    corretorResponsavel: 'Pedro Santos',
-    dataCadastro: '10/01/2025',
-    visualizacoes: 189,
-    contatos: 14,
-    favoritos: 8,
+    quartos: 3, banheiros: 2, vagas: 2, area: '120m²',
+    status: 'Disponível', finalidade: 'Venda',
+    proprietario: 'Carlos Oliveira', corretorResponsavel: 'Pedro Santos',
+    dataCadastro: '10/01/2025', visualizacoes: 189, contatos: 14, favoritos: 8,
     destaque: false,
     caracteristicas: ['Piscina', 'Jardim', 'Garagem coberta', 'Churrasqueira'],
-    proximidades: ['Praia 1km', 'Shopping 2km', 'Escola 500m', 'Hospital 1,5km'],
     descricao: 'Casa espaçosa em bairro nobre, perfeita para famílias.',
+    imagem: 'https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=600&h=400&fit=crop',
+    condominio: 'N/A', iptu: 'R$ 180',
   },
   {
     id: '3',
@@ -154,11 +71,12 @@ const imoveis = [
     tipo: 'Cobertura',
     endereco: 'Av. Atlântica, 789 - Beira Mar, Guarujá',
     valor: 'R$ 1.200.000',
-    quartos: 4,
-    banheiros: 3,
-    area: '200m²',
-    status: 'Reservado',
-    imagem: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=400&h=300&fit=crop',
+    quartos: 4, banheiros: 3, vagas: 3, area: '200m²',
+    status: 'Reservado', finalidade: 'Venda',
+    proprietario: 'Fernando Lima', corretorResponsavel: 'Ana Rocha',
+    dataCadastro: '05/01/2025', visualizacoes: 412, contatos: 32, favoritos: 27,
+    imagem: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=600&h=400&fit=crop',
+    condominio: 'R$ 1.200', iptu: 'R$ 450',
   },
   {
     id: '4',
@@ -166,11 +84,12 @@ const imoveis = [
     tipo: 'Apartamento',
     endereco: 'Rua Domingos de Morais, 321 - Vila Mariana, São Paulo',
     valor: 'R$ 450.000',
-    quartos: 3,
-    banheiros: 2,
-    area: '85m²',
-    status: 'Disponível',
-    imagem: 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=400&h=300&fit=crop',
+    quartos: 3, banheiros: 2, vagas: 1, area: '85m²',
+    status: 'Disponível', finalidade: 'Venda e Aluguel',
+    proprietario: 'Roberto Alves', corretorResponsavel: 'Maria Santos',
+    dataCadastro: '08/01/2025', visualizacoes: 156, contatos: 9, favoritos: 5,
+    imagem: 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=600&h=400&fit=crop',
+    condominio: 'R$ 480', iptu: 'R$ 120',
   },
   {
     id: '5',
@@ -178,11 +97,12 @@ const imoveis = [
     tipo: 'Casa',
     endereco: 'Rua das Acácias, 100 - Alphaville, Barueri',
     valor: 'R$ 720.000',
-    quartos: 3,
-    banheiros: 3,
-    area: '180m²',
-    status: 'Vendido',
-    imagem: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=400&h=300&fit=crop',
+    quartos: 3, banheiros: 3, vagas: 2, area: '180m²',
+    status: 'Vendido', finalidade: 'Venda',
+    proprietario: 'Patricia Nunes', corretorResponsavel: 'Pedro Santos',
+    dataCadastro: '02/01/2025', visualizacoes: 320, contatos: 28, favoritos: 19,
+    imagem: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=600&h=400&fit=crop',
+    condominio: 'R$ 900', iptu: 'R$ 210',
   },
   {
     id: '6',
@@ -190,122 +110,110 @@ const imoveis = [
     tipo: 'Apartamento',
     endereco: 'Av. Giovanni Gronchi, 555 - Morumbi, São Paulo',
     valor: 'R$ 650.000',
-    quartos: 4,
-    banheiros: 2,
-    area: '110m²',
-    status: 'Disponível',
-    imagem: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=400&h=300&fit=crop',
+    quartos: 4, banheiros: 2, vagas: 2, area: '110m²',
+    status: 'Disponível', finalidade: 'Venda',
+    proprietario: 'Marcos Ferreira', corretorResponsavel: 'Ana Rocha',
+    dataCadastro: '12/01/2025', visualizacoes: 201, contatos: 16, favoritos: 11,
+    imagem: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=600&h=400&fit=crop',
+    condominio: 'R$ 650', iptu: 'R$ 175',
   },
 ];
 
+// ─── Helpers ─────────────────────────────────────────────────────────
+const statusBadge: Record<string, string> = {
+  'Disponível': 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-300',
+  'Reservado': 'bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300',
+  'Vendido': 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300',
+  'Alugado': 'bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-300',
+};
+
+const TIPO_FILTERS = ['Todos', 'Apartamento', 'Casa', 'Cobertura', 'Studio', 'Comercial'];
+const STATUS_FILTERS = ['Todos', 'Disponível', 'Reservado', 'Vendido', 'Alugado'];
+
+interface Filters {
+  tipo: string; status: string; quartos: string;
+  banheiros: string; valorMin: string; valorMax: string;
+}
+const defaultFilters: Filters = { tipo: '', status: '', quartos: '', banheiros: '', valorMin: '', valorMax: '' };
+
+// ─── Component ────────────────────────────────────────────────────────
 export function Imoveis() {
   const navigate = useNavigate();
+  const { toast } = useToast();
+  const [imoveis, setImoveis] = useState<any[]>(imoveisData);
   const [searchTerm, setSearchTerm] = useState('');
-  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [viewMode, setViewMode] = useState<'grid' | 'table'>('grid');
+  const [tipoFilter, setTipoFilter] = useState('Todos');
+  const [filters, setFilters] = useState<Filters>(defaultFilters);
+  const [filterOpen, setFilterOpen] = useState(false);
+  const [sheetOpen, setSheetOpen] = useState(false);
+  const [selectedImovel, setSelectedImovel] = useState<any>(null);
+  const [deleteOpen, setDeleteOpen] = useState(false);
   const [imovelToDelete, setImovelToDelete] = useState<any>(null);
-  const [filterModalOpen, setFilterModalOpen] = useState(false);
-  const [filters, setFilters] = useState({
-    tipo: '',
-    status: '',
-    quartos: '',
-    banheiros: '',
-    valorMin: '',
-    valorMax: ''
-  });
 
-  const handleEdit = (imovel: any) => {
-    navigate(`/imoveis/editar/${imovel.id}`);
-  };
 
-  const handleDelete = (imovel: any) => {
-    setImovelToDelete(imovel);
-    setDeleteModalOpen(true);
-  };
+  // ── Handlers
+  const openSheet = (i: any) => navigate(`/imoveis/detalhes/${i.id}`);
 
+  const handleDelete = (i: any) => { setImovelToDelete(i); setDeleteOpen(true); };
   const confirmDelete = () => {
-    // In a real app, this would call an API to delete the imovel
-    console.log('Deleting imovel:', imovelToDelete);
-    setDeleteModalOpen(false);
-    setImovelToDelete(null);
-    // Here you would also update the imoveis array to remove the deleted item
-  };
-
-  const handleViewDetails = (imovel: any) => {
-    navigate(`/imoveis/detalhes/${imovel.id}`);
+    setImoveis(prev => prev.filter(i => i.id !== imovelToDelete?.id));
+    toast({ title: 'Imóvel excluído', description: `${imovelToDelete?.titulo} foi removido.`, variant: 'success' });
+    setDeleteOpen(false); setImovelToDelete(null);
   };
 
 
-  const handleOpenLink = (imovelId: string) => {
-    const url = `https://seusite.com/imovel/${imovelId}`;
-    window.open(url, '_blank');
-  };
 
-  const copyToClipboard = (text: string) => {
-    navigator.clipboard.writeText(text);
-  };
+  const clearAdvanced = () => setFilters(defaultFilters);
+  const hasActive = Object.values(filters).some(v => v !== '');
 
-  const filteredImoveis = imoveis.filter((imovel) => {
-    // Filtro de busca
-    const matchesSearch = searchTerm === '' || 
-      imovel.titulo.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      imovel.endereco.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      imovel.tipo.toLowerCase().includes(searchTerm.toLowerCase());
-    
-    // Filtros específicos
-    const matchesTipo = filters.tipo === '' || imovel.tipo === filters.tipo;
-    const matchesStatus = filters.status === '' || imovel.status === filters.status;
-    const matchesQuartos = filters.quartos === '' || imovel.quartos === parseInt(filters.quartos);
-    const matchesBanheiros = filters.banheiros === '' || imovel.banheiros === parseInt(filters.banheiros);
-    
-    // Filtro de valor
-    let matchesValor = true;
-    if (filters.valorMin || filters.valorMax) {
-      const valorNumerico = parseInt(imovel.valor.replace(/[^0-9]/g, ''));
-      if (filters.valorMin) {
-        matchesValor = valorNumerico >= parseInt(filters.valorMin.replace(/[^0-9]/g, ''));
+  // ── Filtering (fully defensive — never crashes on undefined fields)
+  const filteredImoveis = imoveis.filter(i => {
+    try {
+      const q = searchTerm.toLowerCase();
+      const matchSearch = !q ||
+        (i.titulo ?? '').toLowerCase().includes(q) ||
+        (i.endereco ?? '').toLowerCase().includes(q) ||
+        (i.tipo ?? '').toLowerCase().includes(q);
+      const matchTipo = tipoFilter === 'Todos' || i.tipo === tipoFilter;
+      const matchAdvTipo = !filters.tipo || i.tipo === filters.tipo;
+      const matchStatus = !filters.status || i.status === filters.status;
+      const matchQ = !filters.quartos || (i.quartos ?? 0) >= parseInt(filters.quartos);
+      const matchB = !filters.banheiros || (i.banheiros ?? 0) >= parseInt(filters.banheiros);
+      let matchVal = true;
+      if (filters.valorMin || filters.valorMax) {
+        const rawVal = (i.valor ?? '').replace(/[^0-9]/g, '');
+        const v = rawVal ? parseInt(rawVal) : 0;
+        if (filters.valorMin) {
+          const min = parseInt((filters.valorMin).replace(/[^0-9]/g, '') || '0');
+          matchVal = v >= min;
+        }
+        if (filters.valorMax) {
+          const max = parseInt((filters.valorMax).replace(/[^0-9]/g, '') || '9999999999');
+          matchVal = matchVal && v <= max;
+        }
       }
-      if (filters.valorMax) {
-        matchesValor = matchesValor && valorNumerico <= parseInt(filters.valorMax.replace(/[^0-9]/g, ''));
-      }
+      return matchSearch && matchTipo && matchAdvTipo && matchStatus && matchQ && matchB && matchVal;
+    } catch {
+      return true; // never hide an item due to a filter crash
     }
-    
-    return matchesSearch && matchesTipo && matchesStatus && matchesQuartos && matchesBanheiros && matchesValor;
   });
 
-  const handleClearFilters = () => {
-    setFilters({
-      tipo: '',
-      status: '',
-      quartos: '',
-      banheiros: '',
-      valorMin: '',
-      valorMax: ''
-    });
-  };
 
-  const hasActiveFilters = Object.values(filters).some(value => value !== '');
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'Disponível':
-        return 'border-success text-success';
-      case 'Reservado':
-        return 'border-warning text-warning';
-      case 'Vendido':
-        return 'border-muted-foreground text-muted-foreground';
-      default:
-        return '';
-    }
-  };
+  // ── KPIs
+  const total = imoveis.length;
+  const disponiveis = imoveis.filter(i => i.status === 'Disponível').length;
+  const reservados = imoveis.filter(i => i.status === 'Reservado').length;
+  const vendidos = imoveis.filter(i => i.status === 'Vendido').length;
 
   return (
-    <div className="space-y-6 animate-fade-in">
-      <Breadcrumb>
+    <div className="space-y-5 animate-fade-in">
+      {/* ── Breadcrumb ── */}
+      <Breadcrumb className="mb-4 sm:mb-6">
         <BreadcrumbList>
           <BreadcrumbItem>
             <BreadcrumbLink href="/" className="flex items-center gap-1">
-              <Home className="h-4 w-4" />
-              Dashboard
+              <Home className="h-4 w-4" /> Dashboard
             </BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
@@ -315,249 +223,383 @@ export function Imoveis() {
         </BreadcrumbList>
       </Breadcrumb>
 
-      <div className="flex items-center justify-between">
+      {/* ── Header ── */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold">Imóveis</h1>
-          <p className="text-muted-foreground">Gerencie seu portfólio de imóveis</p>
+          <h1 className="text-2xl sm:text-3xl font-black tracking-tight">Imóveis</h1>
+          <p className="text-sm text-muted-foreground font-medium mt-0.5">Gerencie seu portfólio de imóveis</p>
         </div>
-        <Button className="gap-2" onClick={() => navigate('/imoveis/cadastrar')}>
-          <Plus className="h-4 w-4" />
-          Cadastrar Imóvel
-        </Button>
+        <div className="flex items-center gap-2 shrink-0">
+          {/* View toggle */}
+          <div className="flex items-center bg-muted rounded-lg p-1">
+            <Button variant={viewMode === 'grid' ? 'secondary' : 'ghost'} size="sm" className="h-8 w-8 p-0" onClick={() => setViewMode('grid')}>
+              <Grid className="h-4 w-4" />
+            </Button>
+            <Button variant={viewMode === 'table' ? 'secondary' : 'ghost'} size="sm" className="h-8 w-8 p-0" onClick={() => setViewMode('table')}>
+              <ListIcon className="h-4 w-4" />
+            </Button>
+          </div>
+          <Button className="gap-2 shadow-lg shadow-primary/20 h-9 text-sm" onClick={() => navigate('/imoveis/cadastrar')}>
+            <Plus className="h-4 w-4" /> Novo Imóvel
+          </Button>
+        </div>
       </div>
 
-      <Card>
-        <CardHeader>
-          <div className="flex flex-col sm:flex-row gap-4">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+      {/* ── KPI Row ── */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        {[
+          { label: 'Total', val: total, icon: Building, color: 'text-primary', bg: 'bg-primary/10' },
+          { label: 'Disponíveis', val: disponiveis, icon: CheckCircle, color: 'text-emerald-600', bg: 'bg-emerald-50 dark:bg-emerald-950/40' },
+          { label: 'Reservados', val: reservados, icon: Tag, color: 'text-amber-600', bg: 'bg-amber-50 dark:bg-amber-950/40' },
+          { label: 'Vendidos', val: vendidos, icon: TrendingUp, color: 'text-slate-600', bg: 'bg-slate-100 dark:bg-slate-800/60' },
+        ].map(({ label, val, icon: Icon, color, bg }) => (
+          <Card key={label} className="border-none shadow-sm">
+            <CardContent className="p-4 flex items-center gap-3">
+              <div className={cn('h-10 w-10 rounded-xl flex items-center justify-center shrink-0', bg)}>
+                <Icon className={cn('h-5 w-5', color)} />
+              </div>
+              <div>
+                <p className="text-2xl font-black leading-none">{val}</p>
+                <p className="text-xs text-muted-foreground font-semibold mt-0.5">{label}</p>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+
+      {/* ── Search + Filters ── */}
+      <Card className="border-none shadow-sm bg-muted/30">
+        <CardContent className="p-3 sm:p-4 space-y-3">
+          {/* Row 1 — Search + Popover button */}
+          <div className="flex gap-2">
+            <div className="relative flex-1 group">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
               <Input
                 placeholder="Buscar por título, endereço ou tipo..."
                 value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10"
+                onChange={e => setSearchTerm(e.target.value)}
+                className="pl-10 bg-background border-none shadow-sm h-9"
               />
             </div>
-            <Button variant="outline" className="gap-2" onClick={() => setFilterModalOpen(true)}>
-              <Filter className="h-4 w-4" />
-              Filtros
-              {hasActiveFilters && (
-                <span className="bg-primary text-primary-foreground rounded-full px-2 py-0.5 text-xs">
-                  {Object.values(filters).filter(value => value !== '').length}
-                </span>
-              )}
-            </Button>
-          </div>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {filteredImoveis.map((imovel, index) => (
-              <Card
-                key={imovel.id}
-                className="group overflow-hidden hover:shadow-xl transition-all duration-300 cursor-pointer border-0 shadow-md hover:-translate-y-1"
-                style={{ animationDelay: `${index * 50}ms` }}
-                onClick={() => handleViewDetails(imovel)}
-              >
-                <div className="relative h-48 overflow-hidden">
-                  <img
-                    src={imovel.imagem}
-                    alt={imovel.titulo}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
-                  <div className="absolute top-3 right-3">
-                    <Badge variant="outline" className={`bg-background/90 backdrop-blur-sm ${getStatusColor(imovel.status)}`}>
-                      {imovel.status}
-                    </Badge>
-                  </div>
-                  <div className="absolute top-3 left-3">
-                    <Badge className="bg-primary/90 text-primary-foreground backdrop-blur-sm">
-                      {imovel.tipo}
-                    </Badge>
-                  </div>
-                  {/* Overlay gradient on hover */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
+            <Popover open={filterOpen} onOpenChange={setFilterOpen}>
+              <PopoverTrigger asChild>
+                <Button variant="outline" size="sm" className={cn('gap-2 h-9 px-3 text-xs font-semibold shrink-0 relative', hasActive && 'border-primary/50 text-primary bg-primary/5')}>
+                  <SlidersHorizontal className="h-3.5 w-3.5" />
+                  <span className="hidden sm:inline">Filtros</span>
+                  {hasActive && (
+                    <span className="absolute -top-1.5 -right-1.5 h-4 w-4 rounded-full bg-primary text-primary-foreground text-[9px] font-black flex items-center justify-center">
+                      {Object.values(filters).filter(v => v !== '').length}
+                    </span>
+                  )}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent align="end" className="w-80 p-4 space-y-4">
+                <div className="flex items-center justify-between">
+                  <p className="text-sm font-black">Filtros Avançados</p>
+                  {hasActive && (
+                    <button onClick={clearAdvanced} className="text-xs text-muted-foreground hover:text-destructive flex items-center gap-1 transition-colors">
+                      <X className="h-3 w-3" /> Limpar
+                    </button>
+                  )}
                 </div>
-                <CardContent className="p-5">
-                  <div className="flex items-start justify-between mb-3">
-                    <h3 className="font-semibold text-lg line-clamp-1 group-hover:text-primary transition-colors duration-200">
-                      {imovel.titulo}
-                    </h3>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button 
-                          variant="ghost" 
-                          size="icon" 
-                          className="h-8 w-8 flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200 hover:bg-muted"
-                          onClick={(e) => e.stopPropagation()}
-                        >
-                          <MoreVertical className="h-4 w-4" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end" className="w-48">
-                        <DropdownMenuItem onClick={(e) => { e.stopPropagation(); handleViewDetails(imovel); }} className="gap-2">
-                          <Eye className="h-4 w-4" />
-                          Ver detalhes
-                        </DropdownMenuItem>
-                        <DropdownMenuItem onClick={(e) => { e.stopPropagation(); handleEdit(imovel); }} className="gap-2">
-                          <Edit className="h-4 w-4" />
-                          Editar
-                        </DropdownMenuItem>
-                        <DropdownMenuItem className="text-destructive gap-2" onClick={(e) => { e.stopPropagation(); handleDelete(imovel); }}>
-                          <Trash2 className="h-4 w-4" />
-                          Excluir
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </div>
-                  
-                  <div className="flex items-start gap-2 text-sm text-muted-foreground mb-4">
-                    <MapPin className="h-4 w-4 flex-shrink-0 mt-0.5 text-primary" />
-                    <span className="line-clamp-2">{imovel.endereco}</span>
-                  </div>
-                  
-                  <div className="text-2xl font-bold text-primary mb-4">{imovel.valor}</div>
-                  
-                  <div className="flex items-center justify-between text-sm">
-                    <div className="flex items-center gap-1.5 px-2.5 py-1.5 bg-muted/50 rounded-lg border border-border/50">
-                      <Bed className="h-3.5 w-3.5 text-primary" />
-                      <span className="font-medium text-foreground">{imovel.quartos}</span>
-                    </div>
-                    <div className="flex items-center gap-1.5 px-2.5 py-1.5 bg-muted/50 rounded-lg border border-border/50">
-                      <Bath className="h-3.5 w-3.5 text-primary" />
-                      <span className="font-medium text-foreground">{imovel.banheiros}</span>
-                    </div>
-                    <div className="flex items-center gap-1.5 px-2.5 py-1.5 bg-muted/50 rounded-lg border border-border/50">
-                      <Maximize className="h-3.5 w-3.5 text-primary" />
-                      <span className="font-medium text-foreground">{imovel.area}</span>
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="space-y-1.5 col-span-2">
+                    <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Status</Label>
+                    <div className="flex flex-wrap gap-1.5">
+                      {STATUS_FILTERS.map(s => (
+                        <button key={s} onClick={() => setFilters(f => ({ ...f, status: s === 'Todos' ? '' : s }))}
+                          className={cn('px-2.5 py-1 rounded-md text-xs font-semibold border transition-all',
+                            (s === 'Todos' ? !filters.status : filters.status === s)
+                              ? 'bg-primary text-primary-foreground border-primary'
+                              : 'bg-background border-border hover:border-primary/40')}>
+                          {s}
+                        </button>
+                      ))}
                     </div>
                   </div>
-                </CardContent>
-              </Card>
-            ))}
+                  <div className="space-y-1.5">
+                    <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Quartos (mín.)</Label>
+                    <Select value={filters.quartos} onValueChange={v => setFilters(f => ({ ...f, quartos: v }))}>
+                      <SelectTrigger className="h-8 text-xs"><SelectValue placeholder="Qualquer" /></SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="">Qualquer</SelectItem>
+                        {['1', '2', '3', '4'].map(v => <SelectItem key={v} value={v}>{v}+</SelectItem>)}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Banheiros (mín.)</Label>
+                    <Select value={filters.banheiros} onValueChange={v => setFilters(f => ({ ...f, banheiros: v }))}>
+                      <SelectTrigger className="h-8 text-xs"><SelectValue placeholder="Qualquer" /></SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="">Qualquer</SelectItem>
+                        {['1', '2', '3'].map(v => <SelectItem key={v} value={v}>{v}+</SelectItem>)}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Valor mín.</Label>
+                    <Input placeholder="R$ 0" value={filters.valorMin} onChange={e => setFilters(f => ({ ...f, valorMin: e.target.value }))} className="h-8 text-xs" />
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Valor máx.</Label>
+                    <Input placeholder="R$ ∞" value={filters.valorMax} onChange={e => setFilters(f => ({ ...f, valorMax: e.target.value }))} className="h-8 text-xs" />
+                  </div>
+                </div>
+                <Button size="sm" className="w-full" onClick={() => setFilterOpen(false)}>
+                  Ver {filteredImoveis.length} resultado{filteredImoveis.length !== 1 ? 's' : ''}
+                </Button>
+              </PopoverContent>
+            </Popover>
           </div>
+
+          {/* Row 2 — Tipo quick chips (horizontal scroll, no wrap) */}
+          <div className="flex items-center gap-2 overflow-x-auto pb-0.5 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            {TIPO_FILTERS.map(t => (
+              <button
+                key={t}
+                onClick={() => setTipoFilter(t)}
+                className={cn(
+                  'px-3 py-1.5 rounded-lg text-[11px] font-bold uppercase tracking-wide transition-all border shrink-0',
+                  tipoFilter === t
+                    ? 'bg-primary text-primary-foreground border-primary shadow-sm'
+                    : 'bg-background text-muted-foreground border-border hover:border-primary/40 hover:text-foreground'
+                )}
+              >
+                {t}
+              </button>
+            ))}
+            {hasActive && (
+              <button onClick={clearAdvanced} className="shrink-0 ml-2 text-xs text-muted-foreground hover:text-destructive flex items-center gap-1 transition-colors whitespace-nowrap">
+                <X className="h-3 w-3" /> Limpar filtros
+              </button>
+            )}
+          </div>
+
+          {filteredImoveis.length < imoveis.length && (
+            <p className="text-xs text-muted-foreground">
+              Mostrando <span className="font-bold text-foreground">{filteredImoveis.length}</span> de {imoveis.length} imóveis
+            </p>
+          )}
         </CardContent>
       </Card>
 
-      <ConfirmDeleteModal
-        open={deleteModalOpen}
-        onClose={() => {
-          setDeleteModalOpen(false);
-          setImovelToDelete(null);
-        }}
-        onConfirm={confirmDelete}
-        title="Excluir Imóvel"
-        description={`Tem certeza que deseja excluir o imóvel "${imovelToDelete?.titulo || ''}"? Esta ação não pode ser desfeita.`}
-      />
+      {/* ── Content ── */}
+      <AnimatePresence mode="wait">
+        {viewMode === 'grid' ? (
+          <motion.div key="grid" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.2 }}>
+            {filteredImoveis.length === 0 ? (
+              <EmptyState />
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-5">
+                {filteredImoveis.map(imovel => (
+                  <Card
+                    key={imovel.id}
+                    className="group overflow-hidden hover:shadow-xl transition-all duration-300 cursor-pointer border-border/50 shadow-none hover:-translate-y-1 relative"
+                    onClick={() => openSheet(imovel)}
+                  >
+                    {/* Image */}
+                    <div className="relative h-48 sm:h-52 overflow-hidden">
+                      {imovel.imagem ? (
+                        <img
+                          src={imovel.imagem}
+                          alt={imovel.titulo}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        />
+                      ) : (
+                        <div className="w-full h-full bg-muted flex items-center justify-center">
+                          <Home className="h-12 w-12 text-muted-foreground/20" />
+                        </div>
+                      )}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
 
-      {/* Modal de Filtros */}
-      <Dialog open={filterModalOpen} onOpenChange={setFilterModalOpen}>
-        <DialogContent className="max-w-md">
+                      {/* Status badge */}
+                      <div className="absolute top-3 right-3">
+                        <span className={cn('inline-flex px-2 py-0.5 rounded-md text-[10px] font-bold shadow-sm backdrop-blur-sm', statusBadge[imovel.status] ?? statusBadge['Disponível'])}>
+                          {imovel.status}
+                        </span>
+                      </div>
+
+                      {/* Tipo badge */}
+                      <div className="absolute top-3 left-3">
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-white/90 dark:bg-black/60 backdrop-blur-sm text-[10px] font-bold text-foreground shadow-sm">
+                          <Building className="h-2.5 w-2.5" /> {imovel.tipo}
+                        </span>
+                      </div>
+
+                      {/* Price */}
+                      <div className="absolute bottom-3 left-4">
+                        <div className="text-white font-black text-xl drop-shadow">{imovel.valor}</div>
+                        {imovel.valorAluguel && (
+                          <div className="text-white/75 text-[11px] font-semibold">{imovel.valorAluguel}/mês</div>
+                        )}
+                      </div>
+
+                      {/* Dropdown */}
+                      <div className="absolute bottom-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="sm" className="h-7 w-7 p-0 bg-black/30 hover:bg-black/50 backdrop-blur-sm text-white border-none" onClick={e => e.stopPropagation()}>
+                              <MoreVertical className="h-3.5 w-3.5" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end">
+                            <DropdownMenuItem onClick={(e) => { e.stopPropagation(); openSheet(imovel); }} className="gap-2"><Eye className="h-4 w-4" /> Ver detalhes</DropdownMenuItem>
+                            <DropdownMenuItem onClick={(e) => { e.stopPropagation(); openSheet(imovel); }} className="gap-2"><Edit className="h-4 w-4" /> Editar</DropdownMenuItem>
+                            <DropdownMenuItem onClick={(e) => { e.stopPropagation(); handleDelete(imovel); }} className="text-destructive gap-2"><Trash2 className="h-4 w-4" /> Excluir</DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </div>
+                    </div>
+
+                    <CardContent className="p-4">
+                      <h3 className="font-black text-base tracking-tight group-hover:text-primary transition-colors line-clamp-1 mb-1">
+                        {imovel.titulo}
+                      </h3>
+                      <p className="flex items-center gap-1 text-xs text-muted-foreground font-medium mb-4 line-clamp-1">
+                        <MapPin className="h-3 w-3 shrink-0 text-primary/60" />
+                        {imovel.endereco.split(',').slice(1).join(',').trim() || imovel.endereco}
+                      </p>
+
+                      {/* Stats */}
+                      <div className="grid grid-cols-3 gap-2 border-t border-border/40 pt-3">
+                        {[
+                          { icon: Bed, val: imovel.quartos ?? '—', label: 'Quartos' },
+                          { icon: Bath, val: imovel.banheiros ?? '—', label: 'Banheiros' },
+                          { icon: Maximize, val: imovel.area ?? '—', label: 'Área' },
+                        ].map(({ icon: Icon, val, label }) => (
+                          <div key={label} className="flex flex-col items-center gap-0.5">
+                            <Icon className="h-3.5 w-3.5 text-primary/50" />
+                            <span className="text-xs font-black">{val}</span>
+                            <span className="text-[9px] font-semibold text-muted-foreground uppercase tracking-wide">{label}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            )}
+          </motion.div>
+        ) : (
+          /* ── TABLE VIEW ── */
+          <motion.div key="table" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.2 }} className="bg-card border border-border rounded-xl overflow-hidden shadow-sm">
+            {filteredImoveis.length === 0 ? (
+              <EmptyState />
+            ) : (
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow className="hover:bg-transparent">
+                      <TableHead className="font-bold pl-5 min-w-[220px]">Imóvel</TableHead>
+                      <TableHead className="font-bold hidden sm:table-cell">Tipo</TableHead>
+                      <TableHead className="font-bold hidden md:table-cell">Detalhes</TableHead>
+                      <TableHead className="font-bold">Valor</TableHead>
+                      <TableHead className="font-bold">Status</TableHead>
+                      <TableHead className="w-[50px]" />
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {filteredImoveis.map(imovel => (
+                      <TableRow key={imovel.id} className="group cursor-pointer hover:bg-muted/30 transition-colors" onClick={() => openSheet(imovel)}>
+                        <TableCell className="pl-5 py-3">
+                          <div className="flex items-center gap-3">
+                            <div className="h-12 w-16 rounded-lg overflow-hidden shrink-0 shadow-sm">
+                              {imovel.imagem ? (
+                                <img src={imovel.imagem} alt="" className="w-full h-full object-cover" />
+                              ) : (
+                                <div className="w-full h-full bg-muted flex items-center justify-center">
+                                  <Home className="h-5 w-5 text-muted-foreground/30" />
+                                </div>
+                              )}
+                            </div>
+                            <div className="min-w-0">
+                              <div className="font-semibold text-sm group-hover:text-primary transition-colors truncate">{imovel.titulo}</div>
+                              <div className="flex items-center gap-1 text-xs text-muted-foreground mt-0.5 truncate">
+                                <MapPin className="h-2.5 w-2.5 shrink-0" /> {imovel.endereco.split('-')[0]?.trim()}
+                              </div>
+                            </div>
+                          </div>
+                        </TableCell>
+                        <TableCell className="hidden sm:table-cell">
+                          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-primary/8 text-primary text-xs font-semibold border border-primary/15">
+                            <Building className="h-3 w-3" /> {imovel.tipo}
+                          </span>
+                        </TableCell>
+                        <TableCell className="hidden md:table-cell">
+                          <div className="flex items-center gap-3 text-xs text-muted-foreground font-medium">
+                            {imovel.quartos !== undefined && <span className="flex items-center gap-1"><Bed className="h-3 w-3 text-primary/50" />{imovel.quartos}</span>}
+                            {imovel.banheiros !== undefined && <span className="flex items-center gap-1"><Bath className="h-3 w-3 text-primary/50" />{imovel.banheiros}</span>}
+                            {imovel.area && <span className="flex items-center gap-1"><Maximize className="h-3 w-3 text-primary/50" />{imovel.area}</span>}
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <div className="font-black text-sm text-primary">{imovel.valor}</div>
+                          {imovel.valorAluguel && <div className="text-[10px] text-muted-foreground font-medium">{imovel.valorAluguel}/mês</div>}
+                        </TableCell>
+                        <TableCell>
+                          <span className={cn('inline-flex px-2 py-0.5 rounded-md text-[10px] font-bold', statusBadge[imovel.status] ?? statusBadge['Disponível'])}>
+                            {imovel.status}
+                          </span>
+                        </TableCell>
+                        <TableCell className="pr-4">
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button variant="ghost" size="sm" className="h-8 w-8 p-0 opacity-0 group-hover:opacity-100 transition-opacity" onClick={e => e.stopPropagation()}>
+                                <MoreVertical className="h-4 w-4" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              <DropdownMenuItem onClick={(e) => { e.stopPropagation(); openSheet(imovel); }} className="gap-2"><Eye className="h-4 w-4" /> Ver detalhes</DropdownMenuItem>
+                              <DropdownMenuItem onClick={(e) => { e.stopPropagation(); navigate(`/imoveis/editar/${imovel.id}`); }} className="gap-2"><Edit className="h-4 w-4" /> Editar</DropdownMenuItem>
+                              <DropdownMenuItem onClick={(e) => { e.stopPropagation(); handleDelete(imovel); }} className="text-destructive gap-2"><Trash2 className="h-4 w-4" /> Excluir</DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            )}
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* ── Delete Confirm ── */}
+      <Dialog open={deleteOpen} onOpenChange={setDeleteOpen}>
+        <DialogContent className="sm:max-w-[420px]">
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
-              <Filter className="h-5 w-5" />
-              Filtros de Imóveis
-            </DialogTitle>
+            <DialogTitle>Excluir imóvel</DialogTitle>
+            <DialogDescription>
+              Tem certeza que deseja excluir <strong>"{imovelToDelete?.titulo}"</strong>? Esta ação não pode ser desfeita.
+            </DialogDescription>
           </DialogHeader>
-          <div className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="tipo">Tipo</Label>
-                <Select value={filters.tipo} onValueChange={(value) => setFilters({...filters, tipo: value})}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Todos" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="">Todos</SelectItem>
-                    <SelectItem value="Apartamento">Apartamento</SelectItem>
-                    <SelectItem value="Casa">Casa</SelectItem>
-                    <SelectItem value="Cobertura">Cobertura</SelectItem>
-                    <SelectItem value="Studio">Studio</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              
-              <div>
-                <Label htmlFor="status">Status</Label>
-                <Select value={filters.status} onValueChange={(value) => setFilters({...filters, status: value})}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Todos" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="">Todos</SelectItem>
-                    <SelectItem value="Disponível">Disponível</SelectItem>
-                    <SelectItem value="Reservado">Reservado</SelectItem>
-                    <SelectItem value="Vendido">Vendido</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="quartos">Quartos</Label>
-                <Select value={filters.quartos} onValueChange={(value) => setFilters({...filters, quartos: value})}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Qualquer" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="">Qualquer</SelectItem>
-                    <SelectItem value="1">1</SelectItem>
-                    <SelectItem value="2">2</SelectItem>
-                    <SelectItem value="3">3</SelectItem>
-                    <SelectItem value="4">4+</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              
-              <div>
-                <Label htmlFor="banheiros">Banheiros</Label>
-                <Select value={filters.banheiros} onValueChange={(value) => setFilters({...filters, banheiros: value})}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Qualquer" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="">Qualquer</SelectItem>
-                    <SelectItem value="1">1</SelectItem>
-                    <SelectItem value="2">2</SelectItem>
-                    <SelectItem value="3">3+</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="valorMin">Valor Mínimo</Label>
-                <Input
-                  id="valorMin"
-                  placeholder="R$ 0"
-                  value={filters.valorMin}
-                  onChange={(e) => setFilters({...filters, valorMin: e.target.value})}
-                />
-              </div>
-              
-              <div>
-                <Label htmlFor="valorMax">Valor Máximo</Label>
-                <Input
-                  id="valorMax"
-                  placeholder="R$ 0"
-                  value={filters.valorMax}
-                  onChange={(e) => setFilters({...filters, valorMax: e.target.value})}
-                />
-              </div>
-            </div>
-          </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={handleClearFilters} className="gap-2">
-              <X className="h-4 w-4" />
-              Limpar Filtros
-            </Button>
-            <Button onClick={() => setFilterModalOpen(false)}>
-              Aplicar Filtros
+          <DialogFooter className="gap-2 flex-col sm:flex-row">
+            <Button variant="outline" className="w-full sm:w-auto" onClick={() => setDeleteOpen(false)}>Cancelar</Button>
+            <Button variant="destructive" className="w-full sm:w-auto gap-2" onClick={confirmDelete}>
+              <Trash2 className="h-4 w-4" /> Excluir
             </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+
+    </div>
+  );
+}
+
+function EmptyState() {
+  const navigate = useNavigate();
+  return (
+    <div className="py-20 text-center border-2 border-dashed border-border/40 rounded-2xl px-4">
+      <Building className="h-12 w-12 text-muted-foreground/20 mx-auto mb-3" />
+      <p className="text-foreground font-semibold">Nenhum imóvel encontrado</p>
+      <p className="text-sm text-muted-foreground mt-1">Ajuste os filtros ou cadastre um novo imóvel.</p>
+      <Button className="mt-4 gap-2 shadow-lg shadow-primary/20" onClick={() => navigate('/imoveis/cadastrar')}>
+        <Plus className="h-4 w-4" /> Novo Imóvel
+      </Button>
     </div>
   );
 }

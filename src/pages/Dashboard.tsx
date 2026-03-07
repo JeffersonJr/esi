@@ -4,9 +4,25 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
-import { ArrowUpRight, ArrowDownRight, ArrowRight, Users, Home, Calendar, TrendingUp, AlertTriangle, Clock, FileText, Settings, DollarSign, Target, Activity, Zap, Star, Sun, Moon, Save } from 'lucide-react';
+import { ArrowUpRight, ArrowDownRight, ArrowRight, Users, Home, Calendar as CalendarIcon, TrendingUp, AlertTriangle, Clock, FileText, Settings, DollarSign, Target, Activity, Zap, Star, Sun, Moon, Save, Plus, MessageSquare, Briefcase, BarChart3, MapPin } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, Legend } from 'recharts';
+import { motion, AnimatePresence } from 'framer-motion';
+import { format, subDays, startOfDay, endOfDay, isWithinInterval } from 'date-fns';
+import { DateRange } from 'react-day-picker';
+import { ptBR } from 'date-fns/locale';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Calendar } from '@/components/ui/calendar';
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
 
 // Mock data for properties
 const mockProperties = [
@@ -90,18 +106,32 @@ const recentActivities = [
 ];
 
 const funilData = [
-  { stage: 'Novo Lead', count: 45, color: 'bg-primary-400' },
-  { stage: 'Contato Realizado', count: 32, color: 'bg-primary-500' },
-  { stage: 'Visita Agendada', count: 24, color: 'bg-primary-600' },
-  { stage: 'Proposta Enviada', count: 18, color: 'bg-primary-700' },
-  { stage: 'Negociação', count: 12, color: 'bg-primary-800' },
-  { stage: 'Fechado', count: 8, color: 'bg-primary-900' },
+  { stage: 'Novo Lead', count: 45, color: 'hsl(var(--primary))' },
+  { stage: 'Contato Realizado', count: 32, color: 'hsl(var(--primary) / 0.8)' },
+  { stage: 'Visita Agendada', count: 24, color: 'hsl(var(--primary) / 0.6)' },
+  { stage: 'Proposta Enviada', count: 18, color: 'hsl(var(--primary) / 0.4)' },
+  { stage: 'Negociação', count: 12, color: 'hsl(var(--primary) / 0.3)' },
+  { stage: 'Fechado', count: 8, color: 'hsl(var(--primary) / 0.2)' },
+];
+
+const chartData = [
+  { name: 'Seg', leads: 12, metas: 10 },
+  { name: 'Ter', leads: 19, metas: 15 },
+  { name: 'Qua', leads: 15, metas: 18 },
+  { name: 'Qui', leads: 22, metas: 20 },
+  { name: 'Sex', leads: 30, metas: 25 },
+  { name: 'Sáb', leads: 25, metas: 22 },
+  { name: 'Dom', leads: 18, metas: 15 },
 ];
 
 export function Dashboard() {
   const { toast } = useToast();
   const navigate = useNavigate();
   const [daysThreshold, setDaysThreshold] = useState(30);
+  const [dateRange, setDateRange] = useState<DateRange | undefined>({
+    from: subDays(new Date(), 30),
+    to: new Date(),
+  });
   const [initialDaysThreshold, setInitialDaysThreshold] = useState(30);
   const [hasChanges, setHasChanges] = useState(false);
   const propertyMetrics = calculateMetrics(daysThreshold);
@@ -112,19 +142,19 @@ export function Dashboard() {
 
   // Navigation functions for strategic metrics
   const handleConversionRateClick = () => {
-    navigate('/relatorios/conversao');
+    navigate('/analytics');
   };
 
   const handleAverageTicketClick = () => {
-    navigate('/relatorios/ticket-medio');
+    navigate('/analytics');
   };
 
   const handleQualifiedLeadsClick = () => {
-    navigate('/leads?filter=qualified');
+    navigate('/funil?filter=qualified');
   };
 
   const handleMonthlyTargetClick = () => {
-    navigate('/relatorios/meta-mensal');
+    navigate('/analytics');
   };
 
   const newMetrics = [
@@ -187,7 +217,7 @@ export function Dashboard() {
   };
 
   const handleOutdatedPropertiesClick = () => {
-    handleNavigateToProperties('outdated');
+    handleNavigateToProperties('old-prices');
   };
 
   const handleDraftsClick = () => {
@@ -195,7 +225,7 @@ export function Dashboard() {
   };
 
   const handleIncompleteActiveClick = () => {
-    handleNavigateToProperties('incomplete-active');
+    handleNavigateToProperties('no-photos');
   };
 
   // Detect changes in daysThreshold
@@ -242,7 +272,7 @@ export function Dashboard() {
       value: '24',
       change: '-3.1%',
       trend: 'down',
-      icon: Calendar,
+      icon: CalendarIcon,
       color: 'text-warning',
     },
     {
@@ -289,70 +319,314 @@ export function Dashboard() {
   ];
 
   return (
-    <div className="space-y-6 animate-fade-in">
+    <div className="space-y-8 animate-in fade-in duration-700">
+      <Breadcrumb className="mb-4 sm:mb-6">
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbPage className="flex items-center gap-1">
+              <Home className="h-4 w-4" /> Dashboard
+            </BreadcrumbPage>
+          </BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
       {/* Welcome Section */}
-      <Card className="bg-gradient-to-r from-primary to-primary-600 text-primary-foreground">
-        <CardContent className="p-6">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div>
-              <div className="flex items-center gap-2 mb-2">
-                <GreetingIcon className="h-6 w-6" />
-                <h1 className="text-xl md:text-2xl font-bold">{greeting.text}, {userName}!</h1>
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        <Card className="relative overflow-hidden border-none shadow-xl bg-gradient-to-br from-primary via-primary/90 to-primary-700 text-primary-foreground group">
+          <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10 pointer-events-none" />
+          <div className="absolute -right-20 -top-20 w-64 h-64 bg-white/10 rounded-full blur-3xl group-hover:bg-white/20 transition-all duration-700" />
+
+          <CardContent className="p-8 relative z-10">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+              <div className="space-y-4">
+                <div className="flex items-center gap-3">
+                  <div className="p-3 bg-white/15 backdrop-blur-md rounded-2xl border border-white/20 shadow-inner">
+                    <GreetingIcon className="h-8 w-8 text-white drop-shadow-sm" />
+                  </div>
+                  <div>
+                    <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight drop-shadow-sm">
+                      {greeting.text}, <span className="text-secondary-foreground">{userName}</span>!
+                    </h1>
+                    <p className="text-sm md:text-base text-white/80 font-medium">
+                      Impulsione sua produtividade hoje. Você possui <span className="font-bold text-white">2 tarefas urgentes</span> aguardando.
+                    </p>
+                  </div>
+                </div>
               </div>
-              <p className="text-sm md:text-base text-primary-foreground/90">
-                Aqui está o resumo do seu dia e as métricas mais importantes do seu negócio.
-              </p>
+
+              <div className="flex flex-col items-start md:items-end gap-1">
+                <div className="px-4 py-2 bg-black/10 backdrop-blur-lg border border-white/10 rounded-xl flex items-center gap-3">
+                  <div className="flex flex-col items-end">
+                    <span className="text-xl md:text-2xl font-bold tracking-tight">
+                      {new Date().toLocaleDateString('pt-BR', { day: 'numeric', month: 'long' })}
+                    </span>
+                    <span className="text-xs uppercase tracking-widest text-white/60 font-bold">
+                      {new Date().toLocaleDateString('pt-BR', { weekday: 'long' })}
+                    </span>
+                  </div>
+                  <div className="w-px h-8 bg-white/20" />
+                  <div className="text-2xl font-mono font-bold tracking-tighter">
+                    {new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
+                  </div>
+                </div>
+              </div>
             </div>
-            <div className="text-left md:text-right">
-              <div className="text-xl md:text-3xl font-bold">
-                {new Date().toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' })}
-              </div>
-              <div className="text-sm md:text-base text-primary-foreground/80">
-                {new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
-              </div>
+          </CardContent>
+        </Card>
+      </motion.div>
+
+      {/* Quick Actions */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        {[
+          { label: 'Novo Lead', icon: Plus, color: 'bg-primary', action: () => navigate('/funil?action=novo-lead') },
+          { label: 'Cadastrar Imóvel', icon: Home, color: 'bg-accent', action: () => navigate('/imoveis/cadastrar') },
+          { label: 'Agendar Visita', icon: CalendarIcon, color: 'bg-success', action: () => navigate('/agenda?action=nova-atividade') },
+          { label: 'Nova Proposta', icon: FileText, color: 'bg-warning', action: () => navigate('/funil?action=nova-proposta') },
+        ].map((item, idx) => (
+          <motion.button
+            key={item.label}
+            whileHover={{ scale: 1.05, y: -5 }}
+            whileTap={{ scale: 0.95 }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 * idx }}
+            onClick={item.action}
+            className={cn(
+              "flex items-center gap-3 p-4 rounded-2xl shadow-sm border border-border bg-card hover:shadow-md transition-all group",
+              "hover:border-primary/50"
+            )}
+          >
+            <div className={cn("p-2 rounded-xl text-white group-hover:scale-110 transition-transform", item.color)}>
+              <item.icon className="h-5 w-5" />
             </div>
-          </div>
-        </CardContent>
-      </Card>
+            <span className="font-semibold text-sm text-foreground">{item.label}</span>
+          </motion.button>
+        ))}
+      </div>
 
       {/* Day Summary */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Zap className="h-5 w-5" />
+      <Card className="border-none shadow-lg bg-card/50 backdrop-blur-sm overflow-hidden">
+        <div className="h-1 bg-gradient-to-r from-primary via-accent to-success opacity-50" />
+        <CardHeader className="pb-2">
+          <CardTitle className="text-lg flex items-center gap-3 font-bold text-foreground/90">
+            <div className="p-1.5 bg-primary/10 rounded-lg">
+              <Zap className="h-5 w-5 text-primary" />
+            </div>
             Resumo do Dia
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-            <div className="text-center p-4 bg-primary/10 rounded-lg">
-              <div className="text-2xl font-bold text-primary">{daySummary.newLeads}</div>
-              <div className="text-sm text-primary">Novos Leads</div>
-            </div>
-            <div className="text-center p-4 bg-success/10 rounded-lg">
-              <div className="text-2xl font-bold text-success">{daySummary.scheduledVisits}</div>
-              <div className="text-sm text-success">Visitas</div>
-            </div>
-            <div className="text-center p-4 bg-warning/10 rounded-lg">
-              <div className="text-2xl font-bold text-warning">{daySummary.pendingProposals}</div>
-              <div className="text-sm text-warning">Propostas</div>
-            </div>
-            <div className="text-center p-4 bg-destructive/10 rounded-lg">
-              <div className="text-2xl font-bold text-destructive">{daySummary.urgentTasks}</div>
-              <div className="text-sm text-destructive">Urgentes</div>
-            </div>
-            <div className="text-center p-4 bg-accent/10 rounded-lg">
-              <div className="text-2xl font-bold text-accent">
-                {new Intl.NumberFormat('pt-BR', {
-                  style: 'currency',
-                  currency: 'BRL',
-                }).format(daySummary.todayRevenue)}
-              </div>
-              <div className="text-sm text-accent">Faturamento</div>
-            </div>
+            {[
+              { label: 'Novos Leads', value: daySummary.newLeads, color: 'text-primary', bg: 'bg-primary/5' },
+              { label: 'Visitas', value: daySummary.scheduledVisits, color: 'text-success', bg: 'bg-success/5' },
+              { label: 'Propostas', value: daySummary.pendingProposals, color: 'text-warning', bg: 'bg-warning/5' },
+              { label: 'Urgentes', value: daySummary.urgentTasks, color: 'text-destructive', bg: 'bg-destructive/5' },
+              { label: 'Faturamento', value: new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(daySummary.todayRevenue), color: 'text-accent', bg: 'bg-accent/5', wide: true },
+            ].map((item, idx) => (
+              <motion.div
+                key={item.label}
+                whileHover={{ y: -5 }}
+                className={cn(
+                  "flex flex-col items-center justify-center p-6 rounded-2xl border border-transparent hover:border-border transition-all group",
+                  item.bg
+                )}
+              >
+                <div className={cn("text-3xl font-extrabold tracking-tighter group-hover:scale-110 transition-transform", item.color)}>
+                  {item.value}
+                </div>
+                <div className="text-xs font-bold uppercase tracking-wider text-muted-foreground mt-1">
+                  {item.label}
+                </div>
+              </motion.div>
+            ))}
           </div>
         </CardContent>
       </Card>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Performance Chart */}
+        <Card className="lg:col-span-2 border-none shadow-lg">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <BarChart3 className="h-5 w-5 text-primary" />
+              Tendência de Leads
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="pt-4">
+            <div className="h-[300px] w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={chartData}>
+                  <defs>
+                    <linearGradient id="colorLeads" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.3} />
+                      <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0} />
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--muted-foreground) / 0.2)" />
+                  <XAxis
+                    dataKey="name"
+                    axisLine={false}
+                    tickLine={false}
+                    tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 12 }}
+                  />
+                  <YAxis
+                    axisLine={false}
+                    tickLine={false}
+                    tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 12 }}
+                  />
+                  <Tooltip
+                    contentStyle={{
+                      borderRadius: '12px',
+                      border: 'none',
+                      boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)',
+                      backgroundColor: 'hsl(var(--card))'
+                    }}
+                  />
+                  <Area
+                    type="monotone"
+                    dataKey="leads"
+                    stroke="hsl(var(--primary))"
+                    strokeWidth={4}
+                    fillOpacity={1}
+                    fill="url(#colorLeads)"
+                  />
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Sales Funnel with Visual improvements */}
+        <Card className="border-none shadow-lg">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <TrendingUp className="h-5 w-5 text-primary" />
+              Conversão do Funil
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              {funilData.map((stage, index) => {
+                const percentage = (stage.count / funilData[0].count) * 100;
+                return (
+                  <div key={stage.stage} className="relative group">
+                    <div className="flex justify-between items-center mb-1 text-xs font-bold text-muted-foreground uppercase tracking-tight">
+                      <span>{stage.stage}</span>
+                      <span>{stage.count}</span>
+                    </div>
+                    <div className="h-4 bg-muted/50 rounded-lg overflow-hidden flex items-center">
+                      <motion.div
+                        initial={{ width: 0 }}
+                        animate={{ width: `${percentage}%` }}
+                        transition={{ duration: 1, delay: index * 0.1 }}
+                        className="h-full rounded-lg transition-all opacity-80 group-hover:opacity-100"
+                        style={{ backgroundColor: stage.color }}
+                      />
+                      {index > 0 && (
+                        <div className="absolute -left-1 text-[10px] font-bold text-primary">
+                          ↓
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Strategic Goals & Overview */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <Card className="lg:col-span-2 border-none shadow-lg bg-gradient-to-br from-slate-900 to-slate-800 text-white overflow-hidden relative">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-primary/20 rounded-full blur-3xl -mr-32 -mt-32" />
+          <CardHeader>
+            <CardTitle className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Target className="h-5 w-5 text-primary" />
+                Meta de Vendas Mensal
+              </div>
+              <Badge className="bg-primary/20 text-primary border-none text-[10px] font-bold">DEZEMBRO 2024</Badge>
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-8 relative z-10">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <div className="space-y-2">
+                <p className="text-xs font-bold uppercase tracking-widest text-slate-400">Progresso Atual</p>
+                <div className="text-4xl font-black tracking-tighter">
+                  {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(2450000)}
+                </div>
+                <div className="flex items-center gap-2 text-success text-sm font-bold">
+                  <TrendingUp className="h-4 w-4" />
+                  +15.4% em relação ao mês anterior
+                </div>
+              </div>
+
+              <div className="col-span-2 space-y-4">
+                <div className="flex justify-between items-end mb-1">
+                  <div className="space-y-1">
+                    <p className="text-xs font-bold uppercase tracking-widest text-slate-400">Objetivo: R$ 3.000.000</p>
+                    <div className="h-2 w-full bg-slate-700/50 rounded-full overflow-hidden">
+                      <motion.div
+                        initial={{ width: 0 }}
+                        animate={{ width: '82%' }}
+                        transition={{ duration: 1.5, ease: "easeOut" }}
+                        className="h-full bg-gradient-to-r from-primary to-accent rounded-full relative"
+                      >
+                        <div className="absolute top-0 right-0 h-full w-2 bg-white/20 animate-pulse" />
+                      </motion.div>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <span className="text-3xl font-black text-primary">82%</span>
+                  </div>
+                </div>
+                <p className="text-[11px] text-slate-400 font-medium">Faltam apenas <span className="text-white font-bold">R$ 550.000</span> para bater a meta. Faltam 12 dias.</p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-4 border-t border-white/10">
+              {[
+                { label: 'Ticket Médio', value: 'R$ 612k', icon: DollarSign },
+                { label: 'Conversão', value: '3.4%', icon: Activity },
+                { label: 'Visitas/Mês', value: '42', icon: MapPin },
+                { label: 'Novos Contratos', value: '8', icon: Briefcase },
+              ].map((stat) => (
+                <div key={stat.label} className="space-y-1">
+                  <p className="text-[9px] font-black uppercase tracking-widest text-slate-500">{stat.label}</p>
+                  <div className="flex items-center gap-2">
+                    <stat.icon className="h-3.5 w-3.5 text-primary" />
+                    <span className="text-sm font-bold">{stat.value}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="border-none shadow-lg bg-card overflow-hidden">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-black uppercase tracking-widest flex items-center gap-2">
+              <Star className="h-4 w-4 text-warning fill-warning" />
+              Insight da IA
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="p-4 rounded-2xl bg-amber-50 dark:bg-amber-950/20 border border-amber-100 dark:border-amber-900/30">
+              <p className="text-xs font-bold text-amber-900 dark:text-amber-200 leading-relaxed italic">
+                &quot;Detectamos um aumento de 25% na procura por imóveis na Vila Mariana. Recomendamos focar suas campanhas nesta região.&quot;
+              </p>
+            </div>
+            <Button variant="outline" className="w-full text-[10px] font-black uppercase tracking-widest h-10 rounded-xl border-amber-200 text-amber-700 hover:bg-amber-50">
+              Ver Análise Completa
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
 
       {/* New Strategic Metrics */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -371,7 +645,7 @@ export function Dashboard() {
                   <CardTitle className="text-sm font-medium text-muted-foreground">
                     {metric.title}
                   </CardTitle>
-                  <div className="text-xs text-muted-foreground/70">
+                  <div className="text-xs text-muted-foreground">
                     {metric.period}
                   </div>
                 </div>
@@ -454,34 +728,90 @@ export function Dashboard() {
         })}
       </div>
 
-      {/* Property Metrics Section */}
       <Card>
         <CardHeader>
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <CardTitle>Métricas de Imóveis</CardTitle>
-            <div className="flex items-center gap-2">
-              <Label htmlFor="daysThreshold" className="text-sm text-muted-foreground">
-                Últimos
-              </Label>
-              <Input
-                id="daysThreshold"
-                type="number"
-                min="1"
-                max="365"
-                value={daysThreshold}
-                onChange={(e) => handleDaysThresholdChange(Number(e.target.value))}
-                className="w-20"
-              />
-              <Label htmlFor="daysThreshold" className="text-sm text-muted-foreground">
-                dias
-              </Label>
+            <div className="flex flex-wrap items-center gap-3">
+              <div className="flex bg-muted p-1 rounded-lg">
+                {[30, 60, 90].map((period) => (
+                  <Button
+                    key={period}
+                    variant={daysThreshold === period ? "default" : "ghost"}
+                    size="sm"
+                    className="h-8 text-xs px-3"
+                    onClick={() => handleDaysThresholdChange(period)}
+                  >
+                    {period} dias
+                  </Button>
+                ))}
+
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant={![30, 60, 90].includes(daysThreshold) ? "default" : "ghost"}
+                      size="sm"
+                      className="h-8 text-xs px-4 gap-2 min-w-[120px]"
+                    >
+                      <CalendarIcon className="h-3.5 w-3.5" />
+                      {![30, 60, 90].includes(daysThreshold) && dateRange?.from ? (
+                        dateRange.to ? (
+                          <>
+                            {format(dateRange.from, "dd/MM")} - {format(dateRange.to, "dd/MM")}
+                          </>
+                        ) : (
+                          format(dateRange.from, "dd/MM")
+                        )
+                      ) : (
+                        "Personalizado"
+                      )}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="end">
+                    <Calendar
+                      initialFocus
+                      mode="range"
+                      defaultMonth={dateRange?.from}
+                      selected={dateRange}
+                      onSelect={(range) => {
+                        setDateRange(range);
+                        if (range?.from && range?.to) {
+                          const diff = Math.ceil((range.to.getTime() - range.from.getTime()) / (1000 * 60 * 60 * 24));
+                          setDaysThreshold(diff);
+                          setHasChanges(true);
+                        }
+                      }}
+                      numberOfMonths={2}
+                      locale={ptBR}
+                    />
+                  </PopoverContent>
+                </Popover>
+              </div>
+
+              {![30, 60, 90].includes(daysThreshold) && (
+                <div className="flex items-center gap-2 animate-in fade-in slide-in-from-right-2">
+                  <Input
+                    id="daysThreshold"
+                    type="number"
+                    min="1"
+                    max="365"
+                    value={daysThreshold}
+                    onChange={(e) => handleDaysThresholdChange(Number(e.target.value))}
+                    className="w-20 h-8"
+                  />
+                  <Label htmlFor="daysThreshold" className="text-sm text-muted-foreground whitespace-nowrap">
+                    dias
+                  </Label>
+                </div>
+              )}
+
               <Button
                 variant="outline"
                 size="sm"
                 onClick={handleSave}
                 disabled={!hasChanges}
                 className={cn(
-                  "transition-all duration-200",
+                  "h-8 transition-all duration-200",
                   hasChanges
                     ? "bg-primary text-primary-foreground hover:bg-primary/90"
                     : "opacity-50 cursor-not-allowed"
@@ -532,121 +862,63 @@ export function Dashboard() {
         </CardContent>
       </Card>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <Card className="lg:col-span-2">
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <CardTitle>Funil de Vendas</CardTitle>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => navigate('/funil-vendas')}
-                className="text-primary hover:text-primary/80 transition-colors"
-              >
-                <span className="text-sm">Ver detalhes</span>
-                <ArrowRight className="h-3 w-3 ml-1" />
-              </Button>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {funilData.map((stage, index) => {
-                const previousCount = index > 0 ? funilData[index - 1].count : stage.count;
-                const conversionRate = index > 0 ? ((stage.count / previousCount) * 100).toFixed(1) : null;
 
-                return (
-                  <div key={stage.stage} className="animate-slide-up" style={{ animationDelay: `${index * 100}ms` }}>
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm font-medium">{stage.stage}</span>
-                      <div className="flex items-center gap-2">
-                        <span className="text-sm text-muted-foreground">{stage.count} leads</span>
-                        {conversionRate && (
-                          <span className={cn(
-                            "text-xs px-2 py-1 rounded",
-                            parseFloat(conversionRate) >= 70 ? "bg-green-100 text-green-700" :
-                              parseFloat(conversionRate) >= 50 ? "bg-yellow-100 text-yellow-700" :
-                                "bg-red-100 text-red-700"
-                          )}>
-                            {conversionRate}%
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                    <div className="h-3 bg-muted rounded-full overflow-hidden">
-                      <div
-                        className={cn('h-full transition-all duration-500', stage.color)}
-                        style={{ width: `${(stage.count / funilData[0].count) * 100}%` }}
-                      />
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <CardTitle>Atividades Recentes</CardTitle>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => navigate('/funil-vendas?filter=ultimos-30-dias')}
-                className="text-primary hover:text-primary/80 transition-colors"
+      <Card>
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <CardTitle>Atividades Recentes</CardTitle>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => navigate('/funil')}
+              className="text-primary hover:text-primary/80 transition-colors"
+            >
+              <span className="text-sm">Ver detalhes</span>
+              <ArrowRight className="h-3 w-3 ml-1" />
+            </Button>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            {recentActivities.map((activity, index) => (
+              <div
+                key={activity.id}
+                className="flex gap-3 pb-4 border-b border-border last:border-0 last:pb-0 animate-slide-in cursor-pointer hover:bg-gray-50 rounded-lg p-2 transition-colors"
+                style={{ animationDelay: `${index * 100}ms` }}
+                onClick={() => {
+                  // Navigate to specific page based on activity type
+                  if (activity.type === 'lead' || activity.description.includes('lead')) {
+                    // Navigate to specific lead in funnel
+                    navigate(`/leads/${activity.id}`);
+                  } else if (activity.type === 'visita') {
+                    navigate('/agenda');
+                  } else if (activity.type === 'proposta') {
+                    navigate('/funil?filter=proposals');
+                  } else if (activity.type === 'negocio') {
+                    navigate('/funil?filter=closed');
+                  } else {
+                    navigate('/agenda');
+                  }
+                }}
               >
-                <span className="text-sm">Ver detalhes</span>
-                <ArrowRight className="h-3 w-3 ml-1" />
-              </Button>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {recentActivities.map((activity, index) => (
-                <div
-                  key={activity.id}
-                  className="flex gap-3 pb-4 border-b border-border last:border-0 last:pb-0 animate-slide-in cursor-pointer hover:bg-gray-50 rounded-lg p-2 transition-colors"
-                  style={{ animationDelay: `${index * 100}ms` }}
-                  onClick={() => {
-                    // Navigate to specific page based on activity type
-                    if (activity.type === 'lead' || activity.description.includes('lead')) {
-                      // Extract lead name from description and navigate to specific lead
-                      const leadName = activity.description.split(':')[1]?.split('-')[0]?.trim();
-                      if (leadName) {
-                        navigate(`/leads/${leadName.toLowerCase().replace(/\s+/g, '-')}`);
-                      } else {
-                        navigate('/leads');
-                      }
-                    } else if (activity.type === 'visita') {
-                      navigate('/visitas');
-                    } else if (activity.type === 'proposta') {
-                      navigate('/propostas');
-                    } else if (activity.type === 'negocio') {
-                      navigate('/negocios');
-                    } else {
-                      navigate('/atividades');
-                    }
-                  }}
-                >
-                  <div className="flex-1">
-                    <p className="text-sm font-medium">{activity.description}</p>
-                    <div className="flex items-center gap-2 mt-1">
-                      <p className="text-xs text-muted-foreground">{activity.time}</p>
-                      {activity.priority === 'urgent' && (
-                        <span className="px-2 py-0.5 text-xs bg-red-100 text-red-700 rounded">Urgente</span>
-                      )}
-                      {activity.priority === 'high' && (
-                        <span className="px-2 py-0.5 text-xs bg-orange-100 text-orange-700 rounded">Alta</span>
-                      )}
-                    </div>
+                <div className="flex-1">
+                  <p className="text-sm font-medium">{activity.description}</p>
+                  <div className="flex items-center gap-2 mt-1">
+                    <p className="text-xs text-muted-foreground">{activity.time}</p>
+                    {activity.priority === 'urgent' && (
+                      <span className="px-2 py-0.5 text-xs bg-red-100 text-red-700 rounded">Urgente</span>
+                    )}
+                    {activity.priority === 'high' && (
+                      <span className="px-2 py-0.5 text-xs bg-orange-100 text-orange-700 rounded">Alta</span>
+                    )}
                   </div>
-                  <ArrowRight className="h-4 w-4 text-muted-foreground" />
                 </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+                <ArrowRight className="h-4 w-4 text-muted-foreground" />
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }

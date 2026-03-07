@@ -27,7 +27,6 @@ import { Button } from '@/components/ui/button';
 
 const menuItems = [
   { icon: LayoutDashboard, label: 'Dashboard', path: '/' },
-  { icon: Palette, label: 'Design System', path: '/design-system' },
   { icon: Kanban, label: 'Funil de Vendas', path: '/funil' },
   { icon: Users, label: 'Contatos', path: '/contatos' },
   { icon: Home, label: 'Imóveis', path: '/imoveis' },

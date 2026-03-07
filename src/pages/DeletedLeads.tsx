@@ -20,6 +20,14 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
+import {
   Search,
   Trash2,
   RotateCcw,
@@ -30,7 +38,8 @@ import {
   MoreHorizontal,
   Filter,
   X,
-  Settings
+  Settings,
+  Home
 } from 'lucide-react';
 import { DeletedLead, DeleteReason } from '@/types/lead';
 import { useDeletedLeadsCleanup } from '@/hooks/use-deleted-leads-cleanup';
@@ -108,7 +117,7 @@ export function DeletedLeads() {
   const filteredLeads = useMemo(() => {
     return deletedLeads.filter(lead => {
       if (lead.restoredAt) return false; // Não mostrar já restaurados
-      
+
       const searchLower = searchTerm.toLowerCase();
       return (
         lead.originalLead.name.toLowerCase().includes(searchLower) ||
@@ -149,7 +158,7 @@ export function DeletedLeads() {
         restoredBy: 'currentUser' // Em produção: ID do usuário atual
       };
 
-      setDeletedLeads(prev => 
+      setDeletedLeads(prev =>
         prev.map(l => l.id === lead.id ? updatedLead : l)
       );
 
@@ -194,6 +203,24 @@ export function DeletedLeads() {
 
   return (
     <div className="space-y-6 animate-fade-in">
+      <Breadcrumb>
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink href="/" className="flex items-center gap-1">
+              <Home className="h-4 w-4" /> Dashboard
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbLink href="/funil">Funil de Vendas</BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbPage>Lixeira</BreadcrumbPage>
+          </BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
+
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl md:text-3xl font-bold">Lixeira de Leads</h1>
@@ -201,7 +228,7 @@ export function DeletedLeads() {
             Leads excluídos que podem ser restaurados em até 30 dias
           </p>
         </div>
-        
+
         <div className="flex gap-2">
           <div className="relative flex-1 max-w-xs">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -228,7 +255,7 @@ export function DeletedLeads() {
             </div>
           </CardContent>
         </Card>
-        
+
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-2">
@@ -240,7 +267,7 @@ export function DeletedLeads() {
             </div>
           </CardContent>
         </Card>
-        
+
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-2">
@@ -259,9 +286,9 @@ export function DeletedLeads() {
               <Settings className="h-5 w-5 text-blue-500" />
               <div>
                 <p className="text-sm text-muted-foreground">Limpeza Manual</p>
-                <Button 
-                  size="sm" 
-                  variant="outline" 
+                <Button
+                  size="sm"
+                  variant="outline"
                   onClick={() => {
                     const deleted = manualCleanup();
                     if (deleted > 0) {
@@ -302,7 +329,7 @@ export function DeletedLeads() {
           filteredLeads.map((deletedLead) => {
             const daysRemaining = getDaysRemaining(deletedLead.deletedAt);
             const isExpiringSoon = daysRemaining <= 7;
-            
+
             return (
               <Card key={deletedLead.id} className="hover:shadow-md transition-shadow">
                 <CardHeader className="pb-3">
@@ -327,7 +354,7 @@ export function DeletedLeads() {
                         </div>
                       </div>
                     </div>
-                    
+
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
                         <Button variant="ghost" size="icon">
@@ -359,7 +386,7 @@ export function DeletedLeads() {
                     </DropdownMenu>
                   </div>
                 </CardHeader>
-                
+
                 <CardContent className="space-y-3">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                     <div className="space-y-2">
@@ -389,7 +416,7 @@ export function DeletedLeads() {
                       </div>
                     </div>
                   </div>
-                  
+
                   <div className="pt-2 border-t">
                     <div className="flex items-center gap-2">
                       <span className="text-sm text-muted-foreground">Motivo da exclusão:</span>
@@ -420,7 +447,7 @@ export function DeletedLeads() {
             <Button variant="outline" onClick={() => setRestoreDialogOpen(false)}>
               Cancelar
             </Button>
-            <Button 
+            <Button
               onClick={() => selectedLead && handleRestoreLead(selectedLead)}
               className="gap-2"
             >
@@ -445,7 +472,7 @@ export function DeletedLeads() {
             <Button variant="outline" onClick={() => setPermanentDeleteDialogOpen(false)}>
               Cancelar
             </Button>
-            <Button 
+            <Button
               variant="destructive"
               onClick={() => selectedLead && handlePermanentDelete(selectedLead)}
               className="gap-2"

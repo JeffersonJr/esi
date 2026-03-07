@@ -28,7 +28,7 @@ import { GestaoLocacoes } from './pages/GestaoLocacoes';
 import { GestaoFinanceira } from './pages/GestaoFinanceira';
 import { GestaoSolicitacoes } from './pages/GestaoSolicitacoes';
 import { SistemaVistoria } from './pages/SistemaVistoria';
-import DesignSystem from './pages/DesignSystem';
+import NotFound from './pages/NotFound';
 import { Toaster } from './components/ui/toaster';
 import { ThemeProvider } from './contexts/theme-context';
 
@@ -43,7 +43,6 @@ function App() {
           <Route path="/redefinir-senha" element={<RedefinirSenha />} />
           <Route path="/" element={<DashboardLayout />}>
             <Route index element={<Dashboard />} />
-            <Route path="design-system" element={<DesignSystem />} />
             <Route path="funil" element={<Funil />} />
             <Route path="lixeira" element={<DeletedLeads />} />
             <Route path="leads/:id" element={<LeadDetalhes />} />
@@ -69,7 +68,7 @@ function App() {
             <Route path="configuracoes" element={<Configuracoes />} />
             <Route path="perfil" element={<Perfil />} />
           </Route>
-          <Route path="*" element={<Navigate to="/" replace />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
         <Toaster />
       </Router>

@@ -147,14 +147,14 @@ export function LeadFormModal({ open, onClose, onSubmit, lead }: LeadFormModalPr
     if (type === 'email') {
       setFormData(prev => ({
         ...prev,
-        emails: prev.emails.map((email, i) => 
+        emails: prev.emails.map((email, i) =>
           i === index ? { ...email, value } : email
         )
       }));
     } else {
       setFormData(prev => ({
         ...prev,
-        phones: prev.phones.map((phone, i) => 
+        phones: prev.phones.map((phone, i) =>
           i === index ? { ...phone, value } : phone
         )
       }));
@@ -179,14 +179,14 @@ export function LeadFormModal({ open, onClose, onSubmit, lead }: LeadFormModalPr
     if (type === 'email') {
       setFormData(prev => ({
         ...prev,
-        emails: prev.emails.map((email, i) => 
+        emails: prev.emails.map((email, i) =>
           ({ ...email, isPrimary: i === index })
         )
       }));
     } else {
       setFormData(prev => ({
         ...prev,
-        phones: prev.phones.map((phone, i) => 
+        phones: prev.phones.map((phone, i) =>
           ({ ...phone, isPrimary: i === index })
         )
       }));
@@ -210,13 +210,13 @@ export function LeadFormModal({ open, onClose, onSubmit, lead }: LeadFormModalPr
     }
   };
 
-  const { 
-    showModal: unsavedModalOpen, 
-    showUnsavedChangesModal, 
-    hideUnsavedChangesModal, 
-    confirmNavigation, 
-    handleConfirm: confirmUnsaved, 
-    handleCancel: cancelUnsaved 
+  const {
+    showModal: unsavedModalOpen,
+    showUnsavedChangesModal,
+    hideUnsavedChangesModal,
+    confirmNavigation,
+    handleConfirm: confirmUnsaved,
+    handleCancel: cancelUnsaved
   } = useUnsavedChanges({
     hasUnsavedChanges,
     message: 'Você tem alterações não salvas. Tem certeza que deseja sair?'
@@ -237,9 +237,11 @@ export function LeadFormModal({ open, onClose, onSubmit, lead }: LeadFormModalPr
         <DialogContent className="sm:max-w-[1200px] max-h-[90vh] overflow-y-auto">
           <form onSubmit={handleSubmit}>
             <DialogHeader>
-              <DialogTitle>{lead ? 'Editar Lead' : 'Novo Lead'}</DialogTitle>
+              <DialogTitle>
+                {formData.id ? 'Editar Lead' : (formData.stage === 'proposal' ? 'Nova Proposta' : 'Novo Lead')}
+              </DialogTitle>
             </DialogHeader>
-            
+
             <div className="grid grid-cols-12 gap-6 py-6">
               {/* Colunas 1-7: Informações do Cliente e Perfil de Busca */}
               <div className="col-span-7 space-y-8">
@@ -434,7 +436,7 @@ export function LeadFormModal({ open, onClose, onSubmit, lead }: LeadFormModalPr
                         className="border-slate-200"
                       />
                     </div>
-                    
+
                     <div className="space-y-2">
                       <Label htmlFor="location">Localização</Label>
                       <Input
@@ -510,7 +512,7 @@ export function LeadFormModal({ open, onClose, onSubmit, lead }: LeadFormModalPr
               {/* Colunas 8-12: Classificação (Box lateral) */}
               <div className="col-span-5 bg-slate-50 rounded-lg p-6 space-y-6">
                 <h3 className="text-slate-400 uppercase text-xs font-medium mb-4">Classificação</h3>
-                
+
                 {/* Responsável */}
                 <div className="space-y-2">
                   <Label htmlFor="assignedTo">Responsável</Label>
@@ -531,7 +533,7 @@ export function LeadFormModal({ open, onClose, onSubmit, lead }: LeadFormModalPr
                   <div className="flex items-center justify-between">
                     <Label className="text-sm font-medium">Tags</Label>
                   </div>
-                  
+
                   <TagManager
                     selectedTags={formData.tags || []}
                     availableTags={availableTags}
@@ -568,7 +570,7 @@ export function LeadFormModal({ open, onClose, onSubmit, lead }: LeadFormModalPr
           </form>
         </DialogContent>
       </Dialog>
-      
+
       <UnsavedChangesModal
         open={showModal}
         onConfirm={handleConfirm}

@@ -36,7 +36,7 @@ export function DashboardLayout() {
             </Button>
           }
         />
-        <main className="flex-1 overflow-y-auto bg-muted/30 p-4 md:p-6">
+        <main className="flex-1 overflow-y-auto bg-muted/30 p-6 md:p-8 lg:p-10">
           <Outlet />
         </main>
       </div>

@@ -1,420 +1,532 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Plus, Search, Filter, Mail, Phone, MapPin, MoreVertical, User, Edit, Trash2, Home } from 'lucide-react';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { Badge } from '@/components/ui/badge';
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
+  Plus, Search, Mail, Phone, MapPin, MoreVertical,
+  User, Edit, Trash2, Home, Grid, List as ListIcon,
+  Users, UserCheck, Building, X, SlidersHorizontal
+} from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { cn } from '@/lib/utils';
+import {
+  Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from '@/components/ui/table';
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
+  DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
+  Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList,
+  BreadcrumbPage, BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { ContatoDeleteModal } from '@/components/modals/ContatoDeleteModal';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
+import {
+  Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter,
+} from '@/components/ui/dialog';
+import {
+  Popover, PopoverContent, PopoverTrigger,
+} from '@/components/ui/popover';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
+} from '@/components/ui/select';
+import { ContatoDeleteModal } from '@/components/modals/ContatoDeleteModal';
+import { useToast } from '@/hooks/use-toast';
+import { ContactSheet } from '@/components/sheets/ContactSheet';
 
-const contatos = [
-  {
-    id: '1',
-    nome: 'Maria Santos',
-    email: 'maria@email.com',
-    telefone: '(11) 99999-0001',
-    tipo: 'Cliente',
-    interesse: 'Apartamento',
-    cidade: 'São Paulo',
-    status: 'Ativo',
-  },
-  {
-    id: '2',
-    nome: 'Carlos Oliveira',
-    email: 'carlos@email.com',
-    telefone: '(11) 99999-0002',
-    tipo: 'Proprietário',
-    interesse: 'Casa',
-    cidade: 'Santos',
-    status: 'Ativo',
-  },
-  {
-    id: '3',
-    nome: 'João Silva',
-    email: 'joao@email.com',
-    telefone: '(11) 99999-0003',
-    tipo: 'Cliente',
-    interesse: 'Cobertura',
-    cidade: 'São Paulo',
-    status: 'Em negociação',
-  },
-  {
-    id: '4',
-    nome: 'Ana Costa',
-    email: 'ana@email.com',
-    telefone: '(11) 99999-0004',
-    tipo: 'Cliente',
-    interesse: 'Apartamento',
-    cidade: 'Guarujá',
-    status: 'Ativo',
-  },
-  {
-    id: '5',
-    nome: 'Pedro Souza',
-    email: 'pedro@email.com',
-    telefone: '(11) 99999-0005',
-    tipo: 'Proprietário',
-    interesse: 'Casa condomínio',
-    cidade: 'São Paulo',
-    status: 'Inativo',
-  },
+const contatosIniciais = [
+  { id: '1', nome: 'Maria Santos', email: 'maria@email.com', telefone: '(11) 99999-0001', tipo: 'Cliente', interesse: 'Apartamento', cidade: 'São Paulo', status: 'Ativo' },
+  { id: '2', nome: 'Carlos Oliveira', email: 'carlos@email.com', telefone: '(11) 99999-0002', tipo: 'Proprietário', interesse: 'Casa', cidade: 'Santos', status: 'Ativo' },
+  { id: '3', nome: 'João Silva', email: 'joao@email.com', telefone: '(11) 99999-0003', tipo: 'Cliente', interesse: 'Cobertura', cidade: 'São Paulo', status: 'Em negociação' },
+  { id: '4', nome: 'Ana Costa', email: 'ana@email.com', telefone: '(11) 99999-0004', tipo: 'Cliente', interesse: 'Apartamento', cidade: 'Guarujá', status: 'Ativo' },
+  { id: '5', nome: 'Pedro Souza', email: 'pedro@email.com', telefone: '(11) 99999-0005', tipo: 'Proprietário', interesse: 'Casa condomínio', cidade: 'São Paulo', status: 'Inativo' },
 ];
+
+type FilterType = 'Todos' | 'Cliente' | 'Proprietário';
+
+// High-contrast status badge colors (WCAG AA compliant)
+const statusColor = (status: string) => {
+  if (status === 'Ativo') return 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-300';
+  if (status === 'Em negociação') return 'bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300';
+  return 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400';
+};
+
+const tipoColor = (tipo: string) =>
+  tipo === 'Cliente'
+    ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-300'
+    : 'bg-violet-100 text-violet-800 dark:bg-violet-900/40 dark:text-violet-300';
+
+interface AdvancedFilters {
+  status: string;
+  cidade: string;
+  interesse: string;
+}
+
+const defaultAdvanced: AdvancedFilters = { status: 'Todos', cidade: '', interesse: '' };
 
 export function Contatos() {
   const navigate = useNavigate();
+  const { toast } = useToast();
   const [searchTerm, setSearchTerm] = useState('');
+  const [viewMode, setViewMode] = useState<'table' | 'grid'>('table');
+  const [activeFilter, setActiveFilter] = useState<FilterType>('Todos');
+  const [advanced, setAdvanced] = useState<AdvancedFilters>(defaultAdvanced);
+  const [filterOpen, setFilterOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [contatoToDelete, setContatoToDelete] = useState<any>(null);
   const [addModalOpen, setAddModalOpen] = useState(false);
+  const [contatosList, setContatosList] = useState(contatosIniciais);
   const [newContato, setNewContato] = useState({
-    nome: '',
-    email: '',
-    telefone: '',
-    tipo: '',
-    interesse: '',
-    cidade: '',
-    status: 'Ativo'
+    nome: '', email: '', telefone: '', tipo: '', interesse: '', cidade: '', status: 'Ativo',
   });
-  const [contatosList, setContatosList] = useState(contatos);
+  // Sheet state
+  const [sheetOpen, setSheetOpen] = useState(false);
+  const [selectedContato, setSelectedContato] = useState<any>(null);
 
-  const handleViewProfile = (contato: any) => {
-    navigate(`/contatos/perfil/${contato.id}`);
+  const handleViewProfile = (contato: any) => navigate(`/contatos/perfil/${contato.id}`);
+  const handleEdit = (contato: any) => navigate(`/contatos/editar/${contato.id}`);
+  const openSheet = (contato: any) => { setSelectedContato(contato); setSheetOpen(true); };
+  const handleSheetSave = (updated: any) => {
+    setContatosList(prev => prev.map(c => c.id === updated.id ? updated : c));
+    setSelectedContato(updated);
+    toast({ title: 'Contato atualizado', description: `${updated.nome} foi salvo.`, variant: 'success' });
   };
-
-  const handleEdit = (contato: any) => {
-    navigate(`/contatos/editar/${contato.id}`);
-  };
-
-  const handleDelete = (contato: any) => {
+  const handleSheetDelete = (contato: any) => {
     setContatoToDelete(contato);
+    setSheetOpen(false);
     setDeleteModalOpen(true);
   };
+  const handleDelete = (contato: any) => { setContatoToDelete(contato); setDeleteModalOpen(true); };
 
   const confirmDelete = () => {
-    // In a real app, this would call an API to delete the contato
-    console.log('Deleting contato:', contatoToDelete);
+    setContatosList(prev => prev.filter(c => c.id !== contatoToDelete?.id));
+    toast({ title: 'Contato excluído', description: `${contatoToDelete?.nome} foi removido.`, variant: 'success' });
     setDeleteModalOpen(false);
     setContatoToDelete(null);
   };
 
   const handleAddContato = () => {
     if (newContato.nome && newContato.email && newContato.telefone && newContato.tipo) {
-      const contatoToAdd = {
-        ...newContato,
-        id: Date.now().toString()
-      };
-      setContatosList([...contatosList, contatoToAdd]);
+      setContatosList(prev => [...prev, { ...newContato, id: Date.now().toString() }]);
+      toast({ title: 'Contato adicionado!', description: `${newContato.nome} foi cadastrado com sucesso.`, variant: 'success' });
       setAddModalOpen(false);
-      setNewContato({
-        nome: '',
-        email: '',
-        telefone: '',
-        tipo: '',
-        interesse: '',
-        cidade: '',
-        status: 'Ativo'
-      });
+      setNewContato({ nome: '', email: '', telefone: '', tipo: '', interesse: '', cidade: '', status: 'Ativo' });
+    } else {
+      toast({ title: 'Campos obrigatórios', description: 'Preencha Nome, E-mail, Telefone e Tipo.', variant: 'destructive' });
     }
   };
 
-  const filteredContatos = contatosList.filter(
-    (contato) =>
-      contato.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      contato.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      contato.telefone.includes(searchTerm)
+  const clearAdvanced = () => setAdvanced(defaultAdvanced);
+  const hasActiveAdvanced = advanced.status !== 'Todos' || advanced.cidade !== '' || advanced.interesse !== '';
+
+  const filteredContatos = contatosList.filter((c) => {
+    const q = searchTerm.toLowerCase();
+    const matchSearch = c.nome.toLowerCase().includes(q) || c.email.toLowerCase().includes(q) || c.telefone.includes(q);
+    const matchTipo = activeFilter === 'Todos' || c.tipo === activeFilter;
+    const matchStatus = advanced.status === 'Todos' || c.status === advanced.status;
+    const matchCidade = !advanced.cidade || c.cidade.toLowerCase().includes(advanced.cidade.toLowerCase());
+    const matchInteresse = !advanced.interesse || c.interesse.toLowerCase().includes(advanced.interesse.toLowerCase());
+    return matchSearch && matchTipo && matchStatus && matchCidade && matchInteresse;
+  });
+
+  const totalClientes = contatosList.filter(c => c.tipo === 'Cliente').length;
+  const totalProprietarios = contatosList.filter(c => c.tipo === 'Proprietário').length;
+  const totalAtivos = contatosList.filter(c => c.status === 'Ativo').length;
+
+  const stats = [
+    { label: 'Total', value: contatosList.length, icon: Users, color: 'text-primary', bg: 'bg-primary/10' },
+    { label: 'Clientes', value: totalClientes, icon: User, color: 'text-blue-700 dark:text-blue-400', bg: 'bg-blue-50 dark:bg-blue-950/40' },
+    { label: 'Proprietários', value: totalProprietarios, icon: Building, color: 'text-violet-700 dark:text-violet-400', bg: 'bg-violet-50 dark:bg-violet-950/40' },
+    { label: 'Ativos', value: totalAtivos, icon: UserCheck, color: 'text-emerald-700 dark:text-emerald-400', bg: 'bg-emerald-50 dark:bg-emerald-950/40' },
+  ];
+
+  const filters: FilterType[] = ['Todos', 'Cliente', 'Proprietário'];
+
+  const EmptyState = () => (
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="py-24 text-center px-4">
+      <div className="mx-auto w-16 h-16 rounded-2xl bg-muted flex items-center justify-center mb-4">
+        <Search className="h-7 w-7 text-muted-foreground" />
+      </div>
+      <p className="font-bold text-foreground">Nenhum contato encontrado</p>
+      <p className="text-sm text-muted-foreground mt-1">Tente ajustar os filtros ou adicione um novo contato.</p>
+      <Button className="mt-6 gap-2 shadow-lg shadow-primary/20" onClick={() => setAddModalOpen(true)}>
+        <Plus className="h-4 w-4" /> Novo Contato
+      </Button>
+    </motion.div>
   );
 
   return (
-    <div className="space-y-6 animate-fade-in">
+    <div className="space-y-4 sm:space-y-6 animate-fade-in">
       <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>
             <BreadcrumbLink href="/" className="flex items-center gap-1">
-              <Home className="h-4 w-4" />
-              Dashboard
+              <Home className="h-4 w-4" /> Dashboard
             </BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbPage>Contatos</BreadcrumbPage>
-          </BreadcrumbItem>
+          <BreadcrumbItem><BreadcrumbPage>Contatos</BreadcrumbPage></BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
 
-      <div className="flex items-center justify-between">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:justify-between">
         <div>
-          <h1 className="text-3xl font-bold">Contatos</h1>
-          <p className="text-muted-foreground">Gerencie clientes e proprietários</p>
+          <h1 className="text-2xl sm:text-3xl font-bold">Contatos</h1>
+          <p className="text-sm text-muted-foreground">Gerencie clientes e proprietários</p>
         </div>
-        <Button className="gap-2" onClick={() => setAddModalOpen(true)}>
-          <Plus className="h-4 w-4" />
-          Novo Contato
-        </Button>
+        <div className="flex items-center gap-2 sm:gap-3 self-end sm:self-auto">
+          <div className="flex items-center bg-muted rounded-lg p-1">
+            <Button variant={viewMode === 'table' ? 'secondary' : 'ghost'} size="sm" className="h-8 w-8 p-0" onClick={() => setViewMode('table')}>
+              <ListIcon className="h-4 w-4" />
+            </Button>
+            <Button variant={viewMode === 'grid' ? 'secondary' : 'ghost'} size="sm" className="h-8 w-8 p-0" onClick={() => setViewMode('grid')}>
+              <Grid className="h-4 w-4" />
+            </Button>
+          </div>
+          <Button className="gap-2 shadow-lg shadow-primary/20 text-xs sm:text-sm" onClick={() => setAddModalOpen(true)}>
+            <Plus className="h-4 w-4" />
+            <span>Novo Contato</span>
+          </Button>
+        </div>
       </div>
 
-      <Card>
-        <CardHeader>
-          <div className="flex flex-col sm:flex-row gap-4">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+      {/* KPI Bar */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+        {stats.map((stat) => {
+          const Icon = stat.icon;
+          return (
+            <motion.div key={stat.label} whileHover={{ y: -2 }} className={cn('rounded-2xl p-3 sm:p-4 flex items-center gap-3 border border-border/40', stat.bg)}>
+              <div className="h-10 w-10 rounded-xl flex items-center justify-center bg-background/70 shrink-0">
+                <Icon className={cn('h-5 w-5', stat.color)} />
+              </div>
+              <div className="min-w-0">
+                <p className="text-xl sm:text-2xl font-black tracking-tight leading-none">{stat.value}</p>
+                <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground mt-0.5">{stat.label}</p>
+              </div>
+            </motion.div>
+          );
+        })}
+      </div>
+
+      {/* Search & Filter Bar */}
+      <Card className="border-none shadow-sm bg-muted/30">
+        <CardContent className="p-3 sm:p-4">
+          <div className="flex flex-col gap-3">
+            {/* Search row */}
+            <div className="relative group">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
               <Input
                 placeholder="Buscar por nome, email ou telefone..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10"
+                className="pl-10 bg-background border-none shadow-sm focus-visible:ring-1 focus-visible:ring-primary/30"
               />
             </div>
-            <Button variant="outline" className="gap-2">
-              <Filter className="h-4 w-4" />
-              Filtros
-            </Button>
-          </div>
-        </CardHeader>
-        <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Contato</TableHead>
-                <TableHead>Tipo</TableHead>
-                <TableHead>Interesse</TableHead>
-                <TableHead>Cidade</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead className="w-[50px]"></TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filteredContatos.map((contato, index) => (
-                <TableRow key={contato.id} className="animate-slide-up cursor-pointer hover:bg-muted/50" style={{ animationDelay: `${index * 50}ms` }} onClick={() => navigate(`/contatos/perfil/${contato.id}`)}>
-                  <TableCell>
-                    <div className="flex items-center gap-3">
-                      <Avatar>
-                        <AvatarFallback className="bg-gradient-primary text-primary-foreground">
-                          {contato.nome.split(' ').map(n => n[0]).join('')}
-                        </AvatarFallback>
-                      </Avatar>
-                      <div>
-                        <div className="font-medium">{contato.nome}</div>
-                        <div className="flex items-center gap-3 text-sm text-muted-foreground mt-1">
-                          <span className="flex items-center gap-1">
-                            <Mail className="h-3 w-3" />
-                            {contato.email}
-                          </span>
-                          <span className="flex items-center gap-1">
-                            <Phone className="h-3 w-3" />
-                            {contato.telefone}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    {contato.tipo === 'Ambos' ? (
-                      <div className="flex gap-1">
-                        <Badge variant="default">Cliente</Badge>
-                        <Badge variant="secondary">Proprietário</Badge>
-                      </div>
-                    ) : (
-                      <Badge variant={contato.tipo === 'Cliente' ? 'default' : 'secondary'}>
-                        {contato.tipo}
-                      </Badge>
-                    )}
-                  </TableCell>
-                  <TableCell>{contato.interesse}</TableCell>
-                  <TableCell>
-                    <span className="flex items-center gap-1 text-muted-foreground">
-                      <MapPin className="h-3 w-3" />
-                      {contato.cidade}
-                    </span>
-                  </TableCell>
-                  <TableCell>
-                    <Badge
-                      variant="outline"
-                      className={
-                        contato.status === 'Ativo'
-                          ? 'border-success text-success'
-                          : contato.status === 'Em negociação'
-                          ? 'border-warning text-warning'
-                          : 'border-muted-foreground text-muted-foreground'
-                      }
-                    >
-                      {contato.status}
-                    </Badge>
-                  </TableCell>
-                  <TableCell>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button 
-                          variant="ghost" 
-                          size="icon"
-                          onClick={(e) => e.stopPropagation()}
-                        >
-                          <MoreVertical className="h-4 w-4" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuItem onClick={(e) => {
-                          e.stopPropagation();
-                          handleViewProfile(contato);
-                        }} className="gap-2">
-                          <User className="h-4 w-4" />
-                          Ver perfil
-                        </DropdownMenuItem>
-                        <DropdownMenuItem onClick={(e) => {
-                          e.stopPropagation();
-                          handleEdit(contato);
-                        }} className="gap-2">
-                          <Edit className="h-4 w-4" />
-                          Editar
-                        </DropdownMenuItem>
-                        <DropdownMenuItem onClick={(e) => {
-                          e.stopPropagation();
-                          handleDelete(contato);
-                        }} className="text-destructive gap-2">
-                          <Trash2 className="h-4 w-4" />
-                          Excluir
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </TableCell>
-                </TableRow>
+            {/* Filter chips + Advanced filter button */}
+            <div className="flex items-center gap-2 flex-wrap">
+              {filters.map((f) => (
+                <button
+                  key={f}
+                  onClick={() => setActiveFilter(f)}
+                  className={cn(
+                    'h-7 px-3 rounded-full text-xs font-semibold border transition-all',
+                    activeFilter === f
+                      ? 'bg-primary text-primary-foreground border-primary shadow-sm'
+                      : 'bg-background text-foreground border-border hover:border-primary/60 hover:bg-primary/5'
+                  )}
+                >
+                  {f === 'Todos' ? 'Todos' : f === 'Cliente' ? 'Clientes' : 'Proprietários'}
+                </button>
               ))}
-            </TableBody>
-          </Table>
+
+              <div className="ml-auto flex items-center gap-2">
+                {hasActiveAdvanced && (
+                  <button
+                    onClick={clearAdvanced}
+                    className="h-7 px-2 rounded-full text-xs font-semibold bg-destructive/10 text-destructive border border-destructive/20 flex items-center gap-1 hover:bg-destructive/20 transition-colors"
+                  >
+                    <X className="h-3 w-3" /> Limpar filtros
+                  </button>
+                )}
+                <Popover open={filterOpen} onOpenChange={setFilterOpen}>
+                  <PopoverTrigger asChild>
+                    <button className={cn(
+                      'h-7 px-3 rounded-full text-xs font-semibold border flex items-center gap-1.5 transition-all',
+                      hasActiveAdvanced
+                        ? 'bg-primary/10 text-primary border-primary/30'
+                        : 'bg-background text-foreground border-border hover:border-primary/60'
+                    )}>
+                      <SlidersHorizontal className="h-3.5 w-3.5" />
+                      Filtros
+                      {hasActiveAdvanced && <span className="h-4 w-4 rounded-full bg-primary text-primary-foreground text-[10px] flex items-center justify-center font-black">!</span>}
+                    </button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-72 p-4" align="end">
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between">
+                        <h4 className="font-bold text-sm">Filtros Avançados</h4>
+                        {hasActiveAdvanced && (
+                          <button onClick={clearAdvanced} className="text-xs text-destructive hover:underline font-semibold">Limpar</button>
+                        )}
+                      </div>
+
+                      <div className="space-y-1.5">
+                        <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Status</Label>
+                        <Select value={advanced.status} onValueChange={(v) => setAdvanced(a => ({ ...a, status: v }))}>
+                          <SelectTrigger className="h-9">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="Todos">Todos</SelectItem>
+                            <SelectItem value="Ativo">Ativo</SelectItem>
+                            <SelectItem value="Em negociação">Em negociação</SelectItem>
+                            <SelectItem value="Inativo">Inativo</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+
+                      <div className="space-y-1.5">
+                        <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Cidade</Label>
+                        <Input
+                          placeholder="Ex: São Paulo"
+                          value={advanced.cidade}
+                          onChange={(e) => setAdvanced(a => ({ ...a, cidade: e.target.value }))}
+                          className="h-9"
+                        />
+                      </div>
+
+                      <div className="space-y-1.5">
+                        <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Interesse</Label>
+                        <Input
+                          placeholder="Ex: Apartamento"
+                          value={advanced.interesse}
+                          onChange={(e) => setAdvanced(a => ({ ...a, interesse: e.target.value }))}
+                          className="h-9"
+                        />
+                      </div>
+
+                      <Button className="w-full" size="sm" onClick={() => setFilterOpen(false)}>
+                        Aplicar ({filteredContatos.length} resultado{filteredContatos.length !== 1 ? 's' : ''})
+                      </Button>
+                    </div>
+                  </PopoverContent>
+                </Popover>
+              </div>
+            </div>
+
+            {/* Active filter indicator */}
+            {filteredContatos.length < contatosList.length && (
+              <p className="text-xs text-muted-foreground">
+                Mostrando <span className="font-bold text-foreground">{filteredContatos.length}</span> de {contatosList.length} contatos
+              </p>
+            )}
+          </div>
         </CardContent>
       </Card>
 
-      <ContatoDeleteModal
-        open={deleteModalOpen}
-        onClose={() => {
-          setDeleteModalOpen(false);
-          setContatoToDelete(null);
-        }}
-        contato={contatoToDelete}
-        onConfirm={confirmDelete}
-      />
+      {/* Content */}
+      <Card className="border-none shadow-sm overflow-hidden">
+        <CardContent className="p-0">
+          <AnimatePresence mode="wait">
+            {viewMode === 'table' ? (
+              <motion.div key="table" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.2 }}>
+                {filteredContatos.length === 0 ? <EmptyState /> : (
+                  <div className="overflow-x-auto">
+                    <Table>
+                      <TableHeader>
+                        <TableRow className="hover:bg-transparent">
+                          <TableHead className="font-bold min-w-[200px]">Contato</TableHead>
+                          <TableHead className="font-bold hidden sm:table-cell">Tipo</TableHead>
+                          <TableHead className="font-bold hidden md:table-cell">Interesse</TableHead>
+                          <TableHead className="font-bold hidden lg:table-cell">Cidade</TableHead>
+                          <TableHead className="font-bold text-center">Status</TableHead>
+                          <TableHead className="w-[50px]" />
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {filteredContatos.map((contato) => (
+                          <TableRow key={contato.id} className="group cursor-pointer hover:bg-muted/40 transition-colors" onClick={() => openSheet(contato)}>
+                            <TableCell>
+                              <div className="flex items-center gap-3">
+                                <Avatar className="h-9 w-9 border border-border group-hover:border-primary/40 transition-all shrink-0">
+                                  <AvatarFallback className="bg-primary/10 text-primary text-xs font-bold">
+                                    {contato.nome.split(' ').map(n => n[0]).join('').slice(0, 2)}
+                                  </AvatarFallback>
+                                </Avatar>
+                                <div className="min-w-0">
+                                  <div className="font-semibold text-sm group-hover:text-primary transition-colors truncate">{contato.nome}</div>
+                                  <div className="flex items-center gap-1 text-xs text-muted-foreground mt-0.5 truncate">
+                                    <Mail className="h-3 w-3 shrink-0" /> {contato.email}
+                                  </div>
+                                </div>
+                              </div>
+                            </TableCell>
+                            <TableCell className="hidden sm:table-cell">
+                              <span className={cn('inline-flex items-center px-2 py-0.5 rounded-md text-xs font-semibold', tipoColor(contato.tipo))}>
+                                {contato.tipo}
+                              </span>
+                            </TableCell>
+                            <TableCell className="hidden md:table-cell text-sm font-medium">{contato.interesse}</TableCell>
+                            <TableCell className="hidden lg:table-cell">
+                              <span className="flex items-center gap-1 text-xs text-muted-foreground">
+                                <MapPin className="h-3 w-3 shrink-0" /> {contato.cidade}
+                              </span>
+                            </TableCell>
+                            <TableCell className="text-center">
+                              <span className={cn('inline-flex items-center px-2 py-0.5 rounded-md text-xs font-semibold', statusColor(contato.status))}>
+                                {contato.status}
+                              </span>
+                            </TableCell>
+                            <TableCell>
+                              <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                  <Button variant="ghost" size="sm" className="h-8 w-8 p-0 opacity-0 group-hover:opacity-100 transition-opacity" onClick={(e) => e.stopPropagation()}>
+                                    <MoreVertical className="h-4 w-4" />
+                                  </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align="end">
+                                  <DropdownMenuItem onClick={(e) => { e.stopPropagation(); openSheet(contato); }} className="gap-2"><User className="h-4 w-4" /> Ver detalhes</DropdownMenuItem>
+                                  <DropdownMenuItem onClick={(e) => { e.stopPropagation(); openSheet(contato); }} className="gap-2"><Edit className="h-4 w-4" /> Editar</DropdownMenuItem>
+                                  <DropdownMenuItem onClick={(e) => { e.stopPropagation(); handleDelete(contato); }} className="text-destructive gap-2"><Trash2 className="h-4 w-4" /> Excluir</DropdownMenuItem>
+                                </DropdownMenuContent>
+                              </DropdownMenu>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </div>
+                )}
+              </motion.div>
+            ) : (
+              <motion.div key="grid" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.2 }} className="p-3 sm:p-4">
+                {filteredContatos.length === 0 ? <EmptyState /> : (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-4">
+                    {filteredContatos.map((contato) => (
+                      <Card key={contato.id} className="group hover:border-primary/40 transition-all cursor-pointer overflow-hidden shadow-none hover:shadow-md" onClick={() => openSheet(contato)}>
 
-      {/* Modal para Adicionar Contato */}
+                        <CardContent className="p-0">
+                          <div className="p-4 sm:p-5 flex items-start gap-3 sm:gap-4">
+                            <Avatar className="h-11 w-11 border-2 border-border group-hover:border-primary/30 transition-all shrink-0">
+                              <AvatarFallback className="bg-primary/10 text-primary text-sm font-bold">
+                                {contato.nome.split(' ').map(n => n[0]).join('').slice(0, 2)}
+                              </AvatarFallback>
+                            </Avatar>
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-start justify-between gap-2">
+                                <h3 className="font-semibold text-sm truncate group-hover:text-primary transition-colors">{contato.nome}</h3>
+                                <span className={cn('inline-flex items-center px-1.5 py-0.5 rounded text-[11px] font-semibold shrink-0', statusColor(contato.status))}>
+                                  {contato.status}
+                                </span>
+                              </div>
+                              <div className="space-y-1 mt-2">
+                                <div className="flex items-center gap-1.5 text-xs text-muted-foreground truncate">
+                                  <Mail className="h-3 w-3 shrink-0" /> {contato.email}
+                                </div>
+                                <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                                  <Phone className="h-3 w-3 shrink-0" /> {contato.telefone}
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="px-4 sm:px-5 py-3 bg-muted/30 border-t flex items-center justify-between gap-2">
+                            <div className="flex gap-1.5 flex-wrap">
+                              <span className={cn('inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold', tipoColor(contato.tipo))}>{contato.tipo}</span>
+                              <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium bg-muted text-muted-foreground">{contato.interesse}</span>
+                            </div>
+                            <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
+                              <Button variant="ghost" size="icon" className="h-7 w-7" onClick={(e) => { e.stopPropagation(); handleEdit(contato); }}><Edit className="h-3.5 w-3.5" /></Button>
+                              <Button variant="ghost" size="icon" className="h-7 w-7 text-destructive" onClick={(e) => { e.stopPropagation(); handleDelete(contato); }}><Trash2 className="h-3.5 w-3.5" /></Button>
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                )}
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </CardContent>
+      </Card>
+
+      <ContatoDeleteModal open={deleteModalOpen} onClose={() => { setDeleteModalOpen(false); setContatoToDelete(null); }} contato={contatoToDelete} onConfirm={confirmDelete} />
+
+      {/* Add Contact Modal */}
       <Dialog open={addModalOpen} onOpenChange={setAddModalOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Novo Contato</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4">
-            <div>
-              <Label htmlFor="nome">Nome *</Label>
-              <Input
-                id="nome"
-                value={newContato.nome}
-                onChange={(e) => setNewContato({...newContato, nome: e.target.value})}
-                placeholder="Digite o nome completo"
-              />
-            </div>
-            
-            <div>
-              <Label htmlFor="email">E-mail *</Label>
-              <Input
-                id="email"
-                type="email"
-                value={newContato.email}
-                onChange={(e) => setNewContato({...newContato, email: e.target.value})}
-                placeholder="Digite o e-mail"
-              />
-            </div>
-            
-            <div>
-              <Label htmlFor="telefone">Telefone *</Label>
-              <Input
-                id="telefone"
-                value={newContato.telefone}
-                onChange={(e) => setNewContato({...newContato, telefone: e.target.value})}
-                placeholder="Digite o telefone"
-              />
-            </div>
-            
-            <div>
-              <Label htmlFor="tipo">Tipo *</Label>
-              <Select value={newContato.tipo} onValueChange={(value) => setNewContato({...newContato, tipo: value})}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Selecione o tipo" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="Cliente">Cliente</SelectItem>
-                  <SelectItem value="Proprietário">Proprietário</SelectItem>
-                  <SelectItem value="Ambos">Ambos</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            
-            <div>
-              <Label htmlFor="interesse">Interesse</Label>
-              <Input
-                id="interesse"
-                value={newContato.interesse}
-                onChange={(e) => setNewContato({...newContato, interesse: e.target.value})}
-                placeholder="Ex: Apartamento, Casa, etc."
-              />
-            </div>
-            
-            <div>
-              <Label htmlFor="cidade">Cidade</Label>
-              <Input
-                id="cidade"
-                value={newContato.cidade}
-                onChange={(e) => setNewContato({...newContato, cidade: e.target.value})}
-                placeholder="Digite a cidade"
-              />
-            </div>
-            
-            <div>
-              <Label htmlFor="status">Status</Label>
-              <Select value={newContato.status} onValueChange={(value) => setNewContato({...newContato, status: value})}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="Ativo">Ativo</SelectItem>
-                  <SelectItem value="Inativo">Inativo</SelectItem>
-                  <SelectItem value="Em negociação">Em negociação</SelectItem>
-                </SelectContent>
-              </Select>
+        <DialogContent className="sm:max-w-[500px] p-0 overflow-hidden border-none shadow-2xl">
+          <div className="bg-gradient-to-r from-primary to-primary/80 p-5 sm:p-6">
+            <DialogHeader>
+              <DialogTitle className="text-white text-lg sm:text-xl font-black">Novo Contato</DialogTitle>
+              <p className="text-white/80 text-sm mt-1">Preencha as informações do novo contato</p>
+            </DialogHeader>
+          </div>
+          <div className="p-5 sm:p-6 space-y-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="sm:col-span-2 space-y-1.5">
+                <Label htmlFor="nome" className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Nome Completo *</Label>
+                <Input id="nome" value={newContato.nome} onChange={(e) => setNewContato({ ...newContato, nome: e.target.value })} placeholder="Ex: Maria Silva" />
+              </div>
+              <div className="space-y-1.5">
+                <Label htmlFor="email" className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">E-mail *</Label>
+                <Input id="email" type="email" value={newContato.email} onChange={(e) => setNewContato({ ...newContato, email: e.target.value })} placeholder="email@exemplo.com" />
+              </div>
+              <div className="space-y-1.5">
+                <Label htmlFor="telefone" className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Telefone *</Label>
+                <Input id="telefone" value={newContato.telefone} onChange={(e) => setNewContato({ ...newContato, telefone: e.target.value })} placeholder="(00) 99999-0000" />
+              </div>
+              <div className="space-y-1.5">
+                <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Tipo *</Label>
+                <Select value={newContato.tipo} onValueChange={(v) => setNewContato({ ...newContato, tipo: v })}>
+                  <SelectTrigger><SelectValue placeholder="Selecione..." /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Cliente">Cliente</SelectItem>
+                    <SelectItem value="Proprietário">Proprietário</SelectItem>
+                    <SelectItem value="Ambos">Ambos</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-1.5">
+                <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Status</Label>
+                <Select value={newContato.status} onValueChange={(v) => setNewContato({ ...newContato, status: v })}>
+                  <SelectTrigger><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Ativo">Ativo</SelectItem>
+                    <SelectItem value="Em negociação">Em negociação</SelectItem>
+                    <SelectItem value="Inativo">Inativo</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-1.5">
+                <Label htmlFor="interesse" className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Interesse</Label>
+                <Input id="interesse" value={newContato.interesse} onChange={(e) => setNewContato({ ...newContato, interesse: e.target.value })} placeholder="Ex: Apartamento" />
+              </div>
+              <div className="space-y-1.5">
+                <Label htmlFor="cidade" className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Cidade</Label>
+                <Input id="cidade" value={newContato.cidade} onChange={(e) => setNewContato({ ...newContato, cidade: e.target.value })} placeholder="Ex: São Paulo" />
+              </div>
             </div>
           </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setAddModalOpen(false)}>
-              Cancelar
-            </Button>
-            <Button onClick={handleAddContato}>
-              Adicionar
+          <DialogFooter className="px-5 sm:px-6 pb-5 sm:pb-6 gap-2 flex-col sm:flex-row">
+            <Button variant="outline" onClick={() => setAddModalOpen(false)} className="w-full sm:w-auto">Cancelar</Button>
+            <Button onClick={handleAddContato} className="gap-2 shadow-lg shadow-primary/20 w-full sm:w-auto">
+              <Plus className="h-4 w-4" /> Adicionar Contato
             </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Contact Detail/Edit Sheet */}
+      <ContactSheet
+        contato={selectedContato}
+        open={sheetOpen}
+        onClose={() => setSheetOpen(false)}
+        onSave={handleSheetSave}
+        onDelete={handleSheetDelete}
+        onViewProfile={handleViewProfile}
+      />
     </div>
   );
 }
