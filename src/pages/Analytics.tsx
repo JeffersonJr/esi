@@ -117,7 +117,7 @@ export function Analytics() {
 
   return (
     <div className="space-y-8 pb-20">
-      <Breadcrumb className="mb-4 sm:mb-6">
+      <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>
             <BreadcrumbLink href="/" className="flex items-center gap-1">
@@ -130,14 +130,21 @@ export function Analytics() {
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
-        <div>
-          <h1 className="text-3xl font-black tracking-tight text-foreground">Visão Geral & Analytics</h1>
-          <p className="text-muted-foreground mt-1">Acompanhe as métricas e o desempenho da sua operação.</p>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4 shrink-0">
+        <div className="flex items-center gap-4">
+          <div className="h-12 w-12 rounded-2xl bg-primary text-primary-foreground flex items-center justify-center shadow-lg shadow-primary/20">
+            <TrendingUp className="h-6 w-6" />
+          </div>
+          <div>
+            <h1 className="text-3xl font-black text-slate-800 tracking-tight">Visão Geral & Analytics</h1>
+            <p className="text-slate-500 mt-1 font-medium">Acompanhe as métricas e o desempenho da sua operação.</p>
+          </div>
         </div>
-        <Badge variant="outline" className="w-fit text-sm bg-background/50 backdrop-blur font-bold px-4 py-1 border-border shadow-sm">
-          <Calendar className="h-4 w-4 mr-2" /> Janeiro 2025
-        </Badge>
+        <div className="flex items-center gap-3">
+          <Badge variant="outline" className="h-12 bg-white/50 backdrop-blur font-bold px-6 border-border rounded-2xl shadow-sm flex items-center gap-2">
+            <Calendar className="h-4 w-4 text-primary" /> Janeiro 2025
+          </Badge>
+        </div>
       </div>
 
       <Tabs defaultValue="imoveis" className="w-full">

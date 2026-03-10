@@ -606,7 +606,7 @@ export function Configuracoes() {
 
   return (
     <div className="mx-auto font-sans flex flex-col overflow-hidden bg-slate-50/30">
-      <Breadcrumb className="mb-4 sm:mb-6">
+      <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>
             <BreadcrumbLink href="/" className="flex items-center gap-1">

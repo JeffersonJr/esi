@@ -11,10 +11,11 @@ import {
   Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { useToast } from '@/hooks/use-toast';
-import { cn } from '@/lib/utils';
+import { cn, maskCurrency } from '@/lib/utils';
+import { useAnimation } from '@/components/shared/ActionAnimation';
 import {
   Zap, FileText, Home, MapPin, BarChart3, Tag, Users, Building2,
-  Globe, Eye, Image as ImageIcon, CheckCircle2, ChevronRight, Plus, X, Save
+  Globe, Eye, Image as ImageIcon, CheckCircle2, ChevronRight, Plus, X, Save, Building
 } from 'lucide-react';
 
 // ─── Types ──────────────────────────────────────────────────────────────────
@@ -106,6 +107,7 @@ function CheckChip({ label, active, onClick }: { label: string; active: boolean;
 }
 
 export default function CadastroImovel() {
+  const { triggerAnimation } = useAnimation();
   const { id } = useParams();
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -144,13 +146,29 @@ export default function CadastroImovel() {
   };
   const removeProximidade = (i: number) => set('proximidades', form.proximidades.filter((_, idx) => idx !== i));
 
-  const handleSave = () => {
+  const handleSave = (e?: React.MouseEvent) => {
+    // Trigger micro-animation
+    const target = e?.currentTarget as HTMLElement;
+    const rect = target?.getBoundingClientRect();
+    if (rect) {
+      triggerAnimation({
+        type: 'save-property',
+        startX: rect.left + rect.width / 2,
+        startY: rect.top + rect.height / 2,
+        icon: form.tipo === 'Apartamento' || form.tipo === 'Comercial' || form.tipo === 'Galpão' ? Building : Home
+      });
+    }
+
     toast({
       title: isEditing ? "Imóvel atualizado!" : "Imóvel cadastrado!",
       description: isEditing ? "As informações foram salvas com sucesso." : "O novo imóvel já está disponível.",
       variant: "success",
     });
-    navigate('/imoveis');
+
+    // Small delay to let the animation start
+    setTimeout(() => {
+      navigate('/imoveis');
+    }, 500);
   };
 
   const canSaveQuick = form.titulo && (form.logradouro || form.cidade);
@@ -191,21 +209,29 @@ export default function CadastroImovel() {
   if (mode === 'agil') {
     return (
       <div className="min-h-screen bg-muted/20 pb-20">
-        <div className="bg-gradient-to-r from-amber-500 to-orange-400 p-8 shadow-md sticky top-0 z-50">
-          <div className="max-w-3xl mx-auto flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <button onClick={() => setMode('escolha')} className="h-10 w-10 bg-white/20 rounded-full flex items-center justify-center hover:bg-white/30 transition text-white">
+        <div className="bg-white border-b border-border/40 px-6 py-6 sticky top-0 z-50 backdrop-blur-md bg-white/80">
+          <div className="max-w-3xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div className="flex items-center gap-4">
+              <button
+                onClick={() => setMode('escolha')}
+                className="h-10 w-10 bg-slate-100 rounded-full flex items-center justify-center hover:bg-slate-200 transition text-slate-600 shrink-0"
+              >
                 <ChevronRight className="h-5 w-5 rotate-180" />
               </button>
+              <div className="h-12 w-12 rounded-2xl bg-amber-500 text-white flex items-center justify-center shadow-lg shadow-amber-200 shrink-0">
+                <Zap className="h-6 w-6" />
+              </div>
               <div>
-                <h1 className="text-white text-2xl font-black flex items-center gap-2">
-                  <Zap className="h-6 w-6" /> Cadastro Ágil
-                </h1>
-                <p className="text-white/80 mt-0.5">Preencha o essencial para cadastrar agora</p>
+                <h1 className="text-2xl font-black text-slate-800 tracking-tight">Cadastro Ágil</h1>
+                <p className="text-slate-500 mt-0.5 font-medium">Preencha o essencial e publique agora</p>
               </div>
             </div>
-            <Button onClick={handleSave} disabled={!canSaveQuick} className="gap-2 shadow-xl shrink-0">
-              <Plus className="h-4 w-4" /> Finalizar Cadastro
+            <Button
+              onClick={handleSave}
+              disabled={!canSaveQuick}
+              className="h-12 px-6 rounded-2xl font-bold bg-amber-500 hover:bg-amber-600 text-white shadow-lg shadow-amber-200 shrink-0"
+            >
+              <Plus className="h-4 w-4 mr-2" /> Finalizar Cadastro
             </Button>
           </div>
         </div>
@@ -245,10 +271,20 @@ export default function CadastroImovel() {
                 <Input className="h-12" placeholder="m²" value={form.area} onChange={e => set('area', e.target.value)} />
               </F>
               <F label="Valor venda" required>
-                <Input className="h-12 font-medium" placeholder="R$ 0" value={form.valorVenda} onChange={e => set('valorVenda', e.target.value)} />
+                <Input
+                  className="h-12 font-medium"
+                  placeholder="R$ 0,00"
+                  value={form.valorVenda}
+                  onChange={e => set('valorVenda', maskCurrency(e.target.value))}
+                />
               </F>
               <F label="Valor aluguel">
-                <Input className="h-12" placeholder="R$ 0/mês" value={form.valorAluguel} onChange={e => set('valorAluguel', e.target.value)} />
+                <Input
+                  className="h-12"
+                  placeholder="R$ 0,00/mês"
+                  value={form.valorAluguel}
+                  onChange={e => set('valorAluguel', maskCurrency(e.target.value))}
+                />
               </F>
             </FieldGroup>
 
@@ -292,42 +328,63 @@ export default function CadastroImovel() {
   return (
     <div className="min-h-screen bg-[#f8fafc] dark:bg-[#020817] flex flex-col">
       {/* Header Sticky */}
-      <div className="bg-white/90 dark:bg-slate-950/90 backdrop-blur-md sticky top-0 z-50 border-b border-border/40 px-4 md:px-8 py-4">
-        <div className="max-w-[1400px] mx-auto flex items-center justify-between">
-          <div className="flex flex-col gap-1">
-            <Breadcrumb className="mb-4 sm:mb-6">
-              <BreadcrumbList>
-                <BreadcrumbItem>
-                  <BreadcrumbLink href="/" className="flex items-center gap-1">
-                    <Home className="h-4 w-4" /> Dashboard
-                  </BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator />
-                <BreadcrumbItem>
-                  <BreadcrumbLink href="/imoveis">Imóveis</BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator />
-                <BreadcrumbItem>
-                  <BreadcrumbPage>{isEditing ? 'Editar Imóvel' : 'Cadastrar Imóvel'}</BreadcrumbPage>
-                </BreadcrumbItem>
-              </BreadcrumbList>
-            </Breadcrumb>
-            <h1 className="text-xl md:text-2xl font-black tracking-tight text-foreground flex items-center gap-2">
-              <FileText className="h-5 w-5 text-primary" />
-              {isEditing ? 'Refinar Imóvel' : 'Registrar Novo Ativo'}
-            </h1>
-          </div>
-          <div className="flex items-center gap-4">
-            <div className="hidden lg:flex flex-col items-end mr-4">
-              <div className="text-[10px] font-black uppercase tracking-wider text-primary">Preenchido: {completionPercentage}%</div>
-              <div className="w-32 bg-muted rounded-full h-1.5 mt-1 overflow-hidden">
-                <div className="bg-primary h-full transition-all duration-300" style={{ width: `${completionPercentage}%` }} />
+      <div className="bg-white border-b border-border/40 px-6 py-6 sticky top-0 z-50 backdrop-blur-md bg-white/80">
+        <div className="max-w-[1400px] mx-auto">
+          <Breadcrumb>
+            <BreadcrumbList>
+              <BreadcrumbItem>
+                <BreadcrumbLink href="/" className="flex items-center gap-1">
+                  <Home className="h-4 w-4" /> Dashboard
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbLink href="/imoveis">Imóveis</BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbPage>{isEditing ? 'Editar Imóvel' : 'Cadastrar Imóvel'}</BreadcrumbPage>
+              </BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
+
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mt-4">
+            <div className="flex items-center gap-4">
+              <div className="h-12 w-12 rounded-2xl bg-primary text-primary-foreground flex items-center justify-center shadow-lg shadow-primary/20 shrink-0">
+                <FileText className="h-6 w-6" />
+              </div>
+              <div>
+                <h1 className="text-3xl font-black text-slate-800 tracking-tight">
+                  {isEditing ? 'Refinar Imóvel' : 'Registrar Novo Ativo'}
+                </h1>
+                <p className="text-slate-500 mt-1 font-medium">Cadastro profissional guiado para alta conversão</p>
               </div>
             </div>
-            <Button variant="ghost" className="hidden sm:inline-flex" onClick={() => navigate('/imoveis')}>Descartar</Button>
-            <Button onClick={handleSave} disabled={!form.titulo} className="gap-2 shadow-lg h-10 px-6">
-              <Save className="h-4 w-4" /> <span className="hidden sm:inline">Finalizar Cadastro</span><span className="sm:hidden">Salvar</span>
-            </Button>
+
+            <div className="flex items-center gap-4">
+              <div className="hidden lg:flex flex-col items-end mr-4">
+                <div className="text-[10px] font-black uppercase tracking-wider text-primary">Preenchido: {completionPercentage}%</div>
+                <div className="w-32 bg-slate-100 rounded-full h-2 mt-1 overflow-hidden shadow-inner">
+                  <div className="bg-primary h-full transition-all duration-300 shadow-sm" style={{ width: `${completionPercentage}%` }} />
+                </div>
+              </div>
+              <Button
+                variant="outline"
+                className="h-12 px-6 rounded-2xl font-bold bg-white border-slate-200 text-slate-700 shadow-sm hover:bg-slate-50 transition-all hidden sm:flex"
+                onClick={() => navigate('/imoveis')}
+              >
+                Descartar
+              </Button>
+              <Button
+                onClick={handleSave}
+                disabled={!form.titulo}
+                className="h-12 px-8 rounded-2xl font-bold bg-indigo-600 hover:bg-indigo-700 text-white shadow-lg shadow-indigo-200 transition-all flex gap-2"
+              >
+                <Save className="h-5 w-5" />
+                <span className="hidden sm:inline">{isEditing ? 'Salvar Alterações' : 'Finalizar Cadastro'}</span>
+                <span className="sm:hidden">Salvar</span>
+              </Button>
+            </div>
           </div>
         </div>
       </div>
@@ -478,19 +535,44 @@ export default function CadastroImovel() {
               <h2 className="text-lg font-black uppercase tracking-wide border-b pb-4 mb-6">Precificação e Taxas</h2>
               <FieldGroup cols={2}>
                 <F label="Valor de venda">
-                  <Input className="h-12 font-medium" placeholder="R$ 0" value={form.valorVenda} onChange={e => set('valorVenda', e.target.value)} />
+                  <Input
+                    className="h-12 font-medium"
+                    placeholder="R$ 0,00"
+                    value={form.valorVenda}
+                    onChange={e => set('valorVenda', maskCurrency(e.target.value))}
+                  />
                 </F>
                 <F label="Valor de aluguel">
-                  <Input className="h-12" placeholder="R$ 0/mês" value={form.valorAluguel} onChange={e => set('valorAluguel', e.target.value)} />
+                  <Input
+                    className="h-12"
+                    placeholder="R$ 0,00/mês"
+                    value={form.valorAluguel}
+                    onChange={e => set('valorAluguel', maskCurrency(e.target.value))}
+                  />
                 </F>
                 <F label="Condomínio/mês">
-                  <Input className="h-12" placeholder="R$ 0" value={form.condominio} onChange={e => set('condominio', e.target.value)} />
+                  <Input
+                    className="h-12"
+                    placeholder="R$ 0,00"
+                    value={form.condominio}
+                    onChange={e => set('condominio', maskCurrency(e.target.value))}
+                  />
                 </F>
                 <F label="IPTU/mês">
-                  <Input className="h-12" placeholder="R$ 0" value={form.iptu} onChange={e => set('iptu', e.target.value)} />
+                  <Input
+                    className="h-12"
+                    placeholder="R$ 0,00"
+                    value={form.iptu}
+                    onChange={e => set('iptu', maskCurrency(e.target.value))}
+                  />
                 </F>
                 <F label="Água + Luz (estimativa)">
-                  <Input className="h-12" placeholder="R$ 0/mês" value={form.aguaLuz} onChange={e => set('aguaLuz', e.target.value)} />
+                  <Input
+                    className="h-12"
+                    placeholder="R$ 0,00/mês"
+                    value={form.aguaLuz}
+                    onChange={e => set('aguaLuz', maskCurrency(e.target.value))}
+                  />
                 </F>
               </FieldGroup>
               <div className="flex items-center gap-3 p-4 rounded-xl bg-muted/20 border mt-6">

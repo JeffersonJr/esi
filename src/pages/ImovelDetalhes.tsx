@@ -262,7 +262,7 @@ export default function ImovelDetalhes() {
       <div className="min-h-screen bg-[#F8FAFC]">
         {/* Breadcrumb */}
         <div className="px-6 pt-4 max-w-[1400px] mx-auto no-print">
-          <Breadcrumb className="mb-4 sm:mb-6">
+          <Breadcrumb>
             <BreadcrumbList>
               <BreadcrumbItem>
                 <BreadcrumbLink href="/" className="flex items-center gap-1">
@@ -282,48 +282,60 @@ export default function ImovelDetalhes() {
         </div>
 
         {/* Header */}
-        <div className="bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b border-border/40 px-6 py-4 no-print">
-          <div className="max-w-[1400px] mx-auto flex items-center justify-between">
-            <div className="flex items-center gap-6">
+        <div className="bg-white border-b border-border/40 px-6 py-6 sticky top-0 z-50 backdrop-blur-md bg-white/80 no-print">
+          <div className="max-w-[1400px] mx-auto flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div className="flex items-center gap-4">
               <Button
                 variant="ghost"
+                size="icon"
                 onClick={() => navigate('/imoveis')}
-                className="group h-10 w-10 p-0 rounded-full hover:bg-primary/5"
+                className="h-10 w-10 rounded-full hover:bg-slate-100 shrink-0"
               >
-                <ArrowLeft className="h-5 w-5 group-hover:-translate-x-1 transition-transform" />
+                <ArrowLeft className="h-5 w-5 hover:-translate-x-1 transition-transform" />
               </Button>
-              <div className="h-10 w-[1px] bg-border/60" />
-              <div>
+              <div className="h-12 w-12 rounded-2xl bg-primary text-primary-foreground flex items-center justify-center shadow-lg shadow-primary/20 shrink-0">
+                <Building className="h-6 w-6" />
+              </div>
+              <div className="min-w-0">
                 <div className="flex items-center gap-3">
-                  <h1 className="text-xl font-black tracking-tight text-foreground">{imovel.titulo}</h1>
-                  <Badge variant="outline" className={cn("font-bold text-[10px] uppercase border-none", getStatusColor(imovel.status))}>
+                  <h1 className="text-2xl md:text-3xl font-black text-slate-800 tracking-tight truncate">{imovel.titulo}</h1>
+                  <Badge variant="outline" className={cn("font-bold text-[10px] uppercase border-none shrink-0", getStatusColor(imovel.status))}>
                     {imovel.status}
                   </Badge>
                 </div>
                 <div className="flex items-center gap-2 mt-0.5">
-                  <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">REF: {imovel.codigo}</span>
-                  <span className="text-[10px] text-muted-foreground/40 text-muted-foreground">|</span>
-                  <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">{imovel.tipo}</span>
+                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">REF: {imovel.codigo}</span>
+                  <span className="text-[10px] text-slate-300">|</span>
+                  <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">{imovel.tipo}</span>
                 </div>
               </div>
             </div>
 
             <div className="flex items-center gap-3">
-              <Button onClick={handleEdit} className="gap-2 font-bold text-xs uppercase shadow-lg shadow-primary/20">
-                <Edit className="h-3.5 w-3.5" />
+              <Button
+                onClick={handleEdit}
+                className="h-12 px-6 rounded-2xl font-bold bg-indigo-600 hover:bg-indigo-700 text-white shadow-lg shadow-indigo-200 transition-all text-xs uppercase"
+              >
+                <Edit className="h-4 w-4 mr-2" />
                 Editar
               </Button>
-              <Button variant="outline" onClick={handlePrint} className="gap-2 font-bold text-xs uppercase border-none bg-background shadow-sm hover:bg-muted">
-                <Printer className="h-3.5 w-3.5" />
-                Ficha
+              <Button
+                variant="outline"
+                onClick={handlePrint}
+                className="h-12 px-6 rounded-2xl font-bold bg-white border-slate-200 text-slate-700 shadow-sm hover:bg-slate-50 transition-all text-xs uppercase"
+              >
+                <Printer className="h-4 w-4 mr-2" />
+                Imprimir Ficha
               </Button>
-              <div className="h-8 w-[1px] bg-border/60 mx-1" />
-              <Button variant="ghost" size="icon" className="h-9 w-9 rounded-full text-muted-foreground hover:text-primary transition-colors">
-                <Share2 className="h-4 w-4" />
-              </Button>
-              <Button variant="ghost" size="icon" className="h-9 w-9 rounded-full text-muted-foreground hover:text-destructive transition-colors">
-                <Heart className="h-4 w-4" />
-              </Button>
+              <div className="h-8 w-[1px] bg-slate-100 mx-1 hidden md:block" />
+              <div className="flex items-center gap-1">
+                <Button variant="ghost" size="icon" className="h-10 w-10 rounded-full text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 transition-colors">
+                  <Share2 className="h-5 w-5" />
+                </Button>
+                <Button variant="ghost" size="icon" className="h-10 w-10 rounded-full text-slate-400 hover:text-rose-500 hover:bg-rose-50 transition-colors">
+                  <Heart className="h-5 w-5" />
+                </Button>
+              </div>
             </div>
           </div>
         </div>

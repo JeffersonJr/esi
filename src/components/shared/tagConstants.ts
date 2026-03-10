@@ -6,12 +6,19 @@ export interface Tag {
 
 export const TAG_COLORS = [
   { name: 'Vermelho', value: 'bg-red-500' },
-  { name: 'Laranja', value: 'bg-orange-500' },
-  { name: 'Amarelo', value: 'bg-yellow-500' },
-  { name: 'Verde', value: 'bg-green-500' },
-  { name: 'Azul', value: 'bg-blue-500' },
-  { name: 'Roxo', value: 'bg-purple-500' },
   { name: 'Rosa', value: 'bg-pink-500' },
+  { name: 'Roxo', value: 'bg-purple-500' },
+  { name: 'Violeta', value: 'bg-violet-500' },
+  { name: 'Índigo', value: 'bg-indigo-500' },
+  { name: 'Azul', value: 'bg-blue-500' },
+  { name: 'Ciano', value: 'bg-cyan-500' },
+  { name: 'Esmeralda', value: 'bg-emerald-500' },
+  { name: 'Verde', value: 'bg-green-500' },
+  { name: 'Lima', value: 'bg-lime-500' },
+  { name: 'Amarelo', value: 'bg-yellow-500' },
+  { name: 'Âmbar', value: 'bg-amber-500' },
+  { name: 'Laranja', value: 'bg-orange-500' },
+  { name: 'Ardósia', value: 'bg-slate-500' },
   { name: 'Cinza', value: 'bg-gray-500' },
 ];
 

@@ -10,7 +10,8 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { cn } from '@/lib/utils';
+import { cn, maskPhone } from '@/lib/utils';
+import { useAnimation } from '@/components/shared/ActionAnimation';
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from '@/components/ui/table';
@@ -22,8 +23,8 @@ import {
   BreadcrumbPage, BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import {
-  Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter,
-} from '@/components/ui/dialog';
+  Sheet, SheetContent, SheetHeader, SheetTitle, SheetFooter,
+} from '@/components/ui/sheet';
 import {
   Popover, PopoverContent, PopoverTrigger,
 } from '@/components/ui/popover';
@@ -66,6 +67,7 @@ interface AdvancedFilters {
 const defaultAdvanced: AdvancedFilters = { status: 'Todos', cidade: '', interesse: '' };
 
 export function Contatos() {
+  const { triggerAnimation } = useAnimation();
   const navigate = useNavigate();
   const { toast } = useToast();
   const [searchTerm, setSearchTerm] = useState('');
@@ -99,15 +101,29 @@ export function Contatos() {
   };
   const handleDelete = (contato: any) => { setContatoToDelete(contato); setDeleteModalOpen(true); };
 
-  const confirmDelete = () => {
+  const confirmDelete = (e: React.MouseEvent) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    triggerAnimation({
+      type: 'delete',
+      startX: rect.left + rect.width / 2,
+      startY: rect.top + rect.height / 2,
+      icon: Trash2
+    });
     setContatosList(prev => prev.filter(c => c.id !== contatoToDelete?.id));
     toast({ title: 'Contato excluído', description: `${contatoToDelete?.nome} foi removido.`, variant: 'success' });
     setDeleteModalOpen(false);
     setContatoToDelete(null);
   };
 
-  const handleAddContato = () => {
+  const handleAddContato = (e: React.MouseEvent) => {
     if (newContato.nome && newContato.email && newContato.telefone && newContato.tipo) {
+      const rect = e.currentTarget.getBoundingClientRect();
+      triggerAnimation({
+        type: 'success',
+        startX: rect.left + rect.width / 2,
+        startY: rect.top + rect.height / 2,
+        icon: User
+      });
       setContatosList(prev => [...prev, { ...newContato, id: Date.now().toString() }]);
       toast({ title: 'Contato adicionado!', description: `${newContato.nome} foi cadastrado com sucesso.`, variant: 'success' });
       setAddModalOpen(false);
@@ -166,28 +182,33 @@ export function Contatos() {
             </BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
-          <BreadcrumbItem><BreadcrumbPage>Contatos</BreadcrumbPage></BreadcrumbItem>
+          <BreadcrumbItem>
+            <BreadcrumbPage>Contatos</BreadcrumbPage>
+          </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
 
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:justify-between">
-        <div>
-          <h1 className="text-2xl sm:text-3xl font-bold">Contatos</h1>
-          <p className="text-sm text-muted-foreground">Gerencie clientes e proprietários</p>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4 shrink-0">
+        <div className="flex items-center gap-4">
+          <div className="h-12 w-12 rounded-2xl bg-primary text-primary-foreground flex items-center justify-center shadow-lg shadow-primary/20">
+            <Users className="h-6 w-6" />
+          </div>
+          <div>
+            <h1 className="text-3xl font-black text-slate-800 tracking-tight">Contatos</h1>
+            <p className="text-slate-500 mt-1 font-medium">Gerencie clientes e proprietários</p>
+          </div>
         </div>
-        <div className="flex items-center gap-2 sm:gap-3 self-end sm:self-auto">
-          <div className="flex items-center bg-muted rounded-lg p-1">
-            <Button variant={viewMode === 'table' ? 'secondary' : 'ghost'} size="sm" className="h-8 w-8 p-0" onClick={() => setViewMode('table')}>
+        <div className="flex items-center gap-3">
+          <div className="flex items-center bg-muted/50 rounded-xl p-1 border border-border/50">
+            <Button variant={viewMode === 'table' ? 'secondary' : 'ghost'} size="sm" className="h-9 w-9 p-0 rounded-lg" onClick={() => setViewMode('table')}>
               <ListIcon className="h-4 w-4" />
             </Button>
-            <Button variant={viewMode === 'grid' ? 'secondary' : 'ghost'} size="sm" className="h-8 w-8 p-0" onClick={() => setViewMode('grid')}>
+            <Button variant={viewMode === 'grid' ? 'secondary' : 'ghost'} size="sm" className="h-9 w-9 p-0 rounded-lg" onClick={() => setViewMode('grid')}>
               <Grid className="h-4 w-4" />
             </Button>
           </div>
-          <Button className="gap-2 shadow-lg shadow-primary/20 text-xs sm:text-sm" onClick={() => setAddModalOpen(true)}>
-            <Plus className="h-4 w-4" />
-            <span>Novo Contato</span>
+          <Button onClick={() => setAddModalOpen(true)} className="bg-primary hover:bg-primary/90 text-white font-black px-8 shadow-lg shadow-primary/20 h-12 rounded-2xl">
+            <Plus className="h-4 w-4 mr-2" /> Novo Contato
           </Button>
         </div>
       </div>
@@ -452,16 +473,17 @@ export function Contatos() {
         </CardContent>
       </Card>
 
-      <ContatoDeleteModal open={deleteModalOpen} onClose={() => { setDeleteModalOpen(false); setContatoToDelete(null); }} contato={contatoToDelete} onConfirm={confirmDelete} />
+      <ContatoDeleteModal open={deleteModalOpen} onClose={() => { setDeleteModalOpen(false); setContatoToDelete(null); }} contato={contatoToDelete} onConfirm={(e) => confirmDelete(e)} />
 
       {/* Add Contact Modal */}
-      <Dialog open={addModalOpen} onOpenChange={setAddModalOpen}>
-        <DialogContent className="sm:max-w-[500px] p-0 overflow-hidden border-none shadow-2xl">
-          <div className="bg-gradient-to-r from-primary to-primary/80 p-5 sm:p-6">
-            <DialogHeader>
-              <DialogTitle className="text-white text-lg sm:text-xl font-black">Novo Contato</DialogTitle>
+      {/* Add Contact Modal -> Changed to Sheet */}
+      <Sheet open={addModalOpen} onOpenChange={setAddModalOpen}>
+        <SheetContent side="right" className="sm:max-w-[500px] p-0 overflow-y-auto custom-scrollbar border-none shadow-2xl">
+          <div className="bg-gradient-to-r from-primary to-primary/80 p-5 sm:p-6 sticky top-0 z-10">
+            <SheetHeader>
+              <SheetTitle className="text-white text-lg sm:text-xl font-black">Novo Contato</SheetTitle>
               <p className="text-white/80 text-sm mt-1">Preencha as informações do novo contato</p>
-            </DialogHeader>
+            </SheetHeader>
           </div>
           <div className="p-5 sm:p-6 space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -475,7 +497,7 @@ export function Contatos() {
               </div>
               <div className="space-y-1.5">
                 <Label htmlFor="telefone" className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Telefone *</Label>
-                <Input id="telefone" value={newContato.telefone} onChange={(e) => setNewContato({ ...newContato, telefone: e.target.value })} placeholder="(00) 99999-0000" />
+                <Input id="telefone" value={newContato.telefone} onChange={(e) => setNewContato({ ...newContato, telefone: maskPhone(e.target.value) })} placeholder="(00) 99999-0000" />
               </div>
               <div className="space-y-1.5">
                 <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Tipo *</Label>
@@ -509,14 +531,14 @@ export function Contatos() {
               </div>
             </div>
           </div>
-          <DialogFooter className="px-5 sm:px-6 pb-5 sm:pb-6 gap-2 flex-col sm:flex-row">
+          <SheetFooter className="px-5 sm:px-6 pb-5 sm:pb-6 gap-2 flex-col sm:flex-row mt-6">
             <Button variant="outline" onClick={() => setAddModalOpen(false)} className="w-full sm:w-auto">Cancelar</Button>
-            <Button onClick={handleAddContato} className="gap-2 shadow-lg shadow-primary/20 w-full sm:w-auto">
+            <Button onClick={(e) => handleAddContato(e)} className="gap-2 shadow-lg shadow-primary/20 w-full sm:w-auto">
               <Plus className="h-4 w-4" /> Adicionar Contato
             </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+          </SheetFooter>
+        </SheetContent>
+      </Sheet>
 
       {/* Contact Detail/Edit Sheet */}
       <ContactSheet

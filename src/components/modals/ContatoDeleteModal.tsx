@@ -9,7 +9,7 @@ import { AlertTriangle, Building, Home, ArrowRight } from 'lucide-react';
 interface ContatoDeleteModalProps {
   open: boolean;
   onClose: () => void;
-  onConfirm: () => void;
+  onConfirm: (e: React.MouseEvent) => void;
   contato: any;
 }
 
@@ -29,11 +29,11 @@ export function ContatoDeleteModal({ open, onClose, onConfirm, contato }: Contat
   const [selectedContatoId, setSelectedContatoId] = useState('');
   const [transferRequired, setTransferRequired] = useState(true);
 
-  const handleConfirm = () => {
+  const handleConfirm = (e: React.MouseEvent) => {
     if (transferRequired && !selectedContatoId) {
       return;
     }
-    onConfirm();
+    onConfirm(e);
   };
 
   return (
@@ -50,7 +50,7 @@ export function ContatoDeleteModal({ open, onClose, onConfirm, contato }: Contat
           <Alert>
             <AlertTriangle className="h-4 w-4" />
             <AlertDescription>
-              Tem certeza que deseja excluir o contato <strong>{contato?.nome}</strong>? 
+              Tem certeza que deseja excluir o contato <strong>{contato?.nome}</strong>?
               Esta ação não pode ser desfeita.
             </AlertDescription>
           </Alert>
@@ -61,13 +61,13 @@ export function ContatoDeleteModal({ open, onClose, onConfirm, contato }: Contat
               <Building className="h-4 w-4" />
               Imóveis Atrelados ({mockImoveisAtrelados.length})
             </h3>
-            
+
             {mockImoveisAtrelados.length > 0 ? (
               <div className="space-y-2">
                 <p className="text-sm text-muted-foreground">
                   Este contato possui imóveis cadastrados. Você precisa transferir os imóveis para outro contato antes de excluí-lo.
                 </p>
-                
+
                 <div className="border rounded-lg p-3 space-y-2">
                   {mockImoveisAtrelados.map((imovel) => (
                     <div key={imovel.id} className="flex items-center justify-between p-2 bg-muted rounded">
@@ -125,14 +125,14 @@ export function ContatoDeleteModal({ open, onClose, onConfirm, contato }: Contat
                 </>
               )}
             </div>
-            
+
             <div className="flex gap-2">
               <Button variant="outline" onClick={onClose}>
                 Cancelar
               </Button>
-              <Button 
-                variant="destructive" 
-                onClick={handleConfirm}
+              <Button
+                variant="destructive"
+                onClick={(e) => handleConfirm(e)}
                 disabled={mockImoveisAtrelados.length > 0 && !selectedContatoId}
               >
                 Excluir Contato

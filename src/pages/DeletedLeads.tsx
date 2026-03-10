@@ -202,287 +202,300 @@ export function DeletedLeads() {
   };
 
   return (
-    <div className="space-y-6 animate-fade-in">
-      <Breadcrumb>
-        <BreadcrumbList>
-          <BreadcrumbItem>
-            <BreadcrumbLink href="/" className="flex items-center gap-1">
-              <Home className="h-4 w-4" /> Dashboard
-            </BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbLink href="/funil">Funil de Vendas</BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbPage>Lixeira</BreadcrumbPage>
-          </BreadcrumbItem>
-        </BreadcrumbList>
-      </Breadcrumb>
+    <div className="flex flex-col min-h-full">
+      <div className="max-w-[1400px] w-full mx-auto px-6 pt-4">
+        <Breadcrumb>
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink href="/" className="flex items-center gap-1">
+                <Home className="h-4 w-4" /> Dashboard
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbLink href="/funil">Funil de Vendas</BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbPage>Lixeira</BreadcrumbPage>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
+      </div>
 
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl md:text-3xl font-bold">Lixeira de Leads</h1>
-          <p className="text-muted-foreground text-sm md:text-base">
-            Leads excluídos que podem ser restaurados em até 30 dias
-          </p>
-        </div>
-
-        <div className="flex gap-2">
-          <div className="relative flex-1 max-w-xs">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder="Buscar leads excluídos..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10"
-            />
+      {/* Header Sticky */}
+      <div className="bg-white border-b border-slate-200 px-6 py-6 sticky top-0 z-40 backdrop-blur-md bg-white/80 mt-4 h-24 flex items-center shrink-0">
+        <div className="max-w-[1400px] w-full mx-auto flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div className="flex items-center gap-4">
+            <div className="h-12 w-12 rounded-2xl bg-slate-800 text-white flex items-center justify-center shadow-lg shadow-slate-200 shrink-0">
+              <Trash2 className="h-6 w-6" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <h1 className="text-3xl font-black text-slate-800 tracking-tight">Lixeira de Leads</h1>
+                <Badge variant="outline" className="text-[10px] font-black uppercase tracking-widest border-slate-200 text-slate-600 bg-slate-50/50">Recuperação</Badge>
+              </div>
+              <p className="text-slate-500 mt-1 font-medium italic">Leads excluídos que podem ser restaurados em até 30 dias</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-3">
+            <div className="relative w-64">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-400" />
+              <Input
+                placeholder="Buscar leads excluídos..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-10 h-12 bg-slate-50 border-slate-200 rounded-2xl focus-visible:ring-indigo-100"
+              />
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Estatísticas */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center gap-2">
-              <Trash2 className="h-5 w-5 text-destructive" />
-              <div>
-                <p className="text-sm text-muted-foreground">Total na Lixeira</p>
-                <p className="text-2xl font-bold">{cleanupStats.totalInTrash}</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+      <div className="max-w-[1400px] w-full mx-auto px-6 py-8 space-y-8 animate-fade-in">
 
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center gap-2">
-              <AlertTriangle className="h-5 w-5 text-orange-500" />
-              <div>
-                <p className="text-sm text-muted-foreground">Expiram em 7 dias</p>
-                <p className="text-2xl font-bold">{cleanupStats.expiringInSevenDays}</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center gap-2">
-              <RotateCcw className="h-5 w-5 text-green-500" />
-              <div>
-                <p className="text-sm text-muted-foreground">Restaurados</p>
-                <p className="text-2xl font-bold">{cleanupStats.restored}</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center gap-2">
-              <Settings className="h-5 w-5 text-blue-500" />
-              <div>
-                <p className="text-sm text-muted-foreground">Limpeza Manual</p>
-                <Button
-                  size="sm"
-                  variant="outline"
-                  onClick={() => {
-                    const deleted = manualCleanup();
-                    if (deleted > 0) {
-                      toast({
-                        title: "Limpeza manual realizada",
-                        description: `${deleted} leads foram permanentemente excluídos.`,
-                      });
-                    } else {
-                      toast({
-                        title: "Nenhum lead para limpar",
-                        description: "Não há leads expirados para limpar no momento.",
-                      });
-                    }
-                  }}
-                  className="mt-1"
-                >
-                  Executar Limpeza
-                </Button>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Lista de Leads Excluídos */}
-      <div className="space-y-4">
-        {filteredLeads.length === 0 ? (
+        {/* Estatísticas */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <Card>
-            <CardContent className="p-8 text-center">
-              <Trash2 className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-              <h3 className="text-lg font-semibold mb-2">Nenhum lead na lixeira</h3>
-              <p className="text-muted-foreground">
-                {searchTerm ? 'Nenhum lead encontrado para sua busca.' : 'Todos os leads estão ativos no funil.'}
-              </p>
+            <CardContent className="p-4">
+              <div className="flex items-center gap-2">
+                <Trash2 className="h-5 w-5 text-destructive" />
+                <div>
+                  <p className="text-sm text-muted-foreground">Total na Lixeira</p>
+                  <p className="text-2xl font-bold">{cleanupStats.totalInTrash}</p>
+                </div>
+              </div>
             </CardContent>
           </Card>
-        ) : (
-          filteredLeads.map((deletedLead) => {
-            const daysRemaining = getDaysRemaining(deletedLead.deletedAt);
-            const isExpiringSoon = daysRemaining <= 7;
 
-            return (
-              <Card key={deletedLead.id} className="hover:shadow-md transition-shadow">
-                <CardHeader className="pb-3">
-                  <div className="flex items-start justify-between">
-                    <div className="flex items-center gap-3">
-                      <Avatar className="h-10 w-10">
-                        <AvatarFallback className="bg-muted">
-                          {deletedLead.originalLead.name.split(' ').map(n => n[0]).join('')}
-                        </AvatarFallback>
-                      </Avatar>
-                      <div>
-                        <CardTitle className="text-lg">{deletedLead.originalLead.name}</CardTitle>
-                        <div className="flex items-center gap-2 mt-1">
-                          <Badge variant="outline">{deletedLead.originalLead.source}</Badge>
-                          <Badge variant="secondary">{deletedLead.originalLead.property}</Badge>
-                          {isExpiringSoon && (
-                            <Badge variant="destructive" className="gap-1">
-                              <AlertTriangle className="h-3 w-3" />
-                              Expira em {daysRemaining} dias
-                            </Badge>
-                          )}
+          <Card>
+            <CardContent className="p-4">
+              <div className="flex items-center gap-2">
+                <AlertTriangle className="h-5 w-5 text-orange-500" />
+                <div>
+                  <p className="text-sm text-muted-foreground">Expiram em 7 dias</p>
+                  <p className="text-2xl font-bold">{cleanupStats.expiringInSevenDays}</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardContent className="p-4">
+              <div className="flex items-center gap-2">
+                <RotateCcw className="h-5 w-5 text-green-500" />
+                <div>
+                  <p className="text-sm text-muted-foreground">Restaurados</p>
+                  <p className="text-2xl font-bold">{cleanupStats.restored}</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardContent className="p-4">
+              <div className="flex items-center gap-2">
+                <Settings className="h-5 w-5 text-blue-500" />
+                <div>
+                  <p className="text-sm text-muted-foreground">Limpeza Manual</p>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => {
+                      const deleted = manualCleanup();
+                      if (deleted > 0) {
+                        toast({
+                          title: "Limpeza manual realizada",
+                          description: `${deleted} leads foram permanentemente excluídos.`,
+                        });
+                      } else {
+                        toast({
+                          title: "Nenhum lead para limpar",
+                          description: "Não há leads expirados para limpar no momento.",
+                        });
+                      }
+                    }}
+                    className="mt-1"
+                  >
+                    Executar Limpeza
+                  </Button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Lista de Leads Excluídos */}
+        <div className="space-y-4">
+          {filteredLeads.length === 0 ? (
+            <Card>
+              <CardContent className="p-8 text-center">
+                <Trash2 className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                <h3 className="text-lg font-semibold mb-2">Nenhum lead na lixeira</h3>
+                <p className="text-muted-foreground">
+                  {searchTerm ? 'Nenhum lead encontrado para sua busca.' : 'Todos os leads estão ativos no funil.'}
+                </p>
+              </CardContent>
+            </Card>
+          ) : (
+            filteredLeads.map((deletedLead) => {
+              const daysRemaining = getDaysRemaining(deletedLead.deletedAt);
+              const isExpiringSoon = daysRemaining <= 7;
+
+              return (
+                <Card key={deletedLead.id} className="hover:shadow-md transition-shadow">
+                  <CardHeader className="pb-3">
+                    <div className="flex items-start justify-between">
+                      <div className="flex items-center gap-3">
+                        <Avatar className="h-10 w-10">
+                          <AvatarFallback className="bg-muted">
+                            {deletedLead.originalLead.name.split(' ').map(n => n[0]).join('')}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div>
+                          <CardTitle className="text-lg">{deletedLead.originalLead.name}</CardTitle>
+                          <div className="flex items-center gap-2 mt-1">
+                            <Badge variant="outline">{deletedLead.originalLead.source}</Badge>
+                            <Badge variant="secondary">{deletedLead.originalLead.property}</Badge>
+                            {isExpiringSoon && (
+                              <Badge variant="destructive" className="gap-1">
+                                <AlertTriangle className="h-3 w-3" />
+                                Expira em {daysRemaining} dias
+                              </Badge>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" size="icon">
+                            <MoreHorizontal className="h-4 w-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuItem
+                            onClick={() => {
+                              setSelectedLead(deletedLead);
+                              setRestoreDialogOpen(true);
+                            }}
+                            className="gap-2"
+                          >
+                            <RotateCcw className="h-4 w-4" />
+                            Restaurar Lead
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            onClick={() => {
+                              setSelectedLead(deletedLead);
+                              setPermanentDeleteDialogOpen(true);
+                            }}
+                            className="gap-2 text-destructive"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                            Excluir Permanentemente
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </div>
+                  </CardHeader>
+
+                  <CardContent className="space-y-3">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                      <div className="space-y-2">
+                        <div className="flex items-center gap-2">
+                          <User className="h-4 w-4 text-muted-foreground" />
+                          <span className="text-muted-foreground">Responsável:</span>
+                          <span>{deletedLead.originalLead.assignedTo}</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Calendar className="h-4 w-4 text-muted-foreground" />
+                          <span className="text-muted-foreground">Excluído em:</span>
+                          <span>{formatDate(deletedLead.deletedAt)}</span>
+                        </div>
+                      </div>
+                      <div className="space-y-2">
+                        <div className="flex items-center gap-2">
+                          <User className="h-4 w-4 text-muted-foreground" />
+                          <span className="text-muted-foreground">Excluído por:</span>
+                          <span>{deletedLead.deletedBy}</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Clock className="h-4 w-4 text-muted-foreground" />
+                          <span className="text-muted-foreground">Tempo restante:</span>
+                          <span className={isExpiringSoon ? 'text-destructive font-medium' : ''}>
+                            {daysRemaining} dias
+                          </span>
                         </div>
                       </div>
                     </div>
 
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="icon">
-                          <MoreHorizontal className="h-4 w-4" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuItem
-                          onClick={() => {
-                            setSelectedLead(deletedLead);
-                            setRestoreDialogOpen(true);
-                          }}
-                          className="gap-2"
-                        >
-                          <RotateCcw className="h-4 w-4" />
-                          Restaurar Lead
-                        </DropdownMenuItem>
-                        <DropdownMenuItem
-                          onClick={() => {
-                            setSelectedLead(deletedLead);
-                            setPermanentDeleteDialogOpen(true);
-                          }}
-                          className="gap-2 text-destructive"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                          Excluir Permanentemente
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </div>
-                </CardHeader>
+                    <div className="pt-2 border-t">
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm text-muted-foreground">Motivo da exclusão:</span>
+                        <Badge variant="outline">{deletedLead.deleteReason.label}</Badge>
+                        {deletedLead.customReason && (
+                          <span className="text-sm text-muted-foreground">- {deletedLead.customReason}</span>
+                        )}
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              );
+            })
+          )}
+        </div>
 
-                <CardContent className="space-y-3">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                    <div className="space-y-2">
-                      <div className="flex items-center gap-2">
-                        <User className="h-4 w-4 text-muted-foreground" />
-                        <span className="text-muted-foreground">Responsável:</span>
-                        <span>{deletedLead.originalLead.assignedTo}</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Calendar className="h-4 w-4 text-muted-foreground" />
-                        <span className="text-muted-foreground">Excluído em:</span>
-                        <span>{formatDate(deletedLead.deletedAt)}</span>
-                      </div>
-                    </div>
-                    <div className="space-y-2">
-                      <div className="flex items-center gap-2">
-                        <User className="h-4 w-4 text-muted-foreground" />
-                        <span className="text-muted-foreground">Excluído por:</span>
-                        <span>{deletedLead.deletedBy}</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Clock className="h-4 w-4 text-muted-foreground" />
-                        <span className="text-muted-foreground">Tempo restante:</span>
-                        <span className={isExpiringSoon ? 'text-destructive font-medium' : ''}>
-                          {daysRemaining} dias
-                        </span>
-                      </div>
-                    </div>
-                  </div>
+        {/* Dialog de Confirmação de Restauração */}
+        <Dialog open={restoreDialogOpen} onOpenChange={setRestoreDialogOpen}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Restaurar Lead</DialogTitle>
+              <DialogDescription>
+                Tem certeza que deseja restaurar o lead <strong>{selectedLead?.originalLead.name}</strong>?
+                Ele retornará para o estágio "Novo Lead" no funil.
+              </DialogDescription>
+            </DialogHeader>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setRestoreDialogOpen(false)}>
+                Cancelar
+              </Button>
+              <Button
+                onClick={() => selectedLead && handleRestoreLead(selectedLead)}
+                className="gap-2"
+              >
+                <RotateCcw className="h-4 w-4" />
+                Restaurar Lead
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
 
-                  <div className="pt-2 border-t">
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm text-muted-foreground">Motivo da exclusão:</span>
-                      <Badge variant="outline">{deletedLead.deleteReason.label}</Badge>
-                      {deletedLead.customReason && (
-                        <span className="text-sm text-muted-foreground">- {deletedLead.customReason}</span>
-                      )}
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            );
-          })
-        )}
+        {/* Dialog de Confirmação de Exclusão Permanente */}
+        <Dialog open={permanentDeleteDialogOpen} onOpenChange={setPermanentDeleteDialogOpen}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Excluir Permanentemente</DialogTitle>
+              <DialogDescription>
+                Tem certeza que deseja excluir permanentemente o lead <strong>{selectedLead?.originalLead.name}</strong>?
+                Esta ação não poderá ser desfeita e todos os dados serão perdidos.
+              </DialogDescription>
+            </DialogHeader>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setPermanentDeleteDialogOpen(false)}>
+                Cancelar
+              </Button>
+              <Button
+                variant="destructive"
+                onClick={() => selectedLead && handlePermanentDelete(selectedLead)}
+                className="gap-2"
+              >
+                <Trash2 className="h-4 w-4" />
+                Excluir Permanentemente
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
-
-      {/* Dialog de Confirmação de Restauração */}
-      <Dialog open={restoreDialogOpen} onOpenChange={setRestoreDialogOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Restaurar Lead</DialogTitle>
-            <DialogDescription>
-              Tem certeza que deseja restaurar o lead <strong>{selectedLead?.originalLead.name}</strong>?
-              Ele retornará para o estágio "Novo Lead" no funil.
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setRestoreDialogOpen(false)}>
-              Cancelar
-            </Button>
-            <Button
-              onClick={() => selectedLead && handleRestoreLead(selectedLead)}
-              className="gap-2"
-            >
-              <RotateCcw className="h-4 w-4" />
-              Restaurar Lead
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-
-      {/* Dialog de Confirmação de Exclusão Permanente */}
-      <Dialog open={permanentDeleteDialogOpen} onOpenChange={setPermanentDeleteDialogOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Excluir Permanentemente</DialogTitle>
-            <DialogDescription>
-              Tem certeza que deseja excluir permanentemente o lead <strong>{selectedLead?.originalLead.name}</strong>?
-              Esta ação não poderá ser desfeita e todos os dados serão perdidos.
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setPermanentDeleteDialogOpen(false)}>
-              Cancelar
-            </Button>
-            <Button
-              variant="destructive"
-              onClick={() => selectedLead && handlePermanentDelete(selectedLead)}
-              className="gap-2"
-            >
-              <Trash2 className="h-4 w-4" />
-              Excluir Permanentemente
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 }

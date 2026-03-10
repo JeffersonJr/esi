@@ -320,15 +320,6 @@ export function Dashboard() {
 
   return (
     <div className="space-y-8 animate-in fade-in duration-700">
-      <Breadcrumb className="mb-4 sm:mb-6">
-        <BreadcrumbList>
-          <BreadcrumbItem>
-            <BreadcrumbPage className="flex items-center gap-1">
-              <Home className="h-4 w-4" /> Dashboard
-            </BreadcrumbPage>
-          </BreadcrumbItem>
-        </BreadcrumbList>
-      </Breadcrumb>
       {/* Welcome Section */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}

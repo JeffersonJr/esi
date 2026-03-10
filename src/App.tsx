@@ -14,7 +14,7 @@ import { Analytics } from './pages/Analytics';
 import { Usuarios } from './pages/Usuarios';
 import { Equipes } from './pages/Equipes';
 import { Configuracoes } from './pages/Configuracoes';
-import { EditorSite } from './pages/EditorSite';
+import { EsiSites } from './pages/EditorSite';
 import LeadDetalhes from './pages/LeadDetalhes';
 import { Login } from './pages/Login';
 import { Perfil } from './pages/Perfil';
@@ -31,47 +31,50 @@ import { SistemaVistoria } from './pages/SistemaVistoria';
 import NotFound from './pages/NotFound';
 import { Toaster } from './components/ui/toaster';
 import { ThemeProvider } from './contexts/theme-context';
+import { AnimationProvider } from './components/shared/ActionAnimation';
 
 function App() {
   return (
     <ThemeProvider>
-      <Router>
-        <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="/recuperar-senha" element={<RecuperarSenha />} />
-          <Route path="/verificar-codigo" element={<VerificarCodigo />} />
-          <Route path="/redefinir-senha" element={<RedefinirSenha />} />
-          <Route path="/" element={<DashboardLayout />}>
-            <Route index element={<Dashboard />} />
-            <Route path="funil" element={<Funil />} />
-            <Route path="lixeira" element={<DeletedLeads />} />
-            <Route path="leads/:id" element={<LeadDetalhes />} />
-            <Route path="contatos" element={<Contatos />} />
-            <Route path="contatos/perfil/:id" element={<ContatoPerfil />} />
-            <Route path="contatos/editar/:id" element={<ContatoEditar />} />
-            <Route path="imoveis" element={<Imoveis />} />
-            <Route path="imoveis/detalhes/:id" element={<ImovelDetalhes />} />
-            <Route path="imoveis/cadastrar" element={<CadastroImovel />} />
-            <Route path="imoveis/editar/:id" element={<CadastroImovel />} />
-            <Route path="agenda" element={<Agenda />} />
-            <Route path="analytics" element={<Analytics />} />
-            <Route path="usuarios" element={<Usuarios />} />
-            <Route path="equipes" element={<Equipes />} />
-            <Route path="site" element={<EditorSite />} />
-            <Route path="esibank" element={<EsiBank />} />
-            <Route path="esichat" element={<EsiChat />} />
-            <Route path="automacao" element={<AutomacaoImobiliaria />} />
-            <Route path="locacoes" element={<GestaoLocacoes />} />
-            <Route path="financeiro" element={<GestaoFinanceira />} />
-            <Route path="solicitacoes" element={<GestaoSolicitacoes />} />
-            <Route path="vistoria" element={<SistemaVistoria />} />
-            <Route path="configuracoes" element={<Configuracoes />} />
-            <Route path="perfil" element={<Perfil />} />
-          </Route>
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-        <Toaster />
-      </Router>
+      <AnimationProvider>
+        <Router>
+          <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route path="/recuperar-senha" element={<RecuperarSenha />} />
+            <Route path="/verificar-codigo" element={<VerificarCodigo />} />
+            <Route path="/redefinir-senha" element={<RedefinirSenha />} />
+            <Route path="/" element={<DashboardLayout />}>
+              <Route index element={<Dashboard />} />
+              <Route path="funil" element={<Funil />} />
+              <Route path="lixeira" element={<DeletedLeads />} />
+              <Route path="leads/:id" element={<LeadDetalhes />} />
+              <Route path="contatos" element={<Contatos />} />
+              <Route path="contatos/perfil/:id" element={<ContatoPerfil />} />
+              <Route path="contatos/editar/:id" element={<ContatoEditar />} />
+              <Route path="imoveis" element={<Imoveis />} />
+              <Route path="imoveis/detalhes/:id" element={<ImovelDetalhes />} />
+              <Route path="imoveis/cadastrar" element={<CadastroImovel />} />
+              <Route path="imoveis/editar/:id" element={<CadastroImovel />} />
+              <Route path="agenda" element={<Agenda />} />
+              <Route path="analytics" element={<Analytics />} />
+              <Route path="usuarios" element={<Usuarios />} />
+              <Route path="equipes" element={<Equipes />} />
+              <Route path="site" element={<EsiSites />} />
+              <Route path="esibank" element={<EsiBank />} />
+              <Route path="esichat" element={<EsiChat />} />
+              <Route path="automacao" element={<AutomacaoImobiliaria />} />
+              <Route path="locacoes" element={<GestaoLocacoes />} />
+              <Route path="financeiro" element={<GestaoFinanceira />} />
+              <Route path="solicitacoes" element={<GestaoSolicitacoes />} />
+              <Route path="vistoria" element={<SistemaVistoria />} />
+              <Route path="configuracoes" element={<Configuracoes />} />
+              <Route path="perfil" element={<Perfil />} />
+            </Route>
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+          <Toaster />
+        </Router>
+      </AnimationProvider>
     </ThemeProvider>
   );
 }

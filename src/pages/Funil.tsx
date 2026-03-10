@@ -56,6 +56,14 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
 import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetFooter,
+} from "@/components/ui/sheet";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
@@ -63,6 +71,9 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { TagManager } from '@/components/shared/TagManager';
+import { useAnimation } from '@/components/shared/ActionAnimation';
+import { DEFAULT_TAGS } from '@/components/shared/tagConstants';
 
 import { Lead, DeleteReason, DeletedLead } from '@/types/lead';
 
@@ -223,6 +234,7 @@ const initialLeads: Record<string, Lead[]> = {
 };
 
 export function Funil() {
+  const { triggerAnimation } = useAnimation();
   const [leads, setLeads] = useState<Record<string, Lead[]>>(initialLeads);
   const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
   const [detailsOpen, setDetailsOpen] = useState(false);
@@ -253,19 +265,21 @@ export function Funil() {
     dataMin: string;
     dataMax: string;
     contatoRealizado: boolean;
+    searchType: string;
   }>({
     nomeLead: '',
-    corretor: '',
+    corretor: 'all',
     valorMin: '',
     valorMax: '',
     regiao: '',
     imovel: '',
-    origem: '',
+    origem: 'all',
     tags: [],
-    stage: '',
+    stage: 'all',
     dataMin: '',
     dataMax: '',
-    contatoRealizado: false
+    contatoRealizado: false,
+    searchType: 'all',
   });
   const isMobile = useMediaQuery('(max-width: 768px)');
   const navigate = useNavigate();
@@ -314,6 +328,17 @@ export function Funil() {
 
   const handleConfirmDelete = async (reason: DeleteReason, customReason?: string) => {
     if (!leadToDelete) return;
+
+    // Trigger delete animation
+    const cardElement = document.querySelector(`[data-lead-id="${leadToDelete.id}"]`);
+    const rect = cardElement?.getBoundingClientRect();
+    if (rect) {
+      triggerAnimation({
+        type: 'delete',
+        startX: rect.left + rect.width / 2,
+        startY: rect.top + rect.height / 2
+      });
+    }
 
     try {
       // Criar registro do lead excluído
@@ -469,22 +494,27 @@ export function Funil() {
   const handleClearFilters = () => {
     setFilters({
       nomeLead: '',
-      corretor: '',
+      corretor: 'all',
       valorMin: '',
       valorMax: '',
       regiao: '',
       imovel: '',
-      origem: '',
+      origem: 'all',
       tags: [],
-      stage: '',
+      stage: 'all',
       dataMin: '',
       dataMax: '',
-      contatoRealizado: false
+      contatoRealizado: false,
+      searchType: 'all',
     });
     setSearchTerm('');
   };
 
-  const hasActiveFilters = Object.values(filters).some(value => value !== '') || searchTerm !== '';
+  const hasActiveFilters = Object.entries(filters).some(([key, value]) => {
+    if (key === 'tags') return (value as string[]).length > 0;
+    if (typeof value === 'boolean') return value === true;
+    return value !== '' && value !== 'all';
+  }) || searchTerm !== '';
 
   const getFilteredLeads = () => {
     const filteredLeads = Object.entries(leads).reduce((acc, [stage, stageLeads]) => {
@@ -500,11 +530,12 @@ export function Funil() {
 
         // Filtros específicos
         const matchesNome = filters.nomeLead === '' || lead.name.toLowerCase().includes(filters.nomeLead.toLowerCase());
-        const matchesCorretor = filters.corretor === '' || lead.assignedTo === filters.corretor;
+        const matchesCorretor = filters.corretor === 'all' || lead.assignedTo === filters.corretor;
         const matchesRegiao = filters.regiao === '' || lead.property.toLowerCase().includes(filters.regiao.toLowerCase());
         const matchesImovel = filters.imovel === '' || lead.property.toLowerCase().includes(filters.imovel.toLowerCase());
-        const matchesOrigem = filters.origem === '' || lead.source === filters.origem;
-        const matchesStage = filters.stage === '' || lead.stage === filters.stage;
+        const matchesOrigem = filters.origem === 'all' || lead.source === filters.origem;
+        const matchesStage = filters.stage === 'all' || stage === filters.stage;
+        const matchesSearchType = filters.searchType === 'all' || lead.searchType === filters.searchType;
         const matchesTags = filters.tags.length === 0 || (lead.tags && filters.tags.some(tag => lead.tags.includes(tag)));
         const matchesContato = !filters.contatoRealizado || (filters.contatoRealizado && lead.lastContact && lead.lastContact !== '');
 
@@ -533,7 +564,7 @@ export function Funil() {
         }
 
         return matchesSearch && matchesNome && matchesCorretor && matchesRegiao && matchesImovel &&
-          matchesOrigem && matchesStage && matchesTags && matchesContato && matchesValor && matchesData;
+          matchesOrigem && matchesStage && matchesTags && matchesContato && matchesValor && matchesData && matchesSearchType;
       });
 
       if (filteredStageLeads.length > 0) {
@@ -596,6 +627,19 @@ export function Funil() {
       description: `${removed.name} foi movido(a) de "${sourceStageName}" para "${destStageName}".`,
       variant: "success",
     });
+
+    // Trigger success ping at destination
+    const dropzone = document.querySelector(`[data-droppable-id="${destStage}"]`);
+    const dropRect = dropzone?.getBoundingClientRect();
+    if (dropRect) {
+      triggerAnimation({
+        type: 'success',
+        startX: dropRect.left + dropRect.width / 2,
+        startY: dropRect.top + dropRect.height / 2,
+        endX: dropRect.left + dropRect.width / 2,
+        endY: dropRect.top + dropRect.height / 2
+      });
+    }
   };
 
   // Handle transfer confirmation
@@ -633,28 +677,17 @@ export function Funil() {
     const oldAgent = AGENTS.find(agent => agent.id === lead.assignedTo);
     const newAgent = AGENTS.find(agent => agent.id === newAgentId);
 
-    // Cria elemento de animação visual
-    const createTransferAnimation = () => {
-      const animation = document.createElement('div');
-      animation.className = 'fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg z-50 flex items-center gap-2';
-      animation.innerHTML = `
-        <div class="flex items-center gap-2">
-          <div class="w-2 h-2 bg-white rounded-full animate-pulse"></div>
-          <span class="text-sm font-medium">Transferindo lead...</span>
-        </div>
-      `;
-      document.body.appendChild(animation);
-
-      // Remove após 2 segundos
-      setTimeout(() => {
-        animation.style.transition = 'opacity 0.3s ease-out';
-        animation.style.opacity = '0';
-        setTimeout(() => document.body.removeChild(animation), 300);
-      }, 2000);
-    };
-
-    // Dispara animação
-    createTransferAnimation();
+    // Trigger transfer animation (User icon moving)
+    const cardElement = document.querySelector(`[data-lead-id="${lead.id}"]`);
+    const rect = cardElement?.getBoundingClientRect();
+    if (rect) {
+      triggerAnimation({
+        type: 'change-broker',
+        startX: rect.left + rect.width / 2,
+        startY: rect.top + rect.height / 2,
+        icon: User
+      });
+    }
 
     // Mostra toast detalhado após um pequeno delay
     setTimeout(() => {
@@ -694,20 +727,22 @@ export function Funil() {
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbPage>Funil de Vendas</BreadcrumbPage>
+            <BreadcrumbPage>Esi.leads</BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
 
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl md:text-3xl font-bold tracking-tight">Funil de Vendas</h1>
-          <p className="text-muted-foreground text-sm flex items-center gap-2">
-            <TrendingUp className="h-4 w-4 text-success" />
-            Gerencie seus leads e oportunidades em tempo real
-          </p>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4 shrink-0">
+        <div className="flex items-center gap-4">
+          <div className="h-12 w-12 rounded-2xl bg-primary text-primary-foreground flex items-center justify-center shadow-lg shadow-primary/20">
+            <TrendingUp className="h-6 w-6" />
+          </div>
+          <div>
+            <h1 className="text-3xl font-black text-slate-800 tracking-tight">Esi.leads</h1>
+            <p className="text-slate-500 mt-1 font-medium">Gerencie seus leads e oportunidades em tempo real</p>
+          </div>
         </div>
-        <div className="flex gap-2">
+        <div className="flex items-center gap-3">
           <div className="relative flex-1 max-w-xs">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
@@ -726,7 +761,11 @@ export function Funil() {
             Filtros
             {hasActiveFilters && (
               <span className="bg-primary text-primary-foreground rounded-full px-2 py-0.5 text-xs">
-                {Object.values(filters).filter(value => value !== '').length + (searchTerm !== '' ? 1 : 0)}
+                {Object.entries(filters).filter(([key, value]) => {
+                  if (key === 'tags') return (value as string[]).length > 0;
+                  if (key === 'contatoRealizado') return value === true;
+                  return value !== '' && value !== 'all';
+                }).length + (searchTerm !== '' ? 1 : 0)}
               </span>
             )}
           </Button>
@@ -774,6 +813,7 @@ export function Funil() {
                       <div
                         ref={provided.innerRef}
                         {...provided.droppableProps}
+                        data-droppable-id={stage.id}
                         className={`space-y-3 flex-1 overflow-y-auto rounded-lg p-2 transition-colors ${snapshot.isDraggingOver ? 'bg-primary/5 border-2 border-dashed border-primary' : ''
                           }`}
                       >
@@ -785,6 +825,7 @@ export function Funil() {
                                 {...provided.draggableProps}
                                 {...provided.dragHandleProps}
                                 className="group focus:outline-none"
+                                data-lead-id={lead.id}
                               >
                                 <motion.div
                                   layout
@@ -816,7 +857,7 @@ export function Funil() {
                                           <div className="flex-1 min-w-0">
                                             <CardTitle className="text-sm font-bold truncate group-hover:text-primary transition-colors">{lead.name}</CardTitle>
                                             <div className="flex items-center gap-2 mt-1">
-                                              <Badge variant="secondary" className="text-[9px] font-bold h-4 px-1 bg-muted/50 border-none">
+                                              <Badge variant="outline" className="text-[9px] font-bold h-4 px-1 bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-900/30 dark:text-blue-300 dark:border-blue-800">
                                                 {lead.source}
                                               </Badge>
                                               <div className="flex items-center gap-1 text-[9px] font-bold text-muted-foreground">
@@ -969,7 +1010,7 @@ export function Funil() {
           setFormOpen(false);
           setEditingLead(null);
         }}
-        onSubmit={handleSaveLead}
+        onSave={handleSaveLead}
         lead={editingLead}
       />
 
@@ -980,164 +1021,204 @@ export function Funil() {
         lead={selectedLead}
       />
 
-      {/* Modal de Filtros */}
-      <Dialog open={filterModalOpen} onOpenChange={setFilterModalOpen}>
-        <DialogContent className="max-w-md">
-          <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
-              <Filter className="h-5 w-5" />
-              Filtros do Funil de Vendas
-            </DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4">
-            <div>
-              <Label htmlFor="nomeLead">Nome do Lead</Label>
-              <Input
-                id="nomeLead"
-                placeholder="Buscar por nome..."
-                value={filters.nomeLead}
-                onChange={(e) => setFilters({ ...filters, nomeLead: e.target.value })}
-              />
-            </div>
+      {/* Modal de Filtros (Drawer Lateral) */}
+      <Sheet open={filterModalOpen} onOpenChange={setFilterModalOpen}>
+        <SheetContent side="right" className="sm:max-w-md w-full flex flex-col p-0">
+          <SheetHeader className="p-6 border-b">
+            <SheetTitle className="flex items-center gap-2">
+              <Filter className="h-5 w-5 text-primary" />
+              Filtros do Esi.leads
+            </SheetTitle>
+          </SheetHeader>
 
-            <div>
-              <Label htmlFor="corretor">Corretor Responsável</Label>
-              <Select value={filters.corretor} onValueChange={(value) => setFilters({ ...filters, corretor: value })}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Todos" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="">Todos</SelectItem>
-                  <SelectItem value="JS">JS</SelectItem>
-                  <SelectItem value="MR">MR</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div>
-              <Label htmlFor="origem">Origem do Lead</Label>
-              <Select value={filters.origem} onValueChange={(value) => setFilters({ ...filters, origem: value })}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Todas as origens" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="">Todas as origens</SelectItem>
-                  <SelectItem value="Website">Website</SelectItem>
-                  <SelectItem value="Indicação">Indicação</SelectItem>
-                  <SelectItem value="Redes Sociais">Redes Sociais</SelectItem>
-                  <SelectItem value="Telefone">Telefone</SelectItem>
-                  <SelectItem value="Email">Email</SelectItem>
-                  <SelectItem value="Evento">Evento</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div>
-              <Label htmlFor="stage">Estágio do Funil</Label>
-              <Select value={filters.stage} onValueChange={(value) => setFilters({ ...filters, stage: value })}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Todos os estágios" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="">Todos os estágios</SelectItem>
-                  <SelectItem value="new">Novo Lead</SelectItem>
-                  <SelectItem value="contact">Contato Realizado</SelectItem>
-                  <SelectItem value="visit">Visita Agendada</SelectItem>
-                  <SelectItem value="proposal">Proposta Enviada</SelectItem>
-                  <SelectItem value="negotiation">Em Negociação</SelectItem>
-                  <SelectItem value="closed">Fechado</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="valorMin">Valor Mínimo</Label>
+          <ScrollArea className="flex-1 px-6 py-4">
+            <div className="space-y-6 pb-10">
+              <div className="space-y-2">
+                <Label htmlFor="nomeLead">Nome do Lead</Label>
                 <Input
-                  id="valorMin"
-                  placeholder="R$ 0"
-                  value={filters.valorMin}
-                  onChange={(e) => setFilters({ ...filters, valorMin: e.target.value })}
+                  id="nomeLead"
+                  placeholder="Buscar por nome..."
+                  value={filters.nomeLead}
+                  onChange={(e) => setFilters({ ...filters, nomeLead: e.target.value })}
+                  className="h-11"
                 />
               </div>
 
-              <div>
-                <Label htmlFor="valorMax">Valor Máximo</Label>
-                <Input
-                  id="valorMax"
-                  placeholder="R$ 0"
-                  value={filters.valorMax}
-                  onChange={(e) => setFilters({ ...filters, valorMax: e.target.value })}
-                />
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="dataMin">Data Inicial</Label>
-                <Input
-                  id="dataMin"
-                  type="date"
-                  value={filters.dataMin}
-                  onChange={(e) => setFilters({ ...filters, dataMin: e.target.value })}
-                />
+              <div className="space-y-2">
+                <Label htmlFor="corretor">Corretor Responsável</Label>
+                <Select value={filters.corretor} onValueChange={(value) => setFilters({ ...filters, corretor: value })}>
+                  <SelectTrigger className="h-11">
+                    <SelectValue placeholder="Todos" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Todos</SelectItem>
+                    <SelectItem value="JS">João Silva (JS)</SelectItem>
+                    <SelectItem value="MR">Maria Rocha (MR)</SelectItem>
+                    <SelectItem value="PC">Pedro Costa (PC)</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
 
-              <div>
-                <Label htmlFor="dataMax">Data Final</Label>
+              <div className="space-y-2">
+                <Label htmlFor="origem">Origem do Lead</Label>
+                <Select value={filters.origem} onValueChange={(value) => setFilters({ ...filters, origem: value })}>
+                  <SelectTrigger className="h-11">
+                    <SelectValue placeholder="Todas as origens" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Todas as origens</SelectItem>
+                    <SelectItem value="Site">Site</SelectItem>
+                    <SelectItem value="Instagram">Instagram</SelectItem>
+                    <SelectItem value="Facebook">Facebook</SelectItem>
+                    <SelectItem value="Indicação">Indicação</SelectItem>
+                    <SelectItem value="Telefone">Telefone</SelectItem>
+                    <SelectItem value="E-mail">E-mail</SelectItem>
+                    <SelectItem value="Outros">Outros</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="searchType">Tipo de Negócio</Label>
+                <Select value={filters.searchType} onValueChange={(value) => setFilters({ ...filters, searchType: value })}>
+                  <SelectTrigger className="h-11">
+                    <SelectValue placeholder="Todos os tipos" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Todos os tipos</SelectItem>
+                    <SelectItem value="compra">Compra</SelectItem>
+                    <SelectItem value="venda">Venda</SelectItem>
+                    <SelectItem value="investimento">Investimento</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="stage">Estágio do Funil</Label>
+                <Select value={filters.stage} onValueChange={(value) => setFilters({ ...filters, stage: value })}>
+                  <SelectTrigger className="h-11">
+                    <SelectValue placeholder="Todos os estágios" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Todos os estágios</SelectItem>
+                    <SelectItem value="new">Novo Lead</SelectItem>
+                    <SelectItem value="contact">Contato Realizado</SelectItem>
+                    <SelectItem value="visit">Visita Agendada</SelectItem>
+                    <SelectItem value="proposal">Proposta Enviada</SelectItem>
+                    <SelectItem value="negotiation">Em Negociação</SelectItem>
+                    <SelectItem value="closed">Fechado</SelectItem>
+                    <SelectItem value="lost">Perdido</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="valorMin">Valor Mínimo</Label>
+                  <Input
+                    id="valorMin"
+                    placeholder="R$ 0"
+                    value={filters.valorMin}
+                    onChange={(e) => setFilters({ ...filters, valorMin: e.target.value })}
+                    className="h-11"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="valorMax">Valor Máximo</Label>
+                  <Input
+                    id="valorMax"
+                    placeholder="R$ 0"
+                    value={filters.valorMax}
+                    onChange={(e) => setFilters({ ...filters, valorMax: e.target.value })}
+                    className="h-11"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="dataMin">Data Inicial</Label>
+                  <Input
+                    id="dataMin"
+                    type="date"
+                    value={filters.dataMin}
+                    onChange={(e) => setFilters({ ...filters, dataMin: e.target.value })}
+                    className="h-11"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="dataMax">Data Final</Label>
+                  <Input
+                    id="dataMax"
+                    type="date"
+                    value={filters.dataMax}
+                    onChange={(e) => setFilters({ ...filters, dataMax: e.target.value })}
+                    className="h-11"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="regiao">Região de Interesse</Label>
                 <Input
-                  id="dataMax"
-                  type="date"
-                  value={filters.dataMax}
-                  onChange={(e) => setFilters({ ...filters, dataMax: e.target.value })}
+                  id="regiao"
+                  placeholder="Ex: Centro, Zona Sul..."
+                  value={filters.regiao}
+                  onChange={(e) => setFilters({ ...filters, regiao: e.target.value })}
+                  className="h-11"
                 />
               </div>
-            </div>
 
-            <div>
-              <Label htmlFor="regiao">Região de Interesse</Label>
-              <Input
-                id="regiao"
-                placeholder="Ex: Centro, Zona Sul..."
-                value={filters.regiao}
-                onChange={(e) => setFilters({ ...filters, regiao: e.target.value })}
-              />
-            </div>
+              <div className="space-y-2">
+                <Label htmlFor="imovel">Tipo de Imóvel</Label>
+                <Input
+                  id="imovel"
+                  placeholder="Ex: Apartamento, Casa..."
+                  value={filters.imovel}
+                  onChange={(e) => setFilters({ ...filters, imovel: e.target.value })}
+                  className="h-11"
+                />
+              </div>
 
-            <div>
-              <Label htmlFor="imovel">Tipo de Imóvel</Label>
-              <Input
-                id="imovel"
-                placeholder="Ex: Apartamento, Casa..."
-                value={filters.imovel}
-                onChange={(e) => setFilters({ ...filters, imovel: e.target.value })}
-              />
-            </div>
+              <div className="space-y-2">
+                <Label className="text-sm font-medium">Tags do Lead</Label>
+                <TagManager
+                  selectedTags={filters.tags}
+                  availableTags={DEFAULT_TAGS}
+                  onUpdate={(tags) => setFilters({ ...filters, tags })}
+                  onUpdateAvailableTags={() => { }} // No active editing in filter modal
+                  showEditMode={false}
+                />
+              </div>
 
-            <div className="flex items-center space-x-2">
-              <input
-                type="checkbox"
-                id="contatoRealizado"
-                checked={filters.contatoRealizado}
-                onChange={(e) => setFilters({ ...filters, contatoRealizado: e.target.checked })}
-                className="rounded border-gray-300"
-              />
-              <Label htmlFor="contatoRealizado" className="text-sm">
-                Apenas leads com contato realizado
-              </Label>
+              <div className="flex items-center space-x-3 p-4 bg-muted/30 rounded-lg border border-border/50">
+                <input
+                  type="checkbox"
+                  id="contatoRealizado"
+                  checked={filters.contatoRealizado}
+                  onChange={(e) => setFilters({ ...filters, contatoRealizado: e.target.checked })}
+                  className="h-5 w-5 rounded border-input text-primary focus:ring-primary"
+                />
+                <Label htmlFor="contatoRealizado" className="text-sm cursor-pointer select-none">
+                  Apenas leads com contato realizado
+                </Label>
+              </div>
             </div>
-          </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={handleClearFilters} className="gap-2">
+          </ScrollArea>
+
+          <SheetFooter className="p-6 border-t flex-col sm:flex-row gap-3 bg-muted/20">
+            <Button variant="outline" onClick={handleClearFilters} className="w-full sm:w-auto h-11 gap-2 border-slate-200">
               <X className="h-4 w-4" />
               Limpar Filtros
             </Button>
-            <Button onClick={() => setFilterModalOpen(false)}>
+            <Button onClick={() => setFilterModalOpen(false)} className="w-full sm:w-auto h-11 px-8 bg-indigo-600 hover:bg-indigo-700">
               Aplicar Filtros
             </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+          </SheetFooter>
+        </SheetContent>
+      </Sheet>
 
       <DeleteReasonModal
         open={deleteReasonModalOpen}

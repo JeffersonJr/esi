@@ -127,8 +127,8 @@ export function AutomacaoImobiliaria() {
             </div>
           </div>
           <div className="flex items-center gap-3">
-            <Button variant="outline" className="border-slate-200 text-slate-700">Testar Fluxo</Button>
-            <Button className="bg-indigo-600 hover:bg-indigo-700 text-white shadow-sm">Publicar Alterações</Button>
+            <Button variant="outline" className="h-10 px-4 rounded-xl font-bold border-slate-200 text-slate-700">Testar Fluxo</Button>
+            <Button className="h-10 px-4 rounded-xl font-bold bg-indigo-600 hover:bg-indigo-700 text-white shadow-lg shadow-indigo-100 transition-all">Publicar Alterações</Button>
           </div>
         </div>
 
@@ -256,13 +256,13 @@ export function AutomacaoImobiliaria() {
                       <div className="space-y-2">
                         <div className="flex justify-between">
                           <Label>Mensagem</Label>
-                          <span className="text-xs text-indigo-600 font-medium cursor-pointer">{'{'} Inserir Variável {'}'}</span>
+                          <span className="text-xs text-indigo-600 font-bold cursor-pointer">{'{'} Inserir Variável {'}'}</span>
                         </div>
                         <textarea
-                          className="w-full h-32 p-3 text-sm rounded-xl border border-slate-200 bg-slate-50 resize-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none"
+                          className="w-full h-32 p-3 text-sm rounded-2xl border border-slate-200 bg-slate-50 resize-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none font-medium"
                           defaultValue={activeNode.config?.message}
                         />
-                        <p className="text-xs text-slate-500">Dica: Use {'{nome_lead}'} para personalizar a mensagem.</p>
+                        <p className="text-xs text-slate-500 font-medium">Dica: Use {'{nome_lead}'} para personalizar a mensagem.</p>
                       </div>
                     </div>
                   )}
@@ -271,12 +271,12 @@ export function AutomacaoImobiliaria() {
                     <div className="space-y-4">
                       <div className="space-y-2">
                         <Label>Quantidade de Imóveis</Label>
-                        <Input type="number" defaultValue="3" className="bg-slate-50" />
+                        <Input type="number" defaultValue="3" className="bg-slate-50 rounded-xl" />
                       </div>
-                      <div className="flex items-center justify-between p-4 bg-slate-50 rounded-xl border border-slate-200">
+                      <div className="flex items-center justify-between p-4 bg-slate-50 rounded-2xl border border-slate-200">
                         <div className="space-y-0.5">
-                          <Label className="text-sm">Filtro Inteligente (esi.chat)</Label>
-                          <p className="text-xs text-slate-500">Buscar similares baseados na conversa</p>
+                          <Label className="text-sm font-bold">Filtro Inteligente (esi.chat)</Label>
+                          <p className="text-xs text-slate-500 font-medium">Buscar similares baseados na conversa</p>
                         </div>
                         <Switch defaultChecked />
                       </div>
@@ -287,11 +287,11 @@ export function AutomacaoImobiliaria() {
                     <div className="space-y-4">
                       <div className="space-y-2">
                         <Label>Aguardar por (Horas)</Label>
-                        <Input type="number" defaultValue="24" className="bg-slate-50" />
+                        <Input type="number" defaultValue="24" className="bg-slate-50 rounded-xl" />
                       </div>
-                      <div className="p-4 bg-amber-50 rounded-xl border border-amber-100 flex gap-3">
+                      <div className="p-4 bg-amber-50 rounded-2xl border border-amber-100 flex gap-3 shadow-sm shadow-amber-100/50">
                         <AlertCircle className="h-5 w-5 text-amber-600 shrink-0" />
-                        <p className="text-xs text-amber-800 font-medium leading-relaxed">Se o lead não responder dentro deste prazo, o fluxo seguirá pelo caminho "Não Respondeu".</p>
+                        <p className="text-xs text-amber-800 font-bold leading-relaxed">Se o lead não responder dentro deste prazo, o fluxo seguirá pelo caminho "Não Respondeu".</p>
                       </div>
                     </div>
                   )}
@@ -299,21 +299,21 @@ export function AutomacaoImobiliaria() {
                 </div>
 
                 <div className="p-4 border-t border-slate-100 bg-slate-50 shrink-0 flex gap-3">
-                  <Button variant="outline" className="w-full bg-white text-destructive border-destructive/20 hover:bg-destructive/10" onClick={() => {
+                  <Button variant="outline" className="w-full h-11 rounded-xl bg-white text-destructive border-destructive/20 hover:bg-destructive/10 font-bold" onClick={() => {
                     setFlowNodes(flowNodes.filter(n => n.id !== activeNode.id));
                     setActiveNodeId(null);
                   }}>
                     <Trash2 className="h-4 w-4 mr-2" />
                     Excluir
                   </Button>
-                  <Button className="w-full bg-indigo-600 text-white hover:bg-indigo-700" onClick={() => setActiveNodeId(null)}>Salvar Passo</Button>
+                  <Button className="w-full h-11 rounded-xl bg-indigo-600 text-white hover:bg-indigo-700 font-bold shadow-lg shadow-indigo-100" onClick={() => setActiveNodeId(null)}>Salvar Passo</Button>
                 </div>
               </>
             ) : (
               <div className="flex-1 flex items-center justify-center p-6 text-center">
-                <div className="flex flex-col items-center text-slate-400">
+                <div className="flex flex-col items-center text-slate-300">
                   <Settings className="h-12 w-12 mb-4 opacity-50" />
-                  <p className="text-sm font-medium">Selecione um bloco no canvas para configurar seus parâmetros.</p>
+                  <p className="text-sm font-bold">Selecione um bloco no canvas para configurar seus parâmetros.</p>
                 </div>
               </div>
             )}
@@ -325,9 +325,9 @@ export function AutomacaoImobiliaria() {
 
   // Dashboard View
   return (
-    <div className="font-sans">
-      <div className="max-w-[1400px] mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-        <Breadcrumb className="mb-4 sm:mb-6">
+    <div className="min-h-screen bg-slate-50/50">
+      <div className="max-w-[1400px] mx-auto px-6 pt-4">
+        <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem>
               <BreadcrumbLink href="/" className="flex items-center gap-1">
@@ -340,32 +340,42 @@ export function AutomacaoImobiliaria() {
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>
+      </div>
 
-        {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div>
-            <h1 className="text-3xl font-bold text-slate-800 tracking-tight">Automações</h1>
-            <p className="text-slate-500 mt-1 font-medium">Construa fluxos inteligentes e deixe o esi trabalhar por você.</p>
+      {/* Header Sticky */}
+      <div className="bg-white border-b border-slate-200 px-6 py-6 sticky top-0 z-40 backdrop-blur-md bg-white/80 mt-4">
+        <div className="max-w-[1400px] mx-auto flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div className="flex items-center gap-4">
+            <div className="h-12 w-12 rounded-2xl bg-indigo-600 text-white flex items-center justify-center shadow-lg shadow-indigo-200 shrink-0">
+              <Zap className="h-6 w-6" />
+            </div>
+            <div>
+              <h1 className="text-3xl font-black text-slate-800 tracking-tight">Automações</h1>
+              <p className="text-slate-500 mt-1 font-medium">Construa fluxos inteligentes e deixe o esi trabalhar por você</p>
+            </div>
           </div>
           <div className="flex items-center gap-3">
-            <Button variant="outline" className="bg-white border-slate-200 text-slate-700 font-semibold h-10 shadow-sm">
-              <Download className="h-4 w-4 mr-2" />
-              Relatórios
+            <Button variant="outline" className="h-12 px-6 rounded-2xl font-bold bg-white border-slate-200 text-slate-700 shadow-sm hover:bg-slate-50 transition-all">
+              <Download className="h-4 w-4 mr-2" /> Relatórios
             </Button>
-            <Button onClick={() => setViewMode('builder')} className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold h-10 shadow-sm">
-              <Plus className="h-4 w-4 mr-2" />
-              Criar Fluxo Visual
+            <Button
+              onClick={() => setViewMode('builder')}
+              className="h-12 px-6 rounded-2xl font-bold bg-indigo-600 hover:bg-indigo-700 text-white shadow-lg shadow-indigo-200 transition-all"
+            >
+              <Plus className="h-4 w-4 mr-2" /> Criar Fluxo Visual
             </Button>
           </div>
         </div>
+      </div>
 
+      <div className="max-w-[1400px] mx-auto px-6 py-8 space-y-8">
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {stats.map((stat, i) => (
-            <Card key={i} className="border-none shadow-sm bg-white overflow-hidden group">
+            <Card key={i} className="border-none shadow-sm bg-white overflow-hidden group rounded-2xl">
               <CardContent className="p-6">
                 <div className="flex justify-between items-start mb-4">
-                  <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${stat.bg} ${stat.color} group-hover:scale-110 transition-transform`}>
+                  <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${stat.bg} ${stat.color} group-hover:scale-110 transition-transform shadow-sm`}>
                     <stat.icon className="h-6 w-6" />
                   </div>
                 </div>
@@ -380,10 +390,10 @@ export function AutomacaoImobiliaria() {
         </div>
 
         {/* Main Content Area */}
-        <Card className="border-none shadow-sm bg-white overflow-hidden">
+        <Card className="border-none shadow-sm bg-white overflow-hidden rounded-2xl">
           <Tabs value={selectedTab} onValueChange={setSelectedTab} className="w-full">
             <div className="px-6 pt-6 border-b border-slate-100">
-              <TabsList className="bg-slate-50/50 p-1 border border-slate-100 rounded-xl">
+              <TabsList className="bg-slate-50/50 p-1 border border-slate-100 rounded-xl h-12">
                 <TabsTrigger value="automacoes" className="rounded-lg font-bold data-[state=active]:bg-white data-[state=active]:shadow-sm data-[state=active]:text-indigo-600 px-6">Meus Fluxos</TabsTrigger>
                 <TabsTrigger value="integracoes" className="rounded-lg font-bold data-[state=active]:bg-white data-[state=active]:shadow-sm data-[state=active]:text-indigo-600 px-6">Integrações</TabsTrigger>
                 <TabsTrigger value="templates" className="rounded-lg font-bold data-[state=active]:bg-white data-[state=active]:shadow-sm data-[state=active]:text-indigo-600 px-6">Galeria esi.chat</TabsTrigger>
@@ -397,11 +407,11 @@ export function AutomacaoImobiliaria() {
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
                   <Input
                     placeholder="Buscar fluxo..."
-                    className="pl-9 h-10 w-full bg-white border-slate-200 focus-visible:ring-indigo-500 rounded-xl"
+                    className="pl-9 h-11 w-full bg-white border-slate-200 focus-visible:ring-indigo-100 rounded-xl font-medium"
                   />
                 </div>
                 <div className="flex gap-3 w-full md:w-auto">
-                  <Button variant="outline" className="bg-white w-full md:w-auto"><Filter className="h-4 w-4 mr-2" /> Filtros</Button>
+                  <Button variant="outline" className="bg-white w-full md:w-auto h-11 rounded-xl font-bold border-slate-200 text-slate-700 hover:bg-white/80"><Filter className="h-4 w-4 mr-2" /> Filtros</Button>
                 </div>
               </div>
 
@@ -413,43 +423,44 @@ export function AutomacaoImobiliaria() {
                   { name: 'Resgate de Lead Frio', trigger: 'Inatividade > 30d', desc: 'Dispara e-mail marketing com ofertas', status: 'Pausado', success: '-' }
                 ].map((item, i) => (
                   <div key={i} className="p-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 hover:bg-slate-50/80 transition-colors group">
-                    <div className="flex items-center gap-4">
-                      <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 shadow-sm border ${item.status === 'Ativo' ? 'bg-indigo-50 border-indigo-100 text-indigo-600' : 'bg-slate-50 border-slate-200 text-slate-400'}`}>
-                        <Zap className="h-6 w-6" />
+                    <div className="flex items-center gap-6">
+                      <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 shadow-sm border-2 ${item.status === 'Ativo' ? 'bg-indigo-50 border-indigo-100 text-indigo-600 shadow-indigo-50' : 'bg-slate-50 border-slate-200 text-slate-400 shadow-slate-50'}`}>
+                        <Zap className="h-7 w-7" />
                       </div>
                       <div>
-                        <div className="flex items-center gap-2 mb-1">
-                          <h4 className="font-bold text-slate-800 text-lg">{item.name}</h4>
-                          <Badge variant="outline" className={`text-[10px] uppercase font-bold ${item.status === 'Ativo' ? 'text-emerald-600 border-emerald-200 bg-emerald-50' : 'text-slate-500 border-slate-200 bg-slate-50'}`}>{item.status}</Badge>
+                        <div className="flex items-center gap-3 mb-1.5">
+                          <h4 className="font-black text-slate-800 text-lg tracking-tight group-hover:text-indigo-600 transition-colors">{item.name}</h4>
+                          <Badge variant="outline" className={`text-[10px] font-black uppercase tracking-widest px-2.5 py-0.5 rounded-lg ${item.status === 'Ativo' ? 'text-emerald-600 border-emerald-200 bg-emerald-50' : 'text-slate-500 border-slate-200 bg-slate-50'}`}>{item.status}</Badge>
                         </div>
-                        <p className="text-sm text-slate-500 flex items-center gap-2">
-                          <span className="font-semibold text-slate-700 bg-slate-100 px-2 py-0.5 rounded-md">{item.trigger}</span>
-                          <ArrowRight className="h-3 w-3 text-slate-400" />
-                          {item.desc}
+                        <p className="text-sm text-slate-500 flex items-center gap-3 font-medium">
+                          <span className="font-black text-[10px] text-slate-500 bg-slate-100 px-2 py-1 rounded-md uppercase tracking-wider">{item.trigger}</span>
+                          <ArrowRight className="h-3 w-3 text-slate-300" />
+                          <span className="truncate max-w-[300px]">{item.desc}</span>
                         </p>
                       </div>
                     </div>
 
-                    <div className="flex items-center gap-6 w-full md:w-auto justify-between md:justify-end">
+                    <div className="flex items-center gap-8 w-full md:w-auto justify-between md:justify-end">
                       <div className="text-right hidden sm:block">
-                        <p className="text-xs text-slate-400 font-bold uppercase tracking-wider mb-1">Sucesso</p>
-                        <p className="text-sm font-bold text-slate-700">{item.success}</p>
+                        <p className="text-[10px] text-slate-400 font-black uppercase tracking-[0.2em] mb-1">Sucesso</p>
+                        <p className={`text-lg font-black ${item.success === '-' ? 'text-slate-300' : 'text-slate-800'}`}>{item.success}</p>
                       </div>
 
                       <div className="flex gap-2">
-                        <Button variant="outline" className="h-9 font-semibold text-slate-600 border-slate-200 hover:text-indigo-600 hover:border-indigo-200 transition-colors" onClick={() => setViewMode('builder')}>
+                        <Button variant="outline" className="h-11 px-4 rounded-xl font-bold text-slate-600 border-slate-200 hover:text-indigo-600 hover:border-indigo-200 transition-all bg-white" onClick={() => setViewMode('builder')}>
                           <Edit className="h-4 w-4 mr-2" /> Editar Fluxo
                         </Button>
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="icon" className="h-9 w-9 text-slate-400 hover:text-slate-600">
-                              <MoreVertical className="h-4 w-4" />
+                            <Button variant="ghost" size="icon" className="h-11 w-11 text-slate-400 hover:text-slate-800 rounded-xl hover:bg-slate-100 transition-all">
+                              <MoreVertical className="h-5 w-5" />
                             </Button>
                           </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end" className="w-40 rounded-xl">
-                            <DropdownMenuItem className="cursor-pointer font-medium"><Play className="h-4 w-4 mr-2" /> Executar Agora</DropdownMenuItem>
-                            <DropdownMenuItem className="cursor-pointer font-medium"><Activity className="h-4 w-4 mr-2" /> Ver Logs</DropdownMenuItem>
-                            <DropdownMenuItem className="cursor-pointer font-medium text-destructive"><Trash2 className="h-4 w-4 mr-2" /> Excluir</DropdownMenuItem>
+                          <DropdownMenuContent align="end" className="w-52 p-2 rounded-2xl shadow-xl border-slate-100">
+                            <DropdownMenuItem className="p-3 cursor-pointer font-bold text-slate-700 rounded-xl focus:bg-indigo-50 focus:text-indigo-600"><Play className="h-4 w-4 mr-3" /> Executar Agora</DropdownMenuItem>
+                            <DropdownMenuItem className="p-3 cursor-pointer font-bold text-slate-700 rounded-xl focus:bg-indigo-50 focus:text-indigo-600"><Activity className="h-4 w-4 mr-3" /> Ver Logs de Execução</DropdownMenuItem>
+                            <div className="my-1 border-t border-slate-100" />
+                            <DropdownMenuItem className="p-3 cursor-pointer font-bold text-destructive rounded-xl focus:bg-destructive/10"><Trash2 className="h-4 w-4 mr-3" /> Excluir Fluxo</DropdownMenuItem>
                           </DropdownMenuContent>
                         </DropdownMenu>
                       </div>
@@ -459,12 +470,24 @@ export function AutomacaoImobiliaria() {
               </div>
             </TabsContent>
 
-            <TabsContent value="integracoes" className="p-12 text-center text-slate-500">
-              Integrações virão aqui em breve. (Mock omitido para brevidade)
+            <TabsContent value="integracoes" className="p-20 text-center">
+              <div className="max-w-md mx-auto space-y-4">
+                <div className="h-16 w-16 bg-slate-50 text-slate-300 rounded-3xl flex items-center justify-center mx-auto border-2 border-dashed border-slate-200">
+                  <LinkIcon className="h-8 w-8" />
+                </div>
+                <h3 className="text-xl font-black text-slate-800 tracking-tight">Novas integrações em breve</h3>
+                <p className="text-slate-500 font-medium">Estamos preparando conexões com RD Station, HubSpot e outros CRMs imobiliários.</p>
+              </div>
             </TabsContent>
 
-            <TabsContent value="templates" className="p-12 text-center text-slate-500">
-              Galeria de Templates sugeridos pelo esi.chat virá aqui.
+            <TabsContent value="templates" className="p-20 text-center">
+              <div className="max-w-md mx-auto space-y-4">
+                <div className="h-16 w-16 bg-indigo-50 text-indigo-200 rounded-3xl flex items-center justify-center mx-auto border-2 border-dashed border-indigo-100 shadow-inner">
+                  <Bot className="h-8 w-8" />
+                </div>
+                <h3 className="text-xl font-black text-slate-800 tracking-tight">Galeria de IA esi.chat</h3>
+                <p className="text-slate-500 font-medium">Templates inteligentes criados por nossa IA para otimizar sua conversão de leads.</p>
+              </div>
             </TabsContent>
 
           </Tabs>

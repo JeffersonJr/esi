@@ -28,6 +28,7 @@ import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter,
 } from '@/components/ui/dialog';
 import { useToast } from '@/hooks/use-toast';
+import { ImovelDetailsDrawer } from '@/components/modals/ImovelDetailsDrawer';
 
 // ─── Data ───────────────────────────────────────────────────────────
 const imoveisData = [
@@ -153,7 +154,10 @@ export function Imoveis() {
 
 
   // ── Handlers
-  const openSheet = (i: any) => navigate(`/imoveis/detalhes/${i.id}`);
+  const openSheet = (i: any) => {
+    setSelectedImovel(i);
+    setSheetOpen(true);
+  };
 
   const handleDelete = (i: any) => { setImovelToDelete(i); setDeleteOpen(true); };
   const confirmDelete = () => {
@@ -208,8 +212,7 @@ export function Imoveis() {
 
   return (
     <div className="space-y-5 animate-fade-in">
-      {/* ── Breadcrumb ── */}
-      <Breadcrumb className="mb-4 sm:mb-6">
+      <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>
             <BreadcrumbLink href="/" className="flex items-center gap-1">
@@ -223,24 +226,27 @@ export function Imoveis() {
         </BreadcrumbList>
       </Breadcrumb>
 
-      {/* ── Header ── */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl sm:text-3xl font-black tracking-tight">Imóveis</h1>
-          <p className="text-sm text-muted-foreground font-medium mt-0.5">Gerencie seu portfólio de imóveis</p>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4 shrink-0">
+        <div className="flex items-center gap-4">
+          <div className="h-12 w-12 rounded-2xl bg-primary text-primary-foreground flex items-center justify-center shadow-lg shadow-primary/20">
+            <Building className="h-6 w-6" />
+          </div>
+          <div>
+            <h1 className="text-3xl font-black text-slate-800 tracking-tight">Imóveis</h1>
+            <p className="text-slate-500 mt-1 font-medium">Gerencie seu portfólio de imóveis</p>
+          </div>
         </div>
-        <div className="flex items-center gap-2 shrink-0">
-          {/* View toggle */}
-          <div className="flex items-center bg-muted rounded-lg p-1">
-            <Button variant={viewMode === 'grid' ? 'secondary' : 'ghost'} size="sm" className="h-8 w-8 p-0" onClick={() => setViewMode('grid')}>
+        <div className="flex items-center gap-3">
+          <div className="flex items-center bg-muted/50 rounded-xl p-1 border border-border/50">
+            <Button variant={viewMode === 'grid' ? 'secondary' : 'ghost'} size="sm" className="h-9 w-9 p-0 rounded-lg" onClick={() => setViewMode('grid')}>
               <Grid className="h-4 w-4" />
             </Button>
-            <Button variant={viewMode === 'table' ? 'secondary' : 'ghost'} size="sm" className="h-8 w-8 p-0" onClick={() => setViewMode('table')}>
+            <Button variant={viewMode === 'table' ? 'secondary' : 'ghost'} size="sm" className="h-9 w-9 p-0 rounded-lg" onClick={() => setViewMode('table')}>
               <ListIcon className="h-4 w-4" />
             </Button>
           </div>
-          <Button className="gap-2 shadow-lg shadow-primary/20 h-9 text-sm" onClick={() => navigate('/imoveis/cadastrar')}>
-            <Plus className="h-4 w-4" /> Novo Imóvel
+          <Button onClick={() => navigate('/imoveis/cadastrar')} className="bg-primary hover:bg-primary/90 text-white font-black px-8 shadow-lg shadow-primary/20 h-12 rounded-2xl">
+            <Plus className="h-4 w-4 mr-2" /> Novo Imóvel
           </Button>
         </div>
       </div>
@@ -446,7 +452,7 @@ export function Imoveis() {
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end">
                             <DropdownMenuItem onClick={(e) => { e.stopPropagation(); openSheet(imovel); }} className="gap-2"><Eye className="h-4 w-4" /> Ver detalhes</DropdownMenuItem>
-                            <DropdownMenuItem onClick={(e) => { e.stopPropagation(); openSheet(imovel); }} className="gap-2"><Edit className="h-4 w-4" /> Editar</DropdownMenuItem>
+                            <DropdownMenuItem onClick={(e) => { e.stopPropagation(); navigate(`/imoveis/editar/${imovel.id}`); }} className="gap-2"><Edit className="h-4 w-4" /> Editar</DropdownMenuItem>
                             <DropdownMenuItem onClick={(e) => { e.stopPropagation(); handleDelete(imovel); }} className="text-destructive gap-2"><Trash2 className="h-4 w-4" /> Excluir</DropdownMenuItem>
                           </DropdownMenuContent>
                         </DropdownMenu>
@@ -584,6 +590,16 @@ export function Imoveis() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      <ImovelDetailsDrawer
+        imovel={selectedImovel}
+        open={sheetOpen}
+        onClose={() => setSheetOpen(false)}
+        onEdit={() => {
+          setSheetOpen(false);
+          navigate(`/imoveis/editar/${selectedImovel?.id}`);
+        }}
+      />
 
 
     </div>

@@ -1,6 +1,15 @@
 import { useState, useEffect } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetFooter,
+} from "@/components/ui/sheet";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Separator } from "@/components/ui/separator";
 import { Button } from '@/components/ui/button';
+import { cn, maskCurrency } from '@/lib/utils';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -8,7 +17,8 @@ import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { useUnsavedChanges } from '@/hooks/useUnsavedChanges';
 import { UnsavedChangesModal } from '@/components/modals/UnsavedChangesModal';
-import { X, Plus, Mail, Phone, Smartphone, Palette, Edit2, Trash2 } from 'lucide-react';
+import { useAnimation } from '@/components/shared/ActionAnimation';
+import { X, Plus, Mail, Phone, Smartphone, Palette, Edit2, Trash2, User, Home, Building, DollarSign } from 'lucide-react';
 import { TagManager } from '@/components/shared/TagManager';
 import { DEFAULT_TAGS, TAG_COLORS, Tag } from '@/components/shared/tagConstants';
 
@@ -37,11 +47,13 @@ interface LeadData {
 interface LeadFormModalProps {
   open: boolean;
   onClose: () => void;
-  onSubmit: (lead: LeadData) => void;
+  onSave: (lead: LeadData) => void;
   lead?: LeadData;
+  stageId?: string;
 }
 
-export function LeadFormModal({ open, onClose, onSubmit, lead }: LeadFormModalProps) {
+export function LeadFormModal({ open, onClose, onSave, lead, stageId }: LeadFormModalProps) {
+  const { triggerAnimation } = useAnimation();
   const [formData, setFormData] = useState<LeadData>({
     name: '',
     emails: [{ type: 'email', value: '', isPrimary: true }],
@@ -60,9 +72,9 @@ export function LeadFormModal({ open, onClose, onSubmit, lead }: LeadFormModalPr
   const [availableTags, setAvailableTags] = useState<Tag[]>(DEFAULT_TAGS);
 
   const agents = [
-    { id: 'JS', name: 'João Silva' },
-    { id: 'MR', name: 'Maria Rocha' },
-    { id: 'PC', name: 'Pedro Costa' },
+    { id: '1', name: 'Jefferson (Você)' },
+    { id: '2', name: 'Paula Corretora' },
+    { id: '3', name: 'Rodrigo Silva' }
   ];
 
   const sources = [
@@ -195,7 +207,20 @@ export function LeadFormModal({ open, onClose, onSubmit, lead }: LeadFormModalPr
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit(formData);
+
+    // Trigger micro-animation
+    const rect = (e.target as HTMLFormElement).querySelector('button[type="submit"]')?.getBoundingClientRect();
+    if (rect) {
+      triggerAnimation({
+        type: 'save-property',
+        startX: rect.left + rect.width / 2,
+        startY: rect.top + rect.height / 2,
+        icon: formData.searchType === 'investimento' ? Building : Home
+      });
+    }
+
+    onSave(formData);
+    onClose();
   };
 
   const [showModal, setShowModal] = useState(false);
@@ -233,343 +258,242 @@ export function LeadFormModal({ open, onClose, onSubmit, lead }: LeadFormModalPr
 
   return (
     <>
-      <Dialog open={open} onOpenChange={handleClose}>
-        <DialogContent className="sm:max-w-[1200px] max-h-[90vh] overflow-y-auto">
-          <form onSubmit={handleSubmit}>
-            <DialogHeader>
-              <DialogTitle>
+      <Sheet open={open} onOpenChange={(isOpen) => !isOpen && handleClose()}>
+        <SheetContent side="right" className="sm:max-w-md w-full p-0 flex flex-col h-full bg-background">
+          <form onSubmit={handleSubmit} className="flex flex-col h-full">
+            <SheetHeader className="p-6 border-b bg-white shrink-0">
+              <SheetTitle className="text-xl font-bold text-slate-900">
                 {formData.id ? 'Editar Lead' : (formData.stage === 'proposal' ? 'Nova Proposta' : 'Novo Lead')}
-              </DialogTitle>
-            </DialogHeader>
+              </SheetTitle>
+            </SheetHeader>
 
-            <div className="grid grid-cols-12 gap-6 py-6">
-              {/* Colunas 1-7: Informações do Cliente e Perfil de Busca */}
-              <div className="col-span-7 space-y-8">
-                {/* Informações do Cliente */}
-                <div>
-                  <h3 className="text-slate-400 uppercase text-xs font-medium mb-4">Informações do Cliente</h3>
-                  <div className="space-y-4">
+            <ScrollArea className="flex-1">
+              <div className="p-6 space-y-8">
+                {/* Dados da Pessoa */}
+                <section className="space-y-4">
+                  <div className="flex items-center gap-2 mb-2">
+                    <User className="h-4 w-4 text-indigo-500" />
+                    <h3 className="text-sm font-bold text-slate-800 uppercase tracking-wider">Dados do Lead</h3>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="name" className="text-xs font-semibold text-slate-600">Nome Completo *</Label>
+                    <Input
+                      id="name"
+                      name="name"
+                      value={formData.name}
+                      onChange={handleChange}
+                      required
+                      placeholder="Ex: Maria Oliveira"
+                      className="h-11 border-slate-200 bg-white focus:ring-indigo-500"
+                    />
+                  </div>
+
+                  {/* E-mails Simples */}
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <Label className="text-xs font-semibold text-slate-600">E-mails</Label>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => addContact('email')}
+                        disabled={formData.emails.length >= 2}
+                        className="h-6 text-[10px] text-indigo-600 hover:text-indigo-700 font-bold"
+                      >
+                        <Plus className="h-3 w-3 mr-1" /> ADICIONAR
+                      </Button>
+                    </div>
+                    {formData.emails.map((email, index) => (
+                      <div key={index} className="flex gap-2">
+                        <div className="relative flex-1">
+                          <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+                          <Input
+                            placeholder="E-mail"
+                            value={email.value}
+                            onChange={(e) => updateContact('email', index, e.target.value)}
+                            className="pl-9 h-11 border-slate-200 bg-white"
+                          />
+                        </div>
+                        {formData.emails.length > 1 && (
+                          <Button type="button" variant="ghost" size="icon" className="h-11 w-11 shrink-0" onClick={() => removeContact('email', index)}>
+                            <Trash2 className="h-4 w-4 text-slate-400" />
+                          </Button>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Telefones Simples */}
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <Label className="text-xs font-semibold text-slate-600">Telefones</Label>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => addContact('mobile')}
+                        disabled={formData.phones.length >= 2}
+                        className="h-6 text-[10px] text-indigo-600 hover:text-indigo-700 font-bold"
+                      >
+                        <Plus className="h-3 w-3 mr-1" /> ADICIONAR
+                      </Button>
+                    </div>
+                    {formData.phones.map((phone, index) => (
+                      <div key={index} className="flex gap-2">
+                        <div className="relative flex-1">
+                          <Smartphone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+                          <Input
+                            placeholder="Celular/WhatsApp"
+                            value={phone.value}
+                            onChange={(e) => updateContact(phone.type, index, e.target.value)}
+                            className="pl-9 h-11 border-slate-200 bg-white"
+                          />
+                        </div>
+                        {formData.phones.length > 1 && (
+                          <Button type="button" variant="ghost" size="icon" className="h-11 w-11 shrink-0" onClick={() => removeContact(phone.type, index)}>
+                            <Trash2 className="h-4 w-4 text-slate-400" />
+                          </Button>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </section>
+
+                <Separator />
+
+                {/* Interesse */}
+                <section className="space-y-4">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Home className="h-4 w-4 text-emerald-500" />
+                    <h3 className="text-sm font-bold text-slate-800 uppercase tracking-wider">Interesse e Perfil</h3>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="property" className="text-xs font-semibold text-slate-600">O que procura? *</Label>
+                    <Input
+                      id="property"
+                      name="property"
+                      value={formData.property}
+                      onChange={handleChange}
+                      required
+                      placeholder="Ex: Casa com piscina, Terreno..."
+                      className="h-11 border-slate-200 bg-white"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label htmlFor="name">Nome *</Label>
+                      <Label htmlFor="searchType" className="text-xs font-semibold text-slate-600">Tipo</Label>
+                      <Select value={formData.searchType} onValueChange={(value) => handleSelectChange('searchType', value)}>
+                        <SelectTrigger className="h-11 bg-white border-slate-200">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="compra">Compra</SelectItem>
+                          <SelectItem value="venda">Venda</SelectItem>
+                          <SelectItem value="investimento">Investimento</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="value" className="text-xs font-semibold text-slate-600">Budget Aprox. *</Label>
                       <Input
-                        id="name"
-                        name="name"
-                        value={formData.name}
+                        id="value"
+                        name="value"
+                        value={formData.value}
                         onChange={handleChange}
                         required
-                        placeholder="Nome completo do lead"
-                        className="border-slate-200"
+                        placeholder="R$ 0,00"
+                        className="h-11 border-slate-200 bg-white"
                       />
-                    </div>
-
-                    {/* E-mails */}
-                    <div className="space-y-2">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <Label>E-mails</Label>
-                          <span className="text-xs text-muted-foreground">
-                            ({formData.emails.length}/3)
-                          </span>
-                        </div>
-                        <Button
-                          type="button"
-                          variant="outline"
-                          size="sm"
-                          onClick={() => addContact('email')}
-                          disabled={formData.emails.length >= 3}
-                          title={formData.emails.length >= 3 ? 'Máximo de 3 emails permitidos' : 'Adicionar email'}
-                          className="border-slate-200"
-                        >
-                          <Mail className="h-3 w-3 mr-1" />
-                          Add
-                        </Button>
-                      </div>
-                      <div className="space-y-2">
-                        {formData.emails.map((email, index) => (
-                          <div key={index} className="flex gap-2">
-                            <div className="flex-1 relative">
-                              <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-400" />
-                              <Input
-                                placeholder="E-mail"
-                                value={email.value}
-                                onChange={(e) => updateContact('email', index, e.target.value)}
-                                className="pl-10 pr-14 border-slate-200"
-                              />
-                              <div className="absolute right-2 top-1/2 transform -translate-y-1/2 flex gap-1">
-                                {email.isPrimary && (
-                                  <Badge variant="secondary" className="text-xs px-2 py-0.5">
-                                    Principal
-                                  </Badge>
-                                )}
-                                {!email.isPrimary && (
-                                  <Button
-                                    type="button"
-                                    variant="ghost"
-                                    size="sm"
-                                    className="h-6 w-6 p-0"
-                                    onClick={() => setPrimaryContact('email', index)}
-                                    title="Definir como principal"
-                                  >
-                                    <span className="text-xs">★</span>
-                                  </Button>
-                                )}
-                              </div>
-                            </div>
-                            {formData.emails.length > 1 && (
-                              <Button
-                                type="button"
-                                variant="ghost"
-                                size="sm"
-                                className="h-10 w-8 p-0"
-                                onClick={() => removeContact('email', index)}
-                              >
-                                <X className="h-4 w-4" />
-                              </Button>
-                            )}
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Telefones */}
-                    <div className="space-y-2">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <Label>Telefones</Label>
-                          <span className="text-xs text-muted-foreground">
-                            ({formData.phones.length}/3)
-                          </span>
-                        </div>
-                        <div className="flex gap-2">
-                          <Button
-                            type="button"
-                            variant="outline"
-                            size="sm"
-                            onClick={() => addContact('phone')}
-                            disabled={formData.phones.length >= 3}
-                            title={formData.phones.length >= 3 ? 'Máximo de 3 telefones permitidos' : 'Adicionar telefone'}
-                            className="border-slate-200"
-                          >
-                            <Phone className="h-3 w-3 mr-1" />
-                            Tel
-                          </Button>
-                          <Button
-                            type="button"
-                            variant="outline"
-                            size="sm"
-                            onClick={() => addContact('mobile')}
-                            disabled={formData.phones.length >= 3}
-                            title={formData.phones.length >= 3 ? 'Máximo de 3 telefones permitidos' : 'Adicionar celular'}
-                            className="border-slate-200"
-                          >
-                            <Smartphone className="h-3 w-3 mr-1" />
-                            Cel
-                          </Button>
-                        </div>
-                      </div>
-                      <div className="space-y-2">
-                        {formData.phones.map((phone, index) => (
-                          <div key={index} className="flex gap-2">
-                            <div className="flex-1 relative">
-                              {phone.type === 'phone' ? (
-                                <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-400" />
-                              ) : (
-                                <Smartphone className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-400" />
-                              )}
-                              <Input
-                                placeholder={phone.type === 'phone' ? 'Telefone' : 'Celular'}
-                                value={phone.value}
-                                onChange={(e) => updateContact(phone.type, index, e.target.value)}
-                                className="pl-10 pr-14 border-slate-200"
-                              />
-                              <div className="absolute right-2 top-1/2 transform -translate-y-1/2 flex gap-1">
-                                {phone.isPrimary && (
-                                  <Badge variant="secondary" className="text-xs px-2 py-0.5">
-                                    Principal
-                                  </Badge>
-                                )}
-                                {!phone.isPrimary && (
-                                  <Button
-                                    type="button"
-                                    variant="ghost"
-                                    size="sm"
-                                    className="h-6 w-6 p-0"
-                                    onClick={() => setPrimaryContact(phone.type, index)}
-                                    title="Definir como principal"
-                                  >
-                                    <span className="text-xs">★</span>
-                                  </Button>
-                                )}
-                              </div>
-                            </div>
-                            {formData.phones.length > 1 && (
-                              <Button
-                                type="button"
-                                variant="ghost"
-                                size="sm"
-                                className="h-10 w-8 p-0"
-                                onClick={() => removeContact(phone.type, index)}
-                              >
-                                <X className="h-4 w-4" />
-                              </Button>
-                            )}
-                          </div>
-                        ))}
-                      </div>
                     </div>
                   </div>
-                </div>
 
-                {/* Perfil de Busca */}
-                <div>
-                  <h3 className="text-slate-400 uppercase text-xs font-medium mb-4">Perfil de Busca</h3>
-                  <div className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="location" className="text-xs font-semibold text-slate-600">Onde procura?</Label>
+                    <Input
+                      id="location"
+                      name="location"
+                      value={formData.location}
+                      onChange={handleChange}
+                      placeholder="Bairros, Cidades..."
+                      className="h-11 border-slate-200 bg-white"
+                    />
+                  </div>
+                </section>
+
+                <Separator />
+
+                {/* Gestão */}
+                <section className="space-y-4">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Palette className="h-4 w-4 text-amber-500" />
+                    <h3 className="text-sm font-bold text-slate-800 uppercase tracking-wider">Gestão e Origem</h3>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label htmlFor="property">Imóvel *</Label>
-                      <Input
-                        id="property"
-                        name="property"
-                        value={formData.property}
-                        onChange={handleChange}
-                        required
-                        placeholder="Ex: Apt 2 quartos"
-                        className="border-slate-200"
-                      />
+                      <Label htmlFor="source" className="text-xs font-semibold text-slate-600">Origem *</Label>
+                      <Select value={formData.source} onValueChange={(value) => handleSelectChange('source', value)} required>
+                        <SelectTrigger className="h-11 bg-white border-slate-200">
+                          <SelectValue placeholder="Selecione" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {sources.map((s) => <SelectItem key={s} value={s}>{s}</SelectItem>)}
+                        </SelectContent>
+                      </Select>
                     </div>
-
                     <div className="space-y-2">
-                      <Label htmlFor="location">Localização</Label>
-                      <Input
-                        id="location"
-                        name="location"
-                        value={formData.location}
-                        onChange={handleChange}
-                        placeholder="Ex: Centro, Zona Sul..."
-                        className="border-slate-200"
-                      />
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="value">Valor *</Label>
-                        <Input
-                          id="value"
-                          name="value"
-                          value={formData.value}
-                          onChange={handleChange}
-                          required
-                          placeholder="Ex: R$ 350.000"
-                          className="border-slate-200"
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="searchType">Tipo de Busca</Label>
-                        <Select value={formData.searchType} onValueChange={(value) => handleSelectChange('searchType', value)}>
-                          <SelectTrigger className="border-slate-200">
-                            <SelectValue placeholder="Selecione" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="compra">Compra</SelectItem>
-                            <SelectItem value="venda">Venda</SelectItem>
-                            <SelectItem value="investimento">Investimento</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="source">Origem *</Label>
-                        <Select value={formData.source} onValueChange={(value) => handleSelectChange('source', value)} required>
-                          <SelectTrigger className="border-slate-200">
-                            <SelectValue placeholder="Selecione" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {sources.map((source) => (
-                              <SelectItem key={source} value={source}>{source}</SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="stage">Estágio</Label>
-                        <Select value={formData.stage} onValueChange={(value) => handleSelectChange('stage', value)}>
-                          <SelectTrigger className="border-slate-200">
-                            <SelectValue placeholder="Selecione" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {stages.map((stage) => (
-                              <SelectItem key={stage.id} value={stage.id}>{stage.name}</SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </div>
+                      <Label htmlFor="assignedTo" className="text-xs font-semibold text-slate-600">Responsável</Label>
+                      <Select value={formData.assignedTo} onValueChange={(value) => handleSelectChange('assignedTo', value)}>
+                        <SelectTrigger className="h-11 bg-white border-slate-200">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {agents.map((a) => <SelectItem key={a.id} value={a.id}>{a.name}</SelectItem>)}
+                        </SelectContent>
+                      </Select>
                     </div>
                   </div>
-                </div>
+
+                  <div className="space-y-3">
+                    <Label className="text-xs font-semibold text-slate-600">Qualificar com Tags</Label>
+                    <TagManager
+                      selectedTags={formData.tags || []}
+                      availableTags={availableTags}
+                      onUpdate={(tags) => setFormData(prev => ({ ...prev, tags }))}
+                      onUpdateAvailableTags={setAvailableTags}
+                      showEditMode={true}
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="notes" className="text-xs font-semibold text-slate-600">Notas Internas</Label>
+                    <Textarea
+                      id="notes"
+                      name="notes"
+                      value={formData.notes}
+                      onChange={handleChange}
+                      placeholder="Adicione observações importantes..."
+                      className="min-h-[100px] border-slate-200 bg-white resize-none text-sm"
+                    />
+                  </div>
+                </section>
               </div>
+            </ScrollArea>
 
-              {/* Colunas 8-12: Classificação (Box lateral) */}
-              <div className="col-span-5 bg-slate-50 rounded-lg p-6 space-y-6">
-                <h3 className="text-slate-400 uppercase text-xs font-medium mb-4">Classificação</h3>
-
-                {/* Responsável */}
-                <div className="space-y-2">
-                  <Label htmlFor="assignedTo">Responsável</Label>
-                  <Select value={formData.assignedTo} onValueChange={(value) => handleSelectChange('assignedTo', value)}>
-                    <SelectTrigger className="border-slate-200 bg-white">
-                      <SelectValue placeholder="Selecione" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {agents.map((agent) => (
-                        <SelectItem key={agent.id} value={agent.id}>{agent.name}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                {/* Tags Refinadas */}
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between">
-                    <Label className="text-sm font-medium">Tags</Label>
-                  </div>
-
-                  <TagManager
-                    selectedTags={formData.tags || []}
-                    availableTags={availableTags}
-                    onUpdate={(tags) => setFormData(prev => ({ ...prev, tags }))}
-                    onUpdateAvailableTags={setAvailableTags}
-                    showEditMode={true}
-                  />
-                </div>
-
-                {/* Observações */}
-                <div className="space-y-2">
-                  <Label htmlFor="notes">Observações</Label>
-                  <Textarea
-                    id="notes"
-                    name="notes"
-                    value={formData.notes}
-                    onChange={handleChange}
-                    placeholder="Adicione observações importantes sobre este lead..."
-                    rows={4}
-                    className="border-slate-200 bg-white resize-none"
-                  />
-                </div>
-              </div>
-            </div>
-
-            <DialogFooter className="pt-6">
-              <Button type="button" variant="ghost" onClick={handleClose}>
-                Cancelar
+            <SheetFooter className="p-6 border-t bg-muted/20 shrink-0 sm:flex-row gap-3">
+              <Button type="button" variant="ghost" onClick={handleClose} className="w-full sm:w-auto font-bold text-slate-500">
+                DESCARTAR
               </Button>
-              <Button type="submit" className="bg-cyan-500 hover:bg-cyan-600">
-                {lead ? 'Salvar Lead' : 'Adicionar Lead'}
+              <Button type="submit" className="w-full sm:w-auto px-8 bg-indigo-600 hover:bg-indigo-700 text-white font-bold h-11 shadow-md shadow-indigo-100">
+                {lead ? 'SALVAR ALTERAÇÕES' : 'CRIAR LEAD AGORA'}
               </Button>
-            </DialogFooter>
+            </SheetFooter>
           </form>
-        </DialogContent>
-      </Dialog>
+        </SheetContent>
+      </Sheet>
 
       <UnsavedChangesModal
         open={showModal}

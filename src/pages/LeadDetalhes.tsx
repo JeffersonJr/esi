@@ -1696,7 +1696,7 @@ export default function LeadDetalhes() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Breadcrumb className="mb-4 sm:mb-6">
+      <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>
             <BreadcrumbLink href="/" className="flex items-center gap-1">
@@ -1714,46 +1714,63 @@ export default function LeadDetalhes() {
         </BreadcrumbList>
       </Breadcrumb>
       {/* Header */}
-      <div className="bg-white border-b border-gray-200 px-6 py-4">
-        <div className="flex items-center justify-between">
+      <div className="bg-white border-b border-gray-200 px-6 py-6 sticky top-0 z-40 backdrop-blur-md bg-white/80">
+        <div className="max-w-[1400px] mx-auto flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex items-center gap-4">
-            <Button variant="ghost" onClick={() => handleNavigateWithConfirmation('/funil')} className="gap-2">
-              <ArrowLeft className="h-4 w-4" />
-              Voltar
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => handleNavigateWithConfirmation('/funil')}
+              className="h-10 w-10 rounded-full hover:bg-slate-100 shrink-0"
+            >
+              <ArrowLeft className="h-5 w-5" />
             </Button>
+            <div className="h-12 w-12 rounded-2xl bg-primary text-primary-foreground flex items-center justify-center shadow-lg shadow-primary/20 shrink-0">
+              <User className="h-6 w-6" />
+            </div>
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">{lead.name}</h1>
-              <p className="text-sm text-gray-500">Detalhes completos do lead</p>
+              <h1 className="text-3xl font-black text-slate-800 tracking-tight">{lead.name}</h1>
+              <p className="text-slate-500 mt-1 font-medium">Detalhes completos e histórico do lead</p>
             </div>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
+            <Button
+              variant="outline"
+              onClick={handleEditLead}
+              className="h-12 px-6 rounded-2xl font-bold bg-white border-slate-200 text-slate-700 shadow-sm hover:bg-slate-50 hover:border-slate-300 transition-all"
+            >
+              <Edit className="h-4 w-4 mr-2 text-indigo-500" />
+              Editar Lead
+            </Button>
+
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" className="gap-2">
-                  <MoreVertical className="h-4 w-4" />
-                  Ações
+                <Button className="h-12 px-6 rounded-2xl font-bold bg-indigo-600 hover:bg-indigo-700 text-white shadow-lg shadow-indigo-200 transition-all">
+                  <Plus className="h-4 w-4 mr-2" />
+                  Nova Ação
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={handleEditLead}>
-                  <Edit className="h-4 w-4 mr-2" />
-                  Editar
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setShowAssignModal(true)}>
-                  <UserCheck className="h-4 w-4 mr-2" />
+              <DropdownMenuContent align="end" className="w-56 p-2 rounded-xl border-slate-100 shadow-xl">
+                <DropdownMenuItem onClick={() => setShowAssignModal(true)} className="rounded-lg py-2.5">
+                  <UserCheck className="h-4 w-4 mr-2 text-blue-500" />
                   Mudar Corretor
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={handleWhatsApp}>
-                  <MessageCircle className="h-4 w-4 mr-2" />
+                <DropdownMenuItem onClick={handleWhatsApp} className="rounded-lg py-2.5">
+                  <MessageCircle className="h-4 w-4 mr-2 text-emerald-500" />
                   WhatsApp
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setShowActivityModal(true)}>
-                  <Calendar className="h-4 w-4 mr-2" />
+                <DropdownMenuItem onClick={() => setShowActivityModal(true)} className="rounded-lg py-2.5">
+                  <Calendar className="h-4 w-4 mr-2 text-amber-500" />
                   Agendar Atividade
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setShowNoteModal(true)}>
-                  <Plus className="h-4 w-4 mr-2" />
+                <DropdownMenuItem onClick={() => setShowNoteModal(true)} className="rounded-lg py-2.5">
+                  <StickyNote className="h-4 w-4 mr-2 text-purple-500" />
                   Adicionar Nota
+                </DropdownMenuItem>
+                <Separator className="my-1" />
+                <DropdownMenuItem className="rounded-lg py-2.5 text-destructive focus:bg-destructive/5 focus:text-destructive">
+                  <Trash2 className="h-4 w-4 mr-2" />
+                  Excluir Lead
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

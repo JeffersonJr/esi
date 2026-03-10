@@ -56,9 +56,9 @@ export function GestaoLocacoes() {
   };
 
   return (
-    <div className="font-sans">
-      <div className="max-w-[1400px] mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-        <Breadcrumb className="mb-4 sm:mb-6">
+    <div className="min-h-screen bg-slate-50/50">
+      <div className="max-w-[1400px] mx-auto px-6 pt-4">
+        <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem>
               <BreadcrumbLink href="/" className="flex items-center gap-1">
@@ -71,20 +71,32 @@ export function GestaoLocacoes() {
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>
+      </div>
 
-        {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div>
-            <h1 className="text-3xl font-bold text-slate-800 tracking-tight">Gestão de Locações</h1>
-            <p className="text-slate-500 mt-1 font-medium">Contratos, repasses e fluxo de inadimplência em tempo real.</p>
+      {/* Header Sticky */}
+      <div className="bg-white border-b border-slate-200 px-6 py-6 sticky top-0 z-40 backdrop-blur-md bg-white/80 mt-4">
+        <div className="max-w-[1400px] mx-auto flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div className="flex items-center gap-4">
+            <div className="h-12 w-12 rounded-2xl bg-indigo-600 text-white flex items-center justify-center shadow-lg shadow-indigo-200 shrink-0">
+              <FileText className="h-6 w-6" />
+            </div>
+            <div>
+              <h1 className="text-3xl font-black text-slate-800 tracking-tight">Gestão de Locações</h1>
+              <p className="text-slate-500 mt-1 font-medium">Contratos ativos, repasses e fluxo de inadimplência</p>
+            </div>
           </div>
           <div className="flex items-center gap-3">
-            <Button onClick={() => setShowNovoContrato(true)} className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold shadow-sm h-11">
+            <Button
+              onClick={() => setShowNovoContrato(true)}
+              className="h-12 px-6 rounded-2xl font-bold bg-indigo-600 hover:bg-indigo-700 text-white shadow-lg shadow-indigo-200 transition-all"
+            >
               <Plus className="h-4 w-4 mr-2" /> Novo Contrato
             </Button>
           </div>
         </div>
+      </div>
 
+      <div className="max-w-[1400px] mx-auto px-6 py-8 space-y-8">
         {/* Dashboard Stats */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
           <Card className="border-none shadow-sm bg-white">

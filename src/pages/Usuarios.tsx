@@ -124,29 +124,41 @@ export function Usuarios() {
 
   return (
     <div className="space-y-6 animate-fade-in">
-      <Breadcrumb className="mb-4 sm:mb-6">
+      <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>
-            <BreadcrumbLink href="/" className="flex items-center gap-1"><Home className="h-4 w-4" /> Dashboard</BreadcrumbLink>
+            <BreadcrumbLink href="/" className="flex items-center gap-1">
+              <Home className="h-4 w-4" /> Dashboard
+            </BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
-          <BreadcrumbItem><BreadcrumbPage>Usuários</BreadcrumbPage></BreadcrumbItem>
+          <BreadcrumbItem>
+            <BreadcrumbPage>Usuários</BreadcrumbPage>
+          </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
 
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:justify-between">
-        <div>
-          <h1 className="text-2xl sm:text-3xl font-bold">Usuários</h1>
-          <p className="text-sm text-muted-foreground">Gerencie os usuários do sistema</p>
-        </div>
-        <div className="flex items-center gap-2 sm:gap-3 self-end sm:self-auto">
-          <div className="flex items-center bg-muted rounded-lg p-1">
-            <Button variant={viewMode === 'table' ? 'secondary' : 'ghost'} size="sm" className="h-8 w-8 p-0" onClick={() => setViewMode('table')}><ListIcon className="h-4 w-4" /></Button>
-            <Button variant={viewMode === 'grid' ? 'secondary' : 'ghost'} size="sm" className="h-8 w-8 p-0" onClick={() => setViewMode('grid')}><Grid className="h-4 w-4" /></Button>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4 shrink-0">
+        <div className="flex items-center gap-4">
+          <div className="h-12 w-12 rounded-2xl bg-primary text-primary-foreground flex items-center justify-center shadow-lg shadow-primary/20">
+            <UserCheck className="h-6 w-6" />
           </div>
-          <Button className="gap-2 shadow-lg shadow-primary/20 text-xs sm:text-sm" onClick={handleNew}>
-            <Plus className="h-4 w-4" /><span>Novo Usuário</span>
+          <div>
+            <h1 className="text-3xl font-black text-slate-800 tracking-tight">Usuários</h1>
+            <p className="text-slate-500 mt-1 font-medium">Gerencie os usuários do sistema</p>
+          </div>
+        </div>
+        <div className="flex items-center gap-3">
+          <div className="flex items-center bg-muted/50 rounded-xl p-1 border border-border/50">
+            <Button variant={viewMode === 'table' ? 'secondary' : 'ghost'} size="sm" className="h-9 w-9 p-0 rounded-lg" onClick={() => setViewMode('table')}>
+              <ListIcon className="h-4 w-4" />
+            </Button>
+            <Button variant={viewMode === 'grid' ? 'secondary' : 'ghost'} size="sm" className="h-9 w-9 p-0 rounded-lg" onClick={() => setViewMode('grid')}>
+              <Grid className="h-4 w-4" />
+            </Button>
+          </div>
+          <Button onClick={handleNew} className="bg-primary hover:bg-primary/90 text-white font-black px-8 shadow-lg shadow-primary/20 h-12 rounded-2xl">
+            <Plus className="h-4 w-4 mr-2" /> Novo Usuário
           </Button>
         </div>
       </div>

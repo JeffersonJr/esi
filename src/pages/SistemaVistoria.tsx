@@ -86,8 +86,8 @@ export function SistemaVistoria() {
 
   return (
     <div>
-      <div className="max-w-[1400px] mx-auto space-y-6">
-        <Breadcrumb className="mb-4 sm:mb-6">
+      <div className="max-w-[1400px] mx-auto">
+        <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem>
               <BreadcrumbLink href="/" className="flex items-center gap-1">
@@ -100,19 +100,32 @@ export function SistemaVistoria() {
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>
+      </div>
 
-        {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div>
-            <h1 className="text-3xl font-bold text-slate-800 tracking-tight">Sistema de Vistoria</h1>
-            <p className="text-slate-500 mt-1 font-medium">Agendamento, laudos digitais e assinaturas eletrônicas.</p>
+      {/* Header */}
+      <div className="bg-white border-b border-slate-200 px-6 py-6 sticky top-0 z-40 backdrop-blur-md bg-white/80 mt-4">
+        <div className="max-w-[1400px] mx-auto flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div className="flex items-center gap-4">
+            <div className="h-12 w-12 rounded-2xl bg-indigo-600 text-white flex items-center justify-center shadow-lg shadow-indigo-200 shrink-0">
+              <ShieldCheck className="h-6 w-6" />
+            </div>
+            <div>
+              <h1 className="text-3xl font-black text-slate-800 tracking-tight">Sistema de Vistoria</h1>
+              <p className="text-slate-500 mt-1 font-medium">Agendamento, laudos digitais e assinaturas eletrônicas</p>
+            </div>
           </div>
           <div className="flex items-center gap-3">
-            <Button onClick={() => { }} className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold shadow-sm h-10">
+            <Button
+              onClick={() => { }}
+              className="h-12 px-6 rounded-2xl font-bold bg-indigo-600 hover:bg-indigo-700 text-white shadow-lg shadow-indigo-200 transition-all"
+            >
               <Calendar className="h-4 w-4 mr-2" /> Agendar Vistoria
             </Button>
           </div>
         </div>
+      </div>
+
+      <div className="max-w-[1400px] mx-auto py-8">
 
         {/* Dynamic Navigation Tabs */}
         <Tabs value={selectedTab} onValueChange={setSelectedTab} className="w-full">

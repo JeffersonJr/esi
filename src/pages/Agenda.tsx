@@ -14,7 +14,8 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetFooter } from '@/components/ui/sheet';
+import { useAnimation } from '@/components/shared/ActionAnimation';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
@@ -76,6 +77,7 @@ const getPriorityStyles = (prio: string) => {
 // ─── Main Component ─────────────────────────────────────────────────────────
 
 export function Agenda() {
+  const { triggerAnimation } = useAnimation();
   const { toast } = useToast();
   const navigate = useNavigate();
   const location = useLocation();
@@ -155,7 +157,14 @@ export function Agenda() {
     setShowCompleteModal(true);
   };
 
-  const confirmComplete = () => {
+  const confirmComplete = (e: React.MouseEvent) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    triggerAnimation({
+      type: 'success',
+      startX: rect.left + rect.width / 2,
+      startY: rect.top + rect.height / 2,
+      icon: CheckCircle2
+    });
     setEventos(prev => prev.map(e => e.id === selectedEvento.id ? { ...e, concluida: true } : e));
     toast({ title: "Sensacional!", description: `A atividade "${selectedEvento.titulo}" foi concluída.`, variant: "success" });
     setShowCompleteModal(false);
@@ -163,6 +172,13 @@ export function Agenda() {
 
   const handleNewSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    const rect = (e.target as HTMLFormElement).getBoundingClientRect();
+    triggerAnimation({
+      type: 'success',
+      startX: rect.left + rect.width / 2,
+      startY: rect.top + rect.height / 2,
+      icon: CalendarIcon
+    });
     toast({ title: "Criado!", description: "Nova atividade foi agendada.", variant: "success" });
     setShowNewActivityModal(false);
   };
@@ -182,22 +198,28 @@ export function Agenda() {
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
-      {/* ── HEADER ── */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
-        <div>
-          <h1 className="text-3xl font-black tracking-tight text-foreground">Sua Agenda</h1>
-          <p className="text-muted-foreground mt-1">Concentre-se no que gera resultado hoje.</p>
+
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4 shrink-0">
+        <div className="flex items-center gap-4">
+          <div className="h-12 w-12 rounded-2xl bg-primary text-primary-foreground flex items-center justify-center shadow-lg shadow-primary/20">
+            <CalendarIcon className="h-6 w-6" />
+          </div>
+          <div>
+            <h1 className="text-3xl font-black text-slate-800 tracking-tight">Sua Agenda</h1>
+            <p className="text-slate-500 mt-1 font-medium">Concentre-se no que gera resultado hoje.</p>
+          </div>
         </div>
         <div className="flex items-center gap-3">
-          <Tabs value={viewMode} onValueChange={(v: any) => setViewMode(v)} className="w-[300px] sm:w-[350px]">
-            <TabsList className="grid w-full grid-cols-3 h-10">
-              <TabsTrigger value="day">Diário</TabsTrigger>
-              <TabsTrigger value="week">Semanal</TabsTrigger>
-              <TabsTrigger value="month">Mensal</TabsTrigger>
+          <Tabs value={viewMode} onValueChange={(v: any) => setViewMode(v)} className="w-[300px] h-12 bg-muted/50 p-1 rounded-2xl border border-border/50">
+            <TabsList className="grid w-full grid-cols-3 h-full bg-transparent p-0">
+              <TabsTrigger value="day" className="rounded-xl data-[state=active]:bg-background data-[state=active]:shadow-sm">Diário</TabsTrigger>
+              <TabsTrigger value="week" className="rounded-xl data-[state=active]:bg-background data-[state=active]:shadow-sm">Semanal</TabsTrigger>
+              <TabsTrigger value="month" className="rounded-xl data-[state=active]:bg-background data-[state=active]:shadow-sm">Mensal</TabsTrigger>
             </TabsList>
           </Tabs>
-          <Button onClick={() => setShowNewActivityModal(true)} className="gap-2 shadow-lg h-10 px-5">
-            <Plus className="h-4 w-4" /> <span className="hidden sm:inline">Nova Atividade</span>
+          <Button onClick={() => setShowNewActivityModal(true)} className="bg-primary hover:bg-primary/90 text-white font-black px-8 shadow-lg shadow-primary/20 h-12 rounded-2xl">
+            <Plus className="h-4 w-4 mr-2" />
+            <span className="hidden sm:inline">Nova Atividade</span>
           </Button>
         </div>
       </div>
@@ -390,28 +412,28 @@ export function Agenda() {
         </div>
       </div>
 
-      {/* ── MODALS ── */}
-      <Dialog open={showCompleteModal} onOpenChange={setShowCompleteModal}>
-        <DialogContent className="max-w-md">
-          <DialogHeader>
-            <DialogTitle className="flex items-center gap-2 text-emerald-600"><CheckCircle2 className="h-5 w-5" /> Concluir "{selectedEvento?.titulo}"</DialogTitle>
-          </DialogHeader>
-          <div className="py-2">
+      {/* ── SHEETS ── */}
+      <Sheet open={showCompleteModal} onOpenChange={setShowCompleteModal}>
+        <SheetContent side="right" className="max-w-md">
+          <SheetHeader>
+            <SheetTitle className="flex items-center gap-2 text-emerald-600"><CheckCircle2 className="h-5 w-5" /> Concluir "{selectedEvento?.titulo}"</SheetTitle>
+          </SheetHeader>
+          <div className="py-6">
             <Label>Notas do fechamento (opcional)</Label>
-            <Textarea value={completionNote} onChange={e => setCompletionNote(e.target.value)} placeholder="Deixe um registro do que aconteceu..." className="mt-2 min-h-[100px]" />
+            <Textarea value={completionNote} onChange={e => setCompletionNote(e.target.value)} placeholder="Deixe um registro do que aconteceu..." className="mt-2 min-h-[150px]" />
           </div>
-          <DialogFooter>
+          <SheetFooter>
             <Button variant="ghost" onClick={() => setShowCompleteModal(false)}>Cancelar</Button>
-            <Button className="bg-emerald-600 hover:bg-emerald-700 text-white gap-2" onClick={confirmComplete}>Confirmar Conclusão</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+            <Button className="bg-emerald-600 hover:bg-emerald-700 text-white gap-2" onClick={(e) => confirmComplete(e)}>Confirmar Conclusão</Button>
+          </SheetFooter>
+        </SheetContent>
+      </Sheet>
 
-      <Dialog open={showNewActivityModal} onOpenChange={setShowNewActivityModal}>
-        <DialogContent className="max-w-xl">
-          <DialogHeader>
-            <DialogTitle>Agendar Nova Atividade</DialogTitle>
-          </DialogHeader>
+      <Sheet open={showNewActivityModal} onOpenChange={setShowNewActivityModal}>
+        <SheetContent side="right" className="max-w-xl overflow-y-auto custom-scrollbar">
+          <SheetHeader className="mb-6">
+            <SheetTitle>Agendar Nova Atividade</SheetTitle>
+          </SheetHeader>
           <form onSubmit={handleNewSubmit} className="space-y-4">
             <div className="space-y-2">
               <Label>Assunto / Título</Label>
@@ -461,13 +483,13 @@ export function Agenda() {
                 </SelectContent>
               </Select>
             </div>
-            <DialogFooter className="mt-6 pt-4 border-t border-border">
-              <Button type="button" variant="ghost" onClick={() => setShowNewActivityModal(false)}>Cancelar</Button>
-              <Button type="submit">Agendar</Button>
-            </DialogFooter>
+            <SheetFooter className="mt-8 pt-6 border-t border-border">
+              <Button type="button" variant="ghost" className="w-full sm:w-auto" onClick={() => setShowNewActivityModal(false)}>Cancelar</Button>
+              <Button type="submit" className="w-full sm:w-auto">Agendar</Button>
+            </SheetFooter>
           </form>
-        </DialogContent>
-      </Dialog>
+        </SheetContent>
+      </Sheet>
     </div>
   );
 }

@@ -36,7 +36,9 @@ import {
   Phone,
   Mail,
   Map,
-  Send
+  Send,
+  Sparkles,
+  X
 } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
 import {
@@ -54,17 +56,20 @@ import {
 } from '@/components/ui/accordion';
 import { motion, AnimatePresence, Reorder } from 'framer-motion';
 import { cn } from '@/lib/utils';
+import { useAnimation } from '@/components/shared/ActionAnimation';
 
 type TemplateId = 'minimalista' | 'classico' | 'premium';
 type DomainType = 'auto' | 'custom';
 
-export function EditorSite() {
+export function EsiSites() {
+  const { triggerAnimation } = useAnimation();
   const { toast } = useToast();
 
   // Top Bar State
   const [activePageId, setActivePageId] = useState<number>(1);
   const [viewMode, setViewMode] = useState<'desktop' | 'tablet' | 'mobile'>('desktop');
   const [isPublishing, setIsPublishing] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   // Pages & Content State
   const [pages, setPages] = useState([
@@ -130,7 +135,14 @@ export function EditorSite() {
   const currentTemplateObj = templates.find(t => t.id === selectedTemplate) || templates[0];
   const activePage = pages.find(p => p.id === activePageId) || pages[0];
 
-  const handlePublish = () => {
+  const handlePublish = (e: React.MouseEvent) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    triggerAnimation({
+      type: 'success',
+      startX: rect.left + rect.width / 2,
+      startY: rect.top + rect.height / 2,
+      icon: Globe
+    });
     setIsPublishing(true);
     setTimeout(() => {
       setIsPublishing(false);
@@ -198,8 +210,8 @@ export function EditorSite() {
         {/* Left: Brand & Page Switcher */}
         <div className="flex items-center gap-2 sm:gap-6 shrink-0">
           <div className="flex items-center gap-2 font-bold text-lg hidden sm:flex shrink-0">
-            <div className="w-6 h-6 rounded bg-primary text-primary-foreground flex items-center justify-center">E</div>
-            Site
+            <div className="w-6 h-6 rounded bg-primary text-primary-foreground flex items-center justify-center shrink-0">E</div>
+            si.sites
           </div>
 
           <div className="flex items-center gap-2 text-xs sm:text-sm bg-muted/50 hover:bg-muted transition-colors border rounded-md px-2 sm:px-3 py-1.5 cursor-pointer shrink-0">
@@ -253,10 +265,23 @@ export function EditorSite() {
       </header>
 
       {/* ── SPLIT WORKSPACE ── */}
-      <div className="flex-1 flex overflow-hidden">
+      <div className="flex-1 flex overflow-hidden relative">
+        {/* Mobile Sidebar Toggle */}
+        <div className="lg:hidden absolute bottom-4 right-4 z-[100]">
+          <Button
+            size="icon"
+            className="h-12 w-12 rounded-full shadow-2xl bg-primary text-white"
+            onClick={() => setSidebarOpen(!sidebarOpen)}
+          >
+            {sidebarOpen ? <X className="h-6 w-6" /> : <Settings2 className="h-6 w-6" />}
+          </Button>
+        </div>
 
         {/* SIDEBAR - VERTICAL ACCORDION CMS */}
-        <div className="w-[320px] flex-none border-r border-border bg-card overflow-y-auto custom-scrollbar flex flex-col">
+        <div className={cn(
+          "w-full sm:w-[320px] lg:w-[320px] flex-none border-r border-border bg-card overflow-y-auto custom-scrollbar flex flex-col transition-all duration-300 z-30",
+          sidebarOpen ? "fixed inset-0 sm:relative translate-x-0" : "fixed inset-0 sm:relative -translate-x-full lg:translate-x-0"
+        )}>
 
           <div className="p-4 border-b border-border/50 bg-muted/20">
             <h2 className="font-semibold text-sm uppercase tracking-wider text-muted-foreground mb-1">Configurações</h2>
@@ -279,7 +304,16 @@ export function EditorSite() {
                     {templates.map(tpl => (
                       <div
                         key={tpl.id}
-                        onClick={() => setSelectedTemplate(tpl.id as TemplateId)}
+                        onClick={(e) => {
+                          const rect = e.currentTarget.getBoundingClientRect();
+                          triggerAnimation({
+                            type: 'success',
+                            startX: rect.left + rect.width / 2,
+                            startY: rect.top + rect.height / 2,
+                            icon: Sparkles
+                          });
+                          setSelectedTemplate(tpl.id as TemplateId);
+                        }}
                         className={cn(
                           "border rounded-lg p-3 cursor-pointer transition-all flex items-center justify-between",
                           selectedTemplate === tpl.id ? "border-primary bg-primary/5 ring-1 ring-primary/20" : "bg-card hover:border-foreground/30"
