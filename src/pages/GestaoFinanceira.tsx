@@ -60,7 +60,6 @@ export function GestaoFinanceira() {
   return (
     <div className="flex flex-col min-h-full">
       <div className="max-w-[1400px] w-full mx-auto px-6 pt-4">
-      <div className="max-w-[1400px] w-full mx-auto px-6 pt-4">
         <PageHeader
           title="Esi.finance"
           subtitle="Gestão financeira completa"

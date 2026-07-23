@@ -157,9 +157,23 @@ export function EsiChat() {
   return (
     <div className="flex flex-col min-h-full">
       <div className="max-w-[1400px] w-full mx-auto px-6 pt-4">
-                  Nova Conversa
-                </Button>
-              </DialogTrigger>
+        <PageHeader
+          title="Esi.chat"
+          subtitle="Central de mensagens e atendimento WhatsApp"
+          icon={<MessageCircle />}
+          breadcrumbs={[
+            { label: 'Dashboard', href: '/' },
+            { label: 'Esi.chat' }
+          ]}
+          actions={
+            <div className="flex items-center gap-3">
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold h-12 rounded-2xl shadow-lg shadow-indigo-200 transition-all px-6">
+                    <Plus className="h-4 w-4 mr-2" />
+                    Nova Conversa
+                  </Button>
+                </DialogTrigger>
               <DialogContent className="sm:max-w-[425px] rounded-3xl p-8">
                 <DialogHeader className="mb-6">
                   <div className="h-12 w-12 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center mb-4">
@@ -190,7 +204,8 @@ export function EsiChat() {
               </DialogContent>
             </Dialog>
           </div>
-        </div>
+        }
+      />
       </div>
 
       {/* Main Interface */}
