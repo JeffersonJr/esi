@@ -66,6 +66,7 @@ import {
   Mail,
   Building
 } from 'lucide-react';
+import { PageHeader } from '@/components/layout/PageHeader';
 
 interface Chat {
   id: string;
@@ -156,56 +157,6 @@ export function EsiChat() {
   return (
     <div className="flex flex-col min-h-full">
       <div className="max-w-[1400px] w-full mx-auto px-6 pt-4">
-        <Breadcrumb>
-          <BreadcrumbList>
-            <BreadcrumbItem>
-              <BreadcrumbLink href="/" className="flex items-center gap-1">
-                <Home className="h-4 w-4" /> Dashboard
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbPage>Esi.chat</BreadcrumbPage>
-            </BreadcrumbItem>
-          </BreadcrumbList>
-        </Breadcrumb>
-      </div>
-
-      {/* Header Sticky */}
-      <div className="bg-white border-b border-slate-200 px-6 py-6 sticky top-0 z-40 backdrop-blur-md bg-white/80 mt-4 h-24 flex items-center shrink-0">
-        <div className="max-w-[1400px] w-full mx-auto flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div className="flex items-center gap-4">
-            <div className="h-12 w-12 rounded-2xl bg-indigo-600 text-white flex items-center justify-center shadow-lg shadow-indigo-200 shrink-0">
-              <MessageSquare className="h-6 w-6" />
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <h1 className="text-3xl font-black text-slate-800 tracking-tight">Esi.chat</h1>
-                <Badge variant="outline" className="text-[10px] font-black uppercase tracking-widest border-indigo-100 text-indigo-600 bg-indigo-50/50">Beta</Badge>
-              </div>
-              <p className="text-slate-500 mt-1 font-medium italic">Sua central inteligente de comunicação</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-3">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline" className="bg-white border-slate-200 text-slate-700 font-bold h-12 rounded-2xl shadow-sm hover:bg-slate-50 transition-all">
-                  <Filter className="h-4 w-4 mr-2" />
-                  {statusFilter === 'todos' ? 'Todos' : statusFilter === 'waiting' ? 'Aguardando' : statusFilter === 'active' ? 'Ativos' : 'Bot'}
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-52 p-2 rounded-2xl shadow-xl border-slate-100">
-                <DropdownMenuItem onClick={() => setStatusFilter('todos')} className="p-3 cursor-pointer font-bold rounded-xl focus:bg-indigo-50">Todos os contatos</DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setStatusFilter('waiting')} className="p-3 cursor-pointer text-amber-600 font-bold rounded-xl focus:bg-amber-50">Aguardando resposta</DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setStatusFilter('active')} className="p-3 cursor-pointer text-emerald-600 font-bold rounded-xl focus:bg-emerald-50">Em atendimento</DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setStatusFilter('bot')} className="p-3 cursor-pointer text-blue-600 font-bold rounded-xl focus:bg-blue-50">Com o esi.chat (Bot)</DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-
-            <Dialog>
-              <DialogTrigger asChild>
-                <Button className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold h-12 rounded-2xl shadow-lg shadow-indigo-200 transition-all">
-                  <Sparkles className="h-4 w-4 mr-2" />
                   Nova Conversa
                 </Button>
               </DialogTrigger>

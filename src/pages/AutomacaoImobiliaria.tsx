@@ -23,6 +23,7 @@ import {
   Search, Filter, Clock, Calendar, Mail, MessageSquare, Phone,
   FileText, Users, CheckCircle, Activity, Globe, Link as LinkIcon, Download, RefreshCw, X, ArrowRight, CornerDownRight, Home, AlertCircle
 } from 'lucide-react';
+import { PageHeader } from '@/components/layout/PageHeader';
 
 // Types
 type NodeType = 'trigger' | 'action' | 'condition';
@@ -327,45 +328,28 @@ export function AutomacaoImobiliaria() {
   return (
     <div className="min-h-screen bg-slate-50/50">
       <div className="max-w-[1400px] mx-auto px-6 pt-4">
-        <Breadcrumb>
-          <BreadcrumbList>
-            <BreadcrumbItem>
-              <BreadcrumbLink href="/" className="flex items-center gap-1">
-                <Home className="h-4 w-4" /> Dashboard
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbPage>Automações</BreadcrumbPage>
-            </BreadcrumbItem>
-          </BreadcrumbList>
-        </Breadcrumb>
-      </div>
-
-      {/* Header Sticky */}
-      <div className="bg-white border-b border-slate-200 px-6 py-6 sticky top-0 z-40 backdrop-blur-md bg-white/80 mt-4">
-        <div className="max-w-[1400px] mx-auto flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div className="flex items-center gap-4">
-            <div className="h-12 w-12 rounded-2xl bg-indigo-600 text-white flex items-center justify-center shadow-lg shadow-indigo-200 shrink-0">
-              <Zap className="h-6 w-6" />
+        <PageHeader
+          title="Automações"
+          subtitle="Construa fluxos inteligentes e deixe o esi trabalhar por você"
+          icon={<Zap />}
+          breadcrumbs={[
+            { label: 'Dashboard', href: '/' },
+            { label: 'Automações' }
+          ]}
+          actions={
+            <div className="flex items-center gap-3">
+              <Button variant="outline" className="h-12 px-6 rounded-2xl font-bold bg-white border-slate-200 text-slate-700 shadow-sm hover:bg-slate-50 transition-all">
+                <Download className="h-4 w-4 mr-2" /> Relatórios
+              </Button>
+              <Button
+                onClick={() => setViewMode('builder')}
+                className="h-12 px-6 rounded-2xl font-bold bg-indigo-600 hover:bg-indigo-700 text-white shadow-lg shadow-indigo-200 transition-all"
+              >
+                <Plus className="h-4 w-4 mr-2" /> Criar Fluxo Visual
+              </Button>
             </div>
-            <div>
-              <h1 className="text-3xl font-black text-slate-800 tracking-tight">Automações</h1>
-              <p className="text-slate-500 mt-1 font-medium">Construa fluxos inteligentes e deixe o esi trabalhar por você</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-3">
-            <Button variant="outline" className="h-12 px-6 rounded-2xl font-bold bg-white border-slate-200 text-slate-700 shadow-sm hover:bg-slate-50 transition-all">
-              <Download className="h-4 w-4 mr-2" /> Relatórios
-            </Button>
-            <Button
-              onClick={() => setViewMode('builder')}
-              className="h-12 px-6 rounded-2xl font-bold bg-indigo-600 hover:bg-indigo-700 text-white shadow-lg shadow-indigo-200 transition-all"
-            >
-              <Plus className="h-4 w-4 mr-2" /> Criar Fluxo Visual
-            </Button>
-          </div>
-        </div>
+          }
+        />
       </div>
 
       <div className="max-w-[1400px] mx-auto px-6 py-8 space-y-8">

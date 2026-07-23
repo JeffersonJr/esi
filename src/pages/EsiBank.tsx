@@ -12,6 +12,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { PageHeader } from '@/components/layout/PageHeader';
 import { Separator } from '@/components/ui/separator';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useToast } from '@/hooks/use-toast';
@@ -170,19 +171,15 @@ export function EsiBank() {
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col items-center w-full">
       <div className="w-full max-w-[1600px] mb-4 sm:mb-6">
-        <Breadcrumb>
-          <BreadcrumbList>
-            <BreadcrumbItem>
-              <BreadcrumbLink href="/" className="flex items-center gap-1">
-                <Home className="h-4 w-4" /> Dashboard
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbPage>esi.bank</BreadcrumbPage>
-            </BreadcrumbItem>
-          </BreadcrumbList>
-        </Breadcrumb>
+        <PageHeader
+          title="Esi.bank"
+          subtitle="Conta digital integrada"
+          icon={<CreditCard />}
+          breadcrumbs={[
+            { label: 'Dashboard', href: '/' },
+            { label: 'Esi.bank' }
+          ]}
+        />
       </div>
 
       <div className="w-full max-w-md bg-white shadow-sm sm:shadow-xl min-h-[100dvh] relative border-x border-slate-100 overflow-hidden font-sans flex flex-col">

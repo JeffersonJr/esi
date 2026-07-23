@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { DragDropContext, Droppable, Draggable, DropResult } from '@hello-pangea/dnd';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -25,6 +26,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { PageHeader } from '@/components/layout/PageHeader';
 
 const vistorias = [
   { id: 'VST-501', imovel: 'Apto 2 Quartos - Centro', endereço: 'Rua das Flores, 123', tipo: 'Entrada', inquilino: 'Maria Alves', vistoriador: 'Pedro Oliveira', data: '20/Jan - 14:00', status: 'Agendado', fotos: 0 },
@@ -50,10 +52,27 @@ const itensCozinha = [
 ];
 
 export function SistemaVistoria() {
+  const [vistoriasState, setVistoriasState] = useState(vistorias);
+  const [colunas] = useState(['Agendado', 'Em Análise', 'Concluído', 'Aprovado (Assinado)']);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedTab, setSelectedTab] = useState('dashboard');
   const [showVistoriaDetalhe, setShowVistoriaDetalhe] = useState(false);
   const [comodoSelecionado, setComodoSelecionado] = useState('Cozinha');
+
+  const onDragEnd = (result: DropResult) => {
+    const { source, destination, draggableId } = result;
+    if (!destination) return;
+    if (source.droppableId === destination.droppableId && source.index === destination.index) return;
+
+    setVistoriasState(prev => {
+      const newArr = Array.from(prev);
+      const index = newArr.findIndex(v => v.id === draggableId);
+      if (index !== -1) {
+        newArr[index] = { ...newArr[index], status: destination.droppableId };
+      }
+      return newArr;
+    });
+  };
 
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -87,42 +106,25 @@ export function SistemaVistoria() {
   return (
     <div>
       <div className="max-w-[1400px] mx-auto">
-        <Breadcrumb>
-          <BreadcrumbList>
-            <BreadcrumbItem>
-              <BreadcrumbLink href="/" className="flex items-center gap-1">
-                <Home className="h-4 w-4" /> Dashboard
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbPage>Vistorias</BreadcrumbPage>
-            </BreadcrumbItem>
-          </BreadcrumbList>
-        </Breadcrumb>
-      </div>
-
-      {/* Header */}
-      <div className="bg-white border-b border-slate-200 px-6 py-6 sticky top-0 z-40 backdrop-blur-md bg-white/80 mt-4">
-        <div className="max-w-[1400px] mx-auto flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div className="flex items-center gap-4">
-            <div className="h-12 w-12 rounded-2xl bg-indigo-600 text-white flex items-center justify-center shadow-lg shadow-indigo-200 shrink-0">
-              <ShieldCheck className="h-6 w-6" />
+        <PageHeader
+          title="Sistema de Vistoria"
+          subtitle="Agendamento, laudos digitais e assinaturas eletrônicas"
+          icon={<ShieldCheck />}
+          breadcrumbs={[
+            { label: 'Dashboard', href: '/' },
+            { label: 'Vistorias' }
+          ]}
+          actions={
+            <div className="flex items-center gap-3">
+              <Button
+                onClick={() => { }}
+                className="h-12 px-6 rounded-2xl font-bold bg-indigo-600 hover:bg-indigo-700 text-white shadow-lg shadow-indigo-200 transition-all"
+              >
+                <Calendar className="h-4 w-4 mr-2" /> Agendar Vistoria
+              </Button>
             </div>
-            <div>
-              <h1 className="text-3xl font-black text-slate-800 tracking-tight">Sistema de Vistoria</h1>
-              <p className="text-slate-500 mt-1 font-medium">Agendamento, laudos digitais e assinaturas eletrônicas</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-3">
-            <Button
-              onClick={() => { }}
-              className="h-12 px-6 rounded-2xl font-bold bg-indigo-600 hover:bg-indigo-700 text-white shadow-lg shadow-indigo-200 transition-all"
-            >
-              <Calendar className="h-4 w-4 mr-2" /> Agendar Vistoria
-            </Button>
-          </div>
-        </div>
+          }
+        />
       </div>
 
       <div className="max-w-[1400px] mx-auto py-8">
@@ -241,8 +243,82 @@ export function SistemaVistoria() {
             </Card>
           </TabsContent>
 
-          <TabsContent value="vistorias" className="m-0 p-12 text-center text-slate-500 bg-white rounded-2xl border border-dashed border-slate-200">
-            Lista completa de todas as vistorias virá aqui.
+          <TabsContent value="vistorias" className="m-0 bg-slate-50 rounded-2xl">
+            <DragDropContext onDragEnd={onDragEnd}>
+              <div className="w-full flex gap-6 overflow-x-auto py-4">
+                {colunas.map((colunaLabel) => {
+                  const itensColuna = vistoriasState.filter(v => v.status === colunaLabel);
+
+                  return (
+                    <Droppable key={colunaLabel} droppableId={colunaLabel}>
+                      {(provided, snapshot) => (
+                        <div
+                          ref={provided.innerRef}
+                          {...provided.droppableProps}
+                          className={`min-w-[300px] max-w-[320px] w-full flex flex-col rounded-2xl p-4 border border-slate-200 transition-colors ${
+                            snapshot.isDraggingOver ? 'bg-indigo-50/50 border-indigo-200' : 'bg-white shadow-sm'
+                          }`}
+                        >
+                          <div className="flex items-center justify-between mb-4 px-1">
+                            <h3 className="font-bold text-slate-700 uppercase tracking-wider text-xs">{colunaLabel}</h3>
+                            <Badge variant="secondary" className="bg-slate-100 text-slate-600 font-bold rounded-lg">{itensColuna.length}</Badge>
+                          </div>
+
+                          <div className="flex-1 overflow-y-auto space-y-3 custom-scrollbar pr-1 min-h-[150px]">
+                            {itensColuna.map((vistoria, index) => (
+                              <Draggable key={vistoria.id} draggableId={vistoria.id} index={index}>
+                                {(provided, snapshot) => (
+                                  <div
+                                    ref={provided.innerRef}
+                                    {...provided.draggableProps}
+                                    {...provided.dragHandleProps}
+                                    style={{
+                                      ...provided.draggableProps.style,
+                                      opacity: snapshot.isDragging ? 0.9 : 1
+                                    }}
+                                  >
+                                    <Card
+                                      className={`border-none shadow-sm cursor-pointer transition-all group rounded-2xl overflow-hidden ${
+                                        snapshot.isDragging ? 'ring-2 ring-indigo-400 shadow-xl scale-[1.02]' : 'hover:ring-2 hover:ring-indigo-400 hover:shadow-md border border-slate-100'
+                                      }`}
+                                      onClick={() => setShowVistoriaDetalhe(true)}
+                                    >
+                                      <CardContent className="p-4 bg-slate-50/50">
+                                        <div className="flex justify-between items-start mb-2">
+                                          <span className="text-[10px] font-black font-mono text-slate-400 tracking-wider bg-white px-2 py-0.5 rounded-md border border-slate-100">{vistoria.id}</span>
+                                          {getTipoBadge(vistoria.tipo)}
+                                        </div>
+
+                                        <h4 className="font-bold text-slate-800 leading-tight mb-2 group-hover:text-indigo-600 transition-colors">{vistoria.imovel}</h4>
+                                        <p className="text-xs text-slate-500 font-medium mb-3 flex items-center gap-1.5"><MapPin className="h-3 w-3 text-slate-400" /> {vistoria.endereço}</p>
+                                        
+                                        <div className="flex items-center justify-between border-t border-slate-200 pt-3 mt-1">
+                                          <div className="flex items-center gap-1.5 bg-white px-2 py-1 rounded-full border border-slate-100">
+                                            <span className="text-[10px] font-bold text-slate-600">{vistoria.vistoriador.split(' ')[0]}</span>
+                                          </div>
+                                          <span className="text-[10px] text-slate-500 font-bold flex items-center"><Calendar className="h-3 w-3 mr-1" /> {vistoria.data}</span>
+                                        </div>
+                                      </CardContent>
+                                    </Card>
+                                  </div>
+                                )}
+                              </Draggable>
+                            ))}
+                            {provided.placeholder}
+
+                            {itensColuna.length === 0 && (
+                              <div className="h-24 border-2 border-dashed border-slate-200 rounded-2xl flex items-center justify-center text-slate-400 text-sm font-bold bg-slate-50/50">
+                                Vazio
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      )}
+                    </Droppable>
+                  );
+                })}
+              </div>
+            </DragDropContext>
           </TabsContent>
 
           <TabsContent value="assinaturas" className="m-0 p-12 text-center text-slate-500 bg-white rounded-2xl border border-dashed border-slate-200">

@@ -21,110 +21,210 @@ import {
   DollarSign,
   HelpCircle,
   Camera,
-  Palette,
+  TrendingUp,
+  Building,
 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 
-const menuItems = [
-  { icon: LayoutDashboard, label: 'Dashboard', path: '/' },
-  { icon: Kanban, label: 'Esi.leads', path: '/funil' },
-  { icon: Users, label: 'Contatos', path: '/contatos' },
-  { icon: Home, label: 'Imóveis', path: '/imoveis' },
-  { icon: Calendar, label: 'Agenda', path: '/agenda' },
-  { icon: BarChart3, label: 'Analytics', path: '/analytics' },
-  { icon: UserCircle, label: 'Usuários', path: '/usuarios' },
-  { icon: UsersRound, label: 'Equipes', path: '/equipes' },
-  { icon: Globe, label: 'Esi.sites', path: '/site' },
-  { icon: CreditCard, label: 'Esi.bank', path: '/esibank' },
-  { icon: MessageCircle, label: 'Esi.chat', path: '/esichat' },
-  { icon: Bot, label: 'Automação', path: '/automacao' },
-  { icon: Key, label: 'Locações', path: '/locacoes' },
-  { icon: DollarSign, label: 'Esi.finance', path: '/financeiro' },
-  { icon: HelpCircle, label: 'Solicitações', path: '/solicitacoes' },
-  { icon: Camera, label: 'Vistoria', path: '/vistoria' },
-  { icon: Settings, label: 'Configurações', path: '/configuracoes' },
+const menuGroups = [
+  {
+    label: 'Principal',
+    items: [
+      { icon: LayoutDashboard, label: 'Dashboard',    path: '/' },
+      { icon: Kanban,           label: 'Esi.leads',   path: '/funil' },
+      { icon: Users,            label: 'Contatos',    path: '/contatos' },
+      { icon: Home,             label: 'Imóveis',     path: '/imoveis' },
+      { icon: Building,         label: 'Empreendimentos', path: '/empreendimentos' },
+      { icon: Calendar,         label: 'Agenda',      path: '/agenda' },
+      { icon: TrendingUp,       label: 'Meu Desempenho', path: '/desempenho' },
+      { icon: BarChart3,        label: 'Analytics',   path: '/analytics' },
+    ],
+  },
+  {
+    label: 'Ferramentas',
+    items: [
+      { icon: Globe,            label: 'Esi.sites',   path: '/site' },
+      { icon: CreditCard,       label: 'Esi.bank',    path: '/esibank' },
+      { icon: MessageCircle,    label: 'Esi.chat',    path: '/esichat' },
+      { icon: Bot,              label: 'Automação',   path: '/automacao' },
+      { icon: Key,              label: 'Locações',    path: '/locacoes' },
+      { icon: DollarSign,       label: 'Esi.finance', path: '/financeiro' },
+      { icon: HelpCircle,       label: 'Solicitações',path: '/solicitacoes' },
+      { icon: Camera,           label: 'Vistoria',    path: '/vistoria' },
+    ],
+  },
+  {
+    label: 'Equipe',
+    items: [
+      { icon: UserCircle,  label: 'Usuários', path: '/usuarios' },
+      { icon: UsersRound,  label: 'Equipes',  path: '/equipes' },
+      { icon: Settings,    label: 'Configurações', path: '/configuracoes' },
+    ],
+  },
 ];
+
+interface NavItemProps {
+  icon: React.ElementType;
+  label: string;
+  path: string;
+  isActive: boolean;
+  collapsed: boolean;
+}
+
+function NavItem({ icon: Icon, label, path, isActive, collapsed }: NavItemProps) {
+  const content = (
+    <Link
+      to={path}
+      className={cn(
+        'flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-all duration-150 group relative',
+        isActive
+          ? 'bg-primary/10 text-primary'
+          : 'text-muted-foreground hover:text-foreground hover:bg-muted/60',
+        collapsed && 'justify-center px-2'
+      )}
+    >
+      {isActive && (
+        <span className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-5 bg-primary rounded-r-full" />
+      )}
+      <Icon
+        className={cn(
+          'flex-shrink-0 transition-colors',
+          collapsed ? 'h-5 w-5' : 'h-4 w-4',
+          isActive ? 'text-primary' : 'text-muted-foreground group-hover:text-foreground'
+        )}
+      />
+      {!collapsed && (
+        <span className="truncate">{label}</span>
+      )}
+    </Link>
+  );
+
+  if (collapsed) {
+    return (
+      <Tooltip delayDuration={0}>
+        <TooltipTrigger asChild>{content}</TooltipTrigger>
+        <TooltipContent side="right" className="text-xs font-medium">
+          {label}
+        </TooltipContent>
+      </Tooltip>
+    );
+  }
+
+  return content;
+}
 
 export function Sidebar() {
   const [collapsed, setCollapsed] = useState(false);
   const location = useLocation();
 
   return (
-    <aside
-      className={cn(
-        'relative flex flex-col bg-card border-r border-border transition-all duration-300',
-        collapsed ? 'w-20' : 'w-20 lg:w-64'
-      )}
-    >
-      <div className="flex items-center justify-between p-6 border-b border-border">
-        {(!collapsed) && (
-          <div className="flex items-center justify-center w-full lg:block hidden">
-            <div className="w-full h-auto flex items-center justify-center px-4">
-              <img
-                src="/logoesi.svg"
-                alt="ESI Logo"
-                className="w-full h-auto object-contain"
-                onError={(e) => {
-                  const target = e.target as HTMLImageElement;
-                  target.style.display = 'none';
-                  target.parentElement!.innerHTML = '<div class="w-12 h-12 bg-primary text-primary-foreground rounded-lg flex items-center justify-center mx-auto"><span class="font-bold text-2xl">E</span></div>';
-                }}
-              />
-            </div>
-          </div>
+    <TooltipProvider>
+      <aside
+        className={cn(
+          'relative flex flex-col bg-card transition-all duration-300 ease-in-out',
+          'border-r border-border',
+          collapsed ? 'w-[60px]' : 'w-[60px] lg:w-[220px]'
         )}
-        {(collapsed || true) && (
-          <div className={cn("w-14 h-14 items-center justify-center mx-auto", collapsed ? "flex" : "flex lg:hidden")}>
+      >
+        {/* Logo */}
+        <div
+          className={cn(
+            'flex items-center border-b border-border',
+            collapsed ? 'h-16 justify-center px-3' : 'h-16 px-4 justify-center lg:justify-start gap-3'
+          )}
+        >
+          {/* Minimal logo (always visible) */}
+          <div className={cn('flex-shrink-0', collapsed ? 'block' : 'block lg:hidden')}>
             <img
               src="/logominimal.svg"
-              alt="ESI Logo"
-              className="w-full h-full object-contain"
+              alt="ESI"
+              className="h-8 w-8 object-contain"
               onError={(e) => {
-                const target = e.target as HTMLImageElement;
-                target.style.display = 'none';
-                target.parentElement!.innerHTML = '<div class="w-10 h-10 bg-primary text-primary-foreground rounded-lg flex items-center justify-center transition-all"><span class="font-bold text-lg">E</span></div>';
+                const t = e.target as HTMLImageElement;
+                t.style.display = 'none';
+                t.parentElement!.innerHTML =
+                  '<div class="h-8 w-8 rounded-lg bg-primary flex items-center justify-center"><span class="text-white font-bold text-sm">E</span></div>';
               }}
             />
           </div>
-        )}
-      </div>
 
-      <Button
-        variant="ghost"
-        size="icon"
-        className="absolute -right-3 top-24 z-10 h-6 w-6 rounded-full border border-border bg-background shadow-md hover:bg-muted hidden lg:flex"
-        onClick={() => setCollapsed(!collapsed)}
-      >
-        {collapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
-      </Button>
-
-      <nav className="flex-1 p-4 space-y-2">
-        {menuItems.map((item) => {
-          const Icon = item.icon;
-          const isActive = location.pathname === item.path;
-
-          return (
-            <Link key={item.path} to={item.path}>
-              <Button
-                variant={isActive ? 'default' : 'ghost'}
-                className={cn(
-                  'w-full justify-start gap-3 transition-all',
-                  (collapsed) ? 'justify-center px-2' : 'justify-center lg:justify-start px-2 lg:px-4',
-                  isActive && 'bg-primary text-primary-foreground shadow-md'
-                )}
-              >
-                <Icon className="h-5 w-5 flex-shrink-0" />
-                {!collapsed && <span className="hidden lg:inline">{item.label}</span>}
-              </Button>
-            </Link>
-          );
-        })}
-      </nav>
-
-      <div className="p-4 border-t border-border">
-        <div className="text-center text-xs text-muted-foreground">
+          {/* Full logo (expanded + desktop) */}
+          {!collapsed && (
+            <div className="hidden lg:block">
+              <img
+                src="/logoesi.svg"
+                alt="ESI Logo"
+                className="h-7 w-auto object-contain"
+                onError={(e) => {
+                  const t = e.target as HTMLImageElement;
+                  t.style.display = 'none';
+                  t.parentElement!.innerHTML =
+                    '<span class="font-bold text-lg text-primary tracking-tight">ESI</span>';
+                }}
+              />
+            </div>
+          )}
         </div>
-      </div>
-    </aside>
+
+        {/* Toggle button */}
+        <button
+          className={cn(
+            'absolute -right-3 top-[4.5rem] z-20',
+            'h-6 w-6 rounded-full border border-border bg-card shadow-sm-pro',
+            'flex items-center justify-center',
+            'text-muted-foreground hover:text-foreground hover:bg-muted',
+            'transition-all duration-150 cursor-pointer',
+            'hidden lg:flex'
+          )}
+          onClick={() => setCollapsed(!collapsed)}
+          aria-label={collapsed ? 'Expandir menu' : 'Recolher menu'}
+        >
+          {collapsed
+            ? <ChevronRight className="h-3 w-3" />
+            : <ChevronLeft  className="h-3 w-3" />
+          }
+        </button>
+
+        {/* Navigation */}
+        <nav className="flex-1 overflow-y-auto py-3 space-y-0.5 px-2">
+          {menuGroups.map((group, groupIdx) => (
+            <div key={group.label} className={cn(groupIdx > 0 && 'mt-4')}>
+              {/* Group label — only in expanded mode on desktop */}
+              {!collapsed && (
+                <p className="hidden lg:block px-3 pb-1 text-[10px] font-semibold uppercase tracking-widest text-muted-foreground/50 select-none">
+                  {group.label}
+                </p>
+              )}
+              <div className="space-y-0.5">
+                {group.items.map((item) => (
+                  <NavItem
+                    key={item.path}
+                    icon={item.icon}
+                    label={item.label}
+                    path={item.path}
+                    isActive={location.pathname === item.path}
+                    collapsed={collapsed}
+                  />
+                ))}
+              </div>
+            </div>
+          ))}
+        </nav>
+
+        {/* Footer */}
+        <div className="p-3 border-t border-border">
+          {!collapsed && (
+            <p className="hidden lg:block text-center text-[10px] text-muted-foreground/40 select-none">
+              ESI © {new Date().getFullYear()}
+            </p>
+          )}
+        </div>
+      </aside>
+    </TooltipProvider>
   );
 }

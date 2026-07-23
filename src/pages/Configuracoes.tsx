@@ -30,6 +30,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { PageHeader } from '@/components/layout/PageHeader';
 import { useTheme } from '@/contexts/theme-context';
 import { useToast } from '@/hooks/use-toast';
 
@@ -606,48 +607,33 @@ export function Configuracoes() {
 
   return (
     <div className="mx-auto font-sans flex flex-col overflow-hidden bg-slate-50/30">
-      <Breadcrumb>
-        <BreadcrumbList>
-          <BreadcrumbItem>
-            <BreadcrumbLink href="/" className="flex items-center gap-1">
-              <Home className="h-4 w-4" /> Dashboard
-            </BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbPage>Configurações</BreadcrumbPage>
-          </BreadcrumbItem>
-        </BreadcrumbList>
-      </Breadcrumb>
-
-      {/* Header */}
-      <div className="flex items-center justify-between mb-8 shrink-0">
-        <div className="flex items-center gap-4">
-          <div className="h-12 w-12 rounded-2xl bg-indigo-600 text-white flex items-center justify-center shadow-lg shadow-indigo-200">
-            <Settings className="h-6 w-6" />
+      <PageHeader
+        title="Configurações"
+        subtitle="Ajustes gerais, equipe, marca e faturamento."
+        icon={<Settings />}
+        breadcrumbs={[
+          { label: 'Dashboard', href: '/' },
+          { label: 'Configurações' }
+        ]}
+        actions={
+          <div className="flex items-center gap-3">
+            <Button
+              variant="ghost"
+              className="font-bold text-slate-400 hover:text-slate-800"
+              onClick={() => setActiveTab('geral')}
+            >
+              Descartar
+            </Button>
+            <Button
+              onClick={handleSave}
+              className="bg-indigo-600 hover:bg-indigo-700 text-white font-black px-8 shadow-lg shadow-indigo-100 h-12 rounded-2xl"
+            >
+              {saved ? <CheckCircle2 className="h-5 w-5 mr-2" /> : <Save className="h-5 w-5 mr-2" />}
+              {saved ? 'Salvo com sucesso' : 'Salvar Alterações'}
+            </Button>
           </div>
-          <div>
-            <h1 className="text-3xl font-black text-slate-800 tracking-tight">Configurações</h1>
-            <p className="text-slate-500 mt-1 font-medium">Ajustes gerais, equipe, marca e faturamento.</p>
-          </div>
-        </div>
-        <div className="flex items-center gap-3">
-          <Button
-            variant="ghost"
-            className="font-bold text-slate-400 hover:text-slate-800"
-            onClick={() => setActiveTab('geral')}
-          >
-            Descartar
-          </Button>
-          <Button
-            onClick={handleSave}
-            className="bg-indigo-600 hover:bg-indigo-700 text-white font-black px-8 shadow-lg shadow-indigo-100 h-12 rounded-2xl"
-          >
-            {saved ? <CheckCircle2 className="h-5 w-5 mr-2" /> : <Save className="h-5 w-5 mr-2" />}
-            {saved ? 'Salvo com sucesso' : 'Salvar Alterações'}
-          </Button>
-        </div>
-      </div>
+        }
+      />
 
       <div className="flex-1 flex gap-8 overflow-hidden">
 

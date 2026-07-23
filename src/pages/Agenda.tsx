@@ -11,6 +11,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { PageHeader } from '@/components/layout/PageHeader';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -24,8 +25,9 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import {
   MapPin, CheckSquare, PhoneCall, Users, FileText, Key,
-  BarChart, Activity
+  BarChart, Activity, Play
 } from 'lucide-react';
+import { ModoRoleta } from '@/components/roleta/ModoRoleta';
 
 // ─── Shared Mock Data ───────────────────────────────────────────────────────
 const clientes = [
@@ -85,6 +87,7 @@ export function Agenda() {
   const [viewMode, setViewMode] = useState<'day' | 'week' | 'month' | 'list'>('day');
   const [currentDate, setCurrentDate] = useState(new Date());
   const [eventos, setEventos] = useState(eventosData);
+  const [modoRoletaOpen, setModoRoletaOpen] = useState(false);
 
   // Modals state
   const [showNewActivityModal, setShowNewActivityModal] = useState(false);
@@ -185,44 +188,33 @@ export function Agenda() {
 
   return (
     <div className="space-y-6 pb-20">
-      <Breadcrumb>
-        <BreadcrumbList>
-          <BreadcrumbItem>
-            <BreadcrumbLink href="/" className="flex items-center gap-1">
-              <Home className="h-4 w-4" /> Dashboard
-            </BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbPage>Agenda</BreadcrumbPage>
-          </BreadcrumbItem>
-        </BreadcrumbList>
-      </Breadcrumb>
-
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4 shrink-0">
-        <div className="flex items-center gap-4">
-          <div className="h-12 w-12 rounded-2xl bg-primary text-primary-foreground flex items-center justify-center shadow-lg shadow-primary/20">
-            <CalendarIcon className="h-6 w-6" />
-          </div>
-          <div>
-            <h1 className="text-3xl font-black text-slate-800 tracking-tight">Sua Agenda</h1>
-            <p className="text-slate-500 mt-1 font-medium">Concentre-se no que gera resultado hoje.</p>
-          </div>
-        </div>
-        <div className="flex items-center gap-3">
-          <Tabs value={viewMode} onValueChange={(v: any) => setViewMode(v)} className="w-[300px] h-12 bg-muted/50 p-1 rounded-2xl border border-border/50">
-            <TabsList className="grid w-full grid-cols-3 h-full bg-transparent p-0">
-              <TabsTrigger value="day" className="rounded-xl data-[state=active]:bg-background data-[state=active]:shadow-sm">Diário</TabsTrigger>
-              <TabsTrigger value="week" className="rounded-xl data-[state=active]:bg-background data-[state=active]:shadow-sm">Semanal</TabsTrigger>
-              <TabsTrigger value="month" className="rounded-xl data-[state=active]:bg-background data-[state=active]:shadow-sm">Mensal</TabsTrigger>
-            </TabsList>
-          </Tabs>
-          <Button onClick={() => setShowNewActivityModal(true)} className="bg-primary hover:bg-primary/90 text-white font-black px-8 shadow-lg shadow-primary/20 h-12 rounded-2xl">
-            <Plus className="h-4 w-4 mr-2" />
-            <span className="hidden sm:inline">Nova Atividade</span>
-          </Button>
-        </div>
-      </div>
+      <PageHeader
+        title="Agenda"
+        subtitle="Seus compromissos e tarefas"
+        icon={<CalendarIcon />}
+        breadcrumbs={[
+          { label: 'Dashboard', href: '/' },
+          { label: 'Agenda' }
+        ]}
+        actions={
+          <>
+            <Tabs value={viewMode} onValueChange={(v: any) => setViewMode(v)} className="w-full sm:w-[300px] h-12 bg-muted/50 p-1 rounded-2xl border border-border/50">
+              <TabsList className="grid w-full grid-cols-3 h-full bg-transparent p-0">
+                <TabsTrigger value="day" className="rounded-xl data-[state=active]:bg-background data-[state=active]:shadow-sm">Diário</TabsTrigger>
+                <TabsTrigger value="week" className="rounded-xl data-[state=active]:bg-background data-[state=active]:shadow-sm">Semanal</TabsTrigger>
+                <TabsTrigger value="month" className="rounded-xl data-[state=active]:bg-background data-[state=active]:shadow-sm">Mensal</TabsTrigger>
+              </TabsList>
+            </Tabs>
+            <Button variant="outline" onClick={() => setModoRoletaOpen(true)} className="h-10 border-indigo-200 text-indigo-700 hover:bg-indigo-50 font-bold rounded-xl shadow-sm">
+              <Play className="h-4 w-4 sm:mr-2" /> <span className="hidden sm:inline">Modo Foco</span>
+            </Button>
+            <Button onClick={() => setShowNewActivityModal(true)} className="h-10 px-4 rounded-xl shadow-lg shadow-primary/20 gap-2">
+              <Plus className="h-4 w-4" />
+              <span className="hidden sm:inline">Nova Atividade</span>
+            </Button>
+          </>
+        }
+      />
 
       {/* ── KPI METRICS ROW ── */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
@@ -490,6 +482,14 @@ export function Agenda() {
           </form>
         </SheetContent>
       </Sheet>
+
+      {modoRoletaOpen && (
+        <ModoRoleta 
+          eventos={eventos} 
+          onConcluir={(id) => setEventos(prev => prev.map(e => e.id === id ? { ...e, concluida: true } : e))} 
+          onClose={() => setModoRoletaOpen(false)} 
+        />
+      )}
     </div>
   );
 }

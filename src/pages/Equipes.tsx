@@ -28,6 +28,7 @@ import { Label } from '@/components/ui/label';
 import {
   Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { PageHeader } from '@/components/layout/PageHeader';
 
 const equipesData = [
   { id: '1', nome: 'Vendas Centro', descricao: 'Equipe responsável pela região central', membros: ['João Silva', 'Maria Rodrigues', 'Pedro Santos'], cor: 'bg-primary' },
@@ -113,45 +114,30 @@ export function Equipes() {
   ];
 
   return (
-    <div className="space-y-6 animate-fade-in">
-      <Breadcrumb>
-        <BreadcrumbList>
-          <BreadcrumbItem>
-            <BreadcrumbLink href="/" className="flex items-center gap-1">
-              <Home className="h-4 w-4" /> Dashboard
-            </BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbPage>Equipes</BreadcrumbPage>
-          </BreadcrumbItem>
-        </BreadcrumbList>
-      </Breadcrumb>
-
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4 shrink-0">
-        <div className="flex items-center gap-4">
-          <div className="h-12 w-12 rounded-2xl bg-primary text-primary-foreground flex items-center justify-center shadow-lg shadow-primary/20">
-            <Users className="h-6 w-6" />
-          </div>
-          <div>
-            <h1 className="text-3xl font-black text-slate-800 tracking-tight">Equipes</h1>
-            <p className="text-slate-500 mt-1 font-medium">Organize seus colaboradores em equipes</p>
-          </div>
-        </div>
-        <div className="flex items-center gap-3">
-          <div className="flex items-center bg-muted/50 rounded-xl p-1 border border-border/50">
-            <Button variant={viewMode === 'table' ? 'secondary' : 'ghost'} size="sm" className="h-9 w-9 p-0 rounded-lg" onClick={() => setViewMode('table')}>
-              <ListIcon className="h-4 w-4" />
-            </Button>
-            <Button variant={viewMode === 'grid' ? 'secondary' : 'ghost'} size="sm" className="h-9 w-9 p-0 rounded-lg" onClick={() => setViewMode('grid')}>
-              <Grid className="h-4 w-4" />
+    <div className="space-y-6 animate-fade-      <PageHeader
+        title="Equipes"
+        subtitle="Organize seus colaboradores em equipes"
+        icon={<Users />}
+        breadcrumbs={[
+          { label: 'Dashboard', href: '/' },
+          { label: 'Equipes' }
+        ]}
+        actions={
+          <div className="flex items-center gap-3">
+            <div className="flex items-center bg-muted/50 rounded-xl p-1 border border-border/50">
+              <Button variant={viewMode === 'table' ? 'secondary' : 'ghost'} size="sm" className="h-9 w-9 p-0 rounded-lg" onClick={() => setViewMode('table')}>
+                <ListIcon className="h-4 w-4" />
+              </Button>
+              <Button variant={viewMode === 'grid' ? 'secondary' : 'ghost'} size="sm" className="h-9 w-9 p-0 rounded-lg" onClick={() => setViewMode('grid')}>
+                <Grid className="h-4 w-4" />
+              </Button>
+            </div>
+            <Button onClick={handleNew} className="bg-primary hover:bg-primary/90 text-white font-black px-8 shadow-lg shadow-primary/20 h-12 rounded-2xl">
+              <Plus className="h-4 w-4 mr-2" /> Nova Equipe
             </Button>
           </div>
-          <Button onClick={handleNew} className="bg-primary hover:bg-primary/90 text-white font-black px-8 shadow-lg shadow-primary/20 h-12 rounded-2xl">
-            <Plus className="h-4 w-4 mr-2" /> Novo Equipe
-          </Button>
-        </div>
-      </div>
+        }
+      />/div>
 
       {/* KPI Bar */}
       <div className="grid grid-cols-3 gap-3 sm:gap-4">

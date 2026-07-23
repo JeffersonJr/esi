@@ -10,11 +10,15 @@ import { Imoveis } from './pages/Imoveis';
 import ImovelDetalhes from './pages/ImovelDetalhes';
 import CadastroImovel from './pages/CadastroImovel';
 import { Agenda } from './pages/Agenda';
+import { Empreendimentos } from './pages/Empreendimentos';
+import CadastroEmpreendimento from './pages/CadastroEmpreendimento';
+import { Financeiro } from './pages/Financeiro';
+import { MeuDesempenho } from './pages/MeuDesempenho';
 import { Analytics } from './pages/Analytics';
 import { Usuarios } from './pages/Usuarios';
 import { Equipes } from './pages/Equipes';
 import { Configuracoes } from './pages/Configuracoes';
-import { EsiSites } from './pages/EditorSite';
+import { EsiSites, EditorSitePage } from './pages/EditorSite';
 import LeadDetalhes from './pages/LeadDetalhes';
 import { Login } from './pages/Login';
 import { Perfil } from './pages/Perfil';
@@ -43,6 +47,7 @@ function App() {
             <Route path="/recuperar-senha" element={<RecuperarSenha />} />
             <Route path="/verificar-codigo" element={<VerificarCodigo />} />
             <Route path="/redefinir-senha" element={<RedefinirSenha />} />
+            <Route path="/site" element={<EditorSitePage />} />
             <Route path="/" element={<DashboardLayout />}>
               <Route index element={<Dashboard />} />
               <Route path="funil" element={<Funil />} />
@@ -55,11 +60,16 @@ function App() {
               <Route path="imoveis/detalhes/:id" element={<ImovelDetalhes />} />
               <Route path="imoveis/cadastrar" element={<CadastroImovel />} />
               <Route path="imoveis/editar/:id" element={<CadastroImovel />} />
+              <Route path="empreendimentos" element={<Empreendimentos />} />
+              <Route path="empreendimentos/cadastrar" element={<CadastroEmpreendimento />} />
+              <Route path="empreendimentos/editar/:id" element={<CadastroEmpreendimento />} />
+              <Route path="financeiro" element={<Financeiro />} />
               <Route path="agenda" element={<Agenda />} />
+              <Route path="desempenho" element={<MeuDesempenho />} />
               <Route path="analytics" element={<Analytics />} />
               <Route path="usuarios" element={<Usuarios />} />
               <Route path="equipes" element={<Equipes />} />
-              <Route path="site" element={<EsiSites />} />
+              {/* site route moved outside DashboardLayout for full-screen builder */}
               <Route path="esibank" element={<EsiBank />} />
               <Route path="esichat" element={<EsiChat />} />
               <Route path="automacao" element={<AutomacaoImobiliaria />} />

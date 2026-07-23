@@ -29,6 +29,7 @@ import { Label } from '@/components/ui/label';
 import {
   Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { PageHeader } from '@/components/layout/PageHeader';
 import { UserSheet } from '@/components/sheets/UserSheet';
 
 const usuariosData = [
@@ -124,44 +125,96 @@ export function Usuarios() {
 
   return (
     <div className="space-y-6 animate-fade-in">
-      <Breadcrumb>
-        <BreadcrumbList>
-          <BreadcrumbItem>
-            <BreadcrumbLink href="/" className="flex items-center gap-1">
-              <Home className="h-4 w-4" /> Dashboard
-            </BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbPage>Usuários</BreadcrumbPage>
-          </BreadcrumbItem>
-        </BreadcrumbList>
-      </Breadcrumb>
-
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4 shrink-0">
-        <div className="flex items-center gap-4">
-          <div className="h-12 w-12 rounded-2xl bg-primary text-primary-foreground flex items-center justify-center shadow-lg shadow-primary/20">
-            <UserCheck className="h-6 w-6" />
-          </div>
-          <div>
-            <h1 className="text-3xl font-black text-slate-800 tracking-tight">Usuários</h1>
-            <p className="text-slate-500 mt-1 font-medium">Gerencie os usuários do sistema</p>
-          </div>
-        </div>
-        <div className="flex items-center gap-3">
-          <div className="flex items-center bg-muted/50 rounded-xl p-1 border border-border/50">
-            <Button variant={viewMode === 'table' ? 'secondary' : 'ghost'} size="sm" className="h-9 w-9 p-0 rounded-lg" onClick={() => setViewMode('table')}>
-              <ListIcon className="h-4 w-4" />
+      <PageHeader
+        title="Usuários"
+        subtitle="Gerencie os usuários do sistema"
+        icon={<UserCheck />}
+        breadcrumbs={[
+          { label: 'Dashboard', href: '/' },
+          { label: 'Usuários' }
+        ]}
+        actions={
+          <div className="flex items-center gap-3">
+            <div className="relative flex-1 sm:min-w-[250px]">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder="Buscar usuário..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-9 h-10 w-full"
+              />
+            </div>
+            
+            <div className="flex items-center border rounded-md">
+              <Button
+                variant={viewMode === 'grid' ? 'secondary' : 'ghost'}
+                size="icon"
+                className="h-10 w-10 rounded-r-none"
+                onClick={() => setViewMode('grid')}
+              >
+                <Grid className="h-4 w-4" />
+              </Button>
+              <Button
+                variant={viewMode === 'table' ? 'secondary' : 'ghost'}
+                size="icon"
+                className="h-10 w-10 rounded-l-none"
+                onClick={() => setViewMode('table')}
+              >
+                <ListIcon className="h-4 w-4" />
+              </Button>
+            </div>
+            
+            <Popover open={filterOpen} onOpenChange={setFilterOpen}>
+              <PopoverTrigger asChild>
+                <Button variant="outline" className="gap-2 h-10">
+                  <SlidersHorizontal className="h-4 w-4" />
+                  Filtros
+                  {hasActiveAdvanced && (
+                    <span className="w-2 h-2 rounded-full bg-primary" />
+                  )}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-80 p-4" align="end">
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <h4 className="font-semibold text-sm">Filtros Avançados</h4>
+                    {hasActiveAdvanced && (
+                      <Button variant="ghost" size="sm" onClick={clearAdvanced} className="h-auto p-0 text-xs text-muted-foreground hover:text-foreground">
+                        Limpar
+                      </Button>
+                    )}
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="text-xs">Cargo</Label>
+                    <Input 
+                      placeholder="Ex: Corretor" 
+                      value={advanced.cargo}
+                      onChange={(e) => setAdvanced({ ...advanced, cargo: e.target.value })}
+                      className="h-9"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="text-xs">Status</Label>
+                    <Select value={advanced.status} onValueChange={(v) => setAdvanced({ ...advanced, status: v })}>
+                      <SelectTrigger className="h-9">
+                        <SelectValue placeholder="Todos" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="Todos">Todos</SelectItem>
+                        <SelectItem value="Ativo">Ativo</SelectItem>
+                        <SelectItem value="Inativo">Inativo</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+              </PopoverContent>
+            </Popover>
+            <Button className="gap-2 h-10" onClick={handleNew}>
+              <Plus className="h-4 w-4" /> Novo Usuário
             </Button>
-            <Button variant={viewMode === 'grid' ? 'secondary' : 'ghost'} size="sm" className="h-9 w-9 p-0 rounded-lg" onClick={() => setViewMode('grid')}>
-              <Grid className="h-4 w-4" />
-            </Button>
           </div>
-          <Button onClick={handleNew} className="bg-primary hover:bg-primary/90 text-white font-black px-8 shadow-lg shadow-primary/20 h-12 rounded-2xl">
-            <Plus className="h-4 w-4 mr-2" /> Novo Usuário
-          </Button>
-        </div>
-      </div>
+        }
+      />
 
       {/* KPI Bar */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">

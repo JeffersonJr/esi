@@ -6,7 +6,8 @@ import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Separator } from '@/components/ui/separator';
-import { X, Plus, Calendar, Mail, Phone, MessageSquare, MessageCircle, User, MapPin, Home, DollarSign, Building, Clock, MoreHorizontal, MoreVertical, Search, Filter, Edit, Trash2, ChevronDown, Eye, ArrowLeft, Target, StickyNote, Send, FileText, Download, Star, CheckCircle, AlertCircle, Users, Briefcase, Tag, Activity, UserCheck, TrendingUp, Car, Paperclip } from 'lucide-react';
+import { X, Plus, Calendar, Mail, Phone, MessageSquare, MessageCircle, User, MapPin, Home, DollarSign, Building, Clock, MoreHorizontal, MoreVertical, Search, Filter, Edit, Trash2, ChevronDown, Eye, ArrowLeft, Target, StickyNote, Send, FileText, Download, Star, CheckCircle, AlertCircle, Users, Briefcase, Tag, Activity, UserCheck, TrendingUp, Car, Paperclip, Trophy, XCircle } from 'lucide-react';
+import { GanhoPerdidoSheet } from '@/components/modals/GanhoPerdidoSheet';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { ActivityEditModal } from '@/components/modals/ActivityEditModal';
@@ -56,6 +57,31 @@ interface Lead {
   timeline?: string;
   priorities?: string[];
   tags?: string[];
+  status?: 'aberto' | 'ganho' | 'perdido';
+  temperatura?: 'quente' | 'morno' | 'frio';
+  etapa?: string;
+  funilId?: string;
+  perfil?: {
+    finalidade: string;
+    tipoImovel: string;
+    cidades: string[];
+    bairros: string[];
+    quartos: number | null;
+    suites: number | null;
+    vagas: number | null;
+    areaMin: number | null;
+    areaMax: number | null;
+    valorMin: string;
+    valorMax: string;
+    prazoParaComprar: string;
+    lazer: boolean;
+    varanda: boolean;
+    mobiliado: boolean;
+    aceitaFinanciamento: boolean;
+    observacoes: string;
+    metodo4Q?: { quem: string; oQue: string; quando: string; quanto: string };
+    metodoFORD?: { familia: string; ocupacao: string; recreacao: string; sonhos: string };
+  };
 }
 
 interface ImovelInteresse {
@@ -429,7 +455,61 @@ export default function LeadDetalhes() {
   const [nextActivity, setNextActivity] = useState('');
   const [availableActivityTags, setAvailableActivityTags] = useState(DEFAULT_TAGS);
 
+  // Ganho/Perdido exactly from app
+  const [sheetGanhoPerdido, setSheetGanhoPerdido] = useState<'ganho' | 'perdido' | null>(null);
+
+  // Perfil de Busca states
+  const [perfilBusca, setPerfilBusca] = useState({
+    finalidade: 'Venda',
+    tipoImovel: 'Apartamento',
+    cidades: ['São Paulo'],
+    bairros: ['Vila Mariana', 'Paraíso'],
+    quartos: 2 as number | null,
+    suites: 1 as number | null,
+    vagas: 1 as number | null,
+    areaMin: 60 as number | null,
+    areaMax: 90 as number | null,
+    valorMin: 'R$ 300.000',
+    valorMax: 'R$ 450.000',
+    prazoParaComprar: '1-2 meses',
+    lazer: true,
+    varanda: true,
+    mobiliado: false,
+    aceitaFinanciamento: true,
+    observacoes: 'Prefere apartamentos reformados próximos ao metrô.',
+  });
+  const [editandoPerfil, setEditandoPerfil] = useState(false);
+
+  // Método 4Q states
+  const [form4Q, setForm4Q] = useState({ quem: 'Casal — Maria e o marido', oQue: 'Apt 2 quartos, zona sul', quando: '1-2 meses', quanto: 'R$ 300k-450k' });
+  const [editing4Q, setEditing4Q] = useState(false);
+
+  // Método FORD states
+  const [formFORD, setFormFORD] = useState({ familia: 'Casal sem filhos, planejando ter', ocupacao: 'Advogada e médico', recreacao: 'Academia, restaurantes', sonhos: 'Apartamento próprio perto do trabalho' });
+  const [editingFORD, setEditingFORD] = useState(false);
+
+  // Solicitar Documentos states
+  const [solicitarDocs, setSolicitarDocs] = useState(false);
+  const [docsSelecionados, setDocsSelecionados] = useState<Set<string>>(new Set());
+  const documentosSugeridos = ['RG', 'CPF', 'Comprovante de Residência', 'Certidão de Casamento', 'Holerite', 'Imposto de Renda', 'Extrato Bancário'];
+
+  // Timeline filter
+  const [filtroTimeline, setFiltroTimeline] = useState<'Todos' | 'Atividades' | 'E-mails' | 'WhatsApp' | 'Notas'>('Todos');
+  const [expandedTimelineId, setExpandedTimelineId] = useState<string | null>(null);
+
+  // Etapa do Funil
+  const etapasFunil = [
+    { id: 'novo', label: 'Novo Lead', cor: 'bg-slate-100 text-slate-600' },
+    { id: 'contato', label: 'Contato Realizado', cor: 'bg-blue-100 text-blue-600' },
+    { id: 'visita', label: 'Visita Agendada', cor: 'bg-purple-100 text-purple-600' },
+    { id: 'proposta', label: 'Proposta Enviada', cor: 'bg-orange-100 text-orange-600' },
+    { id: 'negociacao', label: 'Negociação', cor: 'bg-amber-100 text-amber-600' },
+  ];
+  const [etapaAtual, setEtapaAtual] = useState(lead?.stage || 'contato');
+  const etapaIdx = etapasFunil.findIndex(e => e.id === etapaAtual);
+
   const unsavedChanges = useUnsavedChanges();
+
 
   const corretores = [
     { id: 'JS', nome: 'João Silva', avatar: 'JS', color: 'bg-blue-500' },
@@ -1734,6 +1814,33 @@ export default function LeadDetalhes() {
             </div>
           </div>
           <div className="flex items-center gap-3">
+            {(!lead.status || lead.status === 'aberto') && (
+              <>
+                <Button
+                  variant="outline"
+                  onClick={() => setSheetGanhoPerdido('ganho')}
+                  className="h-12 px-6 rounded-2xl font-bold bg-green-50 hover:bg-green-100 text-green-700 border-green-200 shadow-sm transition-all"
+                >
+                  <Trophy className="h-4 w-4 mr-2" />
+                  Ganho
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={() => setSheetGanhoPerdido('perdido')}
+                  className="h-12 px-6 rounded-2xl font-bold bg-red-50 hover:bg-red-100 text-red-700 border-red-200 shadow-sm transition-all"
+                >
+                  <XCircle className="h-4 w-4 mr-2" />
+                  Perdido
+                </Button>
+              </>
+            )}
+            
+            {(lead.status === 'ganho' || lead.status === 'perdido') && (
+              <span className={`flex items-center gap-1.5 rounded-full px-4 py-2 font-bold ${lead.status === 'ganho' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                {lead.status === 'ganho' ? '🏆 Ganho' : '✗ Perdido'}
+              </span>
+            )}
+
             <Button
               variant="outline"
               onClick={handleEditLead}
@@ -1953,12 +2060,73 @@ export default function LeadDetalhes() {
 
           {/* Conteúdo Principal */}
           <div className="lg:col-span-2">
-            <Tabs defaultValue="historico" className="space-y-6">
-              <TabsList className="grid w-full grid-cols-3">
+            <Tabs defaultValue="perfil" className="space-y-6">
+              <TabsList className="grid w-full grid-cols-4">
+                <TabsTrigger value="perfil">Perfil</TabsTrigger>
                 <TabsTrigger value="historico">Histórico</TabsTrigger>
                 <TabsTrigger value="imoveis">Imóveis de Interesse</TabsTrigger>
                 <TabsTrigger value="documentos">Documentos</TabsTrigger>
               </TabsList>
+
+              <TabsContent value="perfil" className="space-y-6">
+                <Card>
+                  <CardHeader className="bg-primary/5 pb-4 border-b border-border">
+                    <CardTitle className="flex items-center gap-2 text-lg text-primary">
+                      <Target className="h-5 w-5" />
+                      Método 4Q (Qualificação)
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="pt-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label className="text-muted-foreground font-bold text-xs uppercase tracking-wider">Quem?</Label>
+                        <Input placeholder="Quem decide a compra?" defaultValue="O casal decide junto." className="bg-muted/30" />
+                      </div>
+                      <div className="space-y-2">
+                        <Label className="text-muted-foreground font-bold text-xs uppercase tracking-wider">O que?</Label>
+                        <Input placeholder="O que estão buscando?" defaultValue="Apartamento 3 quartos com varanda gourmet." className="bg-muted/30" />
+                      </div>
+                      <div className="space-y-2">
+                        <Label className="text-muted-foreground font-bold text-xs uppercase tracking-wider">Por que?</Label>
+                        <Input placeholder="Motivação principal" defaultValue="A família aumentou, precisam de mais espaço." className="bg-muted/30" />
+                      </div>
+                      <div className="space-y-2">
+                        <Label className="text-muted-foreground font-bold text-xs uppercase tracking-wider">Quando?</Label>
+                        <Input placeholder="Prazo de mudança" defaultValue="Pretendem mudar em até 3 meses." className="bg-muted/30" />
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader className="bg-accent/10 pb-4 border-b border-border">
+                    <CardTitle className="flex items-center gap-2 text-lg text-accent-foreground">
+                      <User className="h-5 w-5" />
+                      Método FORD (Conexão)
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="pt-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label className="text-muted-foreground font-bold text-xs uppercase tracking-wider">Família</Label>
+                        <Input placeholder="Detalhes sobre a família" defaultValue="Casado há 5 anos, 1 filha de 2 anos." className="bg-muted/30" />
+                      </div>
+                      <div className="space-y-2">
+                        <Label className="text-muted-foreground font-bold text-xs uppercase tracking-wider">Ocupação</Label>
+                        <Input placeholder="Profissão / Trabalho" defaultValue="Médico cirurgião, trabalha perto do centro." className="bg-muted/30" />
+                      </div>
+                      <div className="space-y-2">
+                        <Label className="text-muted-foreground font-bold text-xs uppercase tracking-wider">Recreação</Label>
+                        <Input placeholder="Hobbies e lazer" defaultValue="Gosta de correr no parque aos domingos." className="bg-muted/30" />
+                      </div>
+                      <div className="space-y-2">
+                        <Label className="text-muted-foreground font-bold text-xs uppercase tracking-wider">Desejos</Label>
+                        <Input placeholder="Sonhos e desejos" defaultValue="Ter uma área de lazer para convidar amigos." className="bg-muted/30" />
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </TabsContent>
 
               <TabsContent value="historico" className="space-y-4">
                 <Card>
@@ -1998,6 +2166,27 @@ export default function LeadDetalhes() {
                                     No Show
                                   </Badge>
                                 )}
+                                
+                                {/* Botões CTA Contextualizados */}
+                                {item.tipo === 'ligacao' && (
+                                  <Button size="sm" className="h-8 gap-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded-full px-3 text-xs shadow-sm">
+                                    <Phone className="h-3 w-3 fill-current" />
+                                    Ligar
+                                  </Button>
+                                )}
+                                {item.tipo === 'visita' && (
+                                  <Button size="sm" variant="secondary" className="h-8 gap-1 rounded-full px-3 text-xs shadow-sm">
+                                    <MapPin className="h-3 w-3" />
+                                    Ver Imóvel
+                                  </Button>
+                                )}
+                                {item.tipo === 'email' && (
+                                  <Button size="sm" variant="outline" className="h-8 gap-1 rounded-full px-3 text-xs shadow-sm">
+                                    <Mail className="h-3 w-3" />
+                                    Responder
+                                  </Button>
+                                )}
+
                                 {/* Ações no canto superior direito */}
                                 <div className="flex gap-1">
                                   {isActivity && (
@@ -2419,6 +2608,30 @@ export default function LeadDetalhes() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Sheet de Ganho e Perdido */}
+      {sheetGanhoPerdido && (
+        <GanhoPerdidoSheet
+          tipo={sheetGanhoPerdido}
+          onClose={() => setSheetGanhoPerdido(null)}
+          onConfirm={(feedback) => {
+            setLead({ ...lead, status: sheetGanhoPerdido });
+            // Adicionar evento no histórico
+            const historyTitle = sheetGanhoPerdido === 'ganho' ? 'Negócio Ganho! 🏆' : 'Negócio Perdido';
+            const historyType = 'followup';
+            const newHistoryItem: HistoricoAtendimento = {
+              id: Date.now().toString(),
+              tipo: historyType,
+              nome: historyTitle,
+              data: new Date().toISOString(),
+              descricao: feedback,
+              usuario: 'Corretor Logado'
+            };
+            setHistorico([newHistoryItem, ...historico]);
+            setSheetGanhoPerdido(null);
+          }}
+        />
+      )}
 
       {/* Modal para Agendar Atividade */}
       <Dialog open={showActivityModal} onOpenChange={setShowActivityModal}>

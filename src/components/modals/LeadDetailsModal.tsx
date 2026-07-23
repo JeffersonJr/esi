@@ -33,6 +33,8 @@ import {
   Download,
   ArrowLeft,
   Trash2,
+  Trophy,
+  Frown,
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useUnsavedChanges } from '@/hooks/useUnsavedChanges';
@@ -40,6 +42,8 @@ import { UnsavedChangesModal } from '@/components/modals/UnsavedChangesModal';
 import { Separator } from '@/components/ui/separator';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
+import { GanhoPerdidoSheet } from './GanhoPerdidoSheet';
+import { cn } from '@/lib/utils';
 
 interface ContactInfo {
   type: 'email' | 'phone' | 'mobile';
@@ -61,6 +65,8 @@ export interface Lead {
   lastContact?: string;
   nextAction?: string;
   tags?: string[];
+  status?: 'aberto' | 'ganho' | 'perdido';
+  temperatura?: 'quente' | 'morno' | 'frio';
 }
 
 interface LeadDetailsModalProps {
@@ -70,6 +76,7 @@ interface LeadDetailsModalProps {
   onEdit: () => void;
   onDelete: () => void;
   onScheduleVisit: () => void;
+  onStatusChange?: (id: string, status: 'ganho' | 'perdido', feedback: string) => void;
 }
 
 const historicoAtendimento = [
@@ -96,7 +103,8 @@ export function LeadDetailsModal({
   onClose, 
   onEdit, 
   onDelete,
-  onScheduleVisit 
+  onScheduleVisit,
+  onStatusChange 
 }: LeadDetailsModalProps) {
   const { toast } = useToast();
   const [isEditing, setIsEditing] = useState(false);
@@ -112,6 +120,7 @@ export function LeadDetailsModal({
   });
   const [emailMessage, setEmailMessage] = useState('');
   const [agendamento, setAgendamento] = useState({ data: '', hora: '', tipo: 'visita' });
+  const [sheetGanhoPerdido, setSheetGanhoPerdido] = useState<'ganho' | 'perdido' | null>(null);
 
   // Store original data for unsaved changes detection
   const [originalData] = useState({
@@ -332,6 +341,28 @@ export function LeadDetailsModal({
             <TabsTrigger value="documents">Documentos</TabsTrigger>
           </TabsList>
           <div className="flex gap-2">
+            {!lead.status || lead.status === 'aberto' ? (
+              <>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="text-green-600 border-green-200 hover:bg-green-50" 
+                  onClick={() => setSheetGanhoPerdido('ganho')}
+                >
+                  <Trophy className="h-4 w-4 mr-2" />
+                  Ganho
+                </Button>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="text-red-600 border-red-200 hover:bg-red-50" 
+                  onClick={() => setSheetGanhoPerdido('perdido')}
+                >
+                  <Frown className="h-4 w-4 mr-2" />
+                  Perdido
+                </Button>
+              </>
+            ) : null}
             <Button 
               variant="outline" 
               size="sm" 
@@ -339,7 +370,7 @@ export function LeadDetailsModal({
               className="gap-2"
             >
               <CalendarIcon className="h-4 w-4" />
-              Agendar Atividade
+              Agendar
             </Button>
             <Button 
               variant="outline" 
@@ -357,17 +388,35 @@ export function LeadDetailsModal({
           <Card>
             <CardHeader className="pb-3">
               <div className="flex justify-between items-start">
-                <div className="flex items-center gap-4">
-                  <Avatar className="h-12 w-12">
-                    <AvatarFallback className="bg-primary text-primary-foreground">
-                      {lead.name.split(' ').map(n => n[0]).join('')}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div>
-                    <CardTitle className="text-xl">{lead.name}</CardTitle>
-                    <p className="text-sm text-muted-foreground">
-                      {lead?.emails?.find(email => email.isPrimary)?.value || lead?.emails?.[0]?.value || ''}
-                    </p>
+                <div className="flex flex-col gap-3">
+                  <div className="flex items-center gap-4">
+                    <Avatar className="h-12 w-12">
+                      <AvatarFallback className="bg-primary text-primary-foreground">
+                        {lead.name.split(' ').map(n => n[0]).join('')}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div>
+                      <CardTitle className="text-xl flex items-center gap-3">
+                        {lead.name}
+                        {lead.status && lead.status !== 'aberto' && (
+                          <Badge variant={lead.status === 'ganho' ? 'default' : 'destructive'} className={lead.status === 'ganho' ? 'bg-green-500 hover:bg-green-600' : ''}>
+                            {lead.status === 'ganho' ? '🏆 Negócio Ganho' : '✗ Negócio Perdido'}
+                          </Badge>
+                        )}
+                        {lead.temperatura && (
+                          <Badge variant="outline" className={cn("text-[10px] font-bold px-2", 
+                            lead.temperatura === 'quente' ? 'bg-orange-50 text-orange-700 border-orange-200' : 
+                            lead.temperatura === 'morno' ? 'bg-yellow-50 text-yellow-700 border-yellow-200' :
+                            'bg-cyan-50 text-cyan-700 border-cyan-200'
+                          )}>
+                            {lead.temperatura === 'quente' ? '🔥 Quente' : lead.temperatura === 'morno' ? '☀️ Morno' : '❄️ Frio'}
+                          </Badge>
+                        )}
+                      </CardTitle>
+                      <p className="text-sm text-muted-foreground mt-1">
+                        {lead?.emails?.find(email => email.isPrimary)?.value || lead?.emails?.[0]?.value || ''}
+                      </p>
+                    </div>
                   </div>
                 </div>
                 <Badge variant="outline" className="text-sm">
@@ -563,6 +612,19 @@ export function LeadDetailsModal({
           </DialogFooter>
         )}
       </DialogContent>
+
+      {/* Ganho ou Perdido Sheet */}
+      {sheetGanhoPerdido && (
+        <GanhoPerdidoSheet
+          tipo={sheetGanhoPerdido}
+          onClose={() => setSheetGanhoPerdido(null)}
+          onConfirm={(feedback) => {
+            if (onStatusChange) {
+              onStatusChange(lead.id, sheetGanhoPerdido, feedback);
+            }
+          }}
+        />
+      )}
     </Dialog>
     
     <UnsavedChangesModal

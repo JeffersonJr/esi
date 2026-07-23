@@ -7,7 +7,7 @@ import { cn } from '@/lib/utils';
 import {
   Plus, Search, MapPin, Bed, Bath, Maximize, MoreVertical, Edit, Trash2, Eye,
   Home, Grid, List as ListIcon, SlidersHorizontal, X, Building, Car,
-  TrendingUp, DollarSign, CheckCircle, Tag
+  TrendingUp, DollarSign, CheckCircle, Tag, Filter
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -24,11 +24,13 @@ import { Label } from '@/components/ui/label';
 import {
   Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { PageHeader } from '@/components/layout/PageHeader';
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter,
 } from '@/components/ui/dialog';
 import { useToast } from '@/hooks/use-toast';
 import { ImovelDetailsDrawer } from '@/components/modals/ImovelDetailsDrawer';
+import { FiltrosImoveisSheet, FiltrosAvancadosImoveis, defaultFiltrosImoveis, countFiltrosAtivos } from '@/components/modals/FiltrosImoveisSheet';
 
 // ─── Data ───────────────────────────────────────────────────────────
 const imoveisData = [
@@ -149,6 +151,11 @@ export function Imoveis() {
   const [filterOpen, setFilterOpen] = useState(false);
   const [sheetOpen, setSheetOpen] = useState(false);
   const [selectedImovel, setSelectedImovel] = useState<any>(null);
+
+  // Advanced Filters State
+  const [isFiltrosSheetOpen, setIsFiltrosSheetOpen] = useState(false);
+  const [filtrosAvancados, setFiltrosAvancados] = useState<FiltrosAvancadosImoveis>(defaultFiltrosImoveis);
+  const ativosCount = countFiltrosAtivos(filtrosAvancados);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [imovelToDelete, setImovelToDelete] = useState<any>(null);
 
@@ -212,44 +219,44 @@ export function Imoveis() {
 
   return (
     <div className="space-y-5 animate-fade-in">
-      <Breadcrumb>
-        <BreadcrumbList>
-          <BreadcrumbItem>
-            <BreadcrumbLink href="/" className="flex items-center gap-1">
-              <Home className="h-4 w-4" /> Dashboard
-            </BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbPage>Imóveis</BreadcrumbPage>
-          </BreadcrumbItem>
-        </BreadcrumbList>
-      </Breadcrumb>
-
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4 shrink-0">
-        <div className="flex items-center gap-4">
-          <div className="h-12 w-12 rounded-2xl bg-primary text-primary-foreground flex items-center justify-center shadow-lg shadow-primary/20">
-            <Building className="h-6 w-6" />
-          </div>
-          <div>
-            <h1 className="text-3xl font-black text-slate-800 tracking-tight">Imóveis</h1>
-            <p className="text-slate-500 mt-1 font-medium">Gerencie seu portfólio de imóveis</p>
-          </div>
-        </div>
-        <div className="flex items-center gap-3">
-          <div className="flex items-center bg-muted/50 rounded-xl p-1 border border-border/50">
-            <Button variant={viewMode === 'grid' ? 'secondary' : 'ghost'} size="sm" className="h-9 w-9 p-0 rounded-lg" onClick={() => setViewMode('grid')}>
-              <Grid className="h-4 w-4" />
+      <PageHeader
+        title="Imóveis"
+        subtitle="Catálogo de imóveis e captações"
+        icon={<Home />}
+        breadcrumbs={[
+          { label: 'Dashboard', href: '/' },
+          { label: 'Imóveis' }
+        ]}
+        actions={
+          <>
+            <div className="flex items-center bg-muted/50 rounded-xl p-1 border border-border/50">
+              <Button variant={viewMode === 'grid' ? 'secondary' : 'ghost'} size="sm" className="h-9 w-9 p-0 rounded-lg" onClick={() => setViewMode('grid')}>
+                <Grid className="h-4 w-4" />
+              </Button>
+              <Button variant={viewMode === 'table' ? 'secondary' : 'ghost'} size="sm" className="h-9 w-9 p-0 rounded-lg" onClick={() => setViewMode('table')}>
+                <ListIcon className="h-4 w-4" />
+              </Button>
+            </div>
+            <Button
+              variant="outline"
+              onClick={() => setIsFiltrosSheetOpen(true)}
+              className="gap-2 relative h-10 px-4 rounded-xl shadow-sm border-border"
+            >
+              <Filter className="h-4 w-4" />
+              <span className="hidden sm:inline">Filtros</span>
+              {ativosCount > 0 && (
+                <span className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-[10px] text-primary-foreground font-bold shadow-sm animate-in zoom-in">
+                  {ativosCount}
+                </span>
+              )}
             </Button>
-            <Button variant={viewMode === 'table' ? 'secondary' : 'ghost'} size="sm" className="h-9 w-9 p-0 rounded-lg" onClick={() => setViewMode('table')}>
-              <ListIcon className="h-4 w-4" />
+            <Button onClick={() => navigate('/imoveis/cadastrar')} className="h-10 px-4 rounded-xl shadow-lg shadow-primary/20 gap-2">
+              <Plus className="h-4 w-4" />
+              <span className="hidden sm:inline">Novo Imóvel</span>
             </Button>
-          </div>
-          <Button onClick={() => navigate('/imoveis/cadastrar')} className="bg-primary hover:bg-primary/90 text-white font-black px-8 shadow-lg shadow-primary/20 h-12 rounded-2xl">
-            <Plus className="h-4 w-4 mr-2" /> Novo Imóvel
-          </Button>
-        </div>
-      </div>
+          </>
+        }
+      />
 
       {/* ── KPI Row ── */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
@@ -287,77 +294,6 @@ export function Imoveis() {
                 className="pl-10 bg-background border-none shadow-sm h-9"
               />
             </div>
-
-            <Popover open={filterOpen} onOpenChange={setFilterOpen}>
-              <PopoverTrigger asChild>
-                <Button variant="outline" size="sm" className={cn('gap-2 h-9 px-3 text-xs font-semibold shrink-0 relative', hasActive && 'border-primary/50 text-primary bg-primary/5')}>
-                  <SlidersHorizontal className="h-3.5 w-3.5" />
-                  <span className="hidden sm:inline">Filtros</span>
-                  {hasActive && (
-                    <span className="absolute -top-1.5 -right-1.5 h-4 w-4 rounded-full bg-primary text-primary-foreground text-[9px] font-black flex items-center justify-center">
-                      {Object.values(filters).filter(v => v !== '').length}
-                    </span>
-                  )}
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent align="end" className="w-80 p-4 space-y-4">
-                <div className="flex items-center justify-between">
-                  <p className="text-sm font-black">Filtros Avançados</p>
-                  {hasActive && (
-                    <button onClick={clearAdvanced} className="text-xs text-muted-foreground hover:text-destructive flex items-center gap-1 transition-colors">
-                      <X className="h-3 w-3" /> Limpar
-                    </button>
-                  )}
-                </div>
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="space-y-1.5 col-span-2">
-                    <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Status</Label>
-                    <div className="flex flex-wrap gap-1.5">
-                      {STATUS_FILTERS.map(s => (
-                        <button key={s} onClick={() => setFilters(f => ({ ...f, status: s === 'Todos' ? '' : s }))}
-                          className={cn('px-2.5 py-1 rounded-md text-xs font-semibold border transition-all',
-                            (s === 'Todos' ? !filters.status : filters.status === s)
-                              ? 'bg-primary text-primary-foreground border-primary'
-                              : 'bg-background border-border hover:border-primary/40')}>
-                          {s}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                  <div className="space-y-1.5">
-                    <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Quartos (mín.)</Label>
-                    <Select value={filters.quartos} onValueChange={v => setFilters(f => ({ ...f, quartos: v }))}>
-                      <SelectTrigger className="h-8 text-xs"><SelectValue placeholder="Qualquer" /></SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="">Qualquer</SelectItem>
-                        {['1', '2', '3', '4'].map(v => <SelectItem key={v} value={v}>{v}+</SelectItem>)}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div className="space-y-1.5">
-                    <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Banheiros (mín.)</Label>
-                    <Select value={filters.banheiros} onValueChange={v => setFilters(f => ({ ...f, banheiros: v }))}>
-                      <SelectTrigger className="h-8 text-xs"><SelectValue placeholder="Qualquer" /></SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="">Qualquer</SelectItem>
-                        {['1', '2', '3'].map(v => <SelectItem key={v} value={v}>{v}+</SelectItem>)}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div className="space-y-1.5">
-                    <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Valor mín.</Label>
-                    <Input placeholder="R$ 0" value={filters.valorMin} onChange={e => setFilters(f => ({ ...f, valorMin: e.target.value }))} className="h-8 text-xs" />
-                  </div>
-                  <div className="space-y-1.5">
-                    <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Valor máx.</Label>
-                    <Input placeholder="R$ ∞" value={filters.valorMax} onChange={e => setFilters(f => ({ ...f, valorMax: e.target.value }))} className="h-8 text-xs" />
-                  </div>
-                </div>
-                <Button size="sm" className="w-full" onClick={() => setFilterOpen(false)}>
-                  Ver {filteredImoveis.length} resultado{filteredImoveis.length !== 1 ? 's' : ''}
-                </Button>
-              </PopoverContent>
-            </Popover>
           </div>
 
           {/* Row 2 — Tipo quick chips (horizontal scroll, no wrap) */}
@@ -376,11 +312,6 @@ export function Imoveis() {
                 {t}
               </button>
             ))}
-            {hasActive && (
-              <button onClick={clearAdvanced} className="shrink-0 ml-2 text-xs text-muted-foreground hover:text-destructive flex items-center gap-1 transition-colors whitespace-nowrap">
-                <X className="h-3 w-3" /> Limpar filtros
-              </button>
-            )}
           </div>
 
           {filteredImoveis.length < imoveis.length && (
@@ -601,7 +532,12 @@ export function Imoveis() {
         }}
       />
 
-
+      <FiltrosImoveisSheet
+        open={isFiltrosSheetOpen}
+        filtrosAtuais={filtrosAvancados}
+        onApply={(f) => setFiltrosAvancados(f)}
+        onClose={() => setIsFiltrosSheetOpen(false)}
+      />
     </div>
   );
 }

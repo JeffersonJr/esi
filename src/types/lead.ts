@@ -22,6 +22,8 @@ export interface Lead {
   tags?: string[];
   createdAt: string;
   updatedAt: string;
+  status?: 'aberto' | 'ganho' | 'perdido';
+  temperatura?: 'quente' | 'morno' | 'frio';
 }
 
 export interface DeleteReason {

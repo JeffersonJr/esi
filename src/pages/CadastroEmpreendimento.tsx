@@ -11,9 +11,9 @@ import {
   Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { useToast } from '@/hooks/use-toast';
+import { AICadastroFlow } from "@/components/shared/AICadastroFlow";
 import { cn, maskCurrency } from '@/lib/utils';
 import { useAnimation } from '@/components/shared/ActionAnimation';
-import { AICadastroFlow } from '@/components/shared/AICadastroFlow';
 import {
   Zap, FileText, Home, MapPin, BarChart3, Tag, Users, Building2,
   Globe, Eye, Image as ImageIcon, CheckCircle2, ChevronRight, Plus, X, Save, Building
@@ -107,13 +107,12 @@ function CheckChip({ label, active, onClick }: { label: string; active: boolean;
   );
 }
 
-export default function CadastroImovel() {
+export default function CadastroEmpreendimento() {
   const { triggerAnimation } = useAnimation();
   const { id } = useParams();
   const navigate = useNavigate();
   const { toast } = useToast();
-  const isEditing = !!id;
-
+  const isEditing = Boolean(id);
   const [mode, setMode] = useState<'escolha' | 'agil' | 'tecnica'>(isEditing ? 'tecnica' : 'escolha');
   const [activeTab, setActiveTab] = useState('identificacao');
   const [form, setForm] = useState<FormData>(defaultForm);
@@ -166,7 +165,7 @@ export default function CadastroImovel() {
     });
 
     setTimeout(() => {
-      navigate('/imoveis');
+      navigate('/empreendimentos');
     }, 500);
   };
 
@@ -327,8 +326,46 @@ export default function CadastroImovel() {
     return (
       <div className="flex-1 bg-background flex flex-col p-8">
         <AICadastroFlow 
-          contexto="imovel" 
-          onClose={() => navigate('/imoveis')}
+          contexto="empreendimento" 
+          onClose={() => navigate('/empreendimentos')}
+          onCompleteManual={(dados) => {
+            setForm(prev => ({
+              ...prev,
+              finalidade: dados.finalidade,
+              tipo: dados.tipo,
+            }));
+            setShowOnboarding(false);
+          }}
+          onCompleteIA={(dadosIA) => {
+            setForm(prev => ({
+              ...prev,
+              finalidade: dadosIA.finalidade || prev.finalidade,
+              tipo: dadosIA.tipo || prev.tipo,
+              titulo: dadosIA.titulo || prev.titulo,
+              descricao: dadosIA.descricao || prev.descricao,
+              quartos: dadosIA.quartos || prev.quartos,
+              vagas: dadosIA.vagas || prev.vagas,
+              areaUtil: dadosIA.areaUtil || prev.areaUtil,
+              valorVenda: dadosIA.valorVenda || prev.valorVenda,
+              caracteristicas: dadosIA.caracteristicas || prev.caracteristicas,
+            }));
+            setShowOnboarding(false);
+            toast({
+              title: "IA Finalizou",
+              description: "Os dados foram preenchidos no formulário.",
+            });
+          }}
+        />
+      </div>
+    );
+  }
+
+  if (showOnboarding) {
+    return (
+      <div className="flex-1 bg-background flex flex-col p-8">
+        <AICadastroFlow 
+          contexto="empreendimento" 
+          onClose={() => navigate('/empreendimentos')}
           onCompleteManual={(dados) => {
             setForm(prev => ({
               ...prev,
@@ -408,7 +445,7 @@ export default function CadastroImovel() {
               <Button
                 variant="outline"
                 className="h-12 px-6 rounded-2xl font-bold bg-white border-slate-200 text-slate-700 shadow-sm hover:bg-slate-50 transition-all hidden sm:flex"
-                onClick={() => navigate('/imoveis')}
+                onClick={() => navigate('/empreendimentos')}
               >
                 Descartar
               </Button>
@@ -806,7 +843,7 @@ export default function CadastroImovel() {
               </div>
 
               <div className="pt-8 flex justify-end gap-3 border-t mt-8">
-                <Button variant="outline" size="lg" className="rounded-xl" onClick={() => navigate('/imoveis')}>Descartar Mudanças</Button>
+                <Button variant="outline" size="lg" className="rounded-xl" onClick={() => navigate('/empreendimentos')}>Descartar Mudanças</Button>
                 <Button size="lg" className="rounded-xl px-8 gap-2 shadow-xl" disabled={!form.titulo || !form.logradouro} onClick={handleSave}>
                   <Save className="h-5 w-5" /> Salvar Tudo e Finalizar
                 </Button>

@@ -1,100 +1,122 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222 47% 11%;
+    /* ── Cores Evolves Globais ───────────────────── */
+    --teal-deep: 200 51% 48%; /* #3c91bb */
+    --teal-mid: 166 80% 44%; /* #17cba2 */
+    --teal-light: 200 68% 73%; /* #8dcce8 */
+    --teal-shadow: 200 58% 30%; /* #215c7a */
+    --amber: 38 92% 50%; /* #f59e0b */
+    --cream: 40 60% 98%; /* #FDFBF7 */
+    --snow: 0 0% 98%; /* #FAFAFA */
+    --fog: 0 0% 90%; /* #E5E5E5 */
+    --slate: 0 0% 45%; /* #737373 */
+    --ink: 0 0% 9%; /* #171717 */
+
+    /* ── Neutros (Baseados no App) ──────────────── */
+    --background: var(--snow);
+    --foreground: var(--ink);
 
     --card: 0 0% 100%;
-    --card-foreground: 222 47% 11%;
+    --card-foreground: var(--ink);
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222 47% 11%;
+    --popover-foreground: var(--ink);
 
-    --primary: 193 55% 48%;
-    --primary-foreground: 210 40% 98%;
-    --primary-50: 193 55% 97%;
-    --primary-100: 193 55% 94%;
-    --primary-200: 193 55% 88%;
-    --primary-300: 193 55% 77%;
-    --primary-400: 193 55% 65%;
-    --primary-500: 193 55% 48%;
-    --primary-600: 193 55% 42%;
-    --primary-700: 193 55% 32%;
-    --primary-800: 193 55% 22%;
-    --primary-900: 193 55% 12%;
+    /* ── Primário: Teal Deep ─────────────────────── */
+    --primary: var(--teal-deep);
+    --primary-foreground: 0 0% 100%;
+    --primary-50:  200 51% 95%;
+    --primary-100: 200 51% 90%;
+    --primary-200: 200 51% 80%;
+    --primary-300: 200 51% 70%;
+    --primary-400: 200 51% 60%;
+    --primary-500: var(--teal-deep);
+    --primary-600: 200 51% 40%;
+    --primary-700: var(--teal-shadow);
+    --primary-800: 200 51% 20%;
+    --primary-900: 200 51% 10%;
 
-    --secondary: 165 100% 38%;
-    --secondary-foreground: 210 40% 98%;
+    /* ── Secundário: Fog ─────────────────────────── */
+    --secondary: var(--fog);
+    --secondary-foreground: var(--teal-deep);
 
-    --muted: 210 40% 96%;
-    --muted-foreground: 215 25% 40%;
+    /* ── Muted ───────────────────────────────────── */
+    --muted: var(--fog);
+    --muted-foreground: var(--slate);
 
-    --accent: 165 100% 38%;
-    --accent-foreground: 210 40% 98%;
+    /* ── Accent (Amber) ──────────────────────────── */
+    --accent: var(--amber);
+    --accent-foreground: var(--ink);
 
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 210 40% 98%;
+    /* ── Semântico ───────────────────────────────── */
+    --destructive: 8 62% 47%; /* #c0442f */
+    --destructive-foreground: 0 0% 100%;
 
-    --success: 142 71% 45%;
-    --success-foreground: 210 40% 98%;
+    --success: 166 80% 44%; /* var(--teal-mid) */
+    --success-foreground: 0 0% 100%;
 
-    --warning: 38 92% 50%;
-    --warning-foreground: 222 47% 11%;
+    --warning: var(--amber);
+    --warning-foreground: 0 0% 100%;
 
-    --border: 214 32% 85%;
-    --input: 214 32% 85%;
-    --ring: 193 55% 48%;
+    /* ── Bordas & Inputs ─────────────────────────── */
+    --border: var(--fog);
+    --input: var(--fog);
+    --ring: var(--teal-mid);
 
-    --radius: 0.5rem;
+    /* ── Raio de Borda (Padrão App = 1.25rem/20px) ─ */
+    --radius: 1.25rem;
   }
 
   .dark {
-    --background: 222 47% 11%;
-    --foreground: 210 40% 98%;
+    --background: 224 30% 8%;
+    --foreground: var(--snow);
 
-    --card: 222 47% 14%;
-    --card-foreground: 210 40% 98%;
+    --card: 224 28% 11%;
+    --card-foreground: var(--snow);
 
-    --popover: 222 47% 14%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 224 28% 11%;
+    --popover-foreground: var(--snow);
 
-    --primary: 193 55% 48%;
-    --primary-foreground: 210 40% 98%;
-    --primary-50: 193 55% 12%;
-    --primary-100: 193 55% 17%;
-    --primary-200: 193 55% 22%;
-    --primary-300: 193 55% 32%;
-    --primary-400: 193 55% 42%;
-    --primary-500: 193 55% 48%;
-    --primary-600: 193 55% 65%;
-    --primary-700: 193 55% 77%;
-    --primary-800: 193 55% 88%;
-    --primary-900: 193 55% 94%;
+    --primary: var(--teal-deep);
+    --primary-foreground: 0 0% 100%;
+    --primary-50:  200 51% 10%;
+    --primary-100: 200 51% 20%;
+    --primary-200: 200 51% 30%;
+    --primary-300: 200 51% 40%;
+    --primary-400: 200 51% 50%;
+    --primary-500: var(--teal-deep);
+    --primary-600: 200 51% 60%;
+    --primary-700: 200 51% 70%;
+    --primary-800: 200 51% 80%;
+    --primary-900: 200 51% 90%;
 
-    --secondary: 165 100% 25%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary: 224 25% 16%;
+    --secondary-foreground: var(--teal-deep);
 
-    --muted: 217 33% 17%;
-    --muted-foreground: 215 25% 75%;
+    --muted: 224 25% 16%;
+    --muted-foreground: var(--slate);
 
-    --accent: 165 100% 38%;
-    --accent-foreground: 210 40% 98%;
+    --accent: var(--amber);
+    --accent-foreground: var(--ink);
 
-    --destructive: 0 75% 45%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 8 62% 55%;
+    --destructive-foreground: 0 0% 100%;
 
-    --success: 142 71% 45%;
-    --success-foreground: 210 40% 98%;
+    --success: 166 80% 44%;
+    --success-foreground: 0 0% 100%;
 
-    --warning: 38 92% 60%;
-    --warning-foreground: 222 47% 11%;
+    --warning: var(--amber);
+    --warning-foreground: 222 35% 10%;
 
-    --border: 217 33% 25%;
-    --input: 217 33% 25%;
-    --ring: 193 55% 48%;
+    --border: 224 22% 18%;
+    --input: 224 22% 18%;
+    --ring: var(--teal-mid);
   }
 }
 
@@ -103,30 +125,116 @@
     @apply border-border;
   }
 
-  body {
-    @apply bg-background text-foreground;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-      'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-      sans-serif;
+  html {
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    letter-spacing: -0.01em;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    letter-spacing: -0.02em;
+    font-weight: 600;
   }
 }
 
 @layer utilities {
+  /* Tipografia */
   .text-balance {
     text-wrap: balance;
   }
 
+  /* Página label de título */
+  .page-title {
+    @apply text-xl font-semibold text-foreground tracking-tight;
+  }
+
+  .page-subtitle {
+    @apply text-sm text-muted-foreground;
+  }
+
+  /* Glass morphism sutil */
   .glass {
-    @apply bg-background/60 backdrop-blur-md border border-border;
+    @apply bg-background/70 backdrop-blur-sm border border-border/60;
   }
 
+  /* Gradiente de texto */
   .gradient-text {
-    @apply bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent;
   }
 
+  /* Fundo gradiente primário */
   .bg-gradient-primary {
-    background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--secondary)));
+    background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-700)));
+  }
+
+  /* Cards de métrica */
+  .metric-card {
+    @apply bg-card border border-border rounded-xl p-5 transition-all duration-200 hover:shadow-md hover:border-border/80;
+  }
+
+  /* Sidebar item ativo */
+  .nav-item-active {
+    @apply bg-primary/8 text-primary font-medium;
+  }
+
+  .nav-item {
+    @apply text-muted-foreground hover:text-foreground hover:bg-muted/60 transition-all duration-150;
+  }
+
+  /* Scrollbar sutil */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-border rounded-full;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-muted-foreground/30;
+  }
+
+  /* Animações */
+  .animate-fade-up {
+    animation: fadeUp 0.4s ease-out both;
+  }
+
+  @keyframes fadeUp {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Sombras profissionais */
+  .shadow-card {
+    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.06), 0 1px 2px -1px rgb(0 0 0 / 0.06);
+  }
+
+  .shadow-card-hover {
+    box-shadow: 0 4px 12px 0 rgb(0 0 0 / 0.08), 0 2px 4px -2px rgb(0 0 0 / 0.06);
+  }
+
+  .shadow-soft {
+    box-shadow: 0 4px 24px -4px rgba(43, 82, 80, 0.05), 0 2px 8px -2px rgba(43, 82, 80, 0.04);
+  }
+
+  .shadow-sidebar {
+    box-shadow: 1px 0 0 0 hsl(var(--border));
   }
 }

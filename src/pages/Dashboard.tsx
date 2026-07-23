@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
-import { ArrowUpRight, ArrowDownRight, ArrowRight, Users, Home, Calendar as CalendarIcon, TrendingUp, AlertTriangle, Clock, FileText, Settings, DollarSign, Target, Activity, Zap, Star, Sun, Moon, Save, Plus, MessageSquare, Briefcase, BarChart3, MapPin } from 'lucide-react';
+import { ArrowUpRight, ArrowDownRight, ArrowRight, Users, Home, Calendar as CalendarIcon, TrendingUp, AlertTriangle, Clock, FileText, Settings, DollarSign, Target, Activity, Zap, Star, Sun, Moon, Save, Plus, MessageSquare, Briefcase, BarChart3, MapPin, Flame } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, Legend } from 'recharts';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -23,6 +23,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { RoletaModal } from '@/components/dashboard/RoletaModal';
 
 // Mock data for properties
 const mockProperties = [
@@ -134,6 +135,32 @@ export function Dashboard() {
   });
   const [initialDaysThreshold, setInitialDaysThreshold] = useState(30);
   const [hasChanges, setHasChanges] = useState(false);
+  const [modoRoleta, setModoRoleta] = useState(false);
+
+  const [tarefasPendentes, setTarefasPendentes] = useState([
+    {
+      id: '1',
+      title: 'Ligar para João Silva',
+      cliente: 'João Silva',
+      tipo: 'Ligação',
+      descricao: 'O cliente demonstrou interesse no apartamento do centro. Precisa confirmar horário da visita amanhã.'
+    },
+    {
+      id: '2',
+      title: 'Enviar proposta Comercial',
+      cliente: 'Maria Oliveira',
+      tipo: 'Proposta',
+      descricao: 'Enviar a proposta comercial com as condições de pagamento discutidas ontem à tarde.'
+    },
+    {
+      id: '3',
+      title: 'Feedback pós-visita',
+      cliente: 'Carlos Souza',
+      tipo: 'Feedback',
+      descricao: 'Pegar feedback sobre a visita na casa do condomínio fechado. O cliente gostou bastante da área de lazer.'
+    }
+  ]);
+
   const propertyMetrics = calculateMetrics(daysThreshold);
   const greeting = getGreeting();
   const GreetingIcon = greeting.icon;
@@ -319,47 +346,45 @@ export function Dashboard() {
   ];
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-700">
+    <div className="space-y-6 animate-in fade-in duration-500">
       {/* Welcome Section */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <Card className="relative overflow-hidden border-none shadow-xl bg-gradient-to-br from-primary via-primary/90 to-primary-700 text-primary-foreground group">
-          <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10 pointer-events-none" />
-          <div className="absolute -right-20 -top-20 w-64 h-64 bg-white/10 rounded-full blur-3xl group-hover:bg-white/20 transition-all duration-700" />
+        <Card className="relative overflow-hidden border border-border/50 shadow-card bg-gradient-to-br from-primary-800 to-primary-700 text-primary-foreground">
+          <div className="absolute -right-16 -top-16 w-56 h-56 bg-white/5 rounded-full blur-2xl" />
+          <div className="absolute left-0 bottom-0 w-48 h-48 bg-primary-900/30 rounded-full blur-2xl" />
 
-          <CardContent className="p-8 relative z-10">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-              <div className="space-y-4">
-                <div className="flex items-center gap-3">
-                  <div className="p-3 bg-white/15 backdrop-blur-md rounded-2xl border border-white/20 shadow-inner">
-                    <GreetingIcon className="h-8 w-8 text-white drop-shadow-sm" />
-                  </div>
-                  <div>
-                    <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight drop-shadow-sm">
-                      {greeting.text}, <span className="text-secondary-foreground">{userName}</span>!
-                    </h1>
-                    <p className="text-sm md:text-base text-white/80 font-medium">
-                      Impulsione sua produtividade hoje. Você possui <span className="font-bold text-white">2 tarefas urgentes</span> aguardando.
-                    </p>
-                  </div>
+          <CardContent className="p-6 md:p-8 relative z-10">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-5">
+              <div className="flex items-center gap-4">
+                <div className="p-2.5 bg-white/10 rounded-xl border border-white/15">
+                  <GreetingIcon className="h-6 w-6 text-white" />
+                </div>
+                <div>
+                  <h1 className="text-xl md:text-2xl font-bold tracking-tight">
+                    {greeting.text}, <span className="text-primary-200">{userName}</span>
+                  </h1>
+                  <p className="text-sm text-white/60 mt-0.5">
+                    Você possui <span className="font-semibold text-white">2 tarefas urgentes</span> aguardando.
+                  </p>
                 </div>
               </div>
 
-              <div className="flex flex-col items-start md:items-end gap-1">
-                <div className="px-4 py-2 bg-black/10 backdrop-blur-lg border border-white/10 rounded-xl flex items-center gap-3">
+              <div className="flex-shrink-0">
+                <div className="px-4 py-2.5 bg-black/15 rounded-xl border border-white/10 flex items-center gap-3">
                   <div className="flex flex-col items-end">
-                    <span className="text-xl md:text-2xl font-bold tracking-tight">
+                    <span className="text-base font-semibold">
                       {new Date().toLocaleDateString('pt-BR', { day: 'numeric', month: 'long' })}
                     </span>
-                    <span className="text-xs uppercase tracking-widest text-white/60 font-bold">
+                    <span className="text-[10px] uppercase tracking-widest text-white/50">
                       {new Date().toLocaleDateString('pt-BR', { weekday: 'long' })}
                     </span>
                   </div>
-                  <div className="w-px h-8 bg-white/20" />
-                  <div className="text-2xl font-mono font-bold tracking-tighter">
+                  <div className="w-px h-7 bg-white/15" />
+                  <div className="text-lg font-mono font-semibold">
                     {new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
                   </div>
                 </div>
@@ -368,6 +393,32 @@ export function Dashboard() {
           </CardContent>
         </Card>
       </motion.div>
+
+      {/* Roleta Gamification Banner */}
+      {tarefasPendentes.length > 0 && (
+        <div className="flex flex-col sm:flex-row items-center gap-4 bg-gradient-to-r from-primary/10 to-primary/5 rounded-2xl p-5 border border-primary/20">
+          <div className="flex-1">
+            <div className="flex items-center gap-2">
+              <div className="flex size-8 items-center justify-center rounded-full bg-primary/20 text-primary animate-pulse">
+                <AlertTriangle className="size-4" />
+              </div>
+              <h3 className="font-serif text-lg font-black text-foreground leading-snug">
+                Você tem {tarefasPendentes.length} pendências acumuladas!
+              </h3>
+            </div>
+            <p className="text-xs text-muted-foreground leading-relaxed font-light mt-2">
+              Não deixe acumular. Entre no fluxo contínuo e liquide sua fila de atividades de forma ultra rápida com Albert IA.
+            </p>
+          </div>
+          <button
+            onClick={() => setModoRoleta(true)}
+            className="w-full sm:w-auto shrink-0 flex items-center justify-center gap-2 h-12 px-6 rounded-2xl bg-primary text-primary-foreground text-xs font-black shadow-md hover:bg-primary/95 transition-all"
+          >
+            <Flame className="size-4 animate-pulse fill-primary-foreground" />
+            Entrar no Modo Roleta
+          </button>
+        </div>
+      )}
 
       {/* Quick Actions */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -379,60 +430,56 @@ export function Dashboard() {
         ].map((item, idx) => (
           <motion.button
             key={item.label}
-            whileHover={{ scale: 1.05, y: -5 }}
-            whileTap={{ scale: 0.95 }}
-            initial={{ opacity: 0, y: 20 }}
+            whileHover={{ scale: 1.02, y: -2 }}
+            whileTap={{ scale: 0.98 }}
+            initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 * idx }}
+            transition={{ delay: 0.08 * idx }}
             onClick={item.action}
             className={cn(
-              "flex items-center gap-3 p-4 rounded-2xl shadow-sm border border-border bg-card hover:shadow-md transition-all group",
-              "hover:border-primary/50"
+              "flex items-center gap-3 p-3.5 rounded-xl border border-border bg-card",
+              "hover:border-primary/30 hover:shadow-card-hover transition-all duration-200 group text-left"
             )}
           >
-            <div className={cn("p-2 rounded-xl text-white group-hover:scale-110 transition-transform", item.color)}>
-              <item.icon className="h-5 w-5" />
+            <div className={cn("p-2 rounded-lg text-white flex-shrink-0", item.color)}>
+              <item.icon className="h-4 w-4" />
             </div>
-            <span className="font-semibold text-sm text-foreground">{item.label}</span>
+            <span className="font-medium text-sm text-foreground">{item.label}</span>
           </motion.button>
         ))}
       </div>
 
       {/* Day Summary */}
-      <Card className="border-none shadow-lg bg-card/50 backdrop-blur-sm overflow-hidden">
-        <div className="h-1 bg-gradient-to-r from-primary via-accent to-success opacity-50" />
-        <CardHeader className="pb-2">
-          <CardTitle className="text-lg flex items-center gap-3 font-bold text-foreground/90">
-            <div className="p-1.5 bg-primary/10 rounded-lg">
-              <Zap className="h-5 w-5 text-primary" />
-            </div>
+      <Card className="border border-border shadow-card overflow-hidden">
+        <CardHeader className="pb-3 pt-5">
+          <CardTitle className="text-sm font-semibold flex items-center gap-2 text-foreground">
+            <Zap className="h-4 w-4 text-primary" />
             Resumo do Dia
           </CardTitle>
         </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+        <CardContent className="pb-5">
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
             {[
-              { label: 'Novos Leads', value: daySummary.newLeads, color: 'text-primary', bg: 'bg-primary/5' },
-              { label: 'Visitas', value: daySummary.scheduledVisits, color: 'text-success', bg: 'bg-success/5' },
-              { label: 'Propostas', value: daySummary.pendingProposals, color: 'text-warning', bg: 'bg-warning/5' },
-              { label: 'Urgentes', value: daySummary.urgentTasks, color: 'text-destructive', bg: 'bg-destructive/5' },
-              { label: 'Faturamento', value: new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(daySummary.todayRevenue), color: 'text-accent', bg: 'bg-accent/5', wide: true },
-            ].map((item, idx) => (
-              <motion.div
+              { label: 'Novos Leads', value: daySummary.newLeads, color: 'text-primary', bg: 'bg-primary/5 border-primary/10' },
+              { label: 'Visitas', value: daySummary.scheduledVisits, color: 'text-success', bg: 'bg-success/5 border-success/10' },
+              { label: 'Propostas', value: daySummary.pendingProposals, color: 'text-warning', bg: 'bg-warning/5 border-warning/10' },
+              { label: 'Urgentes', value: daySummary.urgentTasks, color: 'text-destructive', bg: 'bg-destructive/5 border-destructive/10' },
+              { label: 'Faturamento', value: new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(daySummary.todayRevenue), color: 'text-accent', bg: 'bg-accent/5 border-accent/10' },
+            ].map((item) => (
+              <div
                 key={item.label}
-                whileHover={{ y: -5 }}
                 className={cn(
-                  "flex flex-col items-center justify-center p-6 rounded-2xl border border-transparent hover:border-border transition-all group",
+                  "flex flex-col items-center justify-center p-4 rounded-lg border transition-colors",
                   item.bg
                 )}
               >
-                <div className={cn("text-3xl font-extrabold tracking-tighter group-hover:scale-110 transition-transform", item.color)}>
+                <div className={cn("text-2xl font-bold tracking-tight", item.color)}>
                   {item.value}
                 </div>
-                <div className="text-xs font-bold uppercase tracking-wider text-muted-foreground mt-1">
+                <div className="text-[11px] font-medium text-muted-foreground mt-1 text-center">
                   {item.label}
                 </div>
-              </motion.div>
+              </div>
             ))}
           </div>
         </CardContent>
@@ -533,54 +580,47 @@ export function Dashboard() {
 
       {/* Strategic Goals & Overview */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <Card className="lg:col-span-2 border-none shadow-lg bg-gradient-to-br from-slate-900 to-slate-800 text-white overflow-hidden relative">
-          <div className="absolute top-0 right-0 w-64 h-64 bg-primary/20 rounded-full blur-3xl -mr-32 -mt-32" />
-          <CardHeader>
+        <Card className="lg:col-span-2 border border-border shadow-card overflow-hidden">
+          <CardHeader className="pb-3">
             <CardTitle className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Target className="h-5 w-5 text-primary" />
+              <div className="flex items-center gap-2 text-sm font-semibold">
+                <Target className="h-4 w-4 text-primary" />
                 Meta de Vendas Mensal
               </div>
-              <Badge className="bg-primary/20 text-primary border-none text-[10px] font-bold">DEZEMBRO 2024</Badge>
+              <Badge variant="secondary" className="text-[10px] font-medium">Dezembro 2024</Badge>
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-8 relative z-10">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <div className="space-y-2">
-                <p className="text-xs font-bold uppercase tracking-widest text-slate-400">Progresso Atual</p>
-                <div className="text-4xl font-black tracking-tighter">
+          <CardContent className="space-y-5">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+              <div className="space-y-1">
+                <p className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">Progresso Atual</p>
+                <div className="text-2xl font-bold tracking-tight text-foreground">
                   {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(2450000)}
                 </div>
-                <div className="flex items-center gap-2 text-success text-sm font-bold">
-                  <TrendingUp className="h-4 w-4" />
-                  +15.4% em relação ao mês anterior
+                <div className="flex items-center gap-1.5 text-success text-xs font-medium">
+                  <TrendingUp className="h-3.5 w-3.5" />
+                  +15.4% vs mês anterior
                 </div>
               </div>
 
-              <div className="col-span-2 space-y-4">
-                <div className="flex justify-between items-end mb-1">
-                  <div className="space-y-1">
-                    <p className="text-xs font-bold uppercase tracking-widest text-slate-400">Objetivo: R$ 3.000.000</p>
-                    <div className="h-2 w-full bg-slate-700/50 rounded-full overflow-hidden">
-                      <motion.div
-                        initial={{ width: 0 }}
-                        animate={{ width: '82%' }}
-                        transition={{ duration: 1.5, ease: "easeOut" }}
-                        className="h-full bg-gradient-to-r from-primary to-accent rounded-full relative"
-                      >
-                        <div className="absolute top-0 right-0 h-full w-2 bg-white/20 animate-pulse" />
-                      </motion.div>
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <span className="text-3xl font-black text-primary">82%</span>
-                  </div>
+              <div className="col-span-2 space-y-3">
+                <div className="flex justify-between items-center">
+                  <p className="text-[11px] font-medium text-muted-foreground">Objetivo: R$ 3.000.000</p>
+                  <span className="text-lg font-bold text-primary">82%</span>
                 </div>
-                <p className="text-[11px] text-slate-400 font-medium">Faltam apenas <span className="text-white font-bold">R$ 550.000</span> para bater a meta. Faltam 12 dias.</p>
+                <div className="h-2 w-full bg-muted rounded-full overflow-hidden">
+                  <motion.div
+                    initial={{ width: 0 }}
+                    animate={{ width: '82%' }}
+                    transition={{ duration: 1.2, ease: "easeOut" }}
+                    className="h-full bg-gradient-to-r from-primary to-primary-400 rounded-full"
+                  />
+                </div>
+                <p className="text-xs text-muted-foreground">Faltam <span className="font-semibold text-foreground">R$ 550.000</span> para bater a meta. Faltam 12 dias.</p>
               </div>
             </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-4 border-t border-white/10">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-4 border-t border-border">
               {[
                 { label: 'Ticket Médio', value: 'R$ 612k', icon: DollarSign },
                 { label: 'Conversão', value: '3.4%', icon: Activity },
@@ -588,10 +628,10 @@ export function Dashboard() {
                 { label: 'Novos Contratos', value: '8', icon: Briefcase },
               ].map((stat) => (
                 <div key={stat.label} className="space-y-1">
-                  <p className="text-[9px] font-black uppercase tracking-widest text-slate-500">{stat.label}</p>
-                  <div className="flex items-center gap-2">
+                  <p className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">{stat.label}</p>
+                  <div className="flex items-center gap-1.5">
                     <stat.icon className="h-3.5 w-3.5 text-primary" />
-                    <span className="text-sm font-bold">{stat.value}</span>
+                    <span className="text-sm font-semibold">{stat.value}</span>
                   </div>
                 </div>
               ))}
@@ -599,20 +639,20 @@ export function Dashboard() {
           </CardContent>
         </Card>
 
-        <Card className="border-none shadow-lg bg-card overflow-hidden">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-black uppercase tracking-widest flex items-center gap-2">
+        <Card className="border border-border shadow-card">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-sm font-semibold flex items-center gap-2">
               <Star className="h-4 w-4 text-warning fill-warning" />
               Insight da IA
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="p-4 rounded-2xl bg-amber-50 dark:bg-amber-950/20 border border-amber-100 dark:border-amber-900/30">
-              <p className="text-xs font-bold text-amber-900 dark:text-amber-200 leading-relaxed italic">
-                &quot;Detectamos um aumento de 25% na procura por imóveis na Vila Mariana. Recomendamos focar suas campanhas nesta região.&quot;
+          <CardContent className="space-y-3">
+            <div className="p-4 rounded-lg bg-amber-50 dark:bg-amber-950/20 border border-amber-200/60 dark:border-amber-900/30">
+              <p className="text-xs text-amber-800 dark:text-amber-300 leading-relaxed">
+                Detectamos um aumento de 25% na procura por imóveis na Vila Mariana. Recomendamos focar suas campanhas nesta região.
               </p>
             </div>
-            <Button variant="outline" className="w-full text-[10px] font-black uppercase tracking-widest h-10 rounded-xl border-amber-200 text-amber-700 hover:bg-amber-50">
+            <Button variant="outline" size="sm" className="w-full text-xs font-medium text-amber-700 border-amber-200 hover:bg-amber-50 dark:text-amber-400 dark:border-amber-900/50">
               Ver Análise Completa
             </Button>
           </CardContent>
@@ -628,7 +668,7 @@ export function Dashboard() {
           return (
             <Card
               key={metric.title}
-              className={cn("hover:shadow-lg transition-shadow cursor-pointer hover:bg-gray-50", metric.needsAttention && "border-red-200 bg-red-50/30")}
+              className={cn("border border-border shadow-card hover:shadow-card-hover transition-all duration-200 cursor-pointer hover:border-border/60", metric.needsAttention && "border-destructive/20 bg-destructive/[0.02]")}
               onClick={metric.onClick}
             >
               <CardHeader className="flex flex-row items-center justify-between pb-2">
@@ -691,7 +731,7 @@ export function Dashboard() {
           const TrendIcon = metric.trend === 'up' ? ArrowUpRight : ArrowDownRight;
 
           return (
-            <Card key={metric.title} className="hover:shadow-lg transition-shadow">
+            <Card key={metric.title} className="border border-border shadow-card hover:shadow-card-hover transition-all duration-200">
               <CardHeader className="flex flex-row items-center justify-between pb-2">
                 <CardTitle className="text-sm font-medium text-muted-foreground">
                   {metric.title}
@@ -821,7 +861,7 @@ export function Dashboard() {
               return (
                 <Card
                   key={metric.title}
-                  className="hover:shadow-md transition-shadow cursor-pointer hover:bg-gray-50"
+                  className="border border-border shadow-card hover:shadow-card-hover transition-all duration-200 cursor-pointer"
                   onClick={metric.onClick}
                 >
                   <CardContent className="p-4">
@@ -854,7 +894,7 @@ export function Dashboard() {
       </Card>
 
 
-      <Card>
+      <Card className="border border-border shadow-card">
         <CardHeader>
           <div className="flex items-center justify-between">
             <CardTitle>Atividades Recentes</CardTitle>
@@ -874,7 +914,7 @@ export function Dashboard() {
             {recentActivities.map((activity, index) => (
               <div
                 key={activity.id}
-                className="flex gap-3 pb-4 border-b border-border last:border-0 last:pb-0 animate-slide-in cursor-pointer hover:bg-gray-50 rounded-lg p-2 transition-colors"
+                className="flex gap-3 pb-4 border-b border-border last:border-0 last:pb-0 cursor-pointer hover:bg-muted/50 rounded-lg p-2 -mx-2 transition-colors"
                 style={{ animationDelay: `${index * 100}ms` }}
                 onClick={() => {
                   // Navigate to specific page based on activity type
@@ -910,6 +950,28 @@ export function Dashboard() {
           </div>
         </CardContent>
       </Card>
+      
+      {/* Roleta Modal (Fullscreen Overlay) */}
+      {modoRoleta && (
+        <RoletaModal
+          atividades={tarefasPendentes}
+          onClose={() => setModoRoleta(false)}
+          onConcluirTarefa={(id, feedback) => {
+            setTarefasPendentes(prev => prev.filter(t => t.id !== id));
+            toast({ title: 'Atividade concluída', description: 'Mandou bem!' });
+          }}
+          onPularTarefa={(id) => {
+            setTarefasPendentes(prev => {
+              const task = prev.find(t => t.id === id);
+              if (task) {
+                const newTasks = prev.filter(t => t.id !== id);
+                return [...newTasks, task];
+              }
+              return prev;
+            });
+          }}
+        />
+      )}
     </div>
   );
 }

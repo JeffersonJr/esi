@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { DragDropContext, Droppable, Draggable, DropResult } from '@hello-pangea/dnd';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -20,6 +21,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { PageHeader } from '@/components/layout/PageHeader';
 
 // Tipagem e Mocks
 type Prioridade = 'Baixa' | 'Média' | 'Alta' | 'Urgente';
@@ -49,9 +51,25 @@ const solicitacoesMock: Solicitacao[] = [
 ];
 
 export function GestaoSolicitacoes() {
+  const [solicitacoes, setSolicitacoes] = useState<Solicitacao[]>(solicitacoesMock);
   const [searchTerm, setSearchTerm] = useState('');
   const [colunas] = useState(['Novo', 'Atribuído', 'Em Andamento', 'Resolvido']);
   const [modalAberto, setModalAberto] = useState<Solicitacao | null>(null);
+
+  const onDragEnd = (result: DropResult) => {
+    const { source, destination, draggableId } = result;
+    if (!destination) return;
+    if (source.droppableId === destination.droppableId && source.index === destination.index) return;
+
+    setSolicitacoes(prev => {
+      const newSolicitacoes = Array.from(prev);
+      const index = newSolicitacoes.findIndex(s => s.id === draggableId);
+      if (index !== -1) {
+        newSolicitacoes[index] = { ...newSolicitacoes[index], status: destination.droppableId as any };
+      }
+      return newSolicitacoes;
+    });
+  };
 
   const getUrgencyColor = (horasTotais: number, horasPassadas: number) => {
     const percent = (horasPassadas / horasTotais) * 100;
@@ -89,75 +107,79 @@ export function GestaoSolicitacoes() {
   return (
     <div className="min-h-screen bg-slate-50 font-sans flex flex-col h-full overflow-hidden">
       <div className="max-w-[1600px] mx-auto w-full px-6 pt-4">
-        <Breadcrumb>
-          <BreadcrumbList>
-            <BreadcrumbItem>
-              <BreadcrumbLink href="/" className="flex items-center gap-1">
-                <Home className="h-4 w-4" /> Dashboard
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbPage>Solicitações de Manutenção</BreadcrumbPage>
-            </BreadcrumbItem>
-          </BreadcrumbList>
-        </Breadcrumb>
-      </div>
-
-      {/* Header Sticky */}
-      <div className="bg-white border-b border-slate-200 px-6 py-6 sticky top-0 z-40 backdrop-blur-md bg-white/80 mt-4">
-        <div className="max-w-[1600px] mx-auto flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div className="flex items-center gap-4">
-            <div className="h-12 w-12 rounded-2xl bg-indigo-600 text-white flex items-center justify-center shadow-lg shadow-indigo-200 shrink-0">
-              <Wrench className="h-6 w-6" />
+        <PageHeader
+          title="Manutenção e Chamados"
+          subtitle="Gestão de incidentes, prestadores e acompanhamento de SLA"
+          icon={<Wrench />}
+          breadcrumbs={[
+            { label: 'Dashboard', href: '/' },
+            { label: 'Solicitações de Manutenção' }
+          ]}
+          actions={
+            <div className="flex items-center gap-3">
+              <div className="relative md:w-64">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+                <Input placeholder="Buscar OS, imóvel..." className="pl-9 bg-slate-50 border-slate-200 h-12 rounded-2xl" />
+              </div>
+              <Button variant="outline" className="h-12 px-6 rounded-2xl font-bold bg-white border-slate-200 text-slate-700 shadow-sm hover:bg-slate-50 transition-all">
+                <Filter className="h-4 w-4 mr-2" /> Filtros
+              </Button>
+              <Button className="h-12 px-6 rounded-2xl font-bold bg-indigo-600 hover:bg-indigo-700 text-white shadow-lg shadow-indigo-200 transition-all">
+                <Plus className="h-4 w-4 mr-2" /> Novo Ticket
+              </Button>
             </div>
-            <div>
-              <h1 className="text-3xl font-black text-slate-800 tracking-tight">Manutenção e Chamados</h1>
-              <p className="text-slate-500 mt-1 font-medium">Gestão de incidentes, prestadores e acompanhamento de SLA</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-3">
-            <div className="relative md:w-64">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
-              <Input placeholder="Buscar OS, imóvel..." className="pl-9 bg-slate-50 border-slate-200 h-12 rounded-2xl" />
-            </div>
-            <Button variant="outline" className="h-12 px-6 rounded-2xl font-bold bg-white border-slate-200 text-slate-700 shadow-sm hover:bg-slate-50 transition-all">
-              <Filter className="h-4 w-4 mr-2" /> Filtros
-            </Button>
-            <Button className="h-12 px-6 rounded-2xl font-bold bg-indigo-600 hover:bg-indigo-700 text-white shadow-lg shadow-indigo-200 transition-all">
-              <Plus className="h-4 w-4 mr-2" /> Novo Ticket
-            </Button>
-          </div>
-        </div>
+          }
+        />
       </div>
 
       {/* Kanban Board */}
-      <div className="max-w-[1600px] mx-auto w-full flex-1 flex gap-6 overflow-x-auto p-6 pb-4">
-        {colunas.map((colunaLabel) => {
-          const itensColuna = solicitacoesMock.filter(s => s.status === colunaLabel);
+      <DragDropContext onDragEnd={onDragEnd}>
+        <div className="max-w-[1600px] mx-auto w-full flex-1 flex gap-6 overflow-x-auto p-6 pb-4">
+          {colunas.map((colunaLabel) => {
+            const itensColuna = solicitacoes.filter(s => s.status === colunaLabel);
 
-          return (
-            <div key={colunaLabel} className="min-w-[320px] max-w-[350px] w-full flex flex-col bg-slate-100/50 rounded-2xl p-4 border border-slate-200 shadow-sm">
-              <div className="flex items-center justify-between mb-4 px-1">
-                <h3 className="font-bold text-slate-700 uppercase tracking-wider text-xs">{colunaLabel}</h3>
-                <Badge variant="secondary" className="bg-slate-200 text-slate-600 font-bold rounded-lg">{itensColuna.length}</Badge>
-              </div>
-
-              <div className="flex-1 overflow-y-auto space-y-3 custom-scrollbar pr-1">
-                {itensColuna.map(ticket => (
-                  <Card
-                    key={ticket.id}
-                    className="border-none shadow-sm cursor-pointer hover:ring-2 hover:ring-indigo-400 hover:shadow-md transition-all group rounded-2xl overflow-hidden"
-                    onClick={() => setModalAberto(ticket)}
+            return (
+              <Droppable key={colunaLabel} droppableId={colunaLabel}>
+                {(provided, snapshot) => (
+                  <div
+                    ref={provided.innerRef}
+                    {...provided.droppableProps}
+                    className={`min-w-[320px] max-w-[350px] w-full flex flex-col rounded-2xl p-4 border border-slate-200 transition-colors ${
+                      snapshot.isDraggingOver ? 'bg-indigo-50/50 border-indigo-200' : 'bg-slate-100/50 shadow-sm'
+                    }`}
                   >
-                    <CardContent className="p-4">
-                      <div className="flex justify-between items-start mb-2">
-                        <span className="text-[10px] font-black font-mono text-slate-400 tracking-wider bg-slate-50 px-2 py-0.5 rounded-md border border-slate-100">{ticket.id}</span>
-                        {getPrioridadeBadge(ticket.prioridade)}
-                      </div>
+                    <div className="flex items-center justify-between mb-4 px-1">
+                      <h3 className="font-bold text-slate-700 uppercase tracking-wider text-xs">{colunaLabel}</h3>
+                      <Badge variant="secondary" className="bg-slate-200 text-slate-600 font-bold rounded-lg">{itensColuna.length}</Badge>
+                    </div>
 
-                      <h4 className="font-bold text-slate-800 leading-tight mb-2 group-hover:text-indigo-600 transition-colors">{ticket.titulo}</h4>
-                      <p className="text-xs text-slate-500 font-medium mb-3 flex items-center gap-1.5"><Home className="h-3 w-3 text-slate-400" /> {ticket.imovel}</p>
+                    <div className="flex-1 overflow-y-auto space-y-3 custom-scrollbar pr-1 min-h-[150px]">
+                      {itensColuna.map((ticket, index) => (
+                        <Draggable key={ticket.id} draggableId={ticket.id} index={index}>
+                          {(provided, snapshot) => (
+                            <div
+                              ref={provided.innerRef}
+                              {...provided.draggableProps}
+                              {...provided.dragHandleProps}
+                              style={{
+                                ...provided.draggableProps.style,
+                                opacity: snapshot.isDragging ? 0.9 : 1
+                              }}
+                            >
+                              <Card
+                                className={`border-none shadow-sm cursor-pointer transition-all group rounded-2xl overflow-hidden ${
+                                  snapshot.isDragging ? 'ring-2 ring-indigo-400 shadow-xl scale-[1.02]' : 'hover:ring-2 hover:ring-indigo-400 hover:shadow-md'
+                                }`}
+                                onClick={() => setModalAberto(ticket)}
+                              >
+                                <CardContent className="p-4">
+                                  <div className="flex justify-between items-start mb-2">
+                                    <span className="text-[10px] font-black font-mono text-slate-400 tracking-wider bg-slate-50 px-2 py-0.5 rounded-md border border-slate-100">{ticket.id}</span>
+                                    {getPrioridadeBadge(ticket.prioridade)}
+                                  </div>
+
+                                  <h4 className="font-bold text-slate-800 leading-tight mb-2 group-hover:text-indigo-600 transition-colors">{ticket.titulo}</h4>
+                                  <p className="text-xs text-slate-500 font-medium mb-3 flex items-center gap-1.5"><Home className="h-3 w-3 text-slate-400" /> {ticket.imovel}</p>
 
                       {/* SLA / Tempo */}
                       {ticket.status !== 'Resolvido' && (
@@ -188,20 +210,27 @@ export function GestaoSolicitacoes() {
                         )}
                       </div>
                     </CardContent>
-                  </Card>
-                ))}
+                              </Card>
+                            </div>
+                          )}
+                        </Draggable>
+                      ))}
+                      {provided.placeholder}
 
-                {/* Empty state per column */}
-                {itensColuna.length === 0 && (
-                  <div className="h-24 border-2 border-dashed border-slate-200 rounded-2xl flex items-center justify-center text-slate-400 text-sm font-bold bg-white/30">
-                    Nenhum chamado
+                      {/* Empty state per column */}
+                      {itensColuna.length === 0 && (
+                        <div className="h-24 border-2 border-dashed border-slate-200 rounded-2xl flex items-center justify-center text-slate-400 text-sm font-bold bg-white/30">
+                          Nenhum chamado
+                        </div>
+                      )}
+                    </div>
                   </div>
                 )}
-              </div>
-            </div>
-          );
-        })}
-      </div>
+              </Droppable>
+            );
+          })}
+        </div>
+      </DragDropContext>
 
       {/* TICKET MODAL (Rich Ticket) */}
       <Dialog open={!!modalAberto} onOpenChange={() => setModalAberto(null)}>

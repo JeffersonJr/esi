@@ -1,0 +1,943 @@
+export interface Property {
+  id: string
+  code: string
+  title: string
+  type: 'apartamento' | 'casa' | 'cobertura' | 'studio' | 'terreno' | 'comercial'
+  purpose: 'venda' | 'aluguel' | 'lancamento'
+  price: number
+  rentPrice?: number
+  address: {
+    street: string
+    neighborhood: string
+    city: string
+    state: string
+  }
+  bedrooms: number
+  bathrooms: number
+  parkingSpaces: number
+  area: number
+  totalArea?: number
+  description: string
+  shortDescription: string
+  features: string[]
+  images: string[]
+  featured: boolean
+  isLaunch: boolean
+  launchStatus?: 'pre-lancamento' | 'lancamento' | 'em-obras' | 'pronto'
+  deliveryDate?: string
+  floor?: number
+  totalFloors?: number
+  condo?: number
+  iptu?: number
+  petFriendly?: boolean
+  furnished?: 'nao' | 'semi' | 'sim'
+  yearBuilt?: number
+  sunPosition?: string
+  agent?: {
+    name: string
+    phone: string
+    photo: string
+    creci: string
+  }
+  tenantId?: string
+}
+
+const properties: Property[] = [
+  {
+    id: '1',
+    code: 'VRO-1042',
+    title: 'Casa Contemporânea com Vista Panorâmica',
+    type: 'casa',
+    purpose: 'venda',
+    price: 4200000,
+    address: {
+      street: 'Rua dos Ipês, 284',
+      neighborhood: 'Morumbi',
+      city: 'São Paulo',
+      state: 'SP',
+    },
+    bedrooms: 4,
+    bathrooms: 5,
+    parkingSpaces: 4,
+    area: 380,
+    totalArea: 620,
+    shortDescription: 'Residência de alto padrão em condomínio fechado com segurança 24h, piscina aquecida e acabamento importado.',
+    description: 'Extraordinária residência contemporânea localizada em um dos endereços mais valorizados do Morumbi. Projetada pelo renomado escritório de arquitetura Andrade+Morettin, a casa distribui seus 620m² de área construída em três pavimentos integrados por uma escadaria escultural em aço corten e madeira de demolição.\n\nO pavimento social impressiona com pé-direito duplo de 5,8m, amplo living integrado à cozinha gourmet, adega climatizada para 400 garrafas e sala de jantar com capacidade para 18 pessoas. As esquadrias de vidro do piso ao teto emolduram uma vista privilegiada do skyline paulistano.\n\nNo piso superior, a suíte master de 85m² conta com closet personalizado, banheiro em mármore Calacatta e varanda privativa com banheira de imersão. As três suítes adicionais têm entre 28 e 34m².\n\nO quintal é um oásis urbano: piscina aquecida 12x6m, ofurô, deck em madeira cumaru, churrasqueira e jardim paisagístico assinado por Isabel Duprat.',
+    features: [
+      'Piscina aquecida 12x6m',
+      'Adega climatizada p/ 400 garrafas',
+      'Cozinha gourmet Calacatta',
+      'Sala home theater',
+      'Escritório com terraço privativo',
+      'Automação residencial Crestron',
+      'Energia solar 28 painéis',
+      'Gerador de energia',
+      'Jardim paisagístico assinado',
+      'Segurança 24h com biometria',
+      'Aquecimento central por piso',
+      'Closet master 28m²',
+    ],
+    images: [
+      'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1200&q=85&fit=crop',
+      'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1200&q=85&fit=crop',
+      'https://images.unsplash.com/photo-1484154218962-a197022b5858?w=1200&q=85&fit=crop',
+      'https://images.unsplash.com/photo-1560185127-6a8ad67c4bba?w=1200&q=85&fit=crop',
+    ],
+    featured: true,
+    isLaunch: false,
+    condo: 3800,
+    iptu: 2200,
+    petFriendly: true,
+    furnished: 'nao',
+    yearBuilt: 2021,
+    sunPosition: 'Norte/Nascente',
+    agent: {
+      name: 'Rafaela Monteiro',
+      phone: '(11) 99847-3821',
+      photo: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=200&q=80',
+      creci: 'CRECI-SP 187.342',
+    },
+  },
+  {
+    id: '2',
+    code: 'VRO-0871',
+    title: 'Apartamento Frente-Mar em Ipanema',
+    type: 'apartamento',
+    purpose: 'venda',
+    price: 5850000,
+    address: {
+      street: 'Av. Vieira Souto, 1180',
+      neighborhood: 'Ipanema',
+      city: 'Rio de Janeiro',
+      state: 'RJ',
+    },
+    bedrooms: 3,
+    bathrooms: 2,
+    parkingSpaces: 2,
+    area: 145,
+    shortDescription: 'Rara oportunidade na orla de Ipanema. Vista permanente para o mar com pôr-do-sol na janela todos os dias.',
+    description: 'Apartamento único e irrepetível com vista frente-mar direta na mais famosa avenida do Rio de Janeiro. O imóvel foi completamente renovado em 2023 com materiais premium, mantendo o charme original do edifício dos anos 70.\n\nA sala de estar e jantar com 42m² tem janelas do piso ao teto emoldurando uma vista cinematográfica do mar de Ipanema, com o Morro Dois Irmãos ao fundo. Varanda generosa de 14m² integra o ambiente externo ao interno.\n\nA cozinha planejada em lacca branca e bancadas em quartzito Taj Mahal conta com equipamentos Gaggenau. As suítes foram cuidadosamente decoradas para criar um refúgio sofisticado a poucos passos da praia.\n\nEdifício com portaria 24h, dois elevadores e garagem subterrânea. Localização privilegiada entre as ruas Garcia D\'Ávila e Nascimento Silva.',
+    features: [
+      'Vista direta para o mar',
+      'Varanda 14m² frente mar',
+      'Cozinha Gaggenau',
+      'Piso em mármore travertino',
+      'Ar-condicionado split em todos os cômodos',
+      'Portaria 24h',
+      'Dois elevadores',
+      'Garagem subterrânea',
+      'Lavanderia interna',
+      'Armários planejados em todos os cômodos',
+    ],
+    images: [
+      'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=1200&q=85&fit=crop',
+      'https://images.unsplash.com/photo-1567684014761-b5aa8b8a7921?w=1200&q=85&fit=crop',
+      'https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=1200&q=85&fit=crop',
+    ],
+    featured: true,
+    isLaunch: false,
+    condo: 2800,
+    iptu: 3400,
+    petFriendly: false,
+    furnished: 'sim',
+    floor: 7,
+    totalFloors: 12,
+    yearBuilt: 1974,
+    sunPosition: 'Poente/Mar',
+    agent: {
+      name: 'Thiago Cavalcante',
+      phone: '(21) 98834-5577',
+      photo: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&q=80',
+      creci: 'CRECI-RJ 23.814',
+    },
+  },
+  {
+    id: '3',
+    code: 'VRO-1205',
+    title: 'Cobertura Duplex Assinada em Moema',
+    type: 'cobertura',
+    purpose: 'venda',
+    price: 7500000,
+    address: {
+      street: 'Rua Honduras, 74',
+      neighborhood: 'Moema',
+      city: 'São Paulo',
+      state: 'SP',
+    },
+    bedrooms: 4,
+    bathrooms: 5,
+    parkingSpaces: 4,
+    area: 340,
+    totalArea: 520,
+    shortDescription: 'Cobertura com design assinado, terraço privativo de 180m² e piscina de borda infinita com vista da cidade.',
+    description: 'Cobertura duplex exclusiva no último andar de edifício boutique com apenas 8 unidades. Projeto de interiores assinado pela designer Guta Moura Guedes, a propriedade representa o ápice do design residencial contemporâneo em São Paulo.\n\nO terraço privativo de 180m² foi concebido como extensão da sala de estar, com piscina de borda infinita aquecida, bar externo em pedra ferro, jardim tropical com irrigação automatizada e área de estar ao ar livre.\n\nNo interior, a integração entre sala, cozinha e terraço cria um fluxo natural que conecta o dentro e o fora. Pé-direito duplo na sala, lareira a lenha, adega para 600 garrafas e biblioteca completam o pavimento social.\n\nNo segundo nível, a suíte master ocupa 92m² com banheiro spa, sauna privativa e closet em madeira freijó. Vista de 360° da cidade de São Paulo.',
+    features: [
+      'Terraço privativo 180m²',
+      'Piscina aquecida borda infinita',
+      'Bar externo em pedra ferro',
+      'Lareira a lenha',
+      'Sauna privativa na suíte master',
+      'Adega 600 garrafas',
+      'Biblioteca com 14 metros lineares',
+      'Automação KNX completa',
+      'Elevador privativo',
+      'Projeto interiores assinado',
+      'Jardim tropical automatizado',
+      'Chef de cozinha Gaggenau/Miele',
+    ],
+    images: [
+      'https://images.unsplash.com/photo-1613977257363-707ba9348227?w=1200&q=85&fit=crop',
+      'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=1200&q=85&fit=crop',
+      'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1200&q=85&fit=crop',
+    ],
+    featured: true,
+    isLaunch: false,
+    condo: 4200,
+    iptu: 2900,
+    petFriendly: true,
+    furnished: 'sim',
+    floor: 22,
+    totalFloors: 22,
+    yearBuilt: 2020,
+    sunPosition: 'Todos os lados',
+    agent: {
+      name: 'Rafaela Monteiro',
+      phone: '(11) 99847-3821',
+      photo: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=200&q=80',
+      creci: 'CRECI-SP 187.342',
+    },
+  },
+  {
+    id: '4',
+    code: 'VRO-0634',
+    title: 'Apartamento de Alto Padrão no Leblon',
+    type: 'apartamento',
+    purpose: 'aluguel',
+    price: 3200000,
+    rentPrice: 18000,
+    address: {
+      street: 'Rua Dias Ferreira, 420',
+      neighborhood: 'Leblon',
+      city: 'Rio de Janeiro',
+      state: 'RJ',
+    },
+    bedrooms: 2,
+    bathrooms: 2,
+    parkingSpaces: 1,
+    area: 95,
+    shortDescription: 'Na rua mais badalada do Leblon, 200m da praia. Totalmente reformado e mobiliado com gosto impecável.',
+    description: 'Apartamento reformado com requinte na Rua Dias Ferreira, a mais vibrante rua do Leblon. A 200 metros da praia, no coração do bairro mais sofisticado do Rio.\n\nO apartamento passou por reforma completa em 2024 e está equipado com mobiliário de marcas como Arredamento e assinatura de decoração de Sig Bergamin Jr. A integração entre sala e cozinha cria um ambiente amplo e arejado.\n\nSuíte master com closet italiano e banheiro em mármore verde brasileira. Segunda suíte para hóspedes com mesmo padrão de acabamento. O edifício conta com academia, sauna e portaria 24h.',
+    features: [
+      'Totalmente mobiliado',
+      'A 200m da praia',
+      'Cozinha planejada italiana',
+      'Banheiros em mármore',
+      'Ar-condicionado inverter',
+      'Academia no edifício',
+      'Sauna',
+      'Portaria 24h',
+      'Closet italiano na suíte master',
+      'Armários embutidos',
+    ],
+    images: [
+      'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=1200&q=85&fit=crop',
+      'https://images.unsplash.com/photo-1484154218962-a197022b5858?w=1200&q=85&fit=crop',
+      'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=1200&q=85&fit=crop',
+    ],
+    featured: true,
+    isLaunch: false,
+    condo: 2200,
+    iptu: 1800,
+    petFriendly: false,
+    furnished: 'sim',
+    floor: 5,
+    totalFloors: 10,
+    yearBuilt: 1985,
+    sunPosition: 'Nascente',
+    agent: {
+      name: 'Thiago Cavalcante',
+      phone: '(21) 98834-5577',
+      photo: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&q=80',
+      creci: 'CRECI-RJ 23.814',
+    },
+  },
+  {
+    id: '5',
+    code: 'VRO-0912',
+    title: 'Casa em Condomínio Premium em Curitiba',
+    type: 'casa',
+    purpose: 'aluguel',
+    price: 2800000,
+    rentPrice: 12500,
+    address: {
+      street: 'Alameda das Araucárias, 156',
+      neighborhood: 'Alto da Glória',
+      city: 'Curitiba',
+      state: 'PR',
+    },
+    bedrooms: 4,
+    bathrooms: 4,
+    parkingSpaces: 3,
+    area: 310,
+    totalArea: 440,
+    shortDescription: 'Casa de luxo em condomínio fechado com segurança 24h, piscina aquecida e acabamento de altíssimo padrão.',
+    description: 'Extraordinária casa em condomínio fechado de alto padrão no Alto da Glória, o bairro mais nobre de Curitiba. A propriedade foi construída em 2022 com materiais importados e acabamento premium.\n\nO projeto arquitetônico integra a natureza ao ambiente construído através de grandes janelas e jardim interior com espelho d\'água. Sala de estar com lareira a gás, cozinha gourmet com ilha central e sala de jantar formal completam o pavimento social.\n\nNo jardim, piscina aquecida com deck de madeira Ipe, spa e churrasqueira coberta. A casa dispõe ainda de espaço gourmet, academia privativa e sala de cinema.',
+    features: [
+      'Piscina aquecida com deck Ipe',
+      'Lareira a gás',
+      'Academia privativa',
+      'Sala de cinema',
+      'Churrasqueira coberta',
+      'Espelho d\'água no jardim',
+      'Automação residencial',
+      'Segurança 24h',
+      'Câmeras em toda propriedade',
+      'Cozinha ilha central',
+      'Quartos com suíte completa',
+    ],
+    images: [
+      'https://images.unsplash.com/photo-1583608205776-bfd35f0d9f83?w=1200&q=85&fit=crop',
+      'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1200&q=85&fit=crop',
+      'https://images.unsplash.com/photo-1560185127-6a8ad67c4bba?w=1200&q=85&fit=crop',
+    ],
+    featured: false,
+    isLaunch: false,
+    condo: 1800,
+    iptu: 980,
+    petFriendly: true,
+    furnished: 'semi',
+    yearBuilt: 2022,
+    sunPosition: 'Norte',
+    agent: {
+      name: 'Carolina Ferraz',
+      phone: '(41) 99102-6634',
+      photo: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&q=80',
+      creci: 'CRECI-PR 31.459',
+    },
+  },
+  {
+    id: '6',
+    code: 'VRO-0455',
+    title: 'Studio Design em Vila Madalena',
+    type: 'studio',
+    purpose: 'venda',
+    price: 695000,
+    address: {
+      street: 'Rua Harmonia, 891',
+      neighborhood: 'Vila Madalena',
+      city: 'São Paulo',
+      state: 'SP',
+    },
+    bedrooms: 1,
+    bathrooms: 1,
+    parkingSpaces: 1,
+    area: 46,
+    shortDescription: 'Studio inteligente com projeto de interiores impecável no coração da Vila Madalena.',
+    description: 'Studio de design em localização privilegiada na Vila Madalena, a dois quarteirões do Mercado Municipal e da vida cultural do bairro.\n\nO projeto de interiores criou um espaço inteligente onde cada centímetro foi aproveitado com maestria. O sistema de móveis modulares transforma o studio de ambiente de trabalho para área de descanso com um gesto. A cozinha com bancada em quartzite funciona também como mesa de jantar.\n\nAcabamentos com argamassa polida, cimentício, madeira natural e aço preto criam uma estética industrial-sofisticada muito apreciada pelo público criativo e jovem. Varanda de 6m² para café da manhã ao ar livre.',
+    features: [
+      'Projeto de interiores completo',
+      'Móveis modulares multifuncionais',
+      'Varanda privativa 6m²',
+      'Cozinha integrada à sala',
+      'Banheiro com banheira',
+      'Armário embutido 3m lineares',
+      'Piso em cimentício polido',
+      'Academia no edifício',
+      'Terraço coletivo',
+      'Pet friendly',
+    ],
+    images: [
+      'https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=1200&q=85&fit=crop',
+      'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=1200&q=85&fit=crop',
+    ],
+    featured: false,
+    isLaunch: false,
+    condo: 850,
+    iptu: 320,
+    petFriendly: true,
+    furnished: 'semi',
+    floor: 4,
+    totalFloors: 15,
+    yearBuilt: 2019,
+    sunPosition: 'Nascente',
+    agent: {
+      name: 'Rafaela Monteiro',
+      phone: '(11) 99847-3821',
+      photo: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=200&q=80',
+      creci: 'CRECI-SP 187.342',
+    },
+  },
+  {
+    id: '7',
+    code: 'VRO-1388',
+    title: 'Residences Pinheiros — Lançamento Exclusivo',
+    type: 'apartamento',
+    purpose: 'lancamento',
+    price: 1450000,
+    address: {
+      street: 'Rua dos Pinheiros, 1100',
+      neighborhood: 'Pinheiros',
+      city: 'São Paulo',
+      state: 'SP',
+    },
+    bedrooms: 3,
+    bathrooms: 2,
+    parkingSpaces: 2,
+    area: 102,
+    totalArea: 112,
+    shortDescription: 'Empreendimento boutique com apenas 24 unidades. Arquitetura assinada por Isay Weinfeld. Entrega prevista para 2027.',
+    description: 'Residences Pinheiros é um empreendimento boutique com apenas 24 unidades em um dos endereços mais desejados de São Paulo. Com arquitetura assinada pelo renomado Isay Weinfeld, o projeto se distingue pela presença forte na paisagem urbana e pelo cuidado extremo nos detalhes construtivos.\n\nAs unidades de 3 dormitórios têm entre 98 e 118m² de área privativa, com plantas inteligentes que priorizam integração e amplitude. Terraços de 10 a 32m² estendem os ambientes para o exterior.\n\nO rooftop exclusivo conta com piscina infinita, academia com vista 360°, espaço gourmet e lounge. A localização a dois passos da Av. Rebouças facilita a mobilidade por toda a cidade.',
+    features: [
+      'Apenas 24 unidades',
+      'Arquitetura Isay Weinfeld',
+      'Piscina infinita no rooftop',
+      'Academia com vista 360°',
+      'Terraços privativas 10-32m²',
+      'Vagas com carregador elétrico',
+      'Bicicletário com vestiário',
+      'Portaria virtual 24h',
+      'Lobby duplo pé-direito',
+      'Entrega: Nov/2027',
+    ],
+    images: [
+      'https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=1200&q=85&fit=crop',
+      'https://images.unsplash.com/photo-1613977257363-707ba9348227?w=1200&q=85&fit=crop',
+      'https://images.unsplash.com/photo-1567684014761-b5aa8b8a7921?w=1200&q=85&fit=crop',
+    ],
+    featured: true,
+    isLaunch: true,
+    launchStatus: 'lancamento',
+    deliveryDate: 'Novembro/2027',
+    condo: 1200,
+    iptu: 0,
+    petFriendly: true,
+    furnished: 'nao',
+    yearBuilt: 2027,
+    sunPosition: 'Norte/Nascente',
+    agent: {
+      name: 'Rafaela Monteiro',
+      phone: '(11) 99847-3821',
+      photo: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=200&q=80',
+      creci: 'CRECI-SP 187.342',
+    },
+  },
+  {
+    id: '8',
+    code: 'VRO-0789',
+    title: 'Casa de Praia Moderna em Campeche',
+    type: 'casa',
+    purpose: 'venda',
+    price: 1990000,
+    address: {
+      street: 'Rua Caminha, 392',
+      neighborhood: 'Campeche',
+      city: 'Florianópolis',
+      state: 'SC',
+    },
+    bedrooms: 4,
+    bathrooms: 3,
+    parkingSpaces: 3,
+    area: 248,
+    totalArea: 340,
+    shortDescription: 'Casa moderna a 300m da praia do Campeche. Piscina, área gourmet e jardim tropical em terreno de 650m².',
+    description: 'Casa contemporânea em localização privilegiada no Campeche, a apenas 300m de uma das praias mais preservadas de Florianópolis.\n\nO projeto arquitetônico valoriza a conexão com o exterior tropical. Grandes aberturas trazem luz natural em abundância. A área gourmet coberta de 45m² integra o interior ao jardim e à piscina.\n\nA casa conta com 4 dormitórios, sendo a suíte master com varanda e banheira de imersão. Dois escritórios/quartos de hóspedes permitem trabalho remoto com conforto. Garagem para 3 veículos e espaço para barco.',
+    features: [
+      'A 300m da praia do Campeche',
+      'Piscina 10x4m com deck',
+      'Área gourmet 45m² coberta',
+      'Churrasqueira',
+      'Jardim tropical',
+      'Varanda master com banheira',
+      'Escritório home office',
+      'Garagem 3 veículos + barco',
+      'Portão automático',
+      'Câmeras de segurança',
+    ],
+    images: [
+      'https://images.unsplash.com/photo-1560185007-cde436f6a4d0?w=1200&q=85&fit=crop',
+      'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=1200&q=85&fit=crop',
+      'https://images.unsplash.com/photo-1583608205776-bfd35f0d9f83?w=1200&q=85&fit=crop',
+    ],
+    featured: false,
+    isLaunch: false,
+    iptu: 640,
+    petFriendly: true,
+    furnished: 'semi',
+    yearBuilt: 2018,
+    sunPosition: 'Nascente',
+    agent: {
+      name: 'Marcelo Duarte',
+      phone: '(48) 99341-7823',
+      photo: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&q=80',
+      creci: 'CRECI-SC 18.234',
+    },
+  },
+  {
+    id: '9',
+    code: 'VRO-1147',
+    title: 'Cobertura com Vista para o Oceano na Barra',
+    type: 'cobertura',
+    purpose: 'aluguel',
+    price: 8500000,
+    rentPrice: 35000,
+    address: {
+      street: 'Av. das Américas, 4200',
+      neighborhood: 'Barra da Tijuca',
+      city: 'Rio de Janeiro',
+      state: 'RJ',
+    },
+    bedrooms: 4,
+    bathrooms: 4,
+    parkingSpaces: 3,
+    area: 320,
+    totalArea: 480,
+    shortDescription: 'Cobertura no último andar com vista mar 180°. Piscina privativa, churrasqueira e projeto assinado.',
+    description: 'Cobertura exclusiva com 480m² no coração da Barra da Tijuca. Vista panorâmica de 180° do Oceano Atlântico a partir do terraço privativo de 160m².\n\nDecorada com obras de arte e mobiliário de grifes internacionais como Minotti, B&B Italia e Flexform. Disponível para locação por temporada mínima de 90 dias.\n\nA piscina privativa no terraço está equipada com aquecimento solar e hidromassagem. A churrasqueira e o bar externo transformam o espaço em um palco para entretenimento.\n\nCondomínio com beach club privativo, marina com 40 vagas para barcos, tennis e quadras poliesportivas.',
+    features: [
+      'Vista mar 180° do terraço',
+      'Piscina privativa aquecida',
+      'Churrasqueira e bar externo',
+      'Beach club privativo',
+      'Marina com 40 vagas',
+      'Academia olímpica',
+      'Quadras de tênis e poliesportivo',
+      'Mobiliário Minotti/B&B Italia',
+      'Obras de arte incluídas',
+      'Concierge 24h',
+    ],
+    images: [
+      'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=1200&q=85&fit=crop',
+      'https://images.unsplash.com/photo-1613977257363-707ba9348227?w=1200&q=85&fit=crop',
+      'https://images.unsplash.com/photo-1560185007-cde436f6a4d0?w=1200&q=85&fit=crop',
+    ],
+    featured: false,
+    isLaunch: false,
+    condo: 8500,
+    iptu: 4200,
+    petFriendly: false,
+    furnished: 'sim',
+    floor: 28,
+    totalFloors: 28,
+    yearBuilt: 2016,
+    sunPosition: 'Poente/Mar',
+    agent: {
+      name: 'Thiago Cavalcante',
+      phone: '(21) 98834-5577',
+      photo: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&q=80',
+      creci: 'CRECI-RJ 23.814',
+    },
+  },
+  {
+    id: '10',
+    code: 'VRO-0321',
+    title: 'Apartamento Moderno na Savassi',
+    type: 'apartamento',
+    purpose: 'venda',
+    price: 940000,
+    address: {
+      street: 'Rua Alagoas, 1380',
+      neighborhood: 'Savassi',
+      city: 'Belo Horizonte',
+      state: 'MG',
+    },
+    bedrooms: 2,
+    bathrooms: 2,
+    parkingSpaces: 2,
+    area: 88,
+    shortDescription: 'Apartamento reformado no coração da Savassi. Totalmente reformado em 2024 com acabamento de primeira linha.',
+    description: 'Apartamento reformado em 2024 no coração da Savassi, o bairro mais dinâmico de Belo Horizonte. A reforma completa resultou em um apartamento com acabamento de alto padrão e estética contemporânea.\n\nO apartamento tem plant aberta que integra sala, cozinha e área de serviço. As paredes de concreto aparente e o piso de porcelanato 90x90 em toda a área social criam um ambiente sofisticado.\n\nAs duas suítes têm armários planejados e banheiros reformados com materiais premium. Vista da cidade a partir da varanda de 12m².',
+    features: [
+      'Totalmente reformado 2024',
+      'Varanda 12m² com vista',
+      'Cozinha integrada tipo americana',
+      'Piso porcelanato 90x90',
+      'Concreto aparente',
+      'Suítes com banheiro reformado',
+      'Armários planejados',
+      'Ar-condicionado split',
+      'Portaria 24h',
+      'Academia no edifício',
+    ],
+    images: [
+      'https://images.unsplash.com/photo-1567684014761-b5aa8b8a7921?w=1200&q=85&fit=crop',
+      'https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=1200&q=85&fit=crop',
+      'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=1200&q=85&fit=crop',
+    ],
+    featured: false,
+    isLaunch: false,
+    condo: 980,
+    iptu: 520,
+    petFriendly: true,
+    furnished: 'nao',
+    totalFloors: 16,
+    yearBuilt: 2008,
+    sunPosition: 'Nascente/Norte',
+    agent: {
+      name: 'Carolina Ferraz',
+      phone: '(41) 99102-6634',
+      photo: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&q=80',
+      creci: 'CRECI-PR 31.459',
+    },
+  },
+  {
+    id: '11',
+    code: 'VRO-2041',
+    title: 'Ícaro Cabral Residences',
+    type: 'apartamento',
+    purpose: 'lancamento',
+    price: 3450000,
+    address: {
+      street: 'Avenida Anita Garibaldi, 850',
+      neighborhood: 'Cabral',
+      city: 'Curitiba',
+      state: 'PR',
+    },
+    bedrooms: 3,
+    bathrooms: 4,
+    parkingSpaces: 3,
+    area: 220,
+    totalArea: 310,
+    shortDescription: 'Lançamento de alto padrão assinado no Cabral. Arquitetura integrada ao paisagismo, com abundante luz natural.',
+    description: 'O Ícaro Cabral é uma obra de arte residencial localizada na melhor região do Cabral. Inspirado no design biofílico e na arquitetura contemporânea internacional, o empreendimento apresenta terraços generosos e floreiras integradas que envolvem todo o edifício.\n\nCom apenas 18 residências suspensas exclusivas, as plantas oferecem integração total entre sala, cozinha e a enorme varanda gourmet. Acabamentos em concreto aparente, madeira natural e esquadrias termoacústicas alemãs completam esta obra-prima.',
+    features: [
+      'Projeto paisagístico exclusivo',
+      'Floreiras integradas automatizadas',
+      'Varanda gourmet com churrasqueira',
+      'Vidros duplos de alta performance',
+      'Piscina aquecida coberta',
+      'Academia de última geração',
+      'Carregador para carro elétrico',
+      'Fechadura eletrônica biométrica',
+      'Entrega: Março/2027',
+    ],
+    images: [
+      'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1200&q=85&fit=crop',
+      'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1200&q=85&fit=crop',
+    ],
+    featured: true,
+    isLaunch: true,
+    launchStatus: 'em-obras',
+    deliveryDate: 'Março/2027',
+    petFriendly: true,
+    furnished: 'nao',
+    yearBuilt: 2027,
+    sunPosition: 'Norte/Nascente',
+    agent: {
+      name: 'Carolina Ferraz',
+      phone: '(41) 99102-6634',
+      photo: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&q=80',
+      creci: 'CRECI-PR 31.459',
+    },
+  },
+  {
+    id: '12',
+    code: 'VRO-2042',
+    title: 'Batel Minimalist Square',
+    type: 'apartamento',
+    purpose: 'lancamento',
+    price: 4800000,
+    address: {
+      street: 'Rua Benjamin Lins, 150',
+      neighborhood: 'Batel',
+      city: 'Curitiba',
+      state: 'PR',
+    },
+    bedrooms: 3,
+    bathrooms: 4,
+    parkingSpaces: 4,
+    area: 280,
+    totalArea: 390,
+    shortDescription: 'Lançamento ultra-minimalista no coração do Batel. Design depurado e privacidade absoluta com apenas 12 unidades.',
+    description: 'Batel Minimalist Square redefine o conceito de morar com elegância e simplicidade. O projeto privilegia linhas puras, planos contínuos de concreto e grandes panos de vidro que emolduram a vegetação local.\n\nCom uma unidade por andar, o elevador social privativo com biometria abre diretamente para um amplo hall integrado ao living de 90m². A cozinha de design minimalista possui ilha em quartzito e eletrodomésticos embutidos.',
+    features: [
+      '1 unidade por andar',
+      'Elevador privativo com biometria',
+      'Living integrado de 90m²',
+      'Acabamento em concreto e madeira',
+      'Piso aquecido nos banheiros',
+      'Garagem americana com epóxi',
+      'Gerador de energia de emergência',
+      'Entrega: Dezembro/2027',
+    ],
+    images: [
+      'https://images.unsplash.com/photo-1613977257363-707ba9348227?w=1200&q=85&fit=crop',
+      'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1200&q=85&fit=crop',
+    ],
+    featured: true,
+    isLaunch: true,
+    launchStatus: 'pre-lancamento',
+    deliveryDate: 'Dezembro/2027',
+    petFriendly: true,
+    furnished: 'nao',
+    yearBuilt: 2027,
+    sunPosition: 'Norte',
+    agent: {
+      name: 'Carolina Ferraz',
+      phone: '(41) 99102-6634',
+      photo: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&q=80',
+      creci: 'CRECI-PR 31.459',
+    },
+  },
+  {
+    id: '13',
+    code: 'VRO-2043',
+    title: 'Ecoville Forest View',
+    type: 'cobertura',
+    purpose: 'lancamento',
+    price: 6200000,
+    address: {
+      street: 'Rua Deputado Heitor Alencar Furtado, 1200',
+      neighborhood: 'Ecoville',
+      city: 'Curitiba',
+      state: 'PR',
+    },
+    bedrooms: 4,
+    bathrooms: 5,
+    parkingSpaces: 4,
+    area: 380,
+    totalArea: 540,
+    shortDescription: 'Cobertura duplex extraordinária suspensa sobre o bosque nativo no Ecoville. Vista permanente de tirar o fôlego.',
+    description: 'Ecoville Forest View é o ápice do luxo minimalista no bairro mais verde de Curitiba. Esta cobertura duplex exclusiva possui um terraço privativo de 150m² com piscina de borda infinita de frente para a reserva nativa permanente.\n\nO andar inferior abriga o living de 3 ambientes com pé-direito duplo de 6 metros, lareira ecológica, adega suspensa para 300 garrafas e suíte de hóspedes. No piso superior ficam as 3 suítes principais, todas voltadas para o bosque.',
+    features: [
+      'Terraço privativo com piscina',
+      'Vista permanente para bosque',
+      'Pé-direito duplo de 6m',
+      'Lareira ecológica suspensa',
+      'Automação residencial completa',
+      'Vidros duplos acústicos',
+      'Guarita blindada 24h',
+      'Entrega: Julho/2027',
+    ],
+    images: [
+      'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=1200&q=85&fit=crop',
+      'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1200&q=85&fit=crop',
+    ],
+    featured: true,
+    isLaunch: true,
+    launchStatus: 'em-obras',
+    deliveryDate: 'Julho/2027',
+    petFriendly: true,
+    furnished: 'sim',
+    yearBuilt: 2027,
+    sunPosition: 'Todos os lados',
+    agent: {
+      name: 'Carolina Ferraz',
+      phone: '(41) 99102-6634',
+      photo: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&q=80',
+      creci: 'CRECI-PR 31.459',
+    },
+  },
+  {
+    id: '14',
+    code: 'VRO-2044',
+    title: 'Juvevê Organic Living',
+    type: 'apartamento',
+    purpose: 'lancamento',
+    price: 2150000,
+    address: {
+      street: 'Rua Rocha Pombo, 450',
+      neighborhood: 'Juvevê',
+      city: 'Curitiba',
+      state: 'PR',
+    },
+    bedrooms: 3,
+    bathrooms: 3,
+    parkingSpaces: 2,
+    area: 155,
+    totalArea: 210,
+    shortDescription: 'Lançamento boutique focado em sustentabilidade e materiais naturais no charmoso Juvevê.',
+    description: 'O Juvevê Organic Living foi desenhado para quem busca equilíbrio urbano. Localizado em uma das ruas mais tranquilas e arborizadas do Juvevê, o edifício de arquitetura intimista utiliza concreto pigmentado, painéis de freijó e pedra natural.\n\nAs plantas de 155m² são extremamente flexíveis e contam com varanda integrada equipada com churrasqueira a carvão.',
+    features: [
+      'Edifício boutique sustentável',
+      'Concreto pigmentado e freijó',
+      'Churrasqueira a carvão na varanda',
+      'Horta orgânica comunitária',
+      'Painéis fotovoltaicos',
+      'Captação e reuso de água',
+    ],
+    images: [
+      'https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=1200&q=85&fit=crop',
+      'https://images.unsplash.com/photo-1484154218962-a197022b5858?w=1200&q=85&fit=crop',
+    ],
+    featured: true,
+    isLaunch: true,
+    launchStatus: 'pronto',
+    deliveryDate: 'Pronto para morar',
+    petFriendly: true,
+    furnished: 'semi',
+    yearBuilt: 2025,
+    sunPosition: 'Norte',
+    agent: {
+      name: 'Carolina Ferraz',
+      phone: '(41) 99102-6634',
+      photo: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&q=80',
+      creci: 'CRECI-PR 31.459',
+    },
+  },
+  {
+    id: '15',
+    code: 'VRO-2045',
+    title: 'Cabral Art Residences',
+    type: 'apartamento',
+    purpose: 'lancamento',
+    price: 2750000,
+    address: {
+      street: 'Rua Bom Jesus, 320',
+      neighborhood: 'Cabral',
+      city: 'Curitiba',
+      state: 'PR',
+    },
+    bedrooms: 3,
+    bathrooms: 3,
+    parkingSpaces: 2,
+    area: 180,
+    totalArea: 250,
+    shortDescription: 'Lançamento exclusivo com curadoria artística e design assinado nas áreas comuns no Cabral.',
+    description: 'Cabral Art Residences une o viver com o contemplar. O lobby de entrada conta com esculturas exclusivas e obras de arte contemporâneas curadas especialmente pela galeria Lumina.\n\nAs unidades apresentam acabamento em mármore Paraná na suíte master, janelas acústicas do piso ao teto e aspiração central instalada.',
+    features: [
+      'Lobby galeria com obras',
+      'Mármore Paraná na suíte master',
+      'Janelas acústicas piso-teto',
+      'Sistema de aspiração central',
+      'Fitness center TechnoGym',
+      'Brinquedoteca com design lúdico',
+    ],
+    images: [
+      'https://images.unsplash.com/photo-1567684014761-b5aa8b8a7921?w=1200&q=85&fit=crop',
+      'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=1200&q=85&fit=crop',
+    ],
+    featured: true,
+    isLaunch: true,
+    launchStatus: 'pronto',
+    deliveryDate: 'Pronto para morar',
+    petFriendly: true,
+    furnished: 'nao',
+    yearBuilt: 2025,
+    sunPosition: 'Nascente',
+    agent: {
+      name: 'Carolina Ferraz',
+      phone: '(41) 99102-6634',
+      photo: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&q=80',
+      creci: 'CRECI-PR 31.459',
+    },
+  },
+  {
+    id: '16',
+    code: 'VRO-2046',
+    title: 'Champagnat Minimal Studio',
+    type: 'studio',
+    purpose: 'lancamento',
+    price: 82000,
+    address: {
+      street: 'Rua Padre Anchieta, 2200',
+      neighborhood: 'Champagnat',
+      city: 'Curitiba',
+      state: 'PR',
+    },
+    bedrooms: 1,
+    bathrooms: 1,
+    parkingSpaces: 1,
+    area: 65,
+    totalArea: 85,
+    shortDescription: 'Studios inteligentes e minimalistas no Champagnat. Infraestrutura de wellness e coworking de alto nível.',
+    description: 'Champagnat Minimal Studio é ideal para o investidor ou profissional exigente. Com foco em design minimalista, o estúdio de 65m² integra quarto e sala através de painéis pivotantes de madeira zincada.\n\nO edifício dispõe de piscina aquecida no rooftop, área de coworking equipada, academia completa e lavanderia compartilhada com design contemporâneo.',
+    features: [
+      'Estúdio com painéis pivotantes',
+      'Piscina aquecida no rooftop',
+      'Espaço de coworking equipado',
+      'Academia de alto nível',
+      'Lavanderia compartilhada',
+      'Fechadura inteligente',
+      'Entrega: Setembro/2026',
+    ],
+    images: [
+      'https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=1200&q=85&fit=crop',
+      'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=1200&q=85&fit=crop',
+    ],
+    featured: true,
+    isLaunch: true,
+    launchStatus: 'em-obras',
+    deliveryDate: 'Setembro/2026',
+    petFriendly: true,
+    furnished: 'semi',
+    yearBuilt: 2026,
+    sunPosition: 'Nascente',
+    agent: {
+      name: 'Carolina Ferraz',
+      phone: '(41) 99102-6634',
+      photo: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&q=80',
+      creci: 'CRECI-PR 31.459',
+    },
+  },
+]
+
+// Enrich properties with tenantId dynamically
+properties.forEach((p) => {
+  const idNum = Number(p.id)
+  if (idNum <= 10) {
+    p.tenantId = 'robles'
+  } else {
+    p.tenantId = 'lumina'
+  }
+})
+
+export default properties
+
+export function getProperties(tenantId?: string): Property[] {
+  if (!tenantId) return properties;
+  const filtered = properties.filter((p) => p.tenantId === tenantId);
+  if (filtered.length > 0) return filtered;
+  
+  // Fallback for custom tenants: return Robles properties mapped to this tenantId
+  return properties.filter((p) => p.tenantId === 'robles').map((p) => ({
+    ...p,
+    tenantId,
+  }));
+}
+
+export function getPropertyById(id: string, tenantId?: string): Property | undefined {
+  const found = properties.find((p) => p.id === id && (!tenantId || p.tenantId === tenantId));
+  if (found) return found;
+  
+  // Fallback for custom tenants
+  if (tenantId && tenantId !== 'robles' && tenantId !== 'lumina') {
+    const roblesProp = properties.find((p) => p.id === id && p.tenantId === 'robles');
+    if (roblesProp) {
+      return { ...roblesProp, tenantId };
+    }
+  }
+  return undefined;
+}
+
+export function getFeaturedProperties(tenantId?: string): Property[] {
+  if (!tenantId) return properties.filter((p) => p.featured);
+  const filtered = properties.filter((p) => p.featured && p.tenantId === tenantId);
+  if (filtered.length > 0) return filtered;
+  
+  // Fallback for custom tenants
+  return properties.filter((p) => p.featured && p.tenantId === 'robles').map((p) => ({
+    ...p,
+    tenantId,
+  }));
+}
+
+export function getLaunchProperties(tenantId?: string): Property[] {
+  if (!tenantId) return properties.filter((p) => p.isLaunch);
+  const filtered = properties.filter((p) => p.isLaunch && p.tenantId === tenantId);
+  if (filtered.length > 0) return filtered;
+  
+  // Fallback for custom tenants
+  return properties.filter((p) => p.isLaunch && p.tenantId === 'robles').map((p) => ({
+    ...p,
+    tenantId,
+  }));
+}
+
+export function formatPrice(price: number): string {
+  return new Intl.NumberFormat('pt-BR', {
+    style: 'currency',
+    currency: 'BRL',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(price)
+}

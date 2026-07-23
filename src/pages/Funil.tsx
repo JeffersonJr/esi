@@ -25,6 +25,7 @@ import {
   ChevronDown,
   Eye,
   TrendingUp,
+  Kanban,
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
@@ -63,14 +64,7 @@ import {
   SheetFooter,
 } from "@/components/ui/sheet";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
+import { PageHeader } from "@/components/layout/PageHeader";
 import { TagManager } from '@/components/shared/TagManager';
 import { useAnimation } from '@/components/shared/ActionAnimation';
 import { DEFAULT_TAGS } from '@/components/shared/tagConstants';
@@ -718,69 +712,55 @@ export function Funil() {
 
   return (
     <div className="space-y-6 animate-fade-in h-full flex flex-col">
-      <Breadcrumb>
-        <BreadcrumbList>
-          <BreadcrumbItem>
-            <BreadcrumbLink href="/" className="flex items-center gap-1">
-              <Home className="h-4 w-4" /> Dashboard
-            </BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbPage>Esi.leads</BreadcrumbPage>
-          </BreadcrumbItem>
-        </BreadcrumbList>
-      </Breadcrumb>
-
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4 shrink-0">
-        <div className="flex items-center gap-4">
-          <div className="h-12 w-12 rounded-2xl bg-primary text-primary-foreground flex items-center justify-center shadow-lg shadow-primary/20">
-            <TrendingUp className="h-6 w-6" />
+      <PageHeader
+        title="Esi.leads"
+        subtitle="Gerencie seus leads e oportunidades em tempo real"
+        icon={<Kanban />}
+        breadcrumbs={[
+          { label: 'Dashboard', href: '/' },
+          { label: 'Esi.leads' }
+        ]}
+        actions={
+          <div className="flex items-center gap-3">
+            <div className="relative flex-1 max-w-xs">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder="Buscar leads..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-10"
+              />
+            </div>
+            <Button
+              variant="outline"
+              className="gap-2"
+              onClick={() => setFilterModalOpen(true)}
+            >
+              <Filter className="h-4 w-4" />
+              Filtros
+              {hasActiveFilters && (
+                <span className="bg-primary text-primary-foreground rounded-full px-2 py-0.5 text-xs">
+                  {Object.entries(filters).filter(([key, value]) => {
+                    if (key === 'tags') return (value as string[]).length > 0;
+                    if (key === 'contatoRealizado') return value === true;
+                    return value !== '' && value !== 'all';
+                  }).length + (searchTerm !== '' ? 1 : 0)}
+                </span>
+              )}
+            </Button>
+            <Button
+              className="gap-2"
+              onClick={() => {
+                setEditingLead(null);
+                setFormOpen(true);
+              }}
+            >
+              <Plus className="h-4 w-4" />
+              Novo Lead
+            </Button>
           </div>
-          <div>
-            <h1 className="text-3xl font-black text-slate-800 tracking-tight">Esi.leads</h1>
-            <p className="text-slate-500 mt-1 font-medium">Gerencie seus leads e oportunidades em tempo real</p>
-          </div>
-        </div>
-        <div className="flex items-center gap-3">
-          <div className="relative flex-1 max-w-xs">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder="Buscar leads..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10"
-            />
-          </div>
-          <Button
-            variant="outline"
-            className="gap-2"
-            onClick={() => setFilterModalOpen(true)}
-          >
-            <Filter className="h-4 w-4" />
-            Filtros
-            {hasActiveFilters && (
-              <span className="bg-primary text-primary-foreground rounded-full px-2 py-0.5 text-xs">
-                {Object.entries(filters).filter(([key, value]) => {
-                  if (key === 'tags') return (value as string[]).length > 0;
-                  if (key === 'contatoRealizado') return value === true;
-                  return value !== '' && value !== 'all';
-                }).length + (searchTerm !== '' ? 1 : 0)}
-              </span>
-            )}
-          </Button>
-          <Button
-            className="gap-2"
-            onClick={() => {
-              setEditingLead(null);
-              setFormOpen(true);
-            }}
-          >
-            <Plus className="h-4 w-4" />
-            Novo Lead
-          </Button>
-        </div>
-      </div>
+        }
+      />
 
       <DragDropContext onDragEnd={onDragEnd}>
         <div className="flex-1 overflow-x-auto pb-6">
