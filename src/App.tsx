@@ -12,7 +12,7 @@ import CadastroImovel from './pages/CadastroImovel';
 import { Agenda } from './pages/Agenda';
 import { Empreendimentos } from './pages/Empreendimentos';
 import CadastroEmpreendimento from './pages/CadastroEmpreendimento';
-import { Financeiro } from './pages/Financeiro';
+import { GestaoFinanceira } from './pages/GestaoFinanceira';
 import { MeuDesempenho } from './pages/MeuDesempenho';
 import { Analytics } from './pages/Analytics';
 import { Usuarios } from './pages/Usuarios';
@@ -63,7 +63,7 @@ function App() {
               <Route path="empreendimentos" element={<Empreendimentos />} />
               <Route path="empreendimentos/cadastrar" element={<CadastroEmpreendimento />} />
               <Route path="empreendimentos/editar/:id" element={<CadastroEmpreendimento />} />
-              <Route path="financeiro" element={<Financeiro />} />
+              <Route path="financeiro" element={<GestaoFinanceira />} />
               <Route path="agenda" element={<Agenda />} />
               <Route path="analytics" element={<Analytics />} />
               <Route path="usuarios" element={<Usuarios />} />
