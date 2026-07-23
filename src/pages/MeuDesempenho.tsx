@@ -19,28 +19,25 @@ export function MeuDesempenho() {
   const [periodo, setPeriodo] = useState('semestre');
 
   return (
-    <div className="space-y-6 animate-fade-in pb-20">
-      <PageHeader
-        title="Meu Desempenho"
-        subtitle="Acompanhe suas metas"
-        icon={<TrendingUp />}
-        breadcrumbs={[
-          { label: 'Dashboard', href: '/' },
-          { label: 'Meu Desempenho' }
-        ]}
-        actions={
-          <Select value={periodo} onValueChange={setPeriodo}>
-            <SelectTrigger className="w-[180px] bg-background">
-              <SelectValue placeholder="Selecione o período" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="mes">Este Mês</SelectItem>
-              <SelectItem value="semestre">Último Semestre</SelectItem>
-              <SelectItem value="ano">Este Ano</SelectItem>
-            </SelectContent>
-          </Select>
-        }
-      />
+    <div className="space-y-6 animate-fade-in pb-10 pt-2">
+      <div className="flex justify-between items-center bg-card p-4 rounded-2xl shadow-sm border border-border/50">
+        <div>
+          <h2 className="text-xl font-bold text-foreground flex items-center gap-2">
+            <TrendingUp className="h-5 w-5 text-primary" /> Meu Desempenho
+          </h2>
+          <p className="text-sm text-muted-foreground">Acompanhe suas metas e conversões</p>
+        </div>
+        <Select value={periodo} onValueChange={setPeriodo}>
+          <SelectTrigger className="w-[180px] bg-background">
+            <SelectValue placeholder="Selecione o período" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="mes">Este Mês</SelectItem>
+            <SelectItem value="semestre">Último Semestre</SelectItem>
+            <SelectItem value="ano">Este Ano</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
 
       {/* KPIs Principais */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">

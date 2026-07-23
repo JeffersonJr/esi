@@ -41,7 +41,6 @@ const menuGroups = [
       { icon: Home,             label: 'Imóveis',     path: '/imoveis' },
       { icon: Building,         label: 'Empreendimentos', path: '/empreendimentos' },
       { icon: Calendar,         label: 'Agenda',      path: '/agenda' },
-      { icon: TrendingUp,       label: 'Meu Desempenho', path: '/desempenho' },
       { icon: BarChart3,        label: 'Analytics',   path: '/analytics' },
     ],
   },

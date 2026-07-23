@@ -22,6 +22,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { MeuDesempenho } from './MeuDesempenho';
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
@@ -138,6 +139,7 @@ export function Analytics() {
         <div className="overflow-x-auto pb-4 custom-scrollbar">
           <TabsList className="h-12 w-full justify-start md:justify-center p-1 bg-muted/40 border border-border/50 rounded-xl inline-flex min-w-max">
             <TabsTrigger value="imoveis" className="rounded-lg data-[state=active]:bg-background data-[state=active]:shadow-sm px-4">Imóveis</TabsTrigger>
+            <TabsTrigger value="meudesempenho" className="rounded-lg data-[state=active]:bg-background data-[state=active]:shadow-sm px-4">Meu Desempenho</TabsTrigger>
             <TabsTrigger value="vendas" className="rounded-lg data-[state=active]:bg-background data-[state=active]:shadow-sm px-4">Vendas</TabsTrigger>
             <TabsTrigger value="locacoes" className="rounded-lg data-[state=active]:bg-background data-[state=active]:shadow-sm px-4">Locações</TabsTrigger>
             <TabsTrigger value="clientes" className="rounded-lg data-[state=active]:bg-background data-[state=active]:shadow-sm px-4">Clientes</TabsTrigger>

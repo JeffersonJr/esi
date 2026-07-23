@@ -65,7 +65,6 @@ function App() {
               <Route path="empreendimentos/editar/:id" element={<CadastroEmpreendimento />} />
               <Route path="financeiro" element={<Financeiro />} />
               <Route path="agenda" element={<Agenda />} />
-              <Route path="desempenho" element={<MeuDesempenho />} />
               <Route path="analytics" element={<Analytics />} />
               <Route path="usuarios" element={<Usuarios />} />
               <Route path="equipes" element={<Equipes />} />
