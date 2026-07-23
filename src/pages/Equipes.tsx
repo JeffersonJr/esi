@@ -114,31 +114,35 @@ export function Equipes() {
   ];
 
   return (
-    <div className="space-y-6 animate-fade-      <PageHeader
-        title="Equipes"
-        subtitle="Organize seus colaboradores em equipes"
-        icon={<Users />}
-        breadcrumbs={[
-          { label: 'Dashboard', href: '/' },
-          { label: 'Equipes' }
-        ]}
-        actions={
-          <div className="flex items-center gap-3">
-            <div className="flex items-center bg-muted/50 rounded-xl p-1 border border-border/50">
-              <Button variant={viewMode === 'table' ? 'secondary' : 'ghost'} size="sm" className="h-9 w-9 p-0 rounded-lg" onClick={() => setViewMode('table')}>
-                <ListIcon className="h-4 w-4" />
-              </Button>
-              <Button variant={viewMode === 'grid' ? 'secondary' : 'ghost'} size="sm" className="h-9 w-9 p-0 rounded-lg" onClick={() => setViewMode('grid')}>
-                <Grid className="h-4 w-4" />
+    <div className="flex flex-col min-h-full">
+      <div className="max-w-[1400px] w-full mx-auto px-6 pt-4">
+        <PageHeader
+          title="Equipes"
+          subtitle="Organize seus colaboradores em equipes"
+          icon={<Users />}
+          breadcrumbs={[
+            { label: 'Dashboard', href: '/' },
+            { label: 'Equipes' }
+          ]}
+          actions={
+            <div className="flex items-center gap-3">
+              <div className="flex items-center bg-muted/50 rounded-xl p-1 border border-border/50">
+                <Button variant={viewMode === 'table' ? 'secondary' : 'ghost'} size="sm" className="h-9 w-9 p-0 rounded-lg" onClick={() => setViewMode('table')}>
+                  <ListIcon className="h-4 w-4" />
+                </Button>
+                <Button variant={viewMode === 'grid' ? 'secondary' : 'ghost'} size="sm" className="h-9 w-9 p-0 rounded-lg" onClick={() => setViewMode('grid')}>
+                  <Grid className="h-4 w-4" />
+                </Button>
+              </div>
+              <Button onClick={handleNew} className="bg-primary hover:bg-primary/90 text-white font-black px-8 shadow-lg shadow-primary/20 h-12 rounded-2xl">
+                <Plus className="h-4 w-4 mr-2" /> Nova Equipe
               </Button>
             </div>
-            <Button onClick={handleNew} className="bg-primary hover:bg-primary/90 text-white font-black px-8 shadow-lg shadow-primary/20 h-12 rounded-2xl">
-              <Plus className="h-4 w-4 mr-2" /> Nova Equipe
-            </Button>
-          </div>
-        }
-      />/div>
+          }
+        />
+      </div>
 
+      <div className="max-w-[1400px] w-full mx-auto px-6 py-8 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
       {/* KPI Bar */}
       <div className="grid grid-cols-3 gap-3 sm:gap-4">
         {stats.map((stat) => {
@@ -401,6 +405,7 @@ export function Equipes() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+      </div>
     </div>
   );
 }
