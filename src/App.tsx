@@ -17,6 +17,7 @@ import { MeuDesempenho } from './pages/MeuDesempenho';
 import { Analytics } from './pages/Analytics';
 import { Usuarios } from './pages/Usuarios';
 import { Equipes } from './pages/Equipes';
+import { Integracoes } from './pages/Integracoes';
 import { Configuracoes } from './pages/Configuracoes';
 import { EsiSites, EditorSitePage } from './pages/EditorSite';
 import LeadDetalhes from './pages/LeadDetalhes';
@@ -71,6 +72,7 @@ function App() {
               {/* site route moved outside DashboardLayout for full-screen builder */}
               <Route path="esibank" element={<EsiBank />} />
               <Route path="esichat" element={<EsiChat />} />
+              <Route path="integracoes" element={<Integracoes />} />
               <Route path="automacao" element={<AutomacaoImobiliaria />} />
               <Route path="locacoes" element={<GestaoLocacoes />} />
               <Route path="solicitacoes" element={<GestaoSolicitacoes />} />

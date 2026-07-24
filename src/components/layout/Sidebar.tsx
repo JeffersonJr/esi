@@ -23,6 +23,7 @@ import {
   Camera,
   TrendingUp,
   Building,
+  Network,
 } from 'lucide-react';
 import {
   Tooltip,
@@ -50,6 +51,7 @@ const menuGroups = [
       { icon: Globe,            label: 'Esi.sites',   path: '/site' },
       { icon: CreditCard,       label: 'Esi.bank',    path: '/esibank' },
       { icon: MessageCircle,    label: 'Esi.chat',    path: '/esichat' },
+      { icon: Network,          label: 'Integrações', path: '/integracoes' },
       { icon: Bot,              label: 'Automação',   path: '/automacao' },
       { icon: Key,              label: 'Locações',    path: '/locacoes' },
       { icon: DollarSign,       label: 'Esi.finance', path: '/financeiro' },
