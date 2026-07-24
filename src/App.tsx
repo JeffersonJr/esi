@@ -73,7 +73,6 @@ function App() {
               <Route path="esichat" element={<EsiChat />} />
               <Route path="automacao" element={<AutomacaoImobiliaria />} />
               <Route path="locacoes" element={<GestaoLocacoes />} />
-              <Route path="financeiro" element={<GestaoFinanceira />} />
               <Route path="solicitacoes" element={<GestaoSolicitacoes />} />
               <Route path="vistoria" element={<SistemaVistoria />} />
               <Route path="configuracoes" element={<Configuracoes />} />

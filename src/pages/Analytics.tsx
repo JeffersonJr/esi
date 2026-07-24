@@ -150,12 +150,16 @@ export function Analytics() {
           </TabsList>
         </div>
 
+        <TabsContent value="meudesempenho" className="m-0 focus-visible:outline-none">
+          <MeuDesempenho />
+        </TabsContent>
+
         {/* ── IMÓVEIS TAB ── */}
         <TabsContent value="imoveis" className="space-y-6 animate-in fade-in duration-500">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <MetricCard title="Total de Imóveis" value="342" icon={Home} trend="8.2%" trendLabel="vs mês ant." trendPositive colorClass="text-blue-500 bg-blue-500/10" delay={0.1} />
-            <MetricCard title="Captações Ativas" value="289" icon={CrosshairIcon} trend="12.1%" trendLabel="vs mês ant." trendPositive colorClass="text-purple-500 bg-purple-500/10" delay={0.2} />
-            <MetricCard title="Novos no Mês" value="45" icon={PlusCircleIcon} trend="4.5%" trendLabel="vs mês ant." trendPositive colorClass="text-emerald-500 bg-emerald-500/10" delay={0.3} />
+            <MetricCard title="Captações Ativas" value="289" icon={Crosshair} trend="12.1%" trendLabel="vs mês ant." trendPositive colorClass="text-purple-500 bg-purple-500/10" delay={0.2} />
+            <MetricCard title="Novos no Mês" value="45" icon={PlusCircle} trend="4.5%" trendLabel="vs mês ant." trendPositive colorClass="text-emerald-500 bg-emerald-500/10" delay={0.3} />
             <MetricCard title="Ticket Médio" value="R$ 685K" icon={DollarSign} trend="2.8%" trendLabel="vs mês ant." trendPositive colorClass="text-amber-500 bg-amber-500/10" delay={0.4} />
           </div>
 
