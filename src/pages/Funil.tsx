@@ -14,10 +14,11 @@ import {
   type EtapaFunil,
   type Funil,
 } from '@/lib/app-data'
-import { Card, CardContent } from '@/components/ui/card'
+import { Card, CardContent }
+import { Button } from '@/components/ui/button' from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
-import { Search } from 'lucide-react'
+
 import { cn } from '@/lib/utils'
 import { PageHeader } from '@/components/layout/PageHeader'
 import { DragDropContext, Droppable, Draggable, type DropResult } from '@hello-pangea/dnd'
@@ -268,19 +269,19 @@ export function Funil({
               <Settings2 className="size-5" strokeWidth={1.5} />
             </button>
 
-            <button
-              type="button"
+            <Button
+              variant="outline"
               onClick={() => setMostrarFiltrosAvancados(true)}
-              className={`flex size-10 relative items-center justify-center rounded-xl border border-border bg-card shadow-sm transition-brand active:scale-95 ${(filtroTemp !== 'todas' || filtroOrigem.length > 0 || filtroPreAtendimento !== 'todos' || filtroPeriodo !== 'todos' || filtroNome !== '')
-                ? 'text-primary bg-primary/5 border-primary/30'
-                : 'text-foreground hover:text-primary'
-                }`}
+              className="gap-2 relative h-10 px-4 rounded-xl shadow-sm border-border"
             >
-              <ListFilter className="size-5" strokeWidth={1.5} />
+              <ListFilter className="h-4 w-4" />
+              <span className="hidden sm:inline">Filtros</span>
               {(filtroTemp !== 'todas' || filtroOrigem.length > 0 || filtroPreAtendimento !== 'todos' || filtroPeriodo !== 'todos' || filtroNome !== '') && (
-                <span className="absolute -right-0.5 -top-0.5 size-2.5 rounded-full bg-primary border-2 border-background" />
+                <span className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-[10px] text-primary-foreground font-bold shadow-sm animate-in zoom-in">
+                  !
+                </span>
               )}
-            </button>
+            </Button>
           </div>
         }
       />

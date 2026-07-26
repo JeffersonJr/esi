@@ -3,6 +3,8 @@
 import { useState } from 'react'
 
 import { X, Check, Search, ChevronDown } from 'lucide-react'
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetFooter } from '@/components/ui/sheet'
+import { Button } from '@/components/ui/button'
 import { origemConfig, tempConfig, type OrigemLead, type Temperatura } from '@/lib/app-data'
 
 export function FiltrosAvancadosSheet({
@@ -41,36 +43,13 @@ export function FiltrosAvancadosSheet({
   const origensFiltradas = origens.filter(o => o.toLowerCase().includes(buscaOrigem.toLowerCase()))
 
   return (
-    <div className="absolute inset-0 z-50 flex flex-col justify-end">
-      {/* Backdrop */}
-      <button
-        type="button"
-        aria-label="Fechar filtros"
-        onClick={onClose}
-        className="absolute inset-0 bg-teal-shadow/40 backdrop-blur-[2px]"
-      />
+    <Sheet open={true} onOpenChange={(open) => !open && onClose()}>
+      <SheetContent side="right" className="w-full sm:max-w-md flex flex-col gap-0 p-0 border-l border-border bg-card">
+        <SheetHeader className="px-6 py-4 border-b border-border text-left">
+          <SheetTitle className="font-serif text-xl font-semibold">Filtros Avançados</SheetTitle>
+        </SheetHeader>
 
-      {/* Sheet Content */}
-      <div className="relative flex flex-col rounded-t-3xl bg-card shadow-2xl animate-in slide-in-from-bottom duration-200">
-        {/* Handle */}
-        <div className="flex justify-center pt-3 pb-1">
-          <div className="h-1 w-10 rounded-full bg-border" />
-        </div>
-
-        {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-border">
-          <h2 className="font-serif text-xl font-semibold text-foreground">Filtros Avançados</h2>
-          <button
-            type="button"
-            onClick={onClose}
-            className="flex size-8 items-center justify-center rounded-full bg-muted text-muted-foreground transition-brand active:scale-95"
-          >
-            <X className="size-4" strokeWidth={1.5} />
-          </button>
-        </div>
-
-        {/* Form */}
-        <div className="flex flex-col gap-6 p-6 overflow-y-auto pb-[calc(1.5rem+env(safe-area-inset-bottom))] max-h-[85vh]">
+        <div className="flex-1 flex flex-col gap-6 p-6 overflow-y-auto pb-24">
           {/* Nome */}
           <div>
             <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-muted-foreground">
@@ -96,59 +75,45 @@ export function FiltrosAvancadosSheet({
           {/* Pré-atendimento */}
           <div>
             <label className="mb-3 block text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-              Pré-atendimento
+              Pré-atendimento (Albert)
             </label>
-            <div className="flex flex-wrap gap-2">
-              <button
-                type="button"
-                onClick={() => setFiltroPreAtendimento('todos')}
-                className={`rounded-full px-4 py-2 text-sm font-semibold transition-brand border ${filtroPreAtendimento === 'todos'
-                  ? 'border-primary bg-primary text-primary-foreground shadow-md shadow-primary/20'
-                  : 'border-border bg-transparent text-muted-foreground'
-                  }`}
-              >
-                Todos
-              </button>
-              <button
-                type="button"
-                onClick={() => setFiltroPreAtendimento('sim')}
-                className={`rounded-full px-4 py-2 text-sm font-semibold transition-brand border ${filtroPreAtendimento === 'sim'
-                  ? 'border-primary bg-primary/10 text-primary'
-                  : 'border-border bg-transparent text-muted-foreground'
-                  }`}
-              >
-                Em pré-atendimento
-              </button>
-              <button
-                type="button"
-                onClick={() => setFiltroPreAtendimento('nao')}
-                className={`rounded-full px-4 py-2 text-sm font-semibold transition-brand border ${filtroPreAtendimento === 'nao'
-                  ? 'border-primary bg-primary/10 text-primary'
-                  : 'border-border bg-transparent text-muted-foreground'
-                  }`}
-              >
-                Atendimento iniciado
-              </button>
+            <div className="flex rounded-xl bg-muted/50 p-1 border border-border/50">
+              {[
+                { id: 'todos', label: 'Todos' },
+                { id: 'sim', label: 'Ativos' },
+                { id: 'nao', label: 'Inativos' },
+              ].map((op) => (
+                <button
+                  key={op.id}
+                  type="button"
+                  onClick={() => setFiltroPreAtendimento(op.id as 'todos' | 'sim' | 'nao')}
+                  className={`flex-1 rounded-lg py-2 text-xs font-semibold transition-brand ${filtroPreAtendimento === op.id
+                    ? 'bg-background text-foreground shadow-sm'
+                    : 'text-muted-foreground hover:text-foreground'
+                    }`}
+                >
+                  {op.label}
+                </button>
+              ))}
             </div>
           </div>
 
-          {/* Período de Criação */}
+          {/* Período */}
           <div>
-            <label className="mb-3 block text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-              Período de Criação
+            <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              Período de Entrada
             </label>
             <div className="relative">
               <select
                 value={isPersonalizado ? 'personalizado' : filtroPeriodo}
-                onChange={(e) => {
-                  const val = e.target.value
-                  if (val === 'personalizado') {
-                    setFiltroPeriodo(`personalizado:${dataDe}:${dataAte}`)
+                onChange={e => {
+                  if (e.target.value !== 'personalizado') {
+                    setFiltroPeriodo(e.target.value)
                   } else {
-                    setFiltroPeriodo(val)
+                    setFiltroPeriodo('personalizado::')
                   }
                 }}
-                className="w-full appearance-none rounded-xl border border-border bg-background px-4 py-3 text-sm font-medium text-foreground focus:outline-none focus:ring-2 focus:ring-primary/20"
+                className="w-full appearance-none rounded-xl border border-border bg-background pl-4 pr-10 py-2.5 text-sm font-medium text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
               >
                 <option value="todos">Qualquer período</option>
                 <option value="hoje">Hoje</option>
@@ -287,33 +252,32 @@ export function FiltrosAvancadosSheet({
               </div>
             </div>
           </div>
-
-          <div className="mt-2 flex gap-3">
-            <button
-              type="button"
-              onClick={() => {
-                setFiltroTemp('todas')
-                setFiltroOrigem([])
-                setFiltroPreAtendimento('todos')
-                setFiltroPeriodo('todos')
-                setDataDe('')
-                setDataAte('')
-                setFiltroNome('')
-              }}
-              className="flex-1 rounded-2xl border border-border bg-transparent py-3.5 font-semibold text-foreground transition-brand active:scale-[0.98]"
-            >
-              Limpar
-            </button>
-            <button
-              type="button"
-              onClick={onClose}
-              className="flex-[2] rounded-2xl bg-primary py-3.5 font-semibold text-primary-foreground shadow-lg shadow-primary/20 transition-brand active:scale-[0.98]"
-            >
-              Aplicar Filtros
-            </button>
-          </div>
         </div>
-      </div>
-    </div>
+
+        <SheetFooter className="absolute bottom-0 left-0 right-0 bg-card border-t border-border p-4 flex-row gap-3">
+          <Button
+            variant="outline"
+            className="flex-1 rounded-xl h-11"
+            onClick={() => {
+              setFiltroTemp('todas')
+              setFiltroOrigem([])
+              setFiltroPreAtendimento('todos')
+              setFiltroPeriodo('todos')
+              setDataDe('')
+              setDataAte('')
+              setFiltroNome('')
+            }}
+          >
+            Limpar
+          </Button>
+          <Button
+            className="flex-[2] rounded-xl h-11 shadow-lg shadow-primary/20"
+            onClick={onClose}
+          >
+            Aplicar Filtros
+          </Button>
+        </SheetFooter>
+      </SheetContent>
+    </Sheet>
   )
 }
