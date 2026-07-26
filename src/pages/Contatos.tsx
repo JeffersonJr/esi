@@ -6,8 +6,8 @@ import { Input } from '@/components/ui/input';
 import {
   Plus, Search, Mail, Phone, MapPin, MoreVertical,
   User, Edit, Trash2, Home, Grid, List as ListIcon,
-  Users, UserCheck, Building, X, SlidersHorizontal
-, Filter } from 'lucide-react';
+  Users, UserCheck, Building, X, SlidersHorizontal, Filter
+} from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { cn, maskPhone } from '@/lib/utils';

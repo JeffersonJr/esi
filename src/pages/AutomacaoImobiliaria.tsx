@@ -354,7 +354,7 @@ export function AutomacaoImobiliaria() {
                 </div>
               </div>
               
-              <FilterPanel 
+              {/* <FilterPanel 
                 isOpen={showFilters}
                 filters={[
                   { key: "trigger", label: "Gatilho", type: "select", options: triggerTypes.map(t => ({ label: t.label, value: t.id })) },
@@ -363,7 +363,7 @@ export function AutomacaoImobiliaria() {
                 values={filters}
                 onChange={(k, v) => setFilters(prev => ({ ...prev, [k]: v }))}
                 onClear={() => setFilters({})}
-              />
+              /> */}
             </div>
             
             <div className="grid grid-cols-1 gap-6">
