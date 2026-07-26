@@ -53,7 +53,7 @@ export function AICadastroFlow({ contexto, onClose, onCompleteManual, onComplete
           <Button variant="ghost" size="icon" onClick={onClose} className="rounded-full">
             <X className="h-5 w-5 text-muted-foreground" />
           </Button>
-          <h2 className="font-serif text-xl font-semibold text-foreground">
+          <h2 className="text-xl font-semibold text-foreground">
             Categoria do {contexto === 'imovel' ? 'Imóvel' : 'Empreendimento'}
           </h2>
           <div className="w-10" />
@@ -115,7 +115,7 @@ export function AICadastroFlow({ contexto, onClose, onCompleteManual, onComplete
           <Button variant="ghost" size="icon" onClick={() => setFase('escolha_categoria')} className="rounded-full">
             <ChevronLeft className="h-5 w-5 text-muted-foreground" />
           </Button>
-          <h2 className="font-serif text-xl font-semibold text-foreground">Método de Cadastro</h2>
+          <h2 className="text-xl font-semibold text-foreground">Método de Cadastro</h2>
           <div className="w-10" />
         </div>
 
@@ -169,7 +169,7 @@ export function AICadastroFlow({ contexto, onClose, onCompleteManual, onComplete
           <Button variant="ghost" size="icon" onClick={() => setFase('escolha_modo')} className="rounded-full">
             <ChevronLeft className="h-5 w-5 text-muted-foreground" />
           </Button>
-          <h2 className="font-serif text-xl font-semibold text-foreground">Captar {contexto} com IA</h2>
+          <h2 className="text-xl font-semibold text-foreground">Captar {contexto} com IA</h2>
           <div className="w-10" />
         </div>
 
@@ -214,7 +214,7 @@ export function AICadastroFlow({ contexto, onClose, onCompleteManual, onComplete
               <div className="flex size-16 items-center justify-center rounded-full bg-primary/20 text-primary">
                 <Camera className="size-8" strokeWidth={1.5} />
               </div>
-              <p className="mt-4 font-serif text-lg font-semibold text-foreground">
+              <p className="mt-4 text-lg font-semibold text-foreground">
                 Adicionar fotos
               </p>
               <p className="mt-1 text-center text-sm text-muted-foreground">
@@ -299,7 +299,7 @@ export function AICadastroFlow({ contexto, onClose, onCompleteManual, onComplete
           <Sparkles className="size-10 text-primary" strokeWidth={1.5} />
         </div>
 
-        <p className="mt-6 font-serif text-xl font-semibold text-foreground">IA analisando {contexto}</p>
+        <p className="mt-6 text-xl font-semibold text-foreground">IA analisando {contexto}</p>
         <p className="mt-2 text-sm text-muted-foreground">{progressoTexto || 'Iniciando análise...'}</p>
         
         <div className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-3 py-1 text-[11px] font-bold text-primary border border-primary/20">
@@ -351,7 +351,7 @@ export function AICadastroFlow({ contexto, onClose, onCompleteManual, onComplete
     return (
       <div className="flex flex-col h-full bg-background min-h-[400px]">
         <div className="flex items-center justify-between mb-5">
-          <h2 className="font-serif text-xl font-semibold text-foreground">Resultado da IA</h2>
+          <h2 className="text-xl font-semibold text-foreground">Resultado da IA</h2>
           <div className="w-8" />
         </div>
 

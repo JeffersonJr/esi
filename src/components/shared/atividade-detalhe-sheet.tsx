@@ -393,7 +393,7 @@ export function AtividadeDetalheSheet({
                 <div className="flex items-center justify-between border-b border-border pb-4 mb-4">
                   <div className="flex-1 min-w-0 pr-2">
                     <span className="text-[9px] font-bold uppercase tracking-widest text-primary">Avaliação de Imóvel ({indiceAvaliacaoAtual + 1} de {imoveisAvaliacaoPendentes.length})</span>
-                    <h2 className="font-serif text-lg font-bold text-foreground mt-0.5 truncate">{imoveisAvaliacaoPendentes[indiceAvaliacaoAtual].nome}</h2>
+                    <h2 className="text-lg font-bold text-foreground mt-0.5 truncate">{imoveisAvaliacaoPendentes[indiceAvaliacaoAtual].nome}</h2>
                   </div>
                   <span className="text-[10px] text-muted-foreground bg-muted px-2.5 py-1 rounded-full font-semibold truncate shrink-0 max-w-[150px]">{imoveisAvaliacaoPendentes[indiceAvaliacaoAtual].endereco}</span>
                 </div>
@@ -512,7 +512,7 @@ export function AtividadeDetalheSheet({
                 <div className="flex size-20 items-center justify-center rounded-full bg-teal-mid/10 text-teal-deep mb-4">
                   <CheckCircle2 className="size-10" />
                 </div>
-                <h2 className="font-serif text-2xl font-bold text-foreground text-center">
+                <h2 className="text-2xl font-bold text-foreground text-center">
                   Atividade Concluída!
                 </h2>
                 <p className="mt-2 text-sm text-muted-foreground text-center max-w-xs">
@@ -524,7 +524,7 @@ export function AtividadeDetalheSheet({
                 <div className="flex size-20 items-center justify-center rounded-full bg-amber/10 text-amber mb-4">
                   <Calendar className="size-10" />
                 </div>
-                <h2 className="font-serif text-2xl font-bold text-foreground text-center">
+                <h2 className="text-2xl font-bold text-foreground text-center">
                   Remarcado com sucesso!
                 </h2>
                 <p className="mt-2 text-sm text-muted-foreground text-center max-w-xs">
@@ -536,7 +536,7 @@ export function AtividadeDetalheSheet({
                 <div className="flex size-20 items-center justify-center rounded-full bg-teal-mid/10 text-teal-deep mb-4">
                   <CheckCircle2 className="size-10" />
                 </div>
-                <h2 className="font-serif text-2xl font-bold text-foreground text-center">
+                <h2 className="text-2xl font-bold text-foreground text-center">
                   Atividade Concluída
                 </h2>
                 <p className="mt-2 text-sm text-muted-foreground text-center max-w-xs mb-8">
@@ -561,7 +561,7 @@ export function AtividadeDetalheSheet({
                       <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-1">
                         {atividade.tipo}
                       </p>
-                      <h2 className="font-serif text-xl font-semibold text-foreground leading-tight">
+                      <h2 className="text-xl font-semibold text-foreground leading-tight">
                         {atividade.titulo}
                       </h2>
                     </div>

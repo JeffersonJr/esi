@@ -190,7 +190,7 @@ export function Funil({
                 className="flex items-center gap-2 rounded-xl bg-card px-4 py-2 shadow-sm transition-brand active:scale-95 border border-border h-10"
               >
                 <div className="flex flex-col text-left">
-                  <span className="font-serif text-sm font-semibold text-foreground flex items-center justify-between gap-1.5">
+                  <span className="text-sm font-semibold text-foreground flex items-center justify-between gap-1.5">
                     {funilAtivo.nome}
                     <ChevronDown className={`size-4 text-muted-foreground transition-transform ${mostrarSeletorFunil ? 'rotate-180' : ''}`} strokeWidth={2} />
                   </span>
@@ -213,7 +213,7 @@ export function Funil({
                             }`}
                         >
                           <div className="flex-1">
-                            <span className="block font-serif text-sm font-semibold">{f.nome}</span>
+                            <span className="block text-sm font-semibold">{f.nome}</span>
                             <span className="block text-[10px] text-muted-foreground">{f.descricao}</span>
                           </div>
                           {funilAtivo.id === f.id && <CheckCircle2 className="size-4" strokeWidth={2} />}
@@ -472,7 +472,7 @@ function AtendimentoCard({
     <Card className="rounded-xl border-border bg-card shadow-sm hover:shadow-md transition-shadow overflow-hidden group">
       <CardContent className="p-3 sm:p-4">
         <button type="button" onClick={onAbrir} className="flex w-full items-start gap-3 text-left">
-          <div className="relative flex size-10 shrink-0 items-center justify-center rounded-full bg-primary/10 font-serif text-sm font-semibold text-primary border border-primary/20">
+          <div className="relative flex size-10 shrink-0 items-center justify-center rounded-full bg-primary/10 text-sm font-semibold text-primary border border-primary/20">
             {atd.iniciais}
             <span
               className={`absolute -bottom-0.5 -right-0.5 size-3 rounded-full border-2 border-card ${tempConfig[atd.temperatura].dot}`}

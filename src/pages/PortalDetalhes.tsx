@@ -1699,8 +1699,9 @@ export default function PortalDetalhes() {
         </div>
         <Sheet>
           <SheetTrigger asChild>
-            <Button variant="outline" className="h-10 rounded-xl bg-background border-border/50 shadow-sm whitespace-nowrap">
-              <SlidersHorizontal className="w-4 h-4 mr-2 text-primary" /> Filtros Avançados
+            <Button variant="outline" className="gap-2 relative h-10 px-4 rounded-xl shadow-sm border-border whitespace-nowrap bg-background">
+              <Filter className="h-4 w-4" />
+              <span className="hidden sm:inline">Filtros</span>
             </Button>
           </SheetTrigger>
           <SheetContent className="w-[400px] sm:w-[540px] overflow-y-auto">

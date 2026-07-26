@@ -420,7 +420,7 @@ export default function CadastroEmpreendimento({ onClose, empreendimentoParaEdit
           <button type="button" onClick={onClose} className="flex size-8 items-center justify-center rounded-full bg-muted text-muted-foreground transition-brand active:scale-95">
             <X className="size-4" strokeWidth={1.5} />
           </button>
-          <h2 className="font-serif text-xl font-semibold text-foreground">Cadastrar Empreendimento</h2>
+          <h2 className="text-xl font-semibold text-foreground">Cadastrar Empreendimento</h2>
           <div className="w-8" />
         </div>
 
@@ -470,7 +470,7 @@ export default function CadastroEmpreendimento({ onClose, empreendimentoParaEdit
           <button type="button" onClick={() => setFase('escolha_modo')} className="flex size-8 items-center justify-center rounded-full bg-muted text-muted-foreground transition-brand active:scale-95">
             <ChevronRight className="size-4 rotate-180" strokeWidth={1.5} />
           </button>
-          <h2 className="font-serif text-xl font-semibold text-foreground">Cadastro Fast</h2>
+          <h2 className="text-xl font-semibold text-foreground">Cadastro Fast</h2>
           <button type="button" onClick={onClose} className="flex size-8 items-center justify-center rounded-full bg-muted text-muted-foreground">
             <X className="size-4" strokeWidth={1.5} />
           </button>
@@ -577,7 +577,7 @@ export default function CadastroEmpreendimento({ onClose, empreendimentoParaEdit
         <button type="button" onClick={() => setFase('escolha_modo')} className="flex size-8 items-center justify-center rounded-full bg-muted text-muted-foreground transition-brand active:scale-95">
           <ChevronRight className="size-4 rotate-180" strokeWidth={1.5} />
         </button>
-        <h2 className="font-serif text-xl font-semibold text-foreground">Empreendimento</h2>
+        <h2 className="text-xl font-semibold text-foreground">Empreendimento</h2>
         <button type="button" onClick={onClose} className="flex size-8 items-center justify-center rounded-full bg-muted text-muted-foreground">
           <X className="size-4" strokeWidth={1.5} />
         </button>

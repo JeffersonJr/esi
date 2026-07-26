@@ -138,7 +138,7 @@ export function GanhoPerdidoSheet({
                 <CheckCircle2 className="size-10" />
               </div>
             )}
-            <h2 className="font-serif text-2xl font-bold text-foreground text-center">
+            <h2 className="text-2xl font-bold text-foreground text-center">
               {isGanho ? 'Parabéns pela venda!' : 'Feedback registrado'}
             </h2>
             <p className="mt-2 text-sm text-muted-foreground text-center max-w-xs">
@@ -155,7 +155,7 @@ export function GanhoPerdidoSheet({
                   {isGanho ? <Trophy className="size-6" /> : <Frown className="size-6" />}
                 </div>
                 <div>
-                  <h2 className="font-serif text-xl font-bold text-foreground leading-tight">
+                  <h2 className="text-xl font-bold text-foreground leading-tight">
                     {isGanho ? 'Negócio Ganho' : 'Negócio Perdido'}
                   </h2>
                   <p className="text-xs text-muted-foreground">

@@ -46,7 +46,7 @@ export function FiltrosAvancadosSheet({
     <Sheet open={true} onOpenChange={(open) => !open && onClose()}>
       <SheetContent side="right" className="w-full sm:max-w-md flex flex-col gap-0 p-0 border-l border-border bg-card">
         <SheetHeader className="px-6 py-4 border-b border-border text-left">
-          <SheetTitle className="font-serif text-xl font-semibold">Filtros Avançados</SheetTitle>
+          <SheetTitle className="text-xl font-semibold">Filtros Avançados</SheetTitle>
         </SheetHeader>
 
         <div className="flex-1 flex flex-col gap-6 p-6 overflow-y-auto pb-24">

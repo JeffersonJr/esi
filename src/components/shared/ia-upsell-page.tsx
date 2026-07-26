@@ -103,7 +103,7 @@ export function IAUpsellPage({ onClose, onSuccess, origem }: { onClose: () => vo
         </div>
 
         <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-teal-light">evolves IA</p>
-        <h1 className="mt-2 font-serif text-3xl font-semibold leading-tight text-primary-foreground text-balance">
+        <h1 className="mt-2 text-3xl font-semibold leading-tight text-primary-foreground text-balance">
           Venda mais com<br />Inteligência Artificial
         </h1>
         <p className="mt-3 text-sm text-teal-light text-balance max-w-xs">
@@ -116,7 +116,7 @@ export function IAUpsellPage({ onClose, onSuccess, origem }: { onClose: () => vo
         <div className="mt-6 grid grid-cols-4 gap-2 w-full">
           {ESTATISTICAS.map((s) => (
             <div key={s.label} className="flex flex-col items-center gap-0.5 rounded-2xl bg-teal-shadow/40 px-2 py-3">
-              <span className="font-serif text-lg font-black text-primary-foreground">{s.valor}</span>
+              <span className="text-lg font-black text-primary-foreground">{s.valor}</span>
               <span className="text-[9px] font-medium text-teal-light text-center leading-tight">{s.label}</span>
             </div>
           ))}
@@ -129,7 +129,7 @@ export function IAUpsellPage({ onClose, onSuccess, origem }: { onClose: () => vo
             <div className="flex size-24 items-center justify-center rounded-full bg-teal-mid/20 text-teal-deep mb-6">
               <CheckCircle2 className="size-12" strokeWidth={2} />
             </div>
-            <h2 className="font-serif text-2xl font-bold text-foreground mb-4">
+            <h2 className="text-2xl font-bold text-foreground mb-4">
               A IA já está trabalhando por você!
             </h2>
             <div className="rounded-[1.25rem] bg-card p-6 shadow-soft text-left w-full mb-6">
@@ -165,7 +165,7 @@ export function IAUpsellPage({ onClose, onSuccess, origem }: { onClose: () => vo
             <div className="mb-8 grid grid-cols-2 gap-3 px-5 mt-6">
               {ESTATISTICAS.map((est) => (
                 <div key={est.label} className="flex flex-col items-center justify-center rounded-[1.25rem] bg-card p-4 shadow-[0_4px_20px_-10px_rgba(0,0,0,0.08)]">
-                  <span className="font-serif text-2xl font-bold text-primary">{est.valor}</span>
+                  <span className="text-2xl font-bold text-primary">{est.valor}</span>
                   <span className="mt-1 text-center text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
                     {est.label}
                   </span>
@@ -186,7 +186,7 @@ export function IAUpsellPage({ onClose, onSuccess, origem }: { onClose: () => vo
                       <div className={`flex size-10 shrink-0 items-center justify-center rounded-2xl ${isDestaque ? 'bg-white/20' : 'bg-primary/10 text-primary'}`}>
                         <b.icon className="size-5" strokeWidth={1.5} />
                       </div>
-                      <h3 className={`font-serif text-lg font-semibold ${isDestaque ? 'text-white' : 'text-foreground'}`}>
+                      <h3 className={`text-lg font-semibold ${isDestaque ? 'text-white' : 'text-foreground'}`}>
                         {b.titulo}
                       </h3>
                     </div>
@@ -216,7 +216,7 @@ export function IAUpsellPage({ onClose, onSuccess, origem }: { onClose: () => vo
                   "Com o Albert, minha taxa de conversão triplicou. Ele faz os follow-ups enquanto eu estou em visitas. É como ter um assistente trabalhando 24h por dia."
                 </p>
                 <div className="mt-3 flex items-center gap-2">
-                  <div className="flex size-8 items-center justify-center rounded-full bg-primary/10 font-serif text-xs font-bold text-primary">
+                  <div className="flex size-8 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary">
                     RF
                   </div>
                   <div>

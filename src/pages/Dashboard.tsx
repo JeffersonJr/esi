@@ -415,7 +415,7 @@ export function Dashboard() {
               <div className="flex size-8 items-center justify-center rounded-full bg-primary/20 text-primary animate-pulse">
                 <AlertTriangle className="size-4" />
               </div>
-              <h3 className="font-serif text-lg font-black text-foreground leading-snug">
+              <h3 className="text-lg font-black text-foreground leading-snug">
                 Você tem {tarefasPendentes.length} pendências acumuladas!
               </h3>
             </div>

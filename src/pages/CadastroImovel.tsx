@@ -511,7 +511,7 @@ export default function CadastroImovel({ onClose, imovelParaEditar, onSaveEdit }
           <button type="button" onClick={() => setFase('escolha_modo_manual')} className="flex size-8 items-center justify-center rounded-full bg-muted text-muted-foreground transition-brand active:scale-95">
             <ChevronLeft className="size-5" />
           </button>
-          <h2 className="font-serif text-xl font-semibold text-foreground">Captar imóvel com IA</h2>
+          <h2 className="text-xl font-semibold text-foreground">Captar imóvel com IA</h2>
           <div className="w-8" />
         </div>
 
@@ -548,7 +548,7 @@ export default function CadastroImovel({ onClose, imovelParaEditar, onSaveEdit }
             <div className="flex size-16 items-center justify-center rounded-full bg-primary/10 text-primary">
               <Camera className="size-8" strokeWidth={1.5} />
             </div>
-            <p className="mt-4 font-serif text-lg font-semibold text-foreground">
+            <p className="mt-4 text-lg font-semibold text-foreground">
               Adicionar fotos
             </p>
             <p className="mt-1 text-center text-sm text-muted-foreground">
@@ -576,7 +576,7 @@ export default function CadastroImovel({ onClose, imovelParaEditar, onSaveEdit }
               )}
             </div>
             <div className="p-4 bg-muted/30">
-              <p className="font-serif text-lg font-semibold text-foreground">
+              <p className="text-lg font-semibold text-foreground">
                 {fotos.length} foto{fotos.length > 1 ? 's' : ''} selecionada{fotos.length > 1 ? 's' : ''}
               </p>
               <p className="text-xs text-muted-foreground">A IA vai extrair as informações</p>
@@ -622,7 +622,7 @@ export default function CadastroImovel({ onClose, imovelParaEditar, onSaveEdit }
           <button type="button" onClick={() => setFase('escolha_categoria')} className="flex size-8 items-center justify-center rounded-full bg-muted text-muted-foreground transition-brand active:scale-95">
             <ChevronLeft className="size-5" />
           </button>
-          <h2 className="font-serif text-xl font-semibold text-foreground">Método de Cadastro</h2>
+          <h2 className="text-xl font-semibold text-foreground">Método de Cadastro</h2>
           <div className="w-8" />
         </div>
 
@@ -702,7 +702,7 @@ export default function CadastroImovel({ onClose, imovelParaEditar, onSaveEdit }
           <button type="button" onClick={onClose} className="flex size-8 items-center justify-center rounded-full bg-muted text-muted-foreground transition-brand active:scale-95">
             <X className="size-4" strokeWidth={1.5} />
           </button>
-          <h2 className="font-serif text-xl font-semibold text-foreground">Categoria do Imóvel</h2>
+          <h2 className="text-xl font-semibold text-foreground">Categoria do Imóvel</h2>
           <div className="w-8" />
         </div>
 
@@ -781,7 +781,7 @@ export default function CadastroImovel({ onClose, imovelParaEditar, onSaveEdit }
           <Sparkles className="size-10 text-primary" strokeWidth={1.5} />
         </div>
 
-        <p className="mt-6 font-serif text-xl font-semibold text-foreground">IA analisando imóvel</p>
+        <p className="mt-6 text-xl font-semibold text-foreground">IA analisando imóvel</p>
         <p className="mt-2 text-sm text-muted-foreground">{progressoTexto || 'Iniciando análise...'}</p>
         
         {/* Contexto travado guiando a IA */}
@@ -834,7 +834,7 @@ export default function CadastroImovel({ onClose, imovelParaEditar, onSaveEdit }
     return (
       <div>
         <div className="flex items-center justify-between mb-5">
-          <h2 className="font-serif text-xl font-semibold text-foreground">Resultado da IA</h2>
+          <h2 className="text-xl font-semibold text-foreground">Resultado da IA</h2>
           <button type="button" onClick={onClose} aria-label="Fechar" className="flex size-8 items-center justify-center rounded-full bg-muted text-muted-foreground">
             <X className="size-4" strokeWidth={1.5} />
           </button>
@@ -910,7 +910,7 @@ export default function CadastroImovel({ onClose, imovelParaEditar, onSaveEdit }
     return (
       <div className="animate-in fade-in slide-in-from-bottom-2">
         <div className="flex items-center justify-between mb-5">
-          <h2 className="font-serif text-xl font-semibold text-foreground">Como deseja cadastrar?</h2>
+          <h2 className="text-xl font-semibold text-foreground">Como deseja cadastrar?</h2>
           <button type="button" onClick={onClose} aria-label="Fechar" className="flex size-8 items-center justify-center rounded-full bg-muted text-muted-foreground">
             <X className="size-4" strokeWidth={1.5} />
           </button>
@@ -969,7 +969,7 @@ export default function CadastroImovel({ onClose, imovelParaEditar, onSaveEdit }
     return (
       <div className="animate-in fade-in slide-in-from-bottom-2 pb-6">
         <div className="flex items-center justify-between mb-5">
-          <h2 className="font-serif text-xl font-semibold text-foreground">Cadastro Fast</h2>
+          <h2 className="text-xl font-semibold text-foreground">Cadastro Fast</h2>
           <button type="button" onClick={onClose} aria-label="Fechar" className="flex size-8 items-center justify-center rounded-full bg-muted text-muted-foreground">
             <X className="size-4" strokeWidth={1.5} />
           </button>
@@ -1147,7 +1147,7 @@ export default function CadastroImovel({ onClose, imovelParaEditar, onSaveEdit }
       />
       <div className="flex items-center justify-between mb-5">
         <div className="flex items-center gap-2">
-          <h2 className="font-serif text-xl font-semibold text-foreground">Cadastrar imóvel</h2>
+          <h2 className="text-xl font-semibold text-foreground">Cadastrar imóvel</h2>
           {titulo && (
             <span className="flex items-center gap-1 rounded-full bg-teal-mid/15 px-2 py-0.5 text-[10px] font-semibold text-teal-deep">
               <Sparkles className="size-2.5" strokeWidth={2} />
@@ -1834,7 +1834,7 @@ export default function CadastroImovel({ onClose, imovelParaEditar, onSaveEdit }
               <div className="h-1 w-10 rounded-full bg-border" />
             </div>
             <div className="flex items-center justify-between px-6 py-4 border-b border-border">
-              <h2 className="font-serif text-xl font-semibold text-foreground">Detalhes da foto</h2>
+              <h2 className="text-xl font-semibold text-foreground">Detalhes da foto</h2>
               <button type="button" onClick={() => setFotoEditando(null)} className="flex size-8 items-center justify-center rounded-full bg-muted text-muted-foreground">
                 <X className="size-4" strokeWidth={1.5} />
               </button>

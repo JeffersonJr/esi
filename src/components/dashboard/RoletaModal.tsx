@@ -137,7 +137,7 @@ export function RoletaModal({
                 <Trophy className="size-12 animate-bounce" />
               </div>
             </div>
-            <h3 className="font-serif text-2xl font-black text-foreground mb-3">Mesa Limpa, Guerreiro!</h3>
+            <h3 className="text-2xl font-black text-foreground mb-3">Mesa Limpa, Guerreiro!</h3>
             <p className="text-sm text-muted-foreground leading-relaxed mb-6">
               Você passou por todas as tarefas da pilha. Veja o seu resumo:
             </p>
@@ -165,7 +165,7 @@ export function RoletaModal({
               <div className={`w-full max-w-md bg-card border-2 border-primary/50 rounded-3xl shadow-2xl p-6 flex flex-col gap-5 transition-all duration-300 ${roletaEfeitoFrup ? 'opacity-0 -translate-y-[150%] pointer-events-none' : 'animate-in zoom-in-95 duration-300'}`}>
                 <div className="flex items-center gap-3 text-primary mb-2">
                   <Calendar className="size-6" />
-                  <h3 className="font-serif text-xl font-bold">Remarcar Tarefa</h3>
+                  <h3 className="text-xl font-bold">Remarcar Tarefa</h3>
                 </div>
                 <p className="text-sm font-semibold text-foreground mb-4">
                   {remarcarAtividade.title || remarcarAtividade.titulo}
@@ -233,7 +233,7 @@ export function RoletaModal({
               <div className={`w-full max-w-md bg-card border-2 border-primary/50 rounded-3xl shadow-2xl p-6 flex flex-col gap-5 transition-all duration-300 ${roletaEfeitoFrup ? 'opacity-0 -translate-y-[150%] pointer-events-none' : 'animate-in zoom-in-95 duration-300'}`}>
                 <div className="flex items-center gap-3 text-primary mb-2">
                   <Bot className="size-6" />
-                  <h3 className="font-serif text-xl font-bold">Ação com Albert</h3>
+                  <h3 className="text-xl font-bold">Ação com Albert</h3>
                 </div>
                 <p className="text-sm font-semibold text-foreground">
                   {acaoAlbertRoleta.cliente || 'Cliente'}
@@ -381,7 +381,7 @@ export function RoletaModal({
                       <div className="w-20 h-20 bg-primary/20 rounded-full flex items-center justify-center text-4xl mb-4 border-4 border-background shadow-inner">
                         👤
                       </div>
-                      <h2 className="font-serif text-2xl font-black text-foreground text-center line-clamp-1">
+                      <h2 className="text-2xl font-black text-foreground text-center line-clamp-1">
                         {tarefa.title || tarefa.titulo || 'Tarefa sem título'}
                       </h2>
                       <p className="text-sm font-semibold text-muted-foreground text-center mt-1">

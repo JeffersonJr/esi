@@ -301,9 +301,9 @@ export function ApBank() {
                     className="pl-10 w-80"
                   />
                 </div>
-                <Button variant="outline" size="sm">
-                  <Filter className="h-4 w-4 mr-2" />
-                  Filtros
+                <Button variant="outline" className="gap-2 relative h-10 px-4 rounded-xl shadow-sm border-border">
+                  <Filter className="h-4 w-4" />
+                  <span className="hidden sm:inline">Filtros</span>
                 </Button>
               </div>
               <Button onClick={() => setShowNovaContaModal(true)}>
@@ -376,9 +376,9 @@ export function ApBank() {
                     className="pl-10 w-80"
                   />
                 </div>
-                <Button variant="outline" size="sm">
-                  <Filter className="h-4 w-4 mr-2" />
-                  Filtros
+                <Button variant="outline" className="gap-2 relative h-10 px-4 rounded-xl shadow-sm border-border">
+                  <Filter className="h-4 w-4" />
+                  <span className="hidden sm:inline">Filtros</span>
                 </Button>
               </div>
               <Button onClick={() => setShowNovaTransacaoModal(true)}>
@@ -466,9 +466,9 @@ export function ApBank() {
                     className="pl-10 w-80"
                   />
                 </div>
-                <Button variant="outline" size="sm">
-                  <Filter className="h-4 w-4 mr-2" />
-                  Filtros
+                <Button variant="outline" className="gap-2 relative h-10 px-4 rounded-xl shadow-sm border-border">
+                  <Filter className="h-4 w-4" />
+                  <span className="hidden sm:inline">Filtros</span>
                 </Button>
               </div>
               <Button onClick={() => setShowNovoInvestimentoModal(true)}>
@@ -556,9 +556,9 @@ export function ApBank() {
                     className="pl-10 w-80"
                   />
                 </div>
-                <Button variant="outline" size="sm">
-                  <Filter className="h-4 w-4 mr-2" />
-                  Filtros
+                <Button variant="outline" className="gap-2 relative h-10 px-4 rounded-xl shadow-sm border-border">
+                  <Filter className="h-4 w-4" />
+                  <span className="hidden sm:inline">Filtros</span>
                 </Button>
               </div>
             </div>

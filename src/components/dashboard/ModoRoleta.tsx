@@ -345,7 +345,7 @@ export function ScreenHoje({
         <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
           Terça · 07 Jul
         </p>
-        <h1 className="font-serif text-3xl font-semibold text-foreground tracking-tight truncate">
+        <h1 className="text-3xl font-semibold text-foreground tracking-tight truncate">
           {saudacao}, Jefferson.
         </h1>
       </header>
@@ -359,7 +359,7 @@ export function ScreenHoje({
                 <Zap className="size-3.5 fill-primary animate-pulse" />
                 <span className="text-[9px] font-black uppercase tracking-wider">Modo Hércules Ativo</span>
               </div>
-              <h3 className="font-serif text-lg font-black text-foreground leading-snug mt-1">
+              <h3 className="text-lg font-black text-foreground leading-snug mt-1">
                 Você tem {pendentes.length} pendências acumuladas!
               </h3>
               <p className="text-xs text-muted-foreground leading-relaxed font-light mt-0.5">
@@ -430,7 +430,7 @@ export function ScreenHoje({
       {/* Agenda */}
       <section id="secao-agenda" aria-label="Sua agenda" className="scroll-mt-6">
         <div className="mb-3 flex items-center justify-between">
-          <h2 className="flex items-center gap-2 font-serif text-lg font-semibold text-foreground">
+          <h2 className="flex items-center gap-2 text-lg font-semibold text-foreground">
             <CalendarDays className="size-4.5 text-primary" strokeWidth={1.5} />
             Sua agenda
           </h2>
@@ -509,7 +509,7 @@ export function ScreenHoje({
       {/* Leads quentes */}
       <section id="secao-leads" aria-label="Leads quentes" className="scroll-mt-6">
         <div className="mb-3 flex items-center justify-between">
-          <h2 className="flex items-center gap-2 font-serif text-lg font-semibold text-foreground">
+          <h2 className="flex items-center gap-2 text-lg font-semibold text-foreground">
             <Flame className="size-4.5 text-amber" strokeWidth={1.5} />
             Leads quentes
           </h2>
@@ -531,7 +531,7 @@ export function ScreenHoje({
                   onClick={() => onVerCliente(lead.id)}
                   className="flex items-start gap-3 text-left w-full"
                 >
-                  <div className="relative flex size-11 shrink-0 items-center justify-center rounded-full bg-primary/10 font-serif text-sm font-semibold text-primary">
+                  <div className="relative flex size-11 shrink-0 items-center justify-center rounded-full bg-primary/10 text-sm font-semibold text-primary">
                     {lead.iniciais}
                     <span className={`absolute -bottom-0.5 -right-0.5 size-3.5 rounded-full border-2 border-card ${tempConfig[lead.temperatura].dot}`} />
                   </div>
@@ -646,7 +646,7 @@ export function ScreenHoje({
             <div className="mx-auto mb-4 flex size-14 items-center justify-center rounded-full bg-amber/10 text-amber">
               <MapPinOff className="size-6" strokeWidth={2} />
             </div>
-            <h3 className="font-serif text-xl font-bold mb-2">Sinal Perdido</h3>
+            <h3 className="text-xl font-bold mb-2">Sinal Perdido</h3>
             <p className="text-sm text-muted-foreground mb-6">
               Você saiu da zona da imobiliária ou área habilitada para o checkin do rodízio.
             </p>
@@ -695,7 +695,7 @@ export function ScreenHoje({
           />
           <div className="relative rounded-t-3xl bg-card p-6 shadow-2xl animate-in slide-in-from-bottom duration-250 max-h-[80vh] overflow-y-auto z-10">
             <div className="mx-auto mb-4 h-1 w-10 rounded-full bg-border" />
-            <h3 className="font-serif text-lg font-bold text-foreground mb-4">Alternar Imobiliária Parceira</h3>
+            <h3 className="text-lg font-bold text-foreground mb-4">Alternar Imobiliária Parceira</h3>
             <ul className="flex flex-col gap-2">
               {tenants.map(t => (
                 <li key={t.id}>
@@ -752,7 +752,7 @@ export function ScreenHoje({
                 <div className="mx-auto mb-4 flex size-14 items-center justify-center rounded-full bg-primary/10 text-primary">
                   <MapPin className="size-6" strokeWidth={2} />
                 </div>
-                <h3 className="font-serif text-xl font-bold mb-2">Check-in de Plantão</h3>
+                <h3 className="text-xl font-bold mb-2">Check-in de Plantão</h3>
                 <p className="text-sm text-muted-foreground mb-6">
                   Para entrar no rodízio de leads, precisamos validar sua localização na imobiliária.
                 </p>
@@ -781,7 +781,7 @@ export function ScreenHoje({
                 <div className="mx-auto mb-4 flex size-14 items-center justify-center rounded-full bg-red-500/10 text-red-500">
                   <MapPinOff className="size-6" strokeWidth={2} />
                 </div>
-                <h3 className="font-serif text-xl font-bold mb-2">Localização não encontrada</h3>
+                <h3 className="text-xl font-bold mb-2">Localização não encontrada</h3>
                 <p className="text-sm text-muted-foreground mb-6">
                   Não conseguimos identificar sua localização na sede. Por favor, conecte no Wi-Fi da imobiliária e tente novamente.
                 </p>
@@ -824,7 +824,7 @@ export function ScreenHoje({
                 <div className="mx-auto mb-4 flex size-14 items-center justify-center rounded-full bg-green-500/10 text-green-500">
                   <CheckCircle2 className="size-6" strokeWidth={2} />
                 </div>
-                <h3 className="font-serif text-xl font-bold mb-2">Você está no Rodízio!</h3>
+                <h3 className="text-xl font-bold mb-2">Você está no Rodízio!</h3>
                 <p className="text-sm text-muted-foreground mb-6">
                   Check-in realizado com sucesso. Você já está habilitado para receber novos leads.
                 </p>
@@ -857,7 +857,7 @@ export function ScreenHoje({
                     <Trophy className="size-12 animate-bounce" />
                   </div>
                 </div>
-                <h3 className="font-serif text-2xl font-black text-foreground mb-3">Mesa Limpa, Guerreiro!</h3>
+                <h3 className="text-2xl font-black text-foreground mb-3">Mesa Limpa, Guerreiro!</h3>
                 <p className="text-sm text-muted-foreground leading-relaxed mb-6">
                   Você passou por todas as tarefas da pilha. Veja o seu resumo:
                 </p>
@@ -885,7 +885,7 @@ export function ScreenHoje({
                   <div className={`w-full max-w-md bg-card border-2 border-primary/50 rounded-3xl shadow-2xl p-6 flex flex-col gap-5 transition-all duration-300 ${roletaEfeitoFrup ? 'opacity-0 -translate-y-[150%] pointer-events-none' : 'animate-in zoom-in-95 duration-300'}`}>
                     <div className="flex items-center gap-3 text-primary mb-2">
                     <Calendar className="size-6" />
-                    <h3 className="font-serif text-xl font-bold">Remarcar Tarefa</h3>
+                    <h3 className="text-xl font-bold">Remarcar Tarefa</h3>
                   </div>
                   <p className="text-sm font-semibold text-foreground mb-4">
                     {remarcarAtividade.titulo}
@@ -953,7 +953,7 @@ export function ScreenHoje({
                   <div className={`w-full max-w-md bg-card rounded-[32px] shadow-2xl p-6 sm:p-8 flex flex-col gap-5 transition-all duration-300 ${roletaEfeitoFrup ? 'opacity-0 -translate-y-[150%] pointer-events-none' : 'animate-in zoom-in-95 duration-300'}`}>
                     <div className="flex items-center gap-3 text-primary mb-2">
                       <Bot className="size-6" />
-                      <h3 className="font-serif text-xl font-bold">Ação com Albert</h3>
+                      <h3 className="text-xl font-bold">Ação com Albert</h3>
                     </div>
                     <p className="text-sm font-semibold text-foreground">
                       {acaoAlbertRoleta.cliente}

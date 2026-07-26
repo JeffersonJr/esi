@@ -250,7 +250,7 @@ export function FormNovaAtividade({
   return (
     <div>
       <div className="flex items-center justify-between mb-5">
-        <h2 className="font-serif text-xl font-semibold text-foreground">Nova atividade / Registro</h2>
+        <h2 className="text-xl font-semibold text-foreground">Nova atividade / Registro</h2>
         <button
           type="button"
           onClick={onClose}

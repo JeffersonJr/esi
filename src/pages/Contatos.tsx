@@ -265,16 +265,18 @@ export function Contatos() {
                 )}
                 <Popover open={filterOpen} onOpenChange={setFilterOpen}>
                   <PopoverTrigger asChild>
-                    <button className={cn(
-                      'h-7 px-3 rounded-full text-xs font-semibold border flex items-center gap-1.5 transition-all',
-                      hasActiveAdvanced
-                        ? 'bg-primary/10 text-primary border-primary/30'
-                        : 'bg-background text-foreground border-border hover:border-primary/60'
-                    )}>
-                      <SlidersHorizontal className="h-3.5 w-3.5" />
-                      Filtros
-                      {hasActiveAdvanced && <span className="h-4 w-4 rounded-full bg-primary text-primary-foreground text-[10px] flex items-center justify-center font-black">!</span>}
-                    </button>
+                    <Button
+                      variant="outline"
+                      className="gap-2 relative h-10 px-4 rounded-xl shadow-sm border-border"
+                    >
+                      <Filter className="h-4 w-4" />
+                      <span className="hidden sm:inline">Filtros</span>
+                      {hasActiveAdvanced && (
+                        <span className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-[10px] text-primary-foreground font-bold shadow-sm animate-in zoom-in">
+                          !
+                        </span>
+                      )}
+                    </Button>
                   </PopoverTrigger>
                   <PopoverContent className="w-72 p-4" align="end">
                     <div className="space-y-4">

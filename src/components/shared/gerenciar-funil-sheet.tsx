@@ -77,7 +77,7 @@ export function GerenciarFunilSheet({
         
         <div className="flex items-center justify-between px-6 py-4 border-b border-border shrink-0">
           <div>
-            <h2 className="font-serif text-xl font-semibold text-foreground">
+            <h2 className="text-xl font-semibold text-foreground">
               Gerenciar Funil
             </h2>
             <p className="text-xs text-muted-foreground">{funil.nome}</p>

@@ -448,12 +448,12 @@ export function AtendimentoDetail({
 
         {/* Dados do cliente */}
         <div className="mt-4 flex items-center gap-3">
-          <div className="relative flex size-16 shrink-0 items-center justify-center rounded-full bg-teal-mid/30 font-serif text-2xl font-semibold">
+          <div className="relative flex size-16 shrink-0 items-center justify-center rounded-full bg-teal-mid/30 text-2xl font-semibold">
             {atendimento.iniciais}
             <span className={`absolute -bottom-0.5 -right-0.5 size-4 rounded-full border-2 border-primary ${tempConfig[atendimento.temperatura].bg}`} />
           </div>
           <div className="min-w-0 flex-1">
-            <h1 className="truncate font-serif text-xl font-semibold">{atendimento.nome}</h1>
+            <h1 className="truncate text-xl font-semibold">{atendimento.nome}</h1>
             <p className="text-sm text-teal-light">{atendimento.telefone}</p>
             <p className="text-xs text-teal-light/80">{atendimento.email}</p>
           </div>
@@ -522,7 +522,7 @@ export function AtendimentoDetail({
           </button>
           <div className="flex flex-col items-center gap-1">
             <span className="text-[10px] uppercase tracking-widest text-teal-light/70">Etapa no funil</span>
-            <span className="font-serif text-sm font-semibold text-white">
+            <span className="text-sm font-semibold text-white">
               {etapasFunil.find(e => e.id === atendimento.etapa)?.label || atendimento.etapa}
             </span>
             <div className="flex gap-1">
@@ -584,7 +584,7 @@ export function AtendimentoDetail({
         {aba === 'historico' && (
           <div>
             <div className="mb-4 flex items-center justify-between">
-              <h2 className="font-serif text-lg font-semibold">Histórico</h2>
+              <h2 className="text-lg font-semibold">Histórico</h2>
               <button
                 type="button"
                 onClick={() => setMostrarNovaInteracao(true)}
@@ -737,7 +737,7 @@ export function AtendimentoDetail({
         {aba === 'atividades' && (
           <div>
             <div className="mb-4 flex items-center justify-between">
-              <h2 className="font-serif text-lg font-semibold">Atividades</h2>
+              <h2 className="text-lg font-semibold">Atividades</h2>
               <button
                 type="button"
                 onClick={() => setMostrarNovaAtividade(true)}
@@ -803,7 +803,7 @@ export function AtendimentoDetail({
         {aba === 'imoveis' && (
           <div>
             <div className="mb-4">
-              <h2 className="font-serif text-lg font-semibold">Opções de Imóveis</h2>
+              <h2 className="text-lg font-semibold">Opções de Imóveis</h2>
               <p className="mt-0.5 text-xs text-muted-foreground">
                 Baseado no perfil de busca do cliente
               </p>
@@ -934,7 +934,7 @@ export function AtendimentoDetail({
         {aba === 'documentos' && (
           <div>
             <div className="mb-4 flex items-center justify-between">
-              <h2 className="font-serif text-lg font-semibold">Documentos</h2>
+              <h2 className="text-lg font-semibold">Documentos</h2>
               <div className="flex gap-2">
                 <button type="button" onClick={() => setSolicitarDocs(true)} className="flex items-center gap-1 rounded-full bg-amber/10 px-3 py-1.5 text-xs font-semibold text-amber-600 transition-brand active:scale-95">
                   <Bot className="size-3.5" strokeWidth={2} /> Requisitar
@@ -1059,7 +1059,7 @@ export function AtendimentoDetail({
         {/* ── Perfil ── */}
         {aba === 'perfil' && (
           <div>
-            <h2 className="mb-4 font-serif text-lg font-semibold">O que está buscando</h2>
+            <h2 className="mb-4 text-lg font-semibold">O que está buscando</h2>
             <div className="flex flex-col gap-3">
               <InfoRow label="Finalidade" value={atendimento.perfil.finalidade || '—'} />
               <InfoRow label="Tipo de imóvel" value={atendimento.perfil.tipoImovel || '—'} />
@@ -1091,7 +1091,7 @@ export function AtendimentoDetail({
               {/* Método 4Q */}
               <div className="mt-4 rounded-3xl bg-teal-mid/5 shadow-soft p-5 border border-teal-mid/20">
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="font-serif text-lg font-semibold text-teal-deep flex items-center gap-2">
+                  <h3 className="text-lg font-semibold text-teal-deep flex items-center gap-2">
                     <Target className="size-5" />
                     Qualificação 4Q
                   </h3>
@@ -1150,7 +1150,7 @@ export function AtendimentoDetail({
               {/* Método FORD */}
               <div className="mt-3 rounded-3xl bg-amber/5 shadow-soft p-5 border border-amber/20">
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="font-serif text-lg font-semibold text-[#8a5a1e] flex items-center gap-2">
+                  <h3 className="text-lg font-semibold text-[#8a5a1e] flex items-center gap-2">
                     <Heart className="size-5" />
                     Rapport FORD
                   </h3>
@@ -1217,7 +1217,7 @@ export function AtendimentoDetail({
                 <Bot className="size-6" strokeWidth={1.5} />
               </div>
               <div>
-                <h2 className="font-serif text-lg font-semibold">Albert IA</h2>
+                <h2 className="text-lg font-semibold">Albert IA</h2>
                 <p className="text-xs text-muted-foreground">Assistente de follow-up automático</p>
               </div>
             </div>
@@ -1323,7 +1323,7 @@ export function AtendimentoDetail({
       {confirmacaoEtapa && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-background/80 backdrop-blur-sm px-4">
           <div className="w-full max-w-sm rounded-[1.25rem] bg-card border border-border shadow-2xl p-6 text-center animate-in zoom-in-95 duration-200">
-            <h2 className="font-serif text-xl font-bold mb-2">Atenção</h2>
+            <h2 className="text-xl font-bold mb-2">Atenção</h2>
             <p className="text-sm text-muted-foreground mb-6">
               Você deseja mover <strong>{atendimento.nome}</strong> para a etapa <strong>{confirmacaoEtapa.nomeDaEtapa}</strong>?
             </p>
@@ -1359,7 +1359,7 @@ export function AtendimentoDetail({
           <div className="relative rounded-t-3xl bg-card p-6 pb-[calc(1.5rem+env(safe-area-inset-bottom))] shadow-2xl animate-in slide-in-from-bottom duration-200">
             <div className="mx-auto mb-4 h-1 w-10 rounded-full bg-fog" />
             <div className="flex items-center justify-between mb-4">
-              <h3 className="font-serif text-lg font-semibold">Enviar e-mail</h3>
+              <h3 className="text-lg font-semibold">Enviar e-mail</h3>
               <button type="button" onClick={() => setMostrarNovoEmail(false)} className="flex size-8 items-center justify-center rounded-full bg-muted text-muted-foreground">
                 <X className="size-4" strokeWidth={1.5} />
               </button>
@@ -1421,7 +1421,7 @@ export function AtendimentoDetail({
           <button type="button" onClick={() => setMostrarVincularVisita(false)} className="absolute inset-0 bg-teal-shadow/50 backdrop-blur-[2px]" />
           <div className="relative flex flex-col max-h-[80dvh] rounded-t-3xl bg-card p-6 pb-[calc(1.5rem+env(safe-area-inset-bottom))] shadow-2xl animate-in slide-in-from-bottom duration-200">
             <div className="mx-auto mb-4 h-1 w-10 rounded-full bg-fog" />
-            <h3 className="font-serif text-lg font-semibold mb-4">Vincular a Visita Existente</h3>
+            <h3 className="text-lg font-semibold mb-4">Vincular a Visita Existente</h3>
             <p className="text-sm text-muted-foreground mb-4">Selecione uma visita futura para anexar os imóveis selecionados.</p>
             <div className="flex-1 overflow-y-auto">
               <ul className="flex flex-col gap-3">
@@ -1459,7 +1459,7 @@ export function AtendimentoDetail({
               <div className="h-1 w-10 rounded-full bg-border" />
             </div>
             <div className="flex items-center justify-between px-6 py-4 border-b border-border shrink-0">
-              <h2 className="font-serif text-xl font-semibold text-foreground">
+              <h2 className="text-xl font-semibold text-foreground">
                 Enviar por {previewEnvio.tipo === 'whatsapp' ? 'WhatsApp' : 'E-mail'}
               </h2>
               <button type="button" onClick={() => setPreviewEnvio(null)} className="flex size-8 items-center justify-center rounded-full bg-muted text-muted-foreground transition-brand active:scale-95">
@@ -1510,7 +1510,7 @@ export function AtendimentoDetail({
               <div className="h-1 w-10 rounded-full bg-border" />
             </div>
             <div className="flex items-center justify-between px-6 py-4 border-b border-border shrink-0">
-              <h2 className="font-serif text-xl font-semibold text-foreground">Termo de Visita</h2>
+              <h2 className="text-xl font-semibold text-foreground">Termo de Visita</h2>
               <button type="button" onClick={() => setTermoAberto(false)} className="flex size-8 items-center justify-center rounded-full bg-muted text-muted-foreground transition-brand active:scale-95">
                 <X className="size-4" strokeWidth={1.5} />
               </button>
