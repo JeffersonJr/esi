@@ -6,9 +6,10 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
-import { ArrowUpRight, ArrowDownRight, ArrowRight, Users, Home, Calendar as CalendarIcon, TrendingUp, AlertTriangle, Clock, FileText, Settings, DollarSign, Target, Activity, Zap, Star, Sun, Moon, Save, Plus, MessageSquare, Briefcase, BarChart3, MapPin, Flame } from 'lucide-react';
+import { ArrowUpRight, ArrowDownRight, ArrowRight, Users, Home, Calendar as CalendarIcon, TrendingUp, AlertTriangle, Clock, FileText, Settings, DollarSign, Target, Activity, Zap, Star, Sun, Moon, Save, Plus, MessageSquare, Briefcase, BarChart3, MapPin, Flame, Info } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, Legend } from 'recharts';
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer, BarChart, Bar, Legend } from 'recharts';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { motion, AnimatePresence } from 'framer-motion';
 import { format, subDays, startOfDay, endOfDay, isWithinInterval } from 'date-fns';
 import { DateRange } from 'react-day-picker';
@@ -187,6 +188,7 @@ export function Dashboard() {
   const newMetrics = [
     {
       title: 'Taxa de Conversão',
+      tooltip: 'Percentual de leads que se tornaram negócios fechados.',
       value: `${newMetricsData.conversionRate}%`,
       change: '+2.3%',
       trend: 'up',
@@ -199,6 +201,7 @@ export function Dashboard() {
     },
     {
       title: 'Ticket Médio',
+      tooltip: 'Valor médio das vendas realizadas.',
       value: newMetricsData.avgTicket,
       change: '+5.7%',
       trend: 'up',
@@ -210,6 +213,7 @@ export function Dashboard() {
     },
     {
       title: 'Leads Qualificados',
+      tooltip: 'Potenciais clientes que avançaram no funil e demonstraram real interesse.',
       value: newMetricsData.qualifiedLeads,
       change: '+12.1%',
       trend: 'up',
@@ -221,6 +225,7 @@ export function Dashboard() {
     },
     {
       title: 'Meta Mensal',
+      tooltip: 'Progresso em relação ao objetivo de vendas estabelecido para o mês atual.',
       value: `${newMetricsData.monthlyProgress}%`,
       change: '+8.4%',
       trend: 'up',
@@ -280,6 +285,7 @@ export function Dashboard() {
   const updatedMetrics = [
     {
       title: 'Total de Leads',
+      tooltip: 'Número total de contatos captados.',
       value: '347',
       change: '+12.5%',
       trend: 'up',
@@ -288,6 +294,7 @@ export function Dashboard() {
     },
     {
       title: 'Imóveis Ativos',
+      tooltip: 'Imóveis atualmente disponíveis para negociação.',
       value: propertyMetrics.ativos.toString(),
       change: '+8.2%',
       trend: 'up',
@@ -296,6 +303,7 @@ export function Dashboard() {
     },
     {
       title: 'Visitas Agendadas',
+      tooltip: 'Número de visitas marcadas para demonstração de imóveis.',
       value: '24',
       change: '-3.1%',
       trend: 'down',
@@ -304,6 +312,7 @@ export function Dashboard() {
     },
     {
       title: 'Negócios Fechados',
+      tooltip: 'Total de vendas ou locações concluídas.',
       value: '12',
       change: '+18.7%',
       trend: 'up',
@@ -315,6 +324,7 @@ export function Dashboard() {
   const propertyMetricsCards = [
     {
       title: 'Total de Imóveis',
+      tooltip: 'Quantidade total de imóveis cadastrados na plataforma.',
       value: propertyMetrics.total.toString(),
       icon: FileText,
       color: 'text-primary',
@@ -322,6 +332,7 @@ export function Dashboard() {
     },
     {
       title: 'Imóveis Desatualizados',
+      tooltip: 'Imóveis sem atualização de preço ou informações há mais de 30 dias.',
       value: propertyMetrics.desatualizados.toString(),
       icon: Clock,
       color: 'text-warning',
@@ -330,6 +341,7 @@ export function Dashboard() {
     },
     {
       title: 'Rascunhos',
+      tooltip: 'Imóveis com cadastro iniciado mas não publicado.',
       value: propertyMetrics.rascunhos.toString(),
       icon: FileText,
       color: 'text-muted-foreground',
@@ -337,6 +349,7 @@ export function Dashboard() {
     },
     {
       title: 'Ativos Incompletos',
+      tooltip: 'Imóveis cadastrados que não atingiram a porcentagem ideal de informações.',
       value: propertyMetrics.ativosIncompletos.toString(),
       icon: AlertTriangle,
       color: 'text-destructive',
@@ -485,99 +498,6 @@ export function Dashboard() {
         </CardContent>
       </Card>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Performance Chart */}
-        <Card className="lg:col-span-2 border-none shadow-lg">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <BarChart3 className="h-5 w-5 text-primary" />
-              Tendência de Leads
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="pt-4">
-            <div className="h-[300px] w-full">
-              <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={chartData}>
-                  <defs>
-                    <linearGradient id="colorLeads" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.3} />
-                      <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0} />
-                    </linearGradient>
-                  </defs>
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--muted-foreground) / 0.2)" />
-                  <XAxis
-                    dataKey="name"
-                    axisLine={false}
-                    tickLine={false}
-                    tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 12 }}
-                  />
-                  <YAxis
-                    axisLine={false}
-                    tickLine={false}
-                    tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 12 }}
-                  />
-                  <Tooltip
-                    contentStyle={{
-                      borderRadius: '12px',
-                      border: 'none',
-                      boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)',
-                      backgroundColor: 'hsl(var(--card))'
-                    }}
-                  />
-                  <Area
-                    type="monotone"
-                    dataKey="leads"
-                    stroke="hsl(var(--primary))"
-                    strokeWidth={4}
-                    fillOpacity={1}
-                    fill="url(#colorLeads)"
-                  />
-                </AreaChart>
-              </ResponsiveContainer>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Sales Funnel with Visual improvements */}
-        <Card className="border-none shadow-lg">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <TrendingUp className="h-5 w-5 text-primary" />
-              Conversão do Funil
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-3">
-              {funilData.map((stage, index) => {
-                const percentage = (stage.count / funilData[0].count) * 100;
-                return (
-                  <div key={stage.stage} className="relative group">
-                    <div className="flex justify-between items-center mb-1 text-xs font-bold text-muted-foreground uppercase tracking-tight">
-                      <span>{stage.stage}</span>
-                      <span>{stage.count}</span>
-                    </div>
-                    <div className="h-4 bg-muted/50 rounded-lg overflow-hidden flex items-center">
-                      <motion.div
-                        initial={{ width: 0 }}
-                        animate={{ width: `${percentage}%` }}
-                        transition={{ duration: 1, delay: index * 0.1 }}
-                        className="h-full rounded-lg transition-all opacity-80 group-hover:opacity-100"
-                        style={{ backgroundColor: stage.color }}
-                      />
-                      {index > 0 && (
-                        <div className="absolute -left-1 text-[10px] font-bold text-primary">
-                          ↓
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
       {/* Strategic Goals & Overview */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <Card className="lg:col-span-2 border border-border shadow-card overflow-hidden">
@@ -585,7 +505,19 @@ export function Dashboard() {
             <CardTitle className="flex items-center justify-between">
               <div className="flex items-center gap-2 text-sm font-semibold">
                 <Target className="h-4 w-4 text-primary" />
-                Meta de Vendas Mensal
+                <TooltipProvider delayDuration={300}>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <span className="cursor-help flex items-center gap-1 border-b border-dashed border-muted-foreground/50">
+                        Meta de Vendas Mensal
+                        <Info className="h-3.5 w-3.5 text-muted-foreground" />
+                      </span>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p className="max-w-[200px] text-center">Acompanhamento do objetivo financeiro do mês.</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
               </div>
               <Badge variant="secondary" className="text-[10px] font-medium">Dezembro 2024</Badge>
             </CardTitle>
@@ -674,7 +606,19 @@ export function Dashboard() {
               <CardHeader className="flex flex-row items-center justify-between pb-2">
                 <div className="flex flex-col">
                   <CardTitle className="text-sm font-medium text-muted-foreground">
-                    {metric.title}
+                    <TooltipProvider delayDuration={300}>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <span className="cursor-help flex items-center gap-1 border-b border-dashed border-muted-foreground/50">
+                            {metric.title}
+                            <Info className="h-3.5 w-3.5 text-muted-foreground" />
+                          </span>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p className="max-w-[200px] text-center">{metric.tooltip}</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
                   </CardTitle>
                   <div className="text-xs text-muted-foreground">
                     {metric.period}
@@ -734,7 +678,19 @@ export function Dashboard() {
             <Card key={metric.title} className="border border-border shadow-card hover:shadow-card-hover transition-all duration-200">
               <CardHeader className="flex flex-row items-center justify-between pb-2">
                 <CardTitle className="text-sm font-medium text-muted-foreground">
-                  {metric.title}
+                  <TooltipProvider delayDuration={300}>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <span className="cursor-help flex items-center gap-1 border-b border-dashed border-muted-foreground/50">
+                          {metric.title}
+                          <Info className="h-3.5 w-3.5 text-muted-foreground" />
+                        </span>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p className="max-w-[200px] text-center">{metric.tooltip}</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
                 </CardTitle>
                 <Icon className={cn('h-5 w-5', metric.color)} />
               </CardHeader>
@@ -867,7 +823,21 @@ export function Dashboard() {
                   <CardContent className="p-4">
                     <div className="flex items-center justify-between">
                       <div className="flex-1">
-                        <p className="text-sm font-medium text-muted-foreground">{metric.title}</p>
+                        <div className="text-sm font-medium text-muted-foreground">
+                          <TooltipProvider delayDuration={300}>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <span className="cursor-help flex items-center gap-1 border-b border-dashed border-muted-foreground/50">
+                                  {metric.title}
+                                  <Info className="h-3.5 w-3.5 text-muted-foreground" />
+                                </span>
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                <p className="max-w-[200px] text-center">{metric.tooltip}</p>
+                              </TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
+                        </div>
                         <p className="text-2xl font-bold mt-1">{metric.value}</p>
                         {metric.subtitle && (
                           <p className="text-xs text-muted-foreground mt-1">{metric.subtitle}</p>
@@ -897,7 +867,21 @@ export function Dashboard() {
       <Card className="border border-border shadow-card">
         <CardHeader>
           <div className="flex items-center justify-between">
-            <CardTitle>Atividades Recentes</CardTitle>
+            <CardTitle>
+              <TooltipProvider delayDuration={300}>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <span className="cursor-help flex items-center gap-1 border-b border-dashed border-muted-foreground/50">
+                      Atividades Recentes
+                      <Info className="h-3.5 w-3.5 text-muted-foreground" />
+                    </span>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p className="max-w-[200px] text-center">Histórico das últimas ações realizadas no sistema.</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </CardTitle>
             <Button
               variant="ghost"
               size="sm"
@@ -950,7 +934,7 @@ export function Dashboard() {
           </div>
         </CardContent>
       </Card>
-      
+
       {/* Roleta Modal (Fullscreen Overlay) */}
       {modoRoleta && (
         <RoletaModal

@@ -1,5 +1,6 @@
 'use client'
 
+// Atualizado
 import { useState, useEffect, useRef } from 'react'
 import {
   Bell,
@@ -29,7 +30,7 @@ import {
   Wifi,
 } from 'lucide-react'
 import { atividadesHoje, funil, tempConfig, tipoAtividadeConfig, isAtividadeAtrasada, atendimentos } from '@/lib/app-data'
-import { AtividadeDetalheSheet } from '@/components/app/atividade-detalhe-sheet'
+import { AtividadeDetalheSheet } from '@/components/shared/atividade-detalhe-sheet'
 
 export function ScreenHoje({
   onVerFunil,
@@ -949,7 +950,7 @@ export function ScreenHoje({
                 </div>
               ) : acaoAlbertRoleta ? (
                 <div className="relative w-full max-w-md flex justify-center">
-                  <div className={`w-full max-w-md bg-card border-2 border-primary/50 rounded-3xl shadow-2xl p-6 flex flex-col gap-5 transition-all duration-300 ${roletaEfeitoFrup ? 'opacity-0 -translate-y-[150%] pointer-events-none' : 'animate-in zoom-in-95 duration-300'}`}>
+                  <div className={`w-full max-w-md bg-card rounded-[32px] shadow-2xl p-6 sm:p-8 flex flex-col gap-5 transition-all duration-300 ${roletaEfeitoFrup ? 'opacity-0 -translate-y-[150%] pointer-events-none' : 'animate-in zoom-in-95 duration-300'}`}>
                     <div className="flex items-center gap-3 text-primary mb-2">
                       <Bot className="size-6" />
                       <h3 className="font-serif text-xl font-bold">Ação com Albert</h3>
@@ -1069,7 +1070,7 @@ export function ScreenHoje({
                       return (
                         <div 
                           key={offset}
-                          className="absolute w-full max-w-md bg-card border-2 border-border/60 rounded-3xl p-6 flex flex-col gap-5 pointer-events-none transition-all duration-300"
+                          className="absolute w-full max-w-md bg-card rounded-[32px] shadow-xl p-6 flex flex-col gap-5 pointer-events-none transition-all duration-300"
                           style={{
                             transform: `translateY(${translateY}px) scale(${scale})`,
                             opacity: opacity,
@@ -1165,7 +1166,7 @@ export function ScreenHoje({
                       transition: startX && currentX ? 'none' : 'all 0.3s ease-out',
                       opacity: roletaEfeitoFrup ? 0 : 1
                     }}
-                    className={`w-full bg-card border-2 border-border/80 rounded-3xl p-6 flex flex-col gap-5 relative z-10 overflow-hidden ${roletaEfeitoFrup ? 'pointer-events-none' : ''}`}
+                    className={`w-full max-w-md bg-card rounded-[32px] shadow-2xl p-6 sm:p-7 flex flex-col gap-5 relative z-10 overflow-hidden ${roletaEfeitoFrup ? 'pointer-events-none' : ''}`}
                   >
                   {/* Swipe Stamps */}
                   <div 
@@ -1188,33 +1189,34 @@ export function ScreenHoje({
                   </div>
 
                   {/* Visual card badge */}
-                  <div className="flex items-center justify-between border-b border-border/50 pb-3">
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-[#2B5250] bg-[#2B5250]/10 px-2 py-0.5 rounded-md">
+                  <div className="flex items-center justify-between border-b border-border/40 pb-4">
+                    <span className="bg-[#EAEAEA] text-[#333333] px-3 py-1 rounded-full text-[10px] font-bold tracking-widest uppercase">
                       {roletaAtividades[indiceRoleta].tipo}
                     </span>
-                    <span className="text-[10px] font-semibold text-muted-foreground">
+                    <span className="text-[11px] font-semibold text-muted-foreground">
                       Tarefa {indiceRoleta + 1} de {roletaAtividades.length}
                     </span>
                   </div>
 
                   {/* Task context content */}
-                  <div>
-                    <div className="flex items-center justify-between mb-2">
-                      <h4 className="font-serif text-xl font-bold text-foreground">
-                        {roletaAtividades[indiceRoleta].cliente}
-                      </h4>
-                      <span className="text-3xl font-black text-foreground">
-                        {roletaAtividades[indiceRoleta].hora}
-                      </span>
-                    </div>
-                    <p className="text-sm text-muted-foreground leading-relaxed bg-muted/40 p-3 rounded-2xl border border-border/40">
-                      Você ficou de: <span className="font-semibold text-foreground">{roletaAtividades[indiceRoleta].titulo}</span>
+                  <div className="flex items-center justify-between mt-1">
+                    <h4 className="font-sans text-[1.4rem] font-bold text-foreground">
+                      {roletaAtividades[indiceRoleta].cliente}
+                    </h4>
+                    <span className="text-4xl font-black text-foreground">
+                      {roletaAtividades[indiceRoleta].hora}
+                    </span>
+                  </div>
+                  
+                  <div className="bg-[#F5F5F5] p-4 rounded-3xl border border-transparent">
+                    <p className="text-[13px] text-muted-foreground">
+                      Você ficou de: <span className="font-bold text-foreground">{roletaAtividades[indiceRoleta].titulo}</span>
                     </p>
                   </div>
 
                   {/* Call and Chat CTAs */}
-                  <div className="flex flex-col gap-2">
-                    <div className="flex gap-2">
+                  <div className="flex flex-col gap-3">
+                    <div className="flex gap-3">
                       <button
                         type="button"
                         onClick={() => {
@@ -1222,7 +1224,7 @@ export function ScreenHoje({
                             window.dispatchEvent(new CustomEvent('open-simulated-screen', { detail: { tipo: 'ligacao', params: { nome: roletaAtividades[indiceRoleta]?.cliente, telefone: roletaAtividades[indiceRoleta]?.telefone } } }))
                           }
                         }}
-                        className="flex-1 flex items-center justify-center gap-2 h-12 rounded-2xl bg-primary text-primary-foreground text-xs font-bold shadow-md transition-all active:scale-95"
+                        className="flex-1 flex items-center justify-center gap-2 h-14 rounded-full bg-[#3B8FC2] text-white text-[13px] font-bold transition-all active:scale-95"
                       >
                         <Phone className="size-4" /> Ligar agora
                       </button>
@@ -1233,7 +1235,7 @@ export function ScreenHoje({
                             window.dispatchEvent(new CustomEvent('open-simulated-screen', { detail: { tipo: 'whatsapp', params: { nome: roletaAtividades[indiceRoleta]?.cliente } } }))
                           }
                         }}
-                        className="flex-1 flex items-center justify-center gap-2 h-12 rounded-2xl bg-[#25D366] text-white text-xs font-bold shadow-md transition-all active:scale-95"
+                        className="flex-1 flex items-center justify-center gap-2 h-14 rounded-full bg-[#25D366] text-white text-[13px] font-bold transition-all active:scale-95"
                       >
                         <MessageCircle className="size-4" /> WhatsApp
                       </button>
@@ -1241,71 +1243,74 @@ export function ScreenHoje({
                     <button
                       type="button"
                       onClick={() => setAcaoAlbertRoleta(roletaAtividades[indiceRoleta])}
-                      className="w-full flex items-center justify-center gap-2 h-12 rounded-2xl bg-amber-500/15 text-amber-900 border border-amber-500/30 text-xs font-bold shadow-sm transition-all active:scale-95"
+                      className="w-full flex items-center justify-center gap-2 h-14 rounded-full bg-[#FFF3E0] text-[#B96A12] font-bold text-[13px] transition-all active:scale-95"
                     >
-                      <Bot className="size-4" strokeWidth={2} /> Ação com Albert
+                      <Bot className="size-4.5" strokeWidth={2} /> Ação com Albert
                     </button>
                   </div>
+                  
+                  {/* Separator */}
+                  <div className="w-full h-px bg-border/40 my-1" />
 
                   {/* Voice Feedback Section */}
-                  <div className="border-t border-border/50 pt-4 mt-1 flex flex-col gap-3">
-                    <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
+                  <div className="flex flex-col gap-3">
+                    <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
                       Feedback por Voz da Visita/Atividade
                     </label>
 
                     {gravandoAudioRoleta ? (
-                      <div className="flex items-center justify-between p-3 rounded-2xl bg-red-50 border border-red-200 text-red-600 animate-pulse">
-                        <span className="flex items-center gap-2 text-xs font-semibold">
-                          <span className="size-2 rounded-full bg-red-600 animate-ping" />
-                          Gravando áudio... {timerAudioRoleta}s
+                      <div className="flex items-center justify-between p-3 h-14 rounded-full bg-[#F4F9FD] border border-[#3B8FC2] text-[#3B8FC2] animate-pulse">
+                        <span className="flex items-center gap-2 text-[13px] font-bold pl-2">
+                          <span className="size-2.5 rounded-full bg-red-500 animate-ping" />
+                          Gravando... {timerAudioRoleta}s
                         </span>
                         <button
                           type="button"
                           onClick={toggleAudioRoleta}
-                          className="px-3 py-1 rounded-xl bg-red-600 text-white text-[10px] font-bold"
+                          className="px-4 py-1.5 rounded-full bg-red-500 text-white text-[11px] font-bold"
                         >
-                          Parar e Transcrever
+                          Transcrever
                         </button>
                       </div>
                     ) : (
                       <button
                         type="button"
                         onClick={toggleAudioRoleta}
-                        className="flex h-11 items-center justify-center gap-2 rounded-2xl border border-dashed border-primary/40 bg-primary/5 text-primary text-xs font-semibold hover:bg-primary/10 transition-all"
+                        className="flex h-14 items-center justify-center gap-2 rounded-full border border-dashed border-[#3B8FC2]/60 bg-[#F4F9FD] text-[#3B8FC2] text-[13px] font-bold hover:bg-[#F4F9FD]/80 transition-all active:scale-95"
                       >
-                        <Mic className="size-4 text-primary animate-bounce" />
+                        <Mic className="size-4.5 text-[#3B8FC2] animate-bounce" />
                         Gravar feedback por áudio
                       </button>
                     )}
 
                     {feedbackAudioRoleta && (
                       <div className="flex flex-col gap-2 mt-1">
-                        <span className="text-[10px] font-bold text-teal-deep flex items-center gap-1">
+                        <span className="text-[10px] font-bold text-[#3B8FC2] flex items-center gap-1">
                           <Bot className="size-3.5" />
                           Transcrição IA (Clique para editar):
                         </span>
                         <textarea
                           value={feedbackAudioRoleta}
                           onChange={(e) => setFeedbackAudioRoleta(e.target.value)}
-                          className="w-full h-16 resize-none rounded-xl border border-border bg-background p-2.5 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
+                          className="w-full h-16 resize-none rounded-2xl border border-border bg-background p-3 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-primary shadow-sm"
                         />
                       </div>
                     )}
                   </div>
 
                   {/* Actions Row (Skip & Conclude) */}
-                  <div className="flex gap-2.5">
+                  <div className="flex gap-3 mt-1">
                     <button
                       type="button"
                       onClick={pularTarefaRoleta}
-                      className="flex-1 h-12 rounded-2xl border border-border bg-card text-muted-foreground text-xs font-bold transition-all active:bg-muted"
+                      className="flex-[1.2] h-14 rounded-full border border-border bg-white text-muted-foreground text-[13px] font-bold transition-all active:scale-95 shadow-sm"
                     >
                       Pular
                     </button>
                     <button
                       type="button"
                       onClick={concluirTarefaRoleta}
-                      className="flex-[2] h-12 rounded-2xl bg-[#2B5250] text-white text-xs font-bold transition-all active:scale-95 shadow-md flex items-center justify-center gap-2"
+                      className="flex-[2] h-14 rounded-full bg-[#2B5250] text-white text-[13px] font-bold transition-all active:scale-95 shadow-sm flex items-center justify-center gap-2"
                     >
                       Concluir
                       <ChevronRight className="size-4" />
@@ -1313,10 +1318,10 @@ export function ScreenHoje({
                   </div>
                   
                   {/* Gesture Hints */}
-                  <div className="flex justify-between items-center text-[9px] font-bold text-muted-foreground/60 uppercase tracking-widest pt-1 px-2 select-none pointer-events-none">
+                  <div className="flex justify-between items-center text-[9px] font-bold text-muted-foreground/60 uppercase tracking-widest px-2 select-none pointer-events-none mt-2">
                     <span className="flex items-center gap-1"><ChevronLeft size={14} className="-ml-1" /> Pular</span>
                     <span className="flex items-center gap-1 flex-col justify-center translate-y-1"><ChevronUp size={14} className="-mb-1.5" /> Remarcar</span>
-                    <span className="flex items-center gap-1 text-primary/70">Concluir <ChevronRight size={14} className="-mr-1" /></span>
+                    <span className="flex items-center gap-1 text-[#3B8FC2]">Concluir <ChevronRight size={14} className="-mr-1" /></span>
                   </div>
                 </div>
               </div>
@@ -1327,7 +1332,7 @@ export function ScreenHoje({
               <button
                 type="button"
                 onClick={() => setModoRoleta(false)}
-                className="mt-8 rounded-full bg-muted/80 px-6 py-2.5 text-xs font-bold text-muted-foreground shadow-sm hover:bg-muted active:scale-95 flex items-center gap-2 z-10"
+                className="mt-8 rounded-full bg-[#EAEAEA] px-6 py-3.5 text-[13px] font-bold text-muted-foreground shadow-sm hover:bg-[#EAEAEA]/80 active:scale-95 flex items-center gap-2 z-10"
               >
                 <X className="size-4" /> Sair do Modo Roleta
               </button>

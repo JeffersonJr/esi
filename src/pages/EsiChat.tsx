@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -105,6 +106,7 @@ const chats: Chat[] = [
 export function EsiChat() {
   const { triggerAnimation } = useAnimation();
   const { toast } = useToast();
+  const navigate = useNavigate();
   const [chatsList, setChatsList] = useState<Chat[]>(chats);
   const [selectedChat, setSelectedChat] = useState<Chat>(chats[0]);
   const [searchTerm, setSearchTerm] = useState('');
@@ -155,8 +157,8 @@ export function EsiChat() {
   });
 
   return (
-    <div className="flex flex-col min-h-full">
-      <div className="max-w-[1400px] w-full mx-auto px-6 pt-4">
+    <div className="flex flex-col h-[calc(100dvh-5rem)] md:h-[calc(100vh-5rem)] overflow-hidden">
+      <div className="max-w-[1400px] w-full mx-auto px-4 md:px-6 pt-4 shrink-0">
         <PageHeader
           title="Esi.chat"
           subtitle="Central de mensagens e atendimento WhatsApp"
@@ -209,11 +211,11 @@ export function EsiChat() {
       </div>
 
       {/* Main Interface */}
-      <div className="max-w-[1400px] w-full mx-auto px-6 py-6 flex-1 flex flex-col min-h-0">
-        <div className="h-[calc(100vh-14rem)] bg-white lg:rounded-3xl shadow-sm border border-slate-200 flex overflow-hidden">
+      <div className="w-full flex-1 flex flex-col min-h-0 bg-white border-t border-slate-200">
+        <div className="flex-1 flex overflow-hidden">
 
           {/* Left Column: Chat List */}
-          <div className={`w-full lg:w-[280px] xl:w-80 border-r border-slate-100 flex flex-col bg-slate-50/30 shrink-0 ${mobileView === 'list' ? 'flex' : 'hidden lg:flex'}`}>
+          <div className={`w-full lg:w-[320px] xl:w-[360px] border-r border-slate-100 flex flex-col bg-slate-50/30 shrink-0 ${mobileView === 'list' ? 'flex' : 'hidden lg:flex'}`}>
             <div className="p-4 border-b border-slate-100 bg-white/50 backdrop-blur-md shrink-0">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
@@ -456,7 +458,7 @@ export function EsiChat() {
           </div>
 
           {/* Right Column: Copilot */}
-          <div className={`w-full lg:w-[280px] xl:w-96 border-l border-slate-100 bg-white flex flex-col shrink-0 ${mobileView === 'info' ? 'flex' : 'hidden lg:flex'}`}>
+          <div className={`w-full lg:w-[320px] xl:w-[400px] border-l border-slate-100 bg-white flex flex-col shrink-0 ${mobileView === 'info' ? 'flex' : 'hidden lg:flex'}`}>
             <Tabs defaultValue="copilot" className="flex-1 flex flex-col">
               <div className="px-5 pt-5 pb-3 border-b border-slate-100 bg-white/50 backdrop-blur-md">
                 <div className="flex items-center mb-4 lg:hidden">
@@ -546,6 +548,24 @@ export function EsiChat() {
                         <p className="text-sm font-bold text-slate-800">{selectedChat.timeline}</p>
                       </div>
                     </div>
+                  </div>
+
+                  <div className="bg-slate-50/50 border border-slate-200 p-5 rounded-3xl space-y-4 shadow-inner">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Negócio Atrelado</span>
+                      <Badge className="bg-indigo-100 text-indigo-700 hover:bg-indigo-200 border-none">Fase: Negociação</Badge>
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-slate-800">{selectedChat.interest}</h4>
+                      <p className="text-sm text-slate-500">{selectedChat.budget}</p>
+                    </div>
+                    <Button 
+                      className="w-full h-12 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl shadow-lg shadow-indigo-200 font-bold"
+                      onClick={() => navigate(`/leads/${selectedChat.id}`)}
+                    >
+                      <ArrowUpRight className="h-4 w-4 mr-2" />
+                      Abrir Negócio Completo
+                    </Button>
                   </div>
                 </div>
               </TabsContent>

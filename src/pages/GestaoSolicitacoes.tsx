@@ -235,46 +235,46 @@ export function GestaoSolicitacoes() {
       {/* TICKET MODAL (Rich Ticket) */}
       <Dialog open={!!modalAberto} onOpenChange={() => setModalAberto(null)}>
         {modalAberto && (
-          <DialogContent className="sm:max-w-[900px] h-[85vh] p-0 flex flex-col overflow-hidden bg-slate-50 rounded-3xl shadow-2xl">
+          <DialogContent className="sm:max-w-[900px] w-[95vw] h-[90vh] lg:h-[85vh] p-0 flex flex-col overflow-hidden bg-slate-50 rounded-3xl shadow-2xl">
             {/* Header da Modal */}
-            <div className="bg-white px-6 py-6 border-b border-slate-200 flex items-start justify-between shrink-0">
+            <div className="bg-white px-4 md:px-6 py-4 md:py-6 border-b border-slate-200 flex flex-col sm:flex-row sm:items-start justify-between gap-4 shrink-0">
               <div>
-                <div className="flex items-center gap-3 mb-2">
+                <div className="flex flex-wrap items-center gap-2 md:gap-3 mb-2">
                   <Badge variant="outline" className="text-slate-500 font-mono tracking-wider bg-slate-50">{modalAberto.id}</Badge>
                   {getPrioridadeBadge(modalAberto.prioridade)}
                   <Badge className="bg-indigo-50 text-indigo-700 hover:bg-indigo-100 border-none font-bold uppercase text-[10px] tracking-widest px-3">{modalAberto.status}</Badge>
                 </div>
-                <h2 className="text-2xl font-black text-slate-800 tracking-tight">{modalAberto.titulo}</h2>
+                <h2 className="text-xl md:text-2xl font-black text-slate-800 tracking-tight">{modalAberto.titulo}</h2>
               </div>
-              <div className="flex gap-2">
-                <Button variant="outline" size="sm" className="h-10 px-4 rounded-xl font-bold text-slate-600 border-slate-200 hover:bg-slate-50 transition-all">Editar</Button>
+              <div className="flex gap-2 w-full sm:w-auto mt-2 sm:mt-0">
+                <Button variant="outline" size="sm" className="h-10 px-4 flex-1 sm:flex-none rounded-xl font-bold text-slate-600 border-slate-200 hover:bg-slate-50 transition-all">Editar</Button>
                 {modalAberto.status !== 'Resolvido' && (
-                  <Button size="sm" className="h-10 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold shadow-lg shadow-emerald-200 transition-all">
-                    <CheckCircle2 className="h-4 w-4 mr-2" /> Resolver Chamado
+                  <Button size="sm" className="h-10 px-4 flex-1 sm:flex-none rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold shadow-lg shadow-emerald-200 transition-all">
+                    <CheckCircle2 className="h-4 w-4 md:mr-2" /> <span className="hidden md:inline">Resolver Chamado</span><span className="md:hidden">Resolver</span>
                   </Button>
                 )}
               </div>
             </div>
 
             {/* Corpo (Duas colunas) */}
-            <div className="flex-1 flex overflow-hidden">
+            <div className="flex-1 flex flex-col lg:flex-row overflow-y-auto lg:overflow-hidden">
 
               {/* Esquerda: Detalhes do chamado */}
-              <div className="w-1/2 overflow-y-auto p-6 space-y-6 border-r border-slate-200 custom-scrollbar">
+              <div className="w-full lg:w-1/2 lg:overflow-y-auto p-4 md:p-6 space-y-6 border-b lg:border-b-0 lg:border-r border-slate-200 custom-scrollbar shrink-0">
 
                 {/* Info Card */}
                 <Card className="shadow-sm border-none rounded-2xl overflow-hidden">
-                  <CardContent className="p-5 space-y-4 bg-white">
-                    <div className="flex items-start gap-4">
-                      <div className="h-12 w-12 rounded-2xl bg-slate-50 text-slate-400 flex items-center justify-center shrink-0 border border-slate-100 shadow-inner">
-                        <Home className="h-6 w-6" />
+                  <CardContent className="p-4 md:p-5 space-y-4 bg-white">
+                    <div className="flex items-start gap-3 md:gap-4">
+                      <div className="h-10 w-10 md:h-12 md:w-12 rounded-2xl bg-slate-50 text-slate-400 flex items-center justify-center shrink-0 border border-slate-100 shadow-inner">
+                        <Home className="h-5 w-5 md:h-6 md:w-6" />
                       </div>
                       <div className="min-w-0">
                         <p className="font-bold text-slate-800 truncate">{modalAberto.imovel}</p>
                         <p className="text-sm text-slate-500 font-medium">Inquilino: {modalAberto.inquilino}</p>
                       </div>
                     </div>
-                    <div className="p-4 bg-rose-50 rounded-2xl border border-rose-100 flex items-start gap-3 text-sm shadow-sm shadow-rose-100/50">
+                    <div className="p-3 md:p-4 bg-rose-50 rounded-2xl border border-rose-100 flex items-start gap-3 text-sm shadow-sm shadow-rose-100/50">
                       <AlertCircle className="h-5 w-5 text-rose-600 shrink-0 mt-0.5" />
                       <div>
                         <p className="font-bold text-rose-800">SLA Crítico (Total: {modalAberto.slaHoras}h)</p>
@@ -287,7 +287,7 @@ export function GestaoSolicitacoes() {
                 {/* Descrição e Fotos */}
                 <div className="space-y-3">
                   <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] px-1">Descrição do Problema</h3>
-                  <div className="p-5 bg-white rounded-2xl border border-slate-200 text-sm text-slate-600 shadow-sm leading-relaxed font-medium">
+                  <div className="p-4 md:p-5 bg-white rounded-2xl border border-slate-200 text-sm text-slate-600 shadow-sm leading-relaxed font-medium">
                     {modalAberto.descricao}
                   </div>
                 </div>
@@ -296,15 +296,15 @@ export function GestaoSolicitacoes() {
                   <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] px-1 flex items-center gap-2">
                     <Images className="h-3 w-3" /> Anexos do Inquilino
                   </h3>
-                  <div className="flex gap-3">
-                    <div className="w-24 h-24 bg-slate-100 rounded-2xl flex items-center justify-center cursor-pointer hover:bg-slate-200 transition-all border border-slate-200 shadow-inner group">
-                      <Images className="h-8 w-8 text-slate-300 group-hover:scale-110 transition-transform" />
+                  <div className="flex gap-2 md:gap-3 overflow-x-auto pb-2 custom-scrollbar">
+                    <div className="w-20 h-20 md:w-24 md:h-24 shrink-0 bg-slate-100 rounded-2xl flex items-center justify-center cursor-pointer hover:bg-slate-200 transition-all border border-slate-200 shadow-inner group">
+                      <Images className="h-6 w-6 md:h-8 md:w-8 text-slate-300 group-hover:scale-110 transition-transform" />
                     </div>
-                    <div className="w-24 h-24 bg-slate-100 rounded-2xl flex items-center justify-center cursor-pointer hover:bg-slate-200 transition-all border border-slate-200 shadow-inner group">
-                      <Images className="h-8 w-8 text-slate-300 group-hover:scale-110 transition-transform" />
+                    <div className="w-20 h-20 md:w-24 md:h-24 shrink-0 bg-slate-100 rounded-2xl flex items-center justify-center cursor-pointer hover:bg-slate-200 transition-all border border-slate-200 shadow-inner group">
+                      <Images className="h-6 w-6 md:h-8 md:w-8 text-slate-300 group-hover:scale-110 transition-transform" />
                     </div>
-                    <div className="w-24 h-24 bg-white border-2 border-dashed border-slate-200 rounded-2xl flex flex-col items-center justify-center text-slate-400 hover:border-indigo-300 hover:bg-indigo-50/30 transition-all cursor-pointer">
-                      <Plus className="h-6 w-6 mb-1" />
+                    <div className="w-20 h-20 md:w-24 md:h-24 shrink-0 bg-white border-2 border-dashed border-slate-200 rounded-2xl flex flex-col items-center justify-center text-slate-400 hover:border-indigo-300 hover:bg-indigo-50/30 transition-all cursor-pointer">
+                      <Plus className="h-5 w-5 md:h-6 md:w-6 mb-1" />
                       <span className="text-[8px] font-black uppercase tracking-widest">Anexar</span>
                     </div>
                   </div>
@@ -314,22 +314,22 @@ export function GestaoSolicitacoes() {
                 <div className="space-y-3">
                   <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] px-1">Prestador Atribuído</h3>
                   {modalAberto.prestador ? (
-                    <div className="p-4 bg-white rounded-2xl border border-slate-200 shadow-sm flex justify-between items-center transition-all hover:border-indigo-200">
+                    <div className="p-4 bg-white rounded-2xl border border-slate-200 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-3 transition-all hover:border-indigo-200">
                       <div className="flex items-center gap-4">
-                        <Avatar className="h-10 w-10 border border-slate-100 shadow-sm">
+                        <Avatar className="h-10 w-10 border border-slate-100 shadow-sm shrink-0">
                           <AvatarFallback className="bg-indigo-100 text-indigo-700 font-bold">{modalAberto.prestador.nome.substring(0, 2)}</AvatarFallback>
                         </Avatar>
-                        <div>
-                          <p className="font-bold text-slate-800">{modalAberto.prestador.nome}</p>
-                          <p className="text-xs text-slate-500 font-medium">{modalAberto.prestador.especialidade} • WhatsApp: (11) 9999-9999</p>
+                        <div className="min-w-0">
+                          <p className="font-bold text-slate-800 truncate">{modalAberto.prestador.nome}</p>
+                          <p className="text-xs text-slate-500 font-medium truncate">{modalAberto.prestador.especialidade} • WhatsApp: (11) 9999-9999</p>
                         </div>
                       </div>
-                      <Button variant="outline" size="sm" className="rounded-xl font-bold h-9">Trocar</Button>
+                      <Button variant="outline" size="sm" className="rounded-xl font-bold h-9 w-full sm:w-auto">Trocar</Button>
                     </div>
                   ) : (
-                    <div className="p-6 bg-white rounded-2xl border border-dashed border-slate-300 flex flex-col items-center justify-center text-center shadow-inner mt-2">
-                      <div className="h-12 w-12 rounded-2xl bg-slate-50 flex items-center justify-center mb-3 border border-slate-100">
-                        <User className="h-6 w-6 text-slate-300" />
+                    <div className="p-4 md:p-6 bg-white rounded-2xl border border-dashed border-slate-300 flex flex-col items-center justify-center text-center shadow-inner mt-2">
+                      <div className="h-10 w-10 md:h-12 md:w-12 rounded-2xl bg-slate-50 flex items-center justify-center mb-3 border border-slate-100">
+                        <User className="h-5 w-5 md:h-6 md:w-6 text-slate-300" />
                       </div>
                       <p className="text-sm font-bold text-slate-700">Nenhum prestador acionado</p>
                       <p className="text-xs text-slate-400 font-medium mt-1">Selecione um profissional para resolver o chamado.</p>
@@ -343,13 +343,13 @@ export function GestaoSolicitacoes() {
               </div>
 
               {/* Direita: Chat / Histórico */}
-              <div className="w-1/2 flex flex-col bg-white/50 relative">
-                <div className="p-4 py-5 font-black text-slate-800 border-b border-slate-200 bg-white shadow-sm z-10 text-[10px] uppercase tracking-[0.2em] flex items-center gap-2">
+              <div className="w-full lg:w-1/2 flex flex-col bg-white/50 relative shrink-0 min-h-[400px] lg:min-h-0 lg:overflow-hidden">
+                <div className="p-4 py-5 font-black text-slate-800 border-b border-slate-200 bg-white shadow-sm z-10 text-[10px] uppercase tracking-[0.2em] flex items-center gap-2 shrink-0">
                   <MessageSquare className="h-4 w-4 text-indigo-500" /> Histórico de Comunicação
                 </div>
 
                 {/* Área de mensagens */}
-                <div className="flex-1 overflow-y-auto p-4 space-y-6 custom-scrollbar bg-slate-50/30">
+                <div className="flex-1 lg:overflow-y-auto p-4 space-y-6 custom-scrollbar bg-slate-50/30">
 
                   {/* Msg Sistema */}
                   <div className="flex justify-center">
@@ -358,8 +358,8 @@ export function GestaoSolicitacoes() {
 
                   {/* Inquilino */}
                   <div className="flex gap-3">
-                    <Avatar className="h-9 w-9 mt-1 border border-slate-100 shadow-sm"><AvatarImage src="https://i.pravatar.cc/100?img=1" /><AvatarFallback className="font-bold">IN</AvatarFallback></Avatar>
-                    <div className="bg-white p-4 rounded-2xl rounded-tl-sm shadow-lg shadow-slate-200/50 border border-slate-100 text-sm text-slate-700 max-w-[85%] leading-relaxed">
+                    <Avatar className="h-8 w-8 md:h-9 md:w-9 mt-1 border border-slate-100 shadow-sm shrink-0"><AvatarImage src="https://i.pravatar.cc/100?img=1" /><AvatarFallback className="font-bold">IN</AvatarFallback></Avatar>
+                    <div className="bg-white p-3 md:p-4 rounded-2xl rounded-tl-sm shadow-lg shadow-slate-200/50 border border-slate-100 text-sm text-slate-700 max-w-[85%] md:max-w-[85%] leading-relaxed">
                       <p className="font-black text-[10px] text-slate-400 uppercase tracking-wider mb-1.5">{modalAberto.inquilino}</p>
                       Oi, abri o chamado porque de repente a chave não quis virar de jeito nenhum na fechadura da porta principal.
                       <p className="text-[10px] font-bold text-slate-300 mt-2 text-right">09:12</p>
@@ -368,7 +368,7 @@ export function GestaoSolicitacoes() {
 
                   {/* Agência */}
                   <div className="flex gap-3 justify-end">
-                    <div className="bg-indigo-600 p-4 rounded-2xl rounded-tr-sm shadow-xl shadow-indigo-100 text-sm text-white max-w-[85%] leading-relaxed">
+                    <div className="bg-indigo-600 p-3 md:p-4 rounded-2xl rounded-tr-sm shadow-xl shadow-indigo-100 text-sm text-white max-w-[85%] leading-relaxed">
                       <p className="font-black text-[10px] text-indigo-200 uppercase tracking-wider mb-1.5">Você (Agência)</p>
                       Olá {modalAberto.inquilino.split(' ')[0]}, já recebemos a notificação. Estamos acionando o chaveiro parceiro para ir aí ainda hoje na parte da tarde entre 14h e 16h. Tudo bem?
                       <p className="text-[10px] font-bold text-indigo-300/60 mt-2 text-right">09:15</p>
@@ -377,23 +377,23 @@ export function GestaoSolicitacoes() {
 
                   {/* Sistema Update */}
                   <div className="flex justify-center my-4">
-                    <span className="bg-white border border-indigo-100 text-indigo-600 text-[10px] font-bold px-4 py-2 rounded-2xl flex items-center gap-2 shadow-sm">
-                      <CheckCircle2 className="h-4 w-4 text-emerald-500" /> Prestador <strong className="font-black px-1">Chaveiro Rápido</strong> foi atribuído ao chamado.
+                    <span className="bg-white border border-indigo-100 text-indigo-600 text-[9px] md:text-[10px] font-bold px-3 md:px-4 py-2 rounded-2xl flex items-center justify-center text-center gap-1.5 shadow-sm mx-4">
+                      <CheckCircle2 className="h-3 w-3 md:h-4 md:w-4 shrink-0 text-emerald-500" /> <span className="truncate whitespace-normal">Prestador <strong className="font-black px-1">Chaveiro Rápido</strong> foi atribuído.</span>
                     </span>
                   </div>
 
                 </div>
 
                 {/* Input Area */}
-                <div className="p-6 bg-white border-t border-slate-200 shrink-0 shadow-[0_-4px_20px_rgba(0,0,0,0.03)]">
+                <div className="p-4 md:p-6 bg-white border-t border-slate-200 shrink-0 shadow-[0_-4px_20px_rgba(0,0,0,0.03)]">
                   <div className="relative">
                     <Textarea
                       placeholder="Mande uma mensagem..."
-                      className="resize-none pr-14 text-sm bg-slate-50 border-slate-200 h-24 rounded-2xl focus:ring-indigo-100 focus:border-indigo-300 transition-all font-medium py-4 px-5"
+                      className="resize-none pr-14 text-sm bg-slate-50 border-slate-200 h-20 md:h-24 rounded-2xl focus:ring-indigo-100 focus:border-indigo-300 transition-all font-medium py-3 md:py-4 px-4 md:px-5"
                     />
-                    <div className="absolute right-3 bottom-3 flex gap-2">
-                      <Button variant="ghost" size="icon" className="h-10 w-10 text-slate-400 hover:text-indigo-600 rounded-xl hover:bg-slate-100 transition-all"><Paperclip className="h-5 w-5" /></Button>
-                      <Button size="icon" className="h-10 w-10 rounded-xl bg-indigo-600 hover:bg-indigo-700 shadow-lg shadow-indigo-100 transition-all"><Send className="h-5 w-5" /></Button>
+                    <div className="absolute right-2 md:right-3 bottom-2 md:bottom-3 flex gap-1.5 md:gap-2">
+                      <Button variant="ghost" size="icon" className="h-8 w-8 md:h-10 md:w-10 text-slate-400 hover:text-indigo-600 rounded-xl hover:bg-slate-100 transition-all"><Paperclip className="h-4 w-4 md:h-5 md:w-5" /></Button>
+                      <Button size="icon" className="h-8 w-8 md:h-10 md:w-10 rounded-xl bg-indigo-600 hover:bg-indigo-700 shadow-lg shadow-indigo-100 transition-all"><Send className="h-4 w-4 md:h-5 md:w-5" /></Button>
                     </div>
                   </div>
                 </div>

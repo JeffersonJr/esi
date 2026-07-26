@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Separator } from '@/components/ui/separator';
@@ -20,7 +21,7 @@ import {
   Instagram, Facebook, MessageSquare, CreditCard, Share2, Database,
   ChevronRight, Camera, SmartphoneIcon, Monitor, Clock, Calendar,
   CreditCardIcon, Wallet, ArrowUpRight, CheckCircle2, ShieldCheck,
-  Building, MapPin, Phone, Briefcase, MoreVertical, DollarSign, Download, Home
+  Building, MapPin, Phone, Briefcase, MoreVertical, DollarSign, Download, Home, Repeat, Link2, Copy, Eye, EyeOff
 } from 'lucide-react';
 import {
   Breadcrumb,
@@ -32,15 +33,36 @@ import {
 } from "@/components/ui/breadcrumb";
 import { PageHeader } from '@/components/layout/PageHeader';
 import { useTheme } from '@/contexts/theme-context';
+import { useLayout } from '@/contexts/layout-context';
 import { useToast } from '@/hooks/use-toast';
 
 export function Configuracoes() {
   const { theme, setTheme } = useTheme();
+  const { layout, setLayout } = useLayout();
   const { toast } = useToast();
   const [activeTab, setActiveTab] = useState('geral');
   const [saved, setSaved] = useState(false);
   const [twoFactorModalOpen, setTwoFactorModalOpen] = useState(false);
   const [twoFactorEnabled, setTwoFactorEnabled] = useState(false);
+
+  const [telefones, setTelefones] = useState([{ id: 1, nome: '', numero: '', tipo: 'celular', exibicao: 'padrao' }]);
+  const [ips, setIps] = useState([{ id: 1, nome: 'Escritório Principal', ip: '192.168.1.100' }]);
+  const [novoIpNome, setNovoIpNome] = useState('');
+  const [novoIp, setNovoIp] = useState('');
+
+  const handleAddTelefone = () => setTelefones([...telefones, { id: Date.now(), nome: '', numero: '', tipo: 'celular', exibicao: 'padrao' }]);
+  const handleRemoveTelefone = (id: number) => setTelefones(telefones.filter(t => t.id !== id));
+
+  const handleAddIp = () => {
+    if (novoIpNome && novoIp) {
+      setIps([...ips, { id: Date.now(), nome: novoIpNome, ip: novoIp }]);
+      setNovoIpNome('');
+      setNovoIp('');
+    }
+  };
+
+  const handleRemoveIp = (id: number) => setIps(ips.filter(i => i.id !== id));
+
 
   const handleSave = () => {
     setSaved(true);
@@ -54,10 +76,11 @@ export function Configuracoes() {
 
   const menuItems = [
     { id: 'geral', label: 'Dados da Imobiliária', icon: Building },
-    { id: 'perfil', label: 'Meu Perfil', icon: User },
     { id: 'equipe', label: 'Equipe e Permissões', icon: Users },
     { id: 'notificacoes', label: 'Notificações', icon: Bell },
-    { id: 'seguranca', label: 'Segurança e Login', icon: Lock },
+    { id: 'rodizio', label: 'Rodízio de Mensagens', icon: Repeat },
+    { id: 'imoveis', label: 'Imóveis', icon: Home },
+    { id: 'conexoes', label: 'Conexões', icon: Link2 },
     { id: 'branding', label: 'Identidade Visual', icon: Palette },
     { id: 'integracoes', label: 'Hub de Integrações', icon: Zap },
     { id: 'financeiro', label: 'Plano e Cobrança', icon: CreditCard },
@@ -95,11 +118,7 @@ export function Configuracoes() {
 
                 <Separator />
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  <div className="space-y-2">
-                    <Label className="font-bold">Telefone</Label>
-                    <Input placeholder="(11) 9999-9999" className="bg-slate-50" />
-                  </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2">
                     <Label className="font-bold">E-mail Comercial</Label>
                     <Input placeholder="contato@esi.chat" className="bg-slate-50" />
@@ -110,96 +129,115 @@ export function Configuracoes() {
                   </div>
                 </div>
 
-                <div className="space-y-2">
-                  <Label className="font-bold">Endereço Completo</Label>
-                  <Input placeholder="Av. Paulista, 1000 - São Paulo, SP" className="bg-slate-50" />
-                </div>
-              </CardContent>
-            </Card>
 
-            <Card className="border-none shadow-sm">
-              <CardHeader>
-                <CardTitle>Configurações de Lead</CardTitle>
-                <CardDescription>Defina como os novos leads do esi.chat são distribuídos.</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="flex items-center justify-between p-4 bg-slate-50 rounded-xl border border-slate-100">
-                  <div className="space-y-0.5">
-                    <Label className="font-bold text-slate-800">Distribuição Round-Robin</Label>
-                    <p className="text-sm text-slate-500 font-medium">Os leads são distribuídos igualmente entre corretores ativos.</p>
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <Label className="font-bold text-lg">Telefones</Label>
+                    <Button variant="outline" size="sm" onClick={handleAddTelefone}><Plus className="w-4 h-4 mr-2" /> Adicionar Telefone</Button>
                   </div>
-                  <Switch defaultChecked />
+                  {telefones.map((tel, index) => (
+                    <div key={tel.id} className="grid grid-cols-1 md:grid-cols-12 gap-4 items-end p-4 bg-slate-50 rounded-xl border border-slate-100">
+                      <div className="md:col-span-3 space-y-2">
+                        <Label className="font-bold text-xs">Nome (Identificação)</Label>
+                        <Input placeholder="Ex: Plantão Vendas" value={tel.nome} onChange={(e) => {
+                          const newTels = [...telefones];
+                          newTels[index].nome = e.target.value;
+                          setTelefones(newTels);
+                        }} />
+                      </div>
+                      <div className="md:col-span-3 space-y-2">
+                        <Label className="font-bold text-xs">Número</Label>
+                        <Input placeholder="+55 11 99999-9999" value={tel.numero} onChange={(e) => {
+                          const newTels = [...telefones];
+                          newTels[index].numero = e.target.value;
+                          setTelefones(newTels);
+                        }} />
+                      </div>
+                      <div className="md:col-span-3 space-y-2">
+                        <Label className="font-bold text-xs">Tipo</Label>
+                        <Select value={tel.tipo} onValueChange={(val) => {
+                          const newTels = [...telefones];
+                          newTels[index].tipo = val;
+                          setTelefones(newTels);
+                        }}>
+                          <SelectTrigger><SelectValue /></SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="celular">Celular</SelectItem>
+                            <SelectItem value="residencial">Residencial</SelectItem>
+                            <SelectItem value="trabalho">Trabalho</SelectItem>
+                            <SelectItem value="whatsapp">WhatsApp</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div className="md:col-span-2 space-y-2">
+                        <Label className="font-bold text-xs">Exibição</Label>
+                        <Select value={tel.exibicao} onValueChange={(val) => {
+                          const newTels = [...telefones];
+                          newTels[index].exibicao = val;
+                          setTelefones(newTels);
+                        }}>
+                          <SelectTrigger><SelectValue /></SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="padrao">Padrão</SelectItem>
+                            <SelectItem value="principal">Principal</SelectItem>
+                            <SelectItem value="secundario">Secundário</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div className="md:col-span-1">
+                        <Button variant="ghost" className="text-red-500 w-full" onClick={() => handleRemoveTelefone(tel.id)}>
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-                <div className="flex items-center justify-between p-4 bg-slate-50 rounded-xl border border-slate-100">
-                  <div className="space-y-0.5">
-                    <Label className="font-bold text-slate-800">Forçar Atendimento Humano</Label>
-                    <p className="text-sm text-slate-500 font-medium">O chatbot transfere imediatamente para um humano após a primeira interação.</p>
+
+                <Separator />
+
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <Label className="font-bold text-lg">Endereço Completo</Label>
                   </div>
-                  <Switch />
+                  <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
+                    <div className="md:col-span-3 space-y-2">
+                      <Label className="font-bold text-xs">CEP</Label>
+                      <div className="flex gap-2">
+                        <Input placeholder="00000-000" className="bg-slate-50" />
+                        <Button variant="secondary"><Search className="w-4 h-4" /></Button>
+                      </div>
+                    </div>
+                    <div className="md:col-span-7 space-y-2">
+                      <Label className="font-bold text-xs">Rua / Logradouro</Label>
+                      <Input placeholder="Av. Paulista" className="bg-slate-50" />
+                    </div>
+                    <div className="md:col-span-2 space-y-2">
+                      <Label className="font-bold text-xs">Número</Label>
+                      <Input placeholder="1000" className="bg-slate-50" />
+                    </div>
+                    <div className="md:col-span-4 space-y-2">
+                      <Label className="font-bold text-xs">Complemento</Label>
+                      <Input placeholder="Sala 42" className="bg-slate-50" />
+                    </div>
+                    <div className="md:col-span-3 space-y-2">
+                      <Label className="font-bold text-xs">Bairro</Label>
+                      <Input placeholder="Bela Vista" className="bg-slate-50" />
+                    </div>
+                    <div className="md:col-span-3 space-y-2">
+                      <Label className="font-bold text-xs">Cidade</Label>
+                      <Input placeholder="São Paulo" className="bg-slate-50" />
+                    </div>
+                    <div className="md:col-span-2 space-y-2">
+                      <Label className="font-bold text-xs">Estado (UF)</Label>
+                      <Input placeholder="SP" className="bg-slate-50" />
+                    </div>
+                  </div>
                 </div>
+
               </CardContent>
             </Card>
           </div>
         );
-
-      case 'perfil':
-        return (
-          <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
-            <Card className="border-none shadow-sm">
-              <CardHeader>
-                <CardTitle>Informações Pessoais</CardTitle>
-                <CardDescription>Mantenha seus dados de contato sempre atualizados.</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-8">
-                <div className="flex items-center gap-6">
-                  <div className="relative group">
-                    <Avatar className="h-24 w-24 border-4 border-slate-50 shadow-md">
-                      <AvatarImage src="https://github.com/shadcn.png" />
-                      <AvatarFallback>AD</AvatarFallback>
-                    </Avatar>
-                    <button className="absolute inset-0 flex items-center justify-center bg-black/40 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
-                      <Camera className="h-6 w-6 text-white" />
-                    </button>
-                  </div>
-                  <div className="space-y-1">
-                    <h3 className="font-bold text-slate-800 text-lg">Jefferson Jr.</h3>
-                    <p className="text-sm text-slate-500 font-medium">Administrador da Conta</p>
-                    <Button variant="outline" size="sm" className="h-8 text-[11px] font-bold uppercase tracking-wider">Trocar Foto</Button>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-2">
-                    <Label className="font-bold">Nome Completo</Label>
-                    <Input defaultValue="Jefferson Jr." className="bg-slate-50" />
-                  </div>
-                  <div className="space-y-2">
-                    <Label className="font-bold">E-mail Profissional</Label>
-                    <Input defaultValue="jefferson@esi.chat" className="bg-slate-50" />
-                  </div>
-                  <div className="space-y-2">
-                    <Label className="font-bold">WhatsApp</Label>
-                    <Input defaultValue="(11) 98888-8888" className="bg-slate-50" />
-                  </div>
-                  <div className="space-y-2">
-                    <Label className="font-bold">CRECI</Label>
-                    <Input defaultValue="12345-F" className="bg-slate-50" />
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <Label className="font-bold">Bio Profissional</Label>
-                  <Textarea
-                    placeholder="Conte um pouco sobre sua experiência..."
-                    className="bg-slate-50 min-h-[100px]"
-                    defaultValue="Especialista em imóveis de alto padrão na região dos Jardins."
-                  />
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        );
-
       case 'equipe':
         return (
           <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
@@ -319,81 +357,6 @@ export function Configuracoes() {
           </div>
         );
 
-      case 'seguranca':
-        return (
-          <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
-            <Card className="border-none shadow-sm">
-              <CardHeader>
-                <CardTitle>Segurança da Conta</CardTitle>
-                <CardDescription>Gerencie sua senha e métodos de autenticação.</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="space-y-4">
-                  <div className="space-y-2">
-                    <Label className="font-bold">Senha Atual</Label>
-                    <Input type="password" placeholder="••••••••" className="bg-slate-50" />
-                  </div>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label className="font-bold">Nova Senha</Label>
-                      <Input type="password" placeholder="••••••••" className="bg-slate-50" />
-                    </div>
-                    <div className="space-y-2">
-                      <Label className="font-bold">Confirmar Senha</Label>
-                      <Input type="password" placeholder="••••••••" className="bg-slate-50" />
-                    </div>
-                  </div>
-                  <Button variant="outline" className="font-bold text-xs h-9">Alterar Senha</Button>
-                </div>
-
-                <Separator />
-
-                <div className="flex items-center justify-between p-4 bg-indigo-50/50 rounded-2xl border border-indigo-100">
-                  <div className="flex items-center gap-4">
-                    <div className="h-10 w-10 rounded-xl bg-indigo-600 text-white flex items-center justify-center">
-                      <Shield className="h-5 w-5" />
-                    </div>
-                    <div className="min-w-0">
-                      <p className="font-bold text-indigo-900 text-sm">Autenticação em Dois Fatores (2FA)</p>
-                      <p className="text-xs text-indigo-600 font-medium">Adicione uma camada extra de proteção via App ou SMS.</p>
-                    </div>
-                  </div>
-                  <Button
-                    variant="default"
-                    className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold h-9 px-4"
-                    onClick={() => setTwoFactorModalOpen(true)}
-                  >
-                    Ativar 2FA
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="border-none shadow-sm">
-              <CardHeader>
-                <CardTitle className="text-sm">Dispositivos Conectados</CardTitle>
-                <CardDescription>Sessões ativas em outros navegadores ou aparelhos.</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                {[
-                  { device: 'MacBook Pro · Chrome', location: 'São Paulo, Brasil', active: true },
-                  { device: 'iPhone 15 · Safari', location: 'São Paulo, Brasil', active: false },
-                ].map((session, i) => (
-                  <div key={i} className="flex items-center justify-between py-2">
-                    <div className="flex items-center gap-3">
-                      {session.device.includes('iPhone') ? <SmartphoneIcon className="h-5 w-5 text-slate-400" /> : <Monitor className="h-5 w-5 text-slate-400" />}
-                      <div>
-                        <p className="font-bold text-slate-800 text-sm">{session.device} {session.active && <Badge className="bg-emerald-100 text-emerald-700 border-none ml-2 text-[8px] font-black uppercase">Atual</Badge>}</p>
-                        <p className="text-[10px] text-slate-500 font-medium">{session.location}</p>
-                      </div>
-                    </div>
-                    {!session.active && <Button variant="ghost" className="text-rose-500 font-bold text-xs h-8">Encerrar</Button>}
-                  </div>
-                ))}
-              </CardContent>
-            </Card>
-          </div>
-        );
 
       case 'branding':
         return (
@@ -447,6 +410,28 @@ export function Configuracoes() {
                           >
                             <div className={`h-8 w-full rounded-md ${t === 'dark' ? 'bg-slate-900' : t === 'light' ? 'bg-slate-100' : 'bg-gradient-to-r from-slate-100 to-slate-900'}`} />
                             <span className="text-[10px] font-black uppercase text-slate-600">{t === 'light' ? 'Claro' : t === 'dark' ? 'Escuro' : 'Auto'}</span>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="space-y-4 pt-4 border-t border-slate-100">
+                      <Label className="font-bold">Disposição do Menu</Label>
+                      <div className="grid grid-cols-3 gap-2">
+                        {[
+                          { id: 'sidebar', label: 'Lateral', icon: <Layout className="w-4 h-4" /> },
+                          { id: 'topbar', label: 'Superior', icon: <Monitor className="w-4 h-4" /> },
+                          { id: 'dock', label: 'Dock (Mac)', icon: <SmartphoneIcon className="w-4 h-4" /> },
+                        ].map((l) => (
+                          <button
+                            key={l.id}
+                            onClick={() => setLayout(l.id as any)}
+                            className={`flex flex-col items-center gap-2 p-3 rounded-xl border-2 transition-all ${layout === l.id ? 'border-indigo-600 bg-indigo-50/50' : 'border-slate-100 bg-white hover:border-slate-200'}`}
+                          >
+                            <div className="h-8 w-full rounded-md bg-slate-100 flex items-center justify-center text-slate-400">
+                              {l.icon}
+                            </div>
+                            <span className="text-[10px] font-black uppercase text-slate-600">{l.label}</span>
                           </button>
                         ))}
                       </div>
@@ -512,6 +497,200 @@ export function Configuracoes() {
                 </Card>
               ))}
             </div>
+          </div>
+        );
+
+
+      case 'rodizio':
+        return (
+          <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
+            <Card className="border-none shadow-sm">
+              <CardHeader>
+                <CardTitle>Rodízio de Mensagens</CardTitle>
+                <CardDescription>Configurações gerais do rodízio de atendimento de clientes.</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="flex items-center justify-between p-4 bg-slate-50 rounded-xl border border-slate-100">
+                  <div className="space-y-0.5 max-w-[80%]">
+                    <Label className="font-bold text-slate-800">O corretor receberá leads de imóveis que ele não possui vinculo como criador ou captador?</Label>
+                  </div>
+                  <Switch defaultChecked />
+                </div>
+
+                <div className="flex items-center justify-between p-4 bg-slate-50 rounded-xl border border-slate-100">
+                  <div className="space-y-0.5 max-w-[80%]">
+                    <Label className="font-bold text-slate-800">Habilitar encaminhamento de e-mails recebidos nas caixas dos portais</Label>
+                  </div>
+                  <Switch defaultChecked />
+                </div>
+
+                <div className="space-y-2 p-4 bg-slate-50 rounded-xl border border-slate-100">
+                  <Label className="font-bold text-slate-800">E-mail que receberá os e-mails encaminhados das caixas dos portais</Label>
+                  <Input placeholder="contato@imobiliaria.com.br" defaultValue="contato@imobiliaria.com.br" />
+                </div>
+
+                <div className="flex items-center justify-between p-4 bg-slate-50 rounded-xl border border-slate-100">
+                  <div className="space-y-0.5 max-w-[80%]">
+                    <Label className="font-bold text-slate-800">Permitir que um cliente seja atendido por mais de um corretor</Label>
+                  </div>
+                  <Switch />
+                </div>
+
+                <div className="flex items-center justify-between p-4 bg-slate-50 rounded-xl border border-slate-100">
+                  <div className="space-y-0.5 max-w-[80%]">
+                    <Label className="font-bold text-slate-800">Habilitar sistema de pré-vendas</Label>
+                  </div>
+                  <Switch />
+                </div>
+
+                <div className="flex items-center justify-between p-4 bg-slate-50 rounded-xl border border-slate-100">
+                  <div className="space-y-0.5 max-w-[80%]">
+                    <Label className="font-bold text-slate-800">Forçar o corretor a ser responsável pelo negócio, mesmo que haja duplicatas de atendimento</Label>
+                  </div>
+                  <Switch />
+                </div>
+
+                <div className="space-y-2 p-4 bg-slate-50 rounded-xl border border-slate-100">
+                  <Label className="font-bold text-slate-800">Caso o cliente esteja fiel a um usuário desativado, que ação deve ser tomada?</Label>
+                  <Select defaultValue="continuar">
+                    <SelectTrigger><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="continuar">Continuar seguindo rodízio</SelectItem>
+                      <SelectItem value="remover">Remover fidelidade</SelectItem>
+                      <SelectItem value="transferir">Transferir para o corretor da vez</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="space-y-2 p-4 bg-slate-50 rounded-xl border border-slate-100">
+                  <Label className="font-bold text-slate-800">Adicionar uma das tags irá acionar o rodízio imediatamente</Label>
+                  <Input placeholder="Ex: urgente, prioridade, vip" />
+                  <p className="text-xs text-muted-foreground">Separe as tags por vírgula.</p>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        );
+
+      case 'imoveis':
+        return (
+          <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
+            <Card className="border-none shadow-sm">
+              <CardHeader>
+                <CardTitle>Imóveis</CardTitle>
+                <CardDescription>Configurações referentes aos imóveis do sistema.</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex items-center justify-between p-4 bg-slate-50 rounded-xl border border-slate-100">
+                  <Label className="font-bold text-slate-800 max-w-[80%]">Requer aprovação antes de aceitar imóvel?</Label>
+                  <Switch />
+                </div>
+                <div className="flex items-center justify-between p-4 bg-slate-50 rounded-xl border border-slate-100">
+                  <Label className="font-bold text-slate-800 max-w-[80%]">Utilizar código alternativo? (Exibição e busca no site/portais)</Label>
+                  <Switch />
+                </div>
+                <div className="flex items-center justify-between p-4 bg-slate-50 rounded-xl border border-slate-100">
+                  <Label className="font-bold text-slate-800 max-w-[80%]">Gerar código alternativo automaticamente, quando não fornecido?</Label>
+                  <Switch />
+                </div>
+                <div className="flex items-center justify-between p-4 bg-slate-50 rounded-xl border border-slate-100">
+                  <Label className="font-bold text-slate-800 max-w-[80%]">Tornar obrigatório valor de área?</Label>
+                  <Switch />
+                </div>
+                <div className="flex items-center justify-between p-4 bg-slate-50 rounded-xl border border-slate-100">
+                  <Label className="font-bold text-slate-800 max-w-[80%]">Enviar imóveis para pré-seleção ao invés de Seleção ao mandar a um portal?</Label>
+                  <Switch />
+                </div>
+                <div className="flex items-center justify-between p-4 bg-slate-50 rounded-xl border border-slate-100">
+                  <Label className="font-bold text-slate-800 max-w-[80%]">Tornar obrigatório preenchimento de toda composição?</Label>
+                  <Switch />
+                </div>
+                <div className="flex items-center justify-between p-4 bg-slate-50 rounded-xl border border-slate-100">
+                  <Label className="font-bold text-slate-800 max-w-[80%]">Tornar obrigatório os proprietários?</Label>
+                  <Switch />
+                </div>
+                <div className="flex items-center justify-between p-4 bg-slate-50 rounded-xl border border-slate-100">
+                  <Label className="font-bold text-slate-800 max-w-[80%]">Tornar obrigatório fotos?</Label>
+                  <Switch />
+                </div>
+                <div className="flex items-center justify-between p-4 bg-slate-50 rounded-xl border border-slate-100">
+                  <Label className="font-bold text-slate-800 max-w-[80%]">Tornar obrigatório descrição do imóvel para divulgação?</Label>
+                  <Switch />
+                </div>
+                <div className="flex items-center justify-between p-4 bg-slate-50 rounded-xl border border-slate-100">
+                  <Label className="font-bold text-slate-800 max-w-[80%]">Tornar obrigatória a situação da escritura?</Label>
+                  <Switch />
+                </div>
+                <div className="flex items-center justify-between p-4 bg-slate-50 rounded-xl border border-slate-100">
+                  <Label className="font-bold text-slate-800 max-w-[80%]">Tornar obrigatório o título do imóvel?</Label>
+                  <Switch />
+                </div>
+                <div className="flex items-center justify-between p-4 bg-slate-50 rounded-xl border border-slate-100">
+                  <Label className="font-bold text-slate-800 max-w-[80%]">Tornar obrigatório a razão de troca de status?</Label>
+                  <Switch />
+                </div>
+                <div className="flex items-center justify-between p-4 bg-slate-50 rounded-xl border border-slate-100">
+                  <Label className="font-bold text-slate-800 max-w-[80%]">Tornar obrigatório o ano de construção?</Label>
+                  <Switch />
+                </div>
+
+                <div className="space-y-2 p-4 bg-slate-50 rounded-xl border border-slate-100">
+                  <Label className="font-bold text-slate-800">Deverá ser adicionado um vídeo ao imóvel quando ele for salvo, caso nenhum seja fornecido?</Label>
+                  <Input placeholder="URL do YouTube ou link direto do vídeo" />
+                </div>
+
+                <div className="space-y-2 p-4 bg-slate-50 rounded-xl border border-slate-100">
+                  <Label className="font-bold text-slate-800">Marcar imóveis como desatualizados após X dias</Label>
+                  <Input type="number" defaultValue={30} min={30} />
+                </div>
+
+                <div className="flex items-center justify-between p-4 bg-slate-50 rounded-xl border border-slate-100">
+                  <Label className="font-bold text-slate-800 max-w-[80%]">Permitir Albert solicitar informações a respeito de imóveis desatualizados?</Label>
+                  <Switch />
+                </div>
+
+                <div className="space-y-2 p-4 bg-slate-50 rounded-xl border border-slate-100">
+                  <Label className="font-bold text-slate-800">Quantidade mínima para cadastro de fotos nos imóveis (Alerta durante cadastro)</Label>
+                  <Input type="number" defaultValue={0} min={0} />
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        );
+
+      case 'conexoes':
+        return (
+          <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
+            <Card className="border-none shadow-sm">
+              <CardHeader>
+                <CardTitle>Conexões Externas</CardTitle>
+                <CardDescription>Configurações de integração externa e chaves de API.</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="space-y-4 p-5 bg-slate-50 rounded-xl border border-slate-100">
+                  <div className="flex items-center gap-2 text-indigo-600 mb-2">
+                    <Key className="w-5 h-5" />
+                    <Label className="font-bold text-lg text-indigo-900">Token de Integração Externa</Label>
+                  </div>
+                  <p className="text-sm text-slate-600">Este token é utilizado para autenticar requisições de sistemas de terceiros na sua conta ESI. Mantenha em segurança.</p>
+
+                  <div className="flex gap-2 mt-4">
+                    <Input readOnly value="esi_live_qk7X9Lm2B4pRvN8jHwcYtF5Z0" className="font-mono text-sm bg-white" />
+                    <Button variant="secondary" onClick={() => {
+                      navigator.clipboard.writeText("esi_live_qk7X9Lm2B4pRvN8jHwcYtF5Z0");
+                      toast({ title: 'Token copiado', description: 'O token foi copiado para sua área de transferência.', variant: 'success' });
+                    }}>
+                      <Copy className="w-4 h-4 mr-2" /> Copiar
+                    </Button>
+                  </div>
+                  <div className="flex justify-end pt-2">
+                    <Button variant="destructive" size="sm" className="bg-red-50 text-red-600 hover:bg-red-100 hover:text-red-700 border-none shadow-none">
+                      <Repeat className="w-4 h-4 mr-2" /> Gerar novo token
+                    </Button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
           </div>
         );
 
@@ -659,21 +838,6 @@ export function Configuracoes() {
             </nav>
           </ScrollArea>
 
-          <div className="mt-6 p-5 bg-white rounded-3xl border border-slate-100 shadow-sm mb-4">
-            <div className="flex items-center gap-3 mb-6">
-              <Avatar className="h-12 w-12 border-2 border-indigo-50 shadow-sm">
-                <AvatarImage src="https://github.com/shadcn.png" />
-                <AvatarFallback className="bg-indigo-50 text-indigo-700 font-bold uppercase">AD</AvatarFallback>
-              </Avatar>
-              <div className="min-w-0">
-                <p className="font-black text-slate-800 text-sm truncate">Jefferson Jr.</p>
-                <Badge variant="outline" className="bg-indigo-50 text-indigo-700 border-none font-black text-[9px] uppercase tracking-widest mt-0.5">ADMIN MASTER</Badge>
-              </div>
-            </div>
-            <Button variant="outline" className="w-full text-rose-500 border-rose-50 hover:bg-rose-50 hover:border-rose-100 hover:text-rose-600 font-black text-xs h-11 rounded-xl group">
-              <LogOut className="h-4 w-4 mr-2 transition-transform group-hover:-translate-x-1" /> Sair do Painel
-            </Button>
-          </div>
         </aside>
 
         {/* Content Area */}

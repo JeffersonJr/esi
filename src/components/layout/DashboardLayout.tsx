@@ -1,22 +1,28 @@
 import { Outlet } from 'react-router-dom';
 import { Sidebar } from './Sidebar';
 import { Header } from './Header';
+import { TopNavigation } from './TopNavigation';
+import { DockNavigation } from './DockNavigation';
 import { Sheet, SheetContent } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
 import { Menu } from 'lucide-react';
 import { useState } from 'react';
+import { useLayout } from '@/contexts/layout-context';
 
 export function DashboardLayout() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { layout } = useLayout();
 
   return (
     <div className="flex h-screen overflow-hidden bg-background">
-      {/* Desktop Sidebar */}
-      <div className="hidden md:flex flex-shrink-0">
-        <Sidebar />
-      </div>
+      {/* Desktop Sidebar (Only for 'sidebar' layout) */}
+      {layout === 'sidebar' && (
+        <div className="hidden md:flex flex-shrink-0">
+          <Sidebar />
+        </div>
+      )}
 
-      {/* Mobile Sidebar (Drawer) */}
+      {/* Mobile Sidebar (Drawer) - Always available on mobile regardless of layout */}
       <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
         <SheetContent side="left" className="p-0 w-[220px] border-r border-border">
           <Sidebar />
@@ -38,9 +44,25 @@ export function DashboardLayout() {
             </Button>
           }
         />
-        <main className="flex-1 overflow-y-auto bg-muted/30 px-4 py-6 md:px-6 md:py-7 lg:px-8 lg:py-8">
+        
+        {/* Top Navigation (Only for 'topbar' layout) */}
+        {layout === 'topbar' && (
+          <div className="hidden md:block">
+            <TopNavigation />
+          </div>
+        )}
+
+        {/* Content Area */}
+        <main className="flex-1 overflow-y-auto bg-muted/30 px-4 py-6 md:px-6 md:py-7 lg:px-8 lg:py-8 relative">
           <Outlet />
         </main>
+
+        {/* Dock Navigation (Only for 'dock' layout) */}
+        {layout === 'dock' && (
+          <div className="hidden md:block">
+            <DockNavigation />
+          </div>
+        )}
       </div>
     </div>
   );

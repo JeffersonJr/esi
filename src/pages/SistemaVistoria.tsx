@@ -332,87 +332,87 @@ export function SistemaVistoria() {
         <DialogContent className="sm:max-w-screen-xl w-[95vw] h-[90vh] p-0 flex flex-col overflow-hidden bg-slate-50">
 
           {/* Top Bar */}
-          <div className="bg-white px-6 py-4 border-b border-slate-200 flex items-center justify-between shrink-0">
+          <div className="bg-white px-4 md:px-6 py-4 border-b border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shrink-0">
             <div>
               <div className="flex items-center gap-3 mb-1">
                 <Badge variant="outline" className="text-slate-500 font-mono tracking-wider">VST-502</Badge>
                 {getTipoBadge('Saída')}
                 {getStatusBadge('Em Análise')}
               </div>
-              <h2 className="text-2xl font-bold text-slate-800">Laudo de Saída: Casa Cond. Ipê</h2>
+              <h2 className="text-xl md:text-2xl font-bold text-slate-800">Laudo de Saída: Casa Cond. Ipê</h2>
             </div>
-            <div className="flex gap-3">
-              <Button variant="outline" className="bg-white font-semibold">
-                <Download className="h-4 w-4 mr-2" /> Exportar PDF
+            <div className="flex gap-2 w-full sm:w-auto">
+              <Button variant="outline" className="bg-white font-semibold flex-1 sm:flex-none">
+                <Download className="h-4 w-4 md:mr-2" /> <span className="hidden md:inline">Exportar PDF</span>
               </Button>
-              <Button className="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold shadow-sm">
-                <Key className="h-4 w-4 mr-2" /> Aprovar e Enviar para Assinatura
+              <Button className="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold shadow-sm flex-1 sm:flex-none">
+                <Key className="h-4 w-4 md:mr-2" /> <span className="hidden md:inline">Aprovar e Enviar para Assinatura</span><span className="md:hidden">Aprovar</span>
               </Button>
             </div>
           </div>
 
-          <div className="flex-1 flex overflow-hidden">
+          <div className="flex-1 flex flex-col lg:flex-row overflow-y-auto lg:overflow-hidden">
 
             {/* Sidebar Left: Comodos Overview */}
-            <div className="w-64 bg-white border-r border-slate-200 flex flex-col shrink-0">
+            <div className="w-full lg:w-64 bg-white border-b lg:border-b-0 lg:border-r border-slate-200 flex flex-col shrink-0">
               <div className="p-4 border-b border-slate-100 bg-slate-50">
                 <h3 className="font-bold text-slate-700 uppercase tracking-wider text-xs">Cômodos Inspecionados</h3>
               </div>
-              <ScrollArea className="flex-1">
-                <div className="p-2 space-y-1">
+              <div className="flex-1 lg:overflow-y-auto">
+                <div className="p-2 space-y-1 flex lg:block overflow-x-auto lg:overflow-x-visible pb-2 lg:pb-0">
                   {comodosCompletos.map((comodo, idx) => (
                     <button
                       key={idx}
                       onClick={() => setComodoSelecionado(comodo.nome)}
-                      className={`w-full flex items-center justify-between p-3 rounded-xl transition-colors ${comodoSelecionado === comodo.nome ? 'bg-indigo-50 text-indigo-700' : 'hover:bg-slate-50 hover:text-slate-800'}`}
+                      className={`min-w-[160px] lg:min-w-0 lg:w-full flex items-center justify-between p-3 rounded-xl transition-colors ${comodoSelecionado === comodo.nome ? 'bg-indigo-50 text-indigo-700' : 'hover:bg-slate-50 hover:text-slate-800'}`}
                     >
                       <div className="flex items-center gap-3">
                         {comodo.problemas > 0 ? (
-                          <AlertCircle className={`h-4 w-4 ${comodoSelecionado === comodo.nome ? 'text-amber-500' : 'text-amber-400'}`} />
+                          <AlertCircle className={`h-4 w-4 shrink-0 ${comodoSelecionado === comodo.nome ? 'text-amber-500' : 'text-amber-400'}`} />
                         ) : comodo.status === 'Concluído' ? (
-                          <CheckCircle2 className={`h-4 w-4 ${comodoSelecionado === comodo.nome ? 'text-emerald-500' : 'text-emerald-400'}`} />
+                          <CheckCircle2 className={`h-4 w-4 shrink-0 ${comodoSelecionado === comodo.nome ? 'text-emerald-500' : 'text-emerald-400'}`} />
                         ) : (
-                          <div className="h-4 w-4 rounded-full border-2 border-slate-300" />
+                          <div className="h-4 w-4 shrink-0 rounded-full border-2 border-slate-300" />
                         )}
-                        <span className="font-bold text-sm text-left">{comodo.nome}</span>
+                        <span className="font-bold text-sm text-left whitespace-nowrap lg:whitespace-normal">{comodo.nome}</span>
                       </div>
                       {comodo.problemas > 0 && (
-                        <span className="bg-amber-100 text-amber-800 text-[10px] font-bold px-1.5 py-0.5 rounded-sm">{comodo.problemas}</span>
+                        <span className="bg-amber-100 text-amber-800 text-[10px] font-bold px-1.5 py-0.5 rounded-sm shrink-0 ml-2">{comodo.problemas}</span>
                       )}
                     </button>
                   ))}
                 </div>
-              </ScrollArea>
-              <div className="p-4 border-t border-slate-100 bg-slate-50 flex items-center justify-between">
+              </div>
+              <div className="hidden lg:flex p-4 border-t border-slate-100 bg-slate-50 items-center justify-between">
                 <span className="text-xs font-bold text-slate-500 uppercase">Fotos totais:</span>
                 <span className="font-bold text-slate-800 text-sm">145 anexos</span>
               </div>
             </div>
 
             {/* Middle: Itens do Comodo */}
-            <div className="flex-1 flex flex-col overflow-hidden bg-slate-50/50">
-              <div className="p-6 pb-2">
+            <div className="flex-1 flex flex-col lg:overflow-hidden bg-slate-50/50 min-h-[500px] lg:min-h-0">
+              <div className="p-4 md:p-6 pb-2">
                 <h2 className="text-xl font-black text-slate-800">{comodoSelecionado}</h2>
                 <p className="text-sm text-slate-500 font-medium">Avalie as condições de cada item registrado pelo vistoriador.</p>
               </div>
 
-              <ScrollArea className="flex-1 p-6 pt-4">
+              <div className="flex-1 lg:overflow-y-auto p-4 md:p-6 pt-4">
                 <div className="space-y-4">
                   {itensCozinha.map((item, idx) => (
                     <Card key={idx} className={`border-none shadow-sm transition-all ${item.condition === 'Ruim' ? 'ring-2 ring-rose-200' : ''}`}>
-                      <CardContent className="p-5">
-                        <div className="flex items-start justify-between">
+                      <CardContent className="p-4 md:p-5">
+                        <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
                           <div className="space-y-1">
-                            <h4 className="font-bold text-slate-800 text-lg flex items-center gap-2">
+                            <h4 className="font-bold text-slate-800 text-base md:text-lg flex items-center gap-2">
                               {item.nome}
                             </h4>
                             {item.obs && (
-                              <p className="text-sm text-slate-500 leading-relaxed max-w-[500px] mt-2 bg-slate-50 p-3 rounded-lg border border-slate-100 italic">
+                              <p className="text-sm text-slate-500 leading-relaxed mt-2 bg-slate-50 p-3 rounded-lg border border-slate-100 italic">
                                 "{item.obs}"
                               </p>
                             )}
                           </div>
-                          <Badge className={`px-3 py-1 font-bold border ${getConditionColor(item.condition)}`}>
+                          <Badge className={`px-3 py-1 font-bold border w-fit ${getConditionColor(item.condition)}`}>
                             {item.condition}
                           </Badge>
                         </div>
@@ -420,30 +420,29 @@ export function SistemaVistoria() {
                         {/* Gallery Thumbnails inside item */}
                         <div className="mt-4 flex gap-2 overflow-x-auto pb-2 custom-scrollbar">
                           {Array(item.condition === 'Ruim' ? 3 : 1).fill(null).map((_, i) => (
-                            <div key={i} className="group relative w-24 h-24 bg-slate-200 rounded-lg shrink-0 overflow-hidden cursor-pointer">
-                              <Images className="absolute inset-0 m-auto h-6 w-6 text-slate-400 group-hover:scale-110 transition-transform" />
+                            <div key={i} className="group relative w-20 h-20 md:w-24 md:h-24 bg-slate-200 rounded-lg shrink-0 overflow-hidden cursor-pointer">
+                              <Images className="absolute inset-0 m-auto h-5 w-5 md:h-6 md:w-6 text-slate-400 group-hover:scale-110 transition-transform" />
                               <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors" />
                             </div>
                           ))}
-                          <div className="w-24 h-24 bg-white border border-dashed border-slate-300 rounded-lg flex flex-col items-center justify-center shrink-0 cursor-pointer hover:bg-slate-50 transition-colors">
-                            <Plus className="h-5 w-5 text-slate-400 mb-1" />
-                            <span className="text-[10px] font-bold text-slate-400 uppercase">Adicionar</span>
+                          <div className="w-20 h-20 md:w-24 md:h-24 bg-white border border-dashed border-slate-300 rounded-lg flex flex-col items-center justify-center shrink-0 cursor-pointer hover:bg-slate-50 transition-colors">
+                            <Plus className="h-4 w-4 md:h-5 md:w-5 text-slate-400 mb-1" />
+                            <span className="text-[9px] md:text-[10px] font-bold text-slate-400 uppercase">Adicionar</span>
                           </div>
                         </div>
-
                       </CardContent>
                     </Card>
                   ))}
                 </div>
-              </ScrollArea>
+              </div>
             </div>
 
             {/* Right Sidebar: Resumo & Contestacao (Optional/Contextual) */}
-            <div className="w-80 bg-white border-l border-slate-200 flex flex-col shrink-0">
+            <div className="w-full lg:w-80 bg-white border-t lg:border-t-0 lg:border-l border-slate-200 flex flex-col shrink-0">
               <div className="p-4 border-b border-slate-100 bg-indigo-600">
                 <h3 className="font-bold text-white uppercase tracking-wider text-xs">Resumo do Laudo</h3>
               </div>
-              <div className="p-6 space-y-6 overflow-y-auto">
+              <div className="p-4 md:p-6 space-y-6 lg:overflow-y-auto">
                 <div>
                   <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Vistoriador Responsável</h4>
                   <div className="flex items-center gap-3">

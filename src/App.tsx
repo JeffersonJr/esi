@@ -30,18 +30,21 @@ import { EsiBank } from './pages/EsiBank';
 import { EsiChat } from './pages/EsiChat';
 import { AutomacaoImobiliaria } from './pages/AutomacaoImobiliaria';
 import { GestaoLocacoes } from './pages/GestaoLocacoes';
-import { GestaoFinanceira } from './pages/GestaoFinanceira';
 import { GestaoSolicitacoes } from './pages/GestaoSolicitacoes';
 import { SistemaVistoria } from './pages/SistemaVistoria';
 import NotFound from './pages/NotFound';
+import PortalDetalhes from './pages/PortalDetalhes';
+import RedeSocialDetalhes from './pages/RedeSocialDetalhes';
 import { Toaster } from './components/ui/toaster';
 import { ThemeProvider } from './contexts/theme-context';
+import { LayoutProvider } from './contexts/layout-context';
 import { AnimationProvider } from './components/shared/ActionAnimation';
 
 function App() {
   return (
     <ThemeProvider>
-      <AnimationProvider>
+      <LayoutProvider>
+        <AnimationProvider>
         <Router>
           <Routes>
             <Route path="/login" element={<Login />} />
@@ -73,6 +76,8 @@ function App() {
               <Route path="esibank" element={<EsiBank />} />
               <Route path="esichat" element={<EsiChat />} />
               <Route path="integracoes" element={<Integracoes />} />
+              <Route path="integracoes/portal/:id" element={<PortalDetalhes />} />
+              <Route path="integracoes/redesocial/:id" element={<RedeSocialDetalhes />} />
               <Route path="automacao" element={<AutomacaoImobiliaria />} />
               <Route path="locacoes" element={<GestaoLocacoes />} />
               <Route path="solicitacoes" element={<GestaoSolicitacoes />} />
@@ -84,7 +89,8 @@ function App() {
           </Routes>
           <Toaster />
         </Router>
-      </AnimationProvider>
+        </AnimationProvider>
+      </LayoutProvider>
     </ThemeProvider>
   );
 }

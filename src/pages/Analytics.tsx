@@ -9,7 +9,7 @@ import { BrazilMap } from '@/components/BrazilMap';
 import {
   TrendingUp, Users, Home, Target, DollarSign, Eye, MousePointer,
   Clock, ArrowRight, Medal, Key, CheckCircle, AlertCircle, Camera,
-  Calendar, FileText, Activity, MapPin, BarChart3
+  Calendar, FileText, Activity, MapPin, BarChart3, Crosshair, PlusCircle
 } from 'lucide-react';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { motion } from 'framer-motion';

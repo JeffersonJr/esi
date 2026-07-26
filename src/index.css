@@ -42,9 +42,9 @@
     --primary-800: 200 51% 20%;
     --primary-900: 200 51% 10%;
 
-    /* ── Secundário: Fog ─────────────────────────── */
-    --secondary: var(--fog);
-    --secondary-foreground: var(--teal-deep);
+    /* ── Secundário ─────────────────────────── */
+    --secondary: var(--teal-mid);
+    --secondary-foreground: 0 0% 100%;
 
     /* ── Muted ───────────────────────────────────── */
     --muted: var(--fog);

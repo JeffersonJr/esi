@@ -1776,27 +1776,29 @@ export default function LeadDetalhes() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Breadcrumb>
-        <BreadcrumbList>
-          <BreadcrumbItem>
-            <BreadcrumbLink href="/" className="flex items-center gap-1">
-              <Home className="h-4 w-4" /> Dashboard
-            </BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbLink href="/funil">Funil de Vendas</BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbPage>{lead.name}</BreadcrumbPage>
-          </BreadcrumbItem>
-        </BreadcrumbList>
-      </Breadcrumb>
       {/* Header */}
-      <div className="bg-white border-b border-gray-200 px-6 py-6 sticky top-0 z-40 backdrop-blur-md bg-white/80">
-        <div className="max-w-[1400px] mx-auto flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div className="flex items-center gap-4">
+      <div className="bg-white border-b border-gray-200 px-6 pt-4 pb-6 sticky top-0 z-40">
+        <div className="max-w-[1400px] mx-auto">
+          <Breadcrumb className="mb-4">
+            <BreadcrumbList>
+              <BreadcrumbItem>
+                <BreadcrumbLink href="/" className="flex items-center gap-1 text-xs">
+                  <Home className="h-3 w-3" /> Dashboard
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbLink href="/funil" className="text-xs">Funil de Vendas</BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbPage className="text-xs">{lead.name}</BreadcrumbPage>
+              </BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
+          
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div className="flex items-center gap-4">
             <Button
               variant="ghost"
               size="icon"
@@ -1805,12 +1807,12 @@ export default function LeadDetalhes() {
             >
               <ArrowLeft className="h-5 w-5" />
             </Button>
-            <div className="h-12 w-12 rounded-2xl bg-primary text-primary-foreground flex items-center justify-center shadow-lg shadow-primary/20 shrink-0">
+            <div className="h-12 w-12 rounded-xl bg-[#3c91bb] text-white flex items-center justify-center shrink-0">
               <User className="h-6 w-6" />
             </div>
             <div>
-              <h1 className="text-3xl font-black text-slate-800 tracking-tight">{lead.name}</h1>
-              <p className="text-slate-500 mt-1 font-medium">Detalhes completos e histórico do lead</p>
+              <h1 className="text-2xl font-black text-slate-800 tracking-tight leading-tight">{lead.name}</h1>
+              <p className="text-slate-500 text-sm mt-0.5 font-medium">Detalhes completos e histórico do lead</p>
             </div>
           </div>
           <div className="flex items-center gap-3">
@@ -1819,7 +1821,7 @@ export default function LeadDetalhes() {
                 <Button
                   variant="outline"
                   onClick={() => setSheetGanhoPerdido('ganho')}
-                  className="h-12 px-6 rounded-2xl font-bold bg-green-50 hover:bg-green-100 text-green-700 border-green-200 shadow-sm transition-all"
+                  className="h-10 px-5 rounded-xl font-bold bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border-emerald-200 shadow-sm transition-all"
                 >
                   <Trophy className="h-4 w-4 mr-2" />
                   Ganho
@@ -1827,7 +1829,7 @@ export default function LeadDetalhes() {
                 <Button
                   variant="outline"
                   onClick={() => setSheetGanhoPerdido('perdido')}
-                  className="h-12 px-6 rounded-2xl font-bold bg-red-50 hover:bg-red-100 text-red-700 border-red-200 shadow-sm transition-all"
+                  className="h-10 px-5 rounded-xl font-bold bg-red-50 hover:bg-red-100 text-red-700 border-red-200 shadow-sm transition-all"
                 >
                   <XCircle className="h-4 w-4 mr-2" />
                   Perdido
@@ -1836,7 +1838,7 @@ export default function LeadDetalhes() {
             )}
             
             {(lead.status === 'ganho' || lead.status === 'perdido') && (
-              <span className={`flex items-center gap-1.5 rounded-full px-4 py-2 font-bold ${lead.status === 'ganho' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+              <span className={`flex items-center gap-1.5 rounded-xl px-4 py-2 text-sm font-bold shadow-sm ${lead.status === 'ganho' ? 'bg-emerald-100 text-emerald-700 border border-emerald-200' : 'bg-red-100 text-red-700 border border-red-200'}`}>
                 {lead.status === 'ganho' ? '🏆 Ganho' : '✗ Perdido'}
               </span>
             )}
@@ -1844,7 +1846,7 @@ export default function LeadDetalhes() {
             <Button
               variant="outline"
               onClick={handleEditLead}
-              className="h-12 px-6 rounded-2xl font-bold bg-white border-slate-200 text-slate-700 shadow-sm hover:bg-slate-50 hover:border-slate-300 transition-all"
+              className="h-10 px-5 rounded-xl font-bold bg-white border-slate-200 text-slate-700 shadow-sm hover:bg-slate-50 hover:border-slate-300 transition-all"
             >
               <Edit className="h-4 w-4 mr-2 text-indigo-500" />
               Editar Lead
@@ -1852,7 +1854,7 @@ export default function LeadDetalhes() {
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button className="h-12 px-6 rounded-2xl font-bold bg-indigo-600 hover:bg-indigo-700 text-white shadow-lg shadow-indigo-200 transition-all">
+                <Button className="h-10 px-5 rounded-xl font-bold bg-indigo-600 hover:bg-indigo-700 text-white shadow-sm transition-all">
                   <Plus className="h-4 w-4 mr-2" />
                   Nova Ação
                 </Button>
@@ -1884,8 +1886,9 @@ export default function LeadDetalhes() {
           </div>
         </div>
       </div>
+      </div>
 
-      <div className="container mx-auto px-6 py-6">
+      <div className="max-w-[1400px] mx-auto px-6 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Informações Principais */}
           <div className="lg:col-span-1 space-y-6">

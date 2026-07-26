@@ -21,8 +21,15 @@ import {
 } from "@/components/ui/breadcrumb";
 import {
   DollarSign, TrendingUp, TrendingDown, Wallet, ArrowUpRight, ArrowDownRight,
-  Calendar, Search, Filter, MoreVertical, CheckCircle, Clock,
-  Plus, Download, FileText, PieChart, AlertCircle, Edit, Home
+  CalendarIcon,
+  ChevronDown,
+  Building,
+  CheckCircle2,
+  Phone,
+  Video,
+  X, Calendar, Search, Filter, MoreVertical, CheckCircle, Clock,
+  Plus, Download, FileText, PieChart, AlertCircle, Edit, Home,
+  Landmark, RefreshCw, Link as LinkIcon, Unlink
 } from 'lucide-react';
 import { PageHeader } from '@/components/layout/PageHeader';
 
@@ -127,9 +134,10 @@ export function GestaoFinanceira() {
         </div>
 
         <Tabs defaultValue="visao-geral" className="w-full">
-          <TabsList className="bg-slate-100/50 p-1 rounded-xl h-12 w-full md:w-auto mb-6">
-            <TabsTrigger value="visao-geral" className="rounded-lg px-6 font-bold">Visão Geral</TabsTrigger>
-            <TabsTrigger value="movimentacoes" className="rounded-lg px-6 font-bold">Movimentações</TabsTrigger>
+          <TabsList className="bg-slate-100/50 p-1 rounded-xl h-12 w-full md:w-auto mb-6 flex flex-wrap md:flex-nowrap gap-1">
+            <TabsTrigger value="visao-geral" className="rounded-lg px-6 font-bold flex-1 md:flex-none">Visão Geral</TabsTrigger>
+            <TabsTrigger value="movimentacoes" className="rounded-lg px-6 font-bold flex-1 md:flex-none">Movimentações</TabsTrigger>
+            <TabsTrigger value="integracoes" className="rounded-lg px-6 font-bold flex-1 md:flex-none">Integrações Bancárias</TabsTrigger>
           </TabsList>
 
           <TabsContent value="visao-geral" className="space-y-6">
@@ -210,6 +218,108 @@ export function GestaoFinanceira() {
                 </TableBody>
               </Table>
             </Card>
+          </TabsContent>
+
+          {/* Integrações Bancárias Tab */}
+          <TabsContent value="integracoes" className="space-y-6 m-0 animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <h3 className="text-xl font-bold text-slate-800">Contas Conectadas (Open Finance)</h3>
+                <p className="text-sm text-slate-500 font-medium">Sincronize automaticamente extratos e saldos para conciliação.</p>
+              </div>
+              <Button className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold h-11 px-5 rounded-2xl shadow-lg shadow-indigo-200 transition-all w-full sm:w-auto">
+                <LinkIcon className="h-4 w-4 mr-2" /> Conectar Conta
+              </Button>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {/* Connected Bank 1 */}
+              <Card className="border-indigo-100 bg-indigo-50/40 shadow-sm relative overflow-hidden rounded-2xl">
+                <div className="absolute top-0 left-0 w-1.5 h-full bg-orange-500"></div>
+                <CardContent className="p-6 pl-8">
+                  <div className="flex justify-between items-start mb-5">
+                    <div className="flex items-center gap-3">
+                      <div className="h-12 w-12 bg-white rounded-2xl shadow-sm flex items-center justify-center font-black text-orange-500 border border-orange-100 text-lg">
+                        Itaú
+                      </div>
+                      <div>
+                        <h4 className="font-bold text-slate-800">Itaú Empresas</h4>
+                        <p className="text-xs font-medium text-slate-500 mt-0.5">Ag: 1234 CC: 56789-0</p>
+                      </div>
+                    </div>
+                    <Badge className="bg-emerald-100 text-emerald-700 border-none flex items-center gap-1.5 font-bold shadow-sm">
+                      <CheckCircle2 className="h-3.5 w-3.5" /> Sincronizado
+                    </Badge>
+                  </div>
+                  <div className="mb-5 bg-white p-4 rounded-xl border border-slate-100 shadow-sm">
+                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Saldo Atual</p>
+                    <h3 className="text-2xl font-black text-slate-800">{formatCurrency(45200.50)}</h3>
+                  </div>
+                  <div className="flex gap-2">
+                    <Button variant="outline" size="sm" className="flex-1 bg-white border-slate-200 text-slate-600 font-bold h-10 rounded-xl hover:bg-slate-50 hover:text-indigo-600 transition-colors">
+                      <RefreshCw className="h-4 w-4 mr-2" /> Sincronizar Agora
+                    </Button>
+                    <Button variant="ghost" size="icon" className="h-10 w-10 text-rose-500 hover:text-rose-600 hover:bg-rose-50 rounded-xl shrink-0">
+                      <Unlink className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Connected Bank 2 */}
+              <Card className="border-indigo-100 bg-indigo-50/40 shadow-sm relative overflow-hidden rounded-2xl">
+                <div className="absolute top-0 left-0 w-1.5 h-full bg-purple-600"></div>
+                <CardContent className="p-6 pl-8">
+                  <div className="flex justify-between items-start mb-5">
+                    <div className="flex items-center gap-3">
+                      <div className="h-12 w-12 bg-purple-600 rounded-2xl shadow-sm flex items-center justify-center font-black text-white border border-purple-500 text-xl">
+                        NU
+                      </div>
+                      <div>
+                        <h4 className="font-bold text-slate-800">Nubank PJ</h4>
+                        <p className="text-xs font-medium text-slate-500 mt-0.5">Ag: 0001 CC: 123456-7</p>
+                      </div>
+                    </div>
+                    <Badge className="bg-amber-100 text-amber-700 border-none flex items-center gap-1.5 font-bold shadow-sm">
+                      <RefreshCw className="h-3.5 w-3.5 animate-spin" /> Atualizando
+                    </Badge>
+                  </div>
+                  <div className="mb-5 bg-white p-4 rounded-xl border border-slate-100 shadow-sm">
+                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Saldo Atual</p>
+                    <h3 className="text-2xl font-black text-slate-800">{formatCurrency(79300.00)}</h3>
+                  </div>
+                  <div className="flex gap-2">
+                    <Button variant="outline" size="sm" className="flex-1 bg-white border-slate-200 text-slate-400 font-bold h-10 rounded-xl" disabled>
+                      <RefreshCw className="h-4 w-4 mr-2 animate-spin" /> Atualizando...
+                    </Button>
+                    <Button variant="ghost" size="icon" className="h-10 w-10 text-rose-500 hover:text-rose-600 hover:bg-rose-50 rounded-xl shrink-0">
+                      <Unlink className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+              
+              {/* Add new bank CTA */}
+              <div className="border-2 border-dashed border-indigo-200 rounded-2xl flex flex-col items-center justify-center text-center p-6 bg-indigo-50/30 hover:bg-indigo-50 hover:border-indigo-300 transition-colors cursor-pointer min-h-[240px] group">
+                <div className="h-14 w-14 bg-white rounded-2xl flex items-center justify-center mb-4 shadow-sm border border-indigo-100 group-hover:scale-110 transition-transform">
+                  <Landmark className="h-6 w-6 text-indigo-500" />
+                </div>
+                <h4 className="font-bold text-slate-800 mb-1.5 text-lg group-hover:text-indigo-600 transition-colors">Nova Instituição</h4>
+                <p className="text-sm text-slate-500 font-medium">Conecte via Open Finance<br/>para conciliação automática.</p>
+              </div>
+
+            </div>
+            
+            <div className="mt-8">
+               <h3 className="text-lg font-bold text-slate-800 mb-4">Bancos Compatíveis via Open Finance</h3>
+               <div className="flex gap-3 overflow-x-auto pb-4 custom-scrollbar">
+                 {['Itaú', 'Bradesco', 'Santander', 'Banco do Brasil', 'Caixa', 'Nubank', 'Inter', 'Cora', 'Sicredi', 'BTG Pactual'].map(b => (
+                   <div key={b} className="flex-shrink-0 bg-white border border-slate-200 rounded-2xl px-6 py-5 flex items-center justify-center shadow-sm min-w-[140px] opacity-60 grayscale hover:grayscale-0 hover:opacity-100 cursor-pointer transition-all hover:border-indigo-200 hover:shadow-md">
+                     <span className="font-black text-slate-700 whitespace-nowrap tracking-tight">{b}</span>
+                   </div>
+                 ))}
+               </div>
+            </div>
           </TabsContent>
         </Tabs>
       </div>

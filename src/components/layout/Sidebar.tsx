@@ -32,42 +32,7 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 
-const menuGroups = [
-  {
-    label: 'Principal',
-    items: [
-      { icon: LayoutDashboard, label: 'Dashboard',    path: '/' },
-      { icon: Kanban,           label: 'Esi.leads',   path: '/funil' },
-      { icon: Users,            label: 'Contatos',    path: '/contatos' },
-      { icon: Home,             label: 'Imóveis',     path: '/imoveis' },
-      { icon: Building,         label: 'Empreendimentos', path: '/empreendimentos' },
-      { icon: Calendar,         label: 'Agenda',      path: '/agenda' },
-      { icon: BarChart3,        label: 'Analytics',   path: '/analytics' },
-    ],
-  },
-  {
-    label: 'Ferramentas',
-    items: [
-      { icon: Globe,            label: 'Esi.sites',   path: '/site' },
-      { icon: CreditCard,       label: 'Esi.bank',    path: '/esibank' },
-      { icon: MessageCircle,    label: 'Esi.chat',    path: '/esichat' },
-      { icon: Network,          label: 'Integrações', path: '/integracoes' },
-      { icon: Bot,              label: 'Automação',   path: '/automacao' },
-      { icon: Key,              label: 'Locações',    path: '/locacoes' },
-      { icon: DollarSign,       label: 'Esi.finance', path: '/financeiro' },
-      { icon: HelpCircle,       label: 'Solicitações',path: '/solicitacoes' },
-      { icon: Camera,           label: 'Vistoria',    path: '/vistoria' },
-    ],
-  },
-  {
-    label: 'Equipe',
-    items: [
-      { icon: UserCircle,  label: 'Usuários', path: '/usuarios' },
-      { icon: UsersRound,  label: 'Equipes',  path: '/equipes' },
-      { icon: Settings,    label: 'Configurações', path: '/configuracoes' },
-    ],
-  },
-];
+import { menuGroups } from '@/config/navigation';
 
 interface NavItemProps {
   icon: React.ElementType;
@@ -156,18 +121,17 @@ export function Sidebar() {
 
           {/* Full logo (expanded + desktop) */}
           {!collapsed && (
-            <div className="hidden lg:block">
+            <div className="hidden lg:flex items-center gap-2">
               <img
-                src="/logoesi.svg"
-                alt="ESI Logo"
+                src="/logominimal.svg"
+                alt="Evolves Logo"
                 className="h-7 w-auto object-contain"
                 onError={(e) => {
                   const t = e.target as HTMLImageElement;
                   t.style.display = 'none';
-                  t.parentElement!.innerHTML =
-                    '<span class="font-bold text-lg text-primary tracking-tight">ESI</span>';
                 }}
               />
+              <span className="font-bold text-xl tracking-tight text-primary">evolves</span>
             </div>
           )}
         </div>
