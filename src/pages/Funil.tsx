@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { Bot, ChevronDown, MessageCircle, Phone, Plus, ListFilter, Settings2, X, CheckCircle2 } from 'lucide-react'
+import { Bot, Search, ChevronDown, MessageCircle, Phone, Plus, ListFilter, Settings2, X, CheckCircle2 } from 'lucide-react'
 import {
   atendimentos as dadosAtendimentos,
   etapaConfig,
@@ -14,6 +14,11 @@ import {
   type EtapaFunil,
   type Funil,
 } from '@/lib/app-data'
+import { Card, CardContent } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
+import { Badge } from '@/components/ui/badge'
+import { Search } from 'lucide-react'
+import { cn } from '@/lib/utils'
 import { PageHeader } from '@/components/layout/PageHeader'
 import { DragDropContext, Droppable, Draggable, type DropResult } from '@hello-pangea/dnd'
 import { AtendimentoDetail } from '@/components/shared/atendimento-detail'
@@ -280,27 +285,42 @@ export function Funil({
         }
       />
 
-      {/* ── Filtro Venda / Locação / Todos ── */}
       <div className="px-5 mb-4 mt-2">
-        <div className="flex gap-2 max-w-sm">
-          {([
-            { id: 'todos', label: 'Todos' },
-            { id: 'venda', label: '🏷️ Venda' },
-            { id: 'locacao', label: '🔑 Locação' },
-          ] as { id: FiltroModo; label: string }[]).map((f) => (
-            <button
-              key={f.id}
-              type="button"
-              onClick={() => setFiltroModo(f.id)}
-              className={`flex-1 rounded-xl py-2 text-xs font-semibold transition-brand ${filtroModo === f.id
-                ? 'bg-primary/10 text-primary border border-primary/20 shadow-sm'
-                : 'border border-border bg-card text-muted-foreground hover:bg-muted/30'
-                }`}
-            >
-              {f.label}
-            </button>
-          ))}
-        </div>
+        <Card className="shadow-sm border-border bg-card">
+          <CardContent className="p-3 sm:p-4">
+            <div className="flex flex-col gap-3">
+              <div className="relative group max-w-md">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+                <Input 
+                  placeholder="Buscar por nome no funil..." 
+                  value={filtroNome} 
+                  onChange={(e) => setFiltroNome(e.target.value)} 
+                  className="pl-10 bg-background border-border shadow-sm h-9 text-sm" 
+                />
+              </div>
+              <div className="flex items-center gap-2 flex-wrap">
+                {([
+                  { id: 'todos', label: 'Todos' },
+                  { id: 'venda', label: 'Venda' },
+                  { id: 'locacao', label: 'Locação' },
+                ] as { id: FiltroModo; label: string }[]).map((f) => (
+                  <button
+                    key={f.id}
+                    onClick={() => setFiltroModo(f.id)}
+                    className={cn(
+                      'h-7 px-3 rounded-full text-xs font-semibold border transition-all',
+                      filtroModo === f.id
+                        ? 'bg-primary text-primary-foreground border-primary shadow-sm'
+                        : 'bg-background text-foreground border-border hover:border-primary/60 hover:bg-primary/5'
+                    )}
+                  >
+                    {f.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </CardContent>
+        </Card>
       </div>
 
       {/* ── Quadro Kanban (Colunas lado a lado) ── */}
@@ -439,74 +459,78 @@ function AtendimentoCard({
   onVerCliente: (id: string) => void
 }) {
   return (
-    <article className="rounded-[1.25rem] border-transparent bg-card shadow-soft p-4">
-      <button type="button" onClick={onAbrir} className="flex w-full items-start gap-3 text-left">
-        <div className="relative flex size-11 shrink-0 items-center justify-center rounded-full bg-primary/10 font-serif text-sm font-semibold text-primary">
-          {atd.iniciais}
-          <span
-            className={`absolute -bottom-0.5 -right-0.5 size-3.5 rounded-full border-2 border-card ${tempConfig[atd.temperatura].dot}`}
-            aria-label={`Temperatura: ${tempConfig[atd.temperatura].label}`}
-          />
-        </div>
-        <div className="min-w-0 flex-1">
-          <div className="flex items-center gap-2">
-            <span className="truncate text-sm font-semibold text-foreground">{atd.nome}</span>
-            {atd.albert.ativo && (
-              <span title="Albert ativo" className="shrink-0">
-                <Bot className="size-3.5 text-teal-mid" strokeWidth={1.5} />
-              </span>
-            )}
-            {/* Badge Venda/Locação */}
-            <span className={`ml-auto shrink-0 rounded-full px-2 py-0.5 text-[9px] font-semibold ${atd.modo === 'venda' ? 'bg-primary/10 text-primary' : 'bg-teal-mid/15 text-teal-deep'
-              }`}>
-              {atd.modo === 'venda' ? 'Venda' : 'Locação'}
-            </span>
+    <Card className="rounded-xl border-border bg-card shadow-sm hover:shadow-md transition-shadow overflow-hidden group">
+      <CardContent className="p-3 sm:p-4">
+        <button type="button" onClick={onAbrir} className="flex w-full items-start gap-3 text-left">
+          <div className="relative flex size-10 shrink-0 items-center justify-center rounded-full bg-primary/10 font-serif text-sm font-semibold text-primary border border-primary/20">
+            {atd.iniciais}
+            <span
+              className={`absolute -bottom-0.5 -right-0.5 size-3 rounded-full border-2 border-card ${tempConfig[atd.temperatura].dot}`}
+              aria-label={`Temperatura: ${tempConfig[atd.temperatura].label}`}
+            />
           </div>
-          <span className="block text-xs text-muted-foreground">{atd.telefone}</span>
-          <span className="block text-xs text-muted-foreground">{atd.email}</span>
+          <div className="min-w-0 flex-1">
+            <div className="flex items-center gap-2 justify-between">
+              <span className="truncate text-sm font-semibold text-foreground group-hover:text-primary transition-colors">{atd.nome}</span>
+              <div className="flex items-center gap-1.5 shrink-0">
+                {atd.albert.ativo && (
+                  <span title="Albert ativo" className="shrink-0">
+                    <Bot className="size-3.5 text-teal-mid" strokeWidth={1.5} />
+                  </span>
+                )}
+                <Badge variant={atd.modo === 'venda' ? 'default' : 'secondary'} className={cn("text-[9px] px-1.5 py-0", atd.modo === 'locacao' && "bg-teal-mid/15 text-teal-deep hover:bg-teal-mid/25")}>
+                  {atd.modo === 'venda' ? 'Venda' : 'Locação'}
+                </Badge>
+              </div>
+            </div>
+            <div className="mt-1 space-y-0.5">
+              {atd.telefone && <span className="flex text-[11px] text-muted-foreground items-center gap-1"><Phone className="size-3 opacity-70" /> {atd.telefone}</span>}
+              {atd.email && <span className="flex text-[11px] text-muted-foreground items-center gap-1 truncate"><MessageCircle className="size-3 opacity-70" /> {atd.email}</span>}
+            </div>
+          </div>
+        </button>
+
+        <div className="mt-2.5 flex items-center justify-between border-t border-border/50 pt-2.5">
+          <span className="text-[11px] text-muted-foreground truncate mr-2 font-medium">{atd.interesse}</span>
+          <span className="shrink-0 font-mono text-xs font-bold text-primary">{atd.valor}</span>
         </div>
-      </button>
 
-      <div className="mt-2 flex items-center justify-between">
-        <span className="text-xs text-muted-foreground truncate mr-2">{atd.interesse}</span>
-        <span className="shrink-0 font-mono text-sm font-semibold text-primary">{atd.valor}</span>
-      </div>
+        <div className="mt-2.5 flex flex-wrap gap-1.5">
+          <Badge variant="outline" className={cn("text-[9px] font-medium border-transparent", origemConfig[atd.origem].cor)}>
+            {atd.origem}
+          </Badge>
+          <span className="rounded-md bg-muted/50 border border-border/50 px-1.5 py-0.5 text-[9px] text-muted-foreground font-medium">
+            Entrada: {atd.dataEntrada}
+          </span>
+          <span className="rounded-md bg-muted/50 border border-border/50 px-1.5 py-0.5 text-[9px] text-muted-foreground font-medium">
+            Última: {atd.ultimaInteracao}
+          </span>
+        </div>
 
-      <div className="mt-2 flex flex-wrap gap-1.5">
-        <span className={`rounded-full px-2 py-0.5 text-[10px] font-semibold ${origemConfig[atd.origem].cor}`}>
-          {atd.origem}
-        </span>
-        <span className="rounded-full bg-fog px-2 py-0.5 text-[10px] text-muted-foreground">
-          Entrada: {atd.dataEntrada}
-        </span>
-        <span className="rounded-full bg-fog px-2 py-0.5 text-[10px] text-muted-foreground">
-          Última: {atd.ultimaInteracao}
-        </span>
-      </div>
-
-      <div className="mt-3 flex items-center gap-2 border-t border-border pt-3">
-        <button
-          type="button"
-          onClick={onAbrir}
-          className="flex-1 rounded-full bg-primary/10 px-3 py-1.5 text-xs font-semibold text-primary transition-brand active:scale-95"
-        >
-          Abrir atendimento
-        </button>
-        <button
-          type="button"
-          aria-label={`WhatsApp de ${atd.nome}`}
-          className="flex size-8 items-center justify-center rounded-full bg-green-100 text-green-700 transition-brand active:scale-95"
-        >
-          <MessageCircle className="size-4" strokeWidth={1.5} />
-        </button>
-        <button
-          type="button"
-          aria-label={`Ligar para ${atd.nome}`}
-          className="flex size-8 items-center justify-center rounded-full bg-muted text-primary transition-brand active:scale-95"
-        >
-          <Phone className="size-4" strokeWidth={1.5} />
-        </button>
-      </div>
-    </article>
+        <div className="mt-3 flex items-center gap-2">
+          <button
+            type="button"
+            onClick={onAbrir}
+            className="flex-1 rounded-lg bg-primary/10 hover:bg-primary/15 border border-primary/20 px-3 py-1.5 text-xs font-semibold text-primary transition-all active:scale-95"
+          >
+            Abrir
+          </button>
+          <button
+            type="button"
+            aria-label={`WhatsApp de ${atd.nome}`}
+            className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-green-500/15 hover:bg-green-500/25 border border-green-500/30 text-green-700 dark:text-green-400 transition-all active:scale-95"
+          >
+            <MessageCircle className="size-4" strokeWidth={1.5} />
+          </button>
+          <button
+            type="button"
+            aria-label={`Ligar para ${atd.nome}`}
+            className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-muted hover:bg-muted/80 border border-border text-foreground transition-all active:scale-95"
+          >
+            <Phone className="size-4" strokeWidth={1.5} />
+          </button>
+        </div>
+      </CardContent>
+    </Card>
   )
 }
