@@ -286,39 +286,48 @@ export function Funil({
       />
 
       <div className="px-5 mb-4 mt-2">
-        <Card className="shadow-sm border-border bg-card">
-          <CardContent className="p-3 sm:p-4">
-            <div className="flex flex-col gap-3">
-              <div className="relative group max-w-md">
+        <Card className="border-none shadow-sm bg-muted/30">
+          <CardContent className="p-3 sm:p-4 space-y-3">
+            {/* Row 1 — Search */}
+            <div className="flex gap-2">
+              <div className="relative flex-1 group">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
                 <Input 
                   placeholder="Buscar por nome no funil..." 
                   value={filtroNome} 
                   onChange={(e) => setFiltroNome(e.target.value)} 
-                  className="pl-10 bg-background border-border shadow-sm h-9 text-sm" 
+                  className="pl-10 bg-background border-none shadow-sm h-9" 
                 />
               </div>
-              <div className="flex items-center gap-2 flex-wrap">
-                {([
-                  { id: 'todos', label: 'Todos' },
-                  { id: 'venda', label: 'Venda' },
-                  { id: 'locacao', label: 'Locação' },
-                ] as { id: FiltroModo; label: string }[]).map((f) => (
-                  <button
-                    key={f.id}
-                    onClick={() => setFiltroModo(f.id)}
-                    className={cn(
-                      'h-7 px-3 rounded-full text-xs font-semibold border transition-all',
-                      filtroModo === f.id
-                        ? 'bg-primary text-primary-foreground border-primary shadow-sm'
-                        : 'bg-background text-foreground border-border hover:border-primary/60 hover:bg-primary/5'
-                    )}
-                  >
-                    {f.label}
-                  </button>
-                ))}
-              </div>
             </div>
+
+            {/* Row 2 — Tipo quick chips (horizontal scroll) */}
+            <div className="flex items-center gap-2 overflow-x-auto pb-0.5 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+              {([
+                { id: 'todos', label: 'Todos' },
+                { id: 'venda', label: 'Venda' },
+                { id: 'locacao', label: 'Locação' },
+              ] as { id: FiltroModo; label: string }[]).map((f) => (
+                <button
+                  key={f.id}
+                  onClick={() => setFiltroModo(f.id)}
+                  className={cn(
+                    'px-3 py-1.5 rounded-lg text-[11px] font-bold uppercase tracking-wide transition-all border shrink-0',
+                    filtroModo === f.id
+                      ? 'bg-primary text-primary-foreground border-primary shadow-sm'
+                      : 'bg-background text-muted-foreground border-border hover:border-primary/40 hover:text-foreground'
+                  )}
+                >
+                  {f.label}
+                </button>
+              ))}
+            </div>
+            
+            {total > 0 && (
+              <p className="text-xs text-muted-foreground mt-1">
+                Mostrando <span className="font-bold text-foreground">{total}</span> leads em andamento
+              </p>
+            )}
           </CardContent>
         </Card>
       </div>
