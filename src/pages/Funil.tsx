@@ -15,6 +15,7 @@ import {
   type Funil,
 } from '@/lib/app-data'
 import { PageHeader } from '@/components/layout/PageHeader'
+import { DragDropContext, Droppable, Draggable, type DropResult } from '@hello-pangea/dnd'
 import { AtendimentoDetail } from '@/components/shared/atendimento-detail'
 import { FiltrosAvancadosSheet } from '@/components/shared/filtros-avancados-sheet'
 import { GerenciarFunilSheet } from '@/components/shared/gerenciar-funil-sheet'
@@ -94,6 +95,17 @@ export function Funil({
   }))
 
   const total = pipeline.reduce((acc, e) => acc + e.atendimentos.length, 0)
+
+
+  const handleDragEnd = (result: DropResult) => {
+    const { destination, source, draggableId } = result
+    if (!destination) return
+    if (destination.droppableId === source.droppableId && destination.index === source.index) return
+    
+    if (destination.droppableId !== source.droppableId) {
+      handleEtapaChange(draggableId, destination.droppableId)
+    }
+  }
 
   function handleStatusChange(id: string, status: 'ganho' | 'perdido') {
     setDados((prev) => prev.map((a) => (a.id === id ? { ...a, status } : a)))
@@ -293,43 +305,62 @@ export function Funil({
 
       {/* ── Quadro Kanban (Colunas lado a lado) ── */}
       <div className="flex-1 overflow-x-auto overflow-y-hidden px-5 pb-4">
-        <div className="flex h-full gap-4 items-start w-max">
-          {pipeline.map((estagio) => (
-            <div key={estagio.id} className="flex flex-col h-[calc(100vh-280px)] w-[320px] shrink-0 bg-muted/30 rounded-[1.25rem] border border-border/60 overflow-hidden shadow-sm">
-              <div className="px-4 py-3 border-b border-border/40 flex items-center justify-between bg-card/40 backdrop-blur-sm">
-                <h3 className="font-semibold text-sm text-foreground flex items-center gap-2">
-                  {funilAtivo.etapas?.find(e => e.id === estagio.id)?.label || estagio.id}
-                </h3>
-                <span className="flex size-6 items-center justify-center rounded-full bg-background border border-border text-[11px] font-mono font-semibold text-muted-foreground shadow-sm">
-                  {estagio.atendimentos.length}
-                </span>
-              </div>
-              
-              <div className="flex-1 overflow-y-auto p-3 scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent">
-                {estagio.atendimentos.length === 0 ? (
-                  <div className="mt-10 flex flex-col items-center gap-2 text-center px-4">
-                    <div className="size-12 rounded-full bg-muted/50 flex items-center justify-center text-xl shadow-inner">
-                      🎯
+        <DragDropContext onDragEnd={handleDragEnd}>
+          <div className="flex h-full gap-4 items-start w-max">
+            {pipeline.map((estagio) => (
+              <div key={estagio.id} className="flex flex-col h-[calc(100vh-280px)] w-[320px] shrink-0 bg-muted/30 rounded-[1.25rem] border border-border/60 overflow-hidden shadow-sm">
+                <div className="px-4 py-3 border-b border-border/40 flex items-center justify-between bg-card/40 backdrop-blur-sm">
+                  <h3 className="font-semibold text-sm text-foreground flex items-center gap-2">
+                    {funilAtivo.etapas?.find(e => e.id === estagio.id)?.label || estagio.id}
+                  </h3>
+                  <span className="flex size-6 items-center justify-center rounded-full bg-background border border-border text-[11px] font-mono font-semibold text-muted-foreground shadow-sm">
+                    {estagio.atendimentos.length}
+                  </span>
+                </div>
+                
+                <Droppable droppableId={estagio.id}>
+                  {(provided, snapshot) => (
+                    <div 
+                      ref={provided.innerRef}
+                      {...provided.droppableProps}
+                      className={`flex-1 overflow-y-auto p-3 scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent transition-colors ${snapshot.isDraggingOver ? 'bg-primary/5' : ''}`}
+                    >
+                      {estagio.atendimentos.length === 0 && !snapshot.isDraggingOver && (
+                        <div className="mt-10 flex flex-col items-center gap-2 text-center px-4">
+                          <div className="size-12 rounded-full bg-muted/50 flex items-center justify-center text-xl shadow-inner">
+                            🎯
+                          </div>
+                          <p className="text-xs text-muted-foreground font-medium mt-2">Nenhum lead nesta etapa</p>
+                        </div>
+                      )}
+                      <ul className="flex flex-col gap-3 min-h-[50px]">
+                        {estagio.atendimentos.map((atd, index) => (
+                          <Draggable key={atd.id} draggableId={atd.id} index={index}>
+                            {(provided, snapshot) => (
+                              <li 
+                                ref={provided.innerRef}
+                                {...provided.draggableProps}
+                                {...provided.dragHandleProps}
+                                className={`transition-all ${snapshot.isDragging ? 'shadow-2xl rotate-2 z-50 ring-2 ring-primary/20' : 'hover:-translate-y-0.5 hover:shadow-md'}`}
+                              >
+                                <AtendimentoCard
+                                  atendimento={atd}
+                                  onAbrir={() => setAtendimentoAberto(atd)}
+                                  onVerCliente={onVerCliente}
+                                />
+                              </li>
+                            )}
+                          </Draggable>
+                        ))}
+                        {provided.placeholder}
+                      </ul>
                     </div>
-                    <p className="text-xs text-muted-foreground font-medium mt-2">Nenhum lead nesta etapa</p>
-                  </div>
-                ) : (
-                  <ul className="flex flex-col gap-3">
-                    {estagio.atendimentos.map((atd) => (
-                      <li key={atd.id} className="cursor-grab active:cursor-grabbing hover:-translate-y-0.5 hover:shadow-md transition-all">
-                        <AtendimentoCard
-                          atendimento={atd}
-                          onAbrir={() => setAtendimentoAberto(atd)}
-                          onVerCliente={onVerCliente}
-                        />
-                      </li>
-                    ))}
-                  </ul>
-                )}
+                  )}
+                </Droppable>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        </DragDropContext>
       </div>
 
       {mostrarFiltrosAvancados && (
