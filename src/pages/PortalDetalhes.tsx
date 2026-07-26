@@ -22,7 +22,7 @@ import {
   AlertCircle, ChevronDown, List, LayoutGrid, SlidersHorizontal, User, UserPlus,
   Image as ImageIcon, Download, FileText, Code, Trash2, Check, LayoutTemplate,
   Info
-} from 'lucide-react';
+, Filter } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/components/ui/use-toast';
 import { PropertyQuickView } from '@/components/properties/PropertyQuickView';

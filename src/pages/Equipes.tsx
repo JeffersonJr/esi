@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import {
   Plus, Users, MoreVertical, Edit, Trash2, Search, Grid, List as ListIcon,
   Home, TrendingUp, UserCheck, SlidersHorizontal, X
-} from 'lucide-react';
+, Filter } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
