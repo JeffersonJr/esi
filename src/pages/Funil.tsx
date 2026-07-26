@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { Bot, Search, ChevronDown, MessageCircle, Phone, Plus, ListFilter, Settings2, X, CheckCircle2 } from 'lucide-react'
+import { Bot, Search, ChevronDown, MessageCircle, Phone, Plus, ListFilter, Filter, Settings2, X, CheckCircle2 } from 'lucide-react'
 import {
   atendimentos as dadosAtendimentos,
   etapaConfig,
@@ -274,7 +274,7 @@ export function Funil({
               onClick={() => setMostrarFiltrosAvancados(true)}
               className="gap-2 relative h-10 px-4 rounded-xl shadow-sm border-border"
             >
-              <ListFilter className="h-4 w-4" />
+              <Filter className="h-4 w-4" />
               <span className="hidden sm:inline">Filtros</span>
               {(filtroTemp !== 'todas' || filtroOrigem.length > 0 || filtroPreAtendimento !== 'todos' || filtroPeriodo !== 'todos' || filtroNome !== '') && (
                 <span className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-[10px] text-primary-foreground font-bold shadow-sm animate-in zoom-in">
