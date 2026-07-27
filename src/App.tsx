@@ -35,6 +35,8 @@ import { SistemaVistoria } from './pages/SistemaVistoria';
 import NotFound from './pages/NotFound';
 import PortalDetalhes from './pages/PortalDetalhes';
 import RedeSocialDetalhes from './pages/RedeSocialDetalhes';
+import { RelatoriosAnaliticos } from './pages/RelatoriosAnaliticos';
+import { RelatoriosDesempenho } from './pages/RelatoriosDesempenho';
 import { Toaster } from './components/ui/toaster';
 import { ThemeProvider } from './contexts/theme-context';
 import { LayoutProvider } from './contexts/layout-context';
@@ -83,6 +85,8 @@ function App() {
               <Route path="solicitacoes" element={<GestaoSolicitacoes />} />
               <Route path="vistoria" element={<SistemaVistoria />} />
               <Route path="configuracoes" element={<Configuracoes />} />
+              <Route path="relatorios/analiticos" element={<RelatoriosAnaliticos />} />
+              <Route path="relatorios/desempenho" element={<RelatoriosDesempenho />} />
               <Route path="perfil" element={<Perfil />} />
             </Route>
             <Route path="*" element={<NotFound />} />

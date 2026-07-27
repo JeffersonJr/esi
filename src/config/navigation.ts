@@ -18,6 +18,8 @@ import {
   Camera,
   Building,
   Network,
+  PieChart,
+  LineChart,
 } from 'lucide-react';
 
 export const menuGroups = [
@@ -31,6 +33,13 @@ export const menuGroups = [
       { icon: Building,         label: 'Empreendimentos', path: '/empreendimentos' },
       { icon: Calendar,         label: 'Agenda',      path: '/agenda' },
       { icon: BarChart3,        label: 'Analytics',   path: '/analytics' },
+    ],
+  },
+  {
+    label: 'Relatórios',
+    items: [
+      { icon: PieChart,         label: 'Analíticos',  path: '/relatorios/analiticos' },
+      { icon: LineChart,        label: 'Desempenho',  path: '/relatorios/desempenho' },
     ],
   },
   {

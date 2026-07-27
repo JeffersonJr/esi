@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { Bot, Search, ChevronDown, MessageCircle, Phone, Plus, ListFilter, Filter, Settings2, X, CheckCircle2 } from 'lucide-react'
