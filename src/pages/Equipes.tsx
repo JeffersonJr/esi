@@ -134,7 +134,7 @@ export function Equipes() {
                   <Grid className="h-4 w-4" />
                 </Button>
               </div>
-              <Button onClick={handleNew} className="bg-primary hover:bg-primary/90 text-white font-black px-8 shadow-lg shadow-primary/20 h-12 rounded-2xl">
+              <Button onClick={handleNew} className="bg-primary hover:bg-primary/90 text-white font-semibold px-8 shadow-lg shadow-primary/20 h-9 rounded-xl">
                 <Plus className="h-4 w-4 mr-2" /> Nova Equipe
               </Button>
             </div>
@@ -153,8 +153,8 @@ export function Equipes() {
                 <Icon className={cn('h-5 w-5', stat.color)} />
               </div>
               <div className="min-w-0">
-                <p className="text-xl sm:text-2xl font-black tracking-tight leading-none">{stat.value}</p>
-                <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground mt-0.5 truncate">{stat.label}</p>
+                <p className="text-xl sm:text-2xl font-semibold tracking-tight leading-none">{stat.value}</p>
+                <p className="text-[11px] font-semibold  text-muted-foreground mt-0.5 truncate">{stat.label}</p>
               </div>
             </motion.div>
           );
@@ -198,7 +198,7 @@ export function Equipes() {
                         {hasActiveAdvanced && <button onClick={clearAdvanced} className="text-xs text-destructive hover:underline font-semibold">Limpar</button>}
                       </div>
                       <div className="space-y-1.5">
-                        <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Cor da Equipe</Label>
+                        <Label className="text-xs font-semibold text-muted-foreground ">Cor da Equipe</Label>
                         <Select value={advanced.cor} onValueChange={(v) => setAdvanced(a => ({ ...a, cor: v }))}>
                           <SelectTrigger className="h-9"><SelectValue /></SelectTrigger>
                           <SelectContent>
@@ -215,7 +215,7 @@ export function Equipes() {
                         </Select>
                       </div>
                       <div className="space-y-1.5">
-                        <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Mínimo de Membros</Label>
+                        <Label className="text-xs font-semibold text-muted-foreground ">Mínimo de Membros</Label>
                         <Input type="number" placeholder="Ex: 2" min={1} value={advanced.minMembros} onChange={(e) => setAdvanced(a => ({ ...a, minMembros: e.target.value }))} className="h-9" />
                       </div>
                       <Button className="w-full" size="sm" onClick={() => setFilterOpen(false)}>

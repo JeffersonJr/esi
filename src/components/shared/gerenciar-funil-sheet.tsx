@@ -1,4 +1,3 @@
-'use client'
 
 import { useState } from 'react'
 import { CheckCircle2, ChevronRight, Edit3, Plus, Trash2, X, GripVertical } from 'lucide-react'
@@ -198,7 +197,7 @@ export function GerenciarFunilSheet({
             <button
               type="button"
               onClick={handleSaveAll}
-              className="flex h-14 w-full items-center justify-center gap-2 rounded-2xl bg-primary text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/20 transition-transform active:scale-[0.98]"
+              className="flex h-10 w-full items-center justify-center gap-2 rounded-2xl bg-primary text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/20 transition-transform active:scale-[0.98]"
             >
               <CheckCircle2 className="size-5" />
               Salvar alterações

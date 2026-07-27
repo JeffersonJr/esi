@@ -1986,7 +1986,7 @@ export default function PortalDetalhes() {
                   <Badge variant="secondary" className="bg-white/20 hover:bg-white/30 text-white border-none backdrop-blur-md mb-1 px-2 py-0.5 text-xs">{imovel.cod}</Badge>
                   <div className="text-[10px] text-white/90 drop-shadow-sm ml-1">Alt: {imovel.codAlt || '-'}</div>
                 </div>
-                <div className="font-black text-lg leading-tight drop-shadow-md text-right">{imovel.valor}</div>
+                <div className="font-semibold text-lg leading-tight drop-shadow-md text-right">{imovel.valor}</div>
               </div>
             </div>
 
@@ -1998,10 +1998,10 @@ export default function PortalDetalhes() {
               </p>
               
               <div className="grid grid-cols-4 gap-1 text-center bg-muted/30 p-2 rounded-lg mb-4 border border-border/50">
-                <div className="flex flex-col"><span className="text-[9px] text-muted-foreground uppercase font-semibold">Dorm.</span><strong className="text-xs text-foreground mt-0.5">{imovel.dorms}</strong></div>
-                <div className="flex flex-col border-l border-border/50"><span className="text-[9px] text-muted-foreground uppercase font-semibold">Suíte</span><strong className="text-xs text-foreground mt-0.5">{imovel.suites ?? '-'}</strong></div>
-                <div className="flex flex-col border-l border-border/50"><span className="text-[9px] text-muted-foreground uppercase font-semibold">Vaga</span><strong className="text-xs text-foreground mt-0.5">{imovel.vagas}</strong></div>
-                <div className="flex flex-col border-l border-border/50"><span className="text-[9px] text-muted-foreground uppercase font-semibold">Área</span><strong className="text-xs text-foreground mt-0.5 truncate px-1" title={imovel.area}>{imovel.area}</strong></div>
+                <div className="flex flex-col"><span className="text-[9px] text-muted-foreground font-semibold">Dorm.</span><strong className="text-xs text-foreground mt-0.5">{imovel.dorms}</strong></div>
+                <div className="flex flex-col border-l border-border/50"><span className="text-[9px] text-muted-foreground font-semibold">Suíte</span><strong className="text-xs text-foreground mt-0.5">{imovel.suites ?? '-'}</strong></div>
+                <div className="flex flex-col border-l border-border/50"><span className="text-[9px] text-muted-foreground font-semibold">Vaga</span><strong className="text-xs text-foreground mt-0.5">{imovel.vagas}</strong></div>
+                <div className="flex flex-col border-l border-border/50"><span className="text-[9px] text-muted-foreground font-semibold">Área</span><strong className="text-xs text-foreground mt-0.5 truncate px-1" title={imovel.area}>{imovel.area}</strong></div>
               </div>
 
               <div className="flex items-center gap-2 mb-4 text-xs text-muted-foreground bg-muted/20 p-2 rounded-lg border border-border/30">
@@ -2102,7 +2102,7 @@ export default function PortalDetalhes() {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <div className="flex items-center gap-3 cursor-pointer group hover:bg-muted/50 p-2 rounded-2xl transition-colors -ml-2">
-                  <div className={cn("w-14 h-14 rounded-2xl flex items-center justify-center shadow-md border border-border/50 overflow-hidden select-none shrink-0 transition-transform group-hover:scale-105", isImage ? 'bg-white' : portalAtual.color, !isImage && 'text-white')}>
+                  <div className={cn("w-14 h-10 rounded-2xl flex items-center justify-center shadow-md border border-border/50 overflow-hidden select-none shrink-0 transition-transform group-hover:scale-105", isImage ? 'bg-white' : portalAtual.color, !isImage && 'text-white')}>
                     {renderLogo(portalAtual)}
                   </div>
                   <div className="hidden sm:block">
@@ -2115,7 +2115,7 @@ export default function PortalDetalhes() {
                 </div>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="start" className="w-[240px] rounded-2xl p-2">
-                <div className="text-xs font-semibold text-muted-foreground uppercase tracking-widest px-2 py-1.5 mb-1">Alternar Portal</div>
+                <div className="text-xs font-semibold text-muted-foreground tracking-tight px-2 py-1.5 mb-1">Alternar Portal</div>
                 {portais.map(p => (
                   <DropdownMenuItem key={p.id} onClick={() => navigate(`/integracoes/portal/${p.id}`)} className="rounded-xl p-2 cursor-pointer">
                     <div className={cn("w-6 h-6 rounded-md mr-3 flex items-center justify-center text-[8px] font-bold overflow-hidden", p.id === 'vivareal' || p.id === 'orulo' ? 'bg-white' : p.color, p.color.includes('bg-[#') && !['vivareal','orulo'].includes(p.id) ? 'text-white' : '')}>
@@ -2264,7 +2264,7 @@ export default function PortalDetalhes() {
                 <CardContent className="pt-4 space-y-4">
                   <Label className="text-sm text-muted-foreground">Como a localização é enviada ao portal:</Label>
                   <Select value={mapOption} onValueChange={setMapOption}>
-                    <SelectTrigger className="w-full bg-background h-14 text-left">
+                    <SelectTrigger className="w-full bg-background h-10 text-left">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -2299,15 +2299,15 @@ export default function PortalDetalhes() {
                 <CardContent className="pt-4">
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                     <div className="space-y-1">
-                      <Label className="text-xs uppercase tracking-wider text-muted-foreground font-bold">Simples</Label>
+                      <Label className="text-xs tracking-tight text-muted-foreground font-bold">Simples</Label>
                       <Input type="number" defaultValue="280" className="h-12 font-bold text-lg bg-background text-center" />
                     </div>
                     <div className="space-y-1">
-                      <Label className="text-xs uppercase tracking-wider text-blue-600 font-bold">Destaques</Label>
+                      <Label className="text-xs tracking-tight text-blue-600 font-bold">Destaques</Label>
                       <Input type="number" defaultValue="40" className="h-12 font-bold text-lg bg-background text-center text-blue-600" />
                     </div>
                     <div className="space-y-1">
-                      <Label className="text-xs uppercase tracking-wider text-amber-600 font-bold">Super Dest.</Label>
+                      <Label className="text-xs tracking-tight text-amber-600 font-bold">Super Dest.</Label>
                       <Input type="number" defaultValue="12" className="h-12 font-bold text-lg bg-background text-center text-amber-600" />
                     </div>
                   </div>
@@ -2334,7 +2334,7 @@ export default function PortalDetalhes() {
                           <DialogTrigger asChild>
                             <Button size="sm" className="flex-1 sm:flex-none h-9 rounded-full bg-primary text-white font-semibold"><UserPlus className="w-4 h-4 mr-2"/> Adicionar Corretor</Button>
                           </DialogTrigger>
-                          <DialogContent className="sm:max-w-[400px] rounded-3xl">
+                          <DialogContent className="sm:max-w-[400px] rounded-2xl">
                             <DialogHeader>
                               <DialogTitle>Adicionar Corretor</DialogTitle>
                               <DialogDescription>Selecione um corretor para incluir no rateio de cotas.</DialogDescription>
@@ -2383,7 +2383,7 @@ export default function PortalDetalhes() {
                         <TableBody>
                           {corretoresList.map((c, idx) => (
                             <TableRow key={c.id}>
-                              <TableCell className="font-medium whitespace-nowrap flex items-center gap-2 h-14"><User className="w-4 h-4 text-muted-foreground"/> {c.name}</TableCell>
+                              <TableCell className="font-medium whitespace-nowrap flex items-center gap-2 h-10"><User className="w-4 h-4 text-muted-foreground"/> {c.name}</TableCell>
                               <TableCell><Input type="number" value={c.simples} onChange={(e) => { const n = [...corretoresList]; n[idx].simples = parseInt(e.target.value)||0; setCorretoresList(n); }} className="h-9 w-full bg-background text-center font-semibold" /></TableCell>
                               <TableCell><Input type="number" value={c.destaque} onChange={(e) => { const n = [...corretoresList]; n[idx].destaque = parseInt(e.target.value)||0; setCorretoresList(n); }} className="h-9 w-full bg-background text-center font-semibold text-blue-600" /></TableCell>
                               <TableCell><Input type="number" value={c.sdestaque} onChange={(e) => { const n = [...corretoresList]; n[idx].sdestaque = parseInt(e.target.value)||0; setCorretoresList(n); }} className="h-9 w-full bg-background text-center font-semibold text-amber-600" /></TableCell>
@@ -2420,7 +2420,7 @@ export default function PortalDetalhes() {
           setBrokerToReceive('');
         }
       }}>
-        <DialogContent className="sm:max-w-[400px] rounded-3xl">
+        <DialogContent className="sm:max-w-[400px] rounded-2xl">
           <DialogHeader>
             <DialogTitle>Transferir Imóveis e Remover</DialogTitle>
             <DialogDescription>

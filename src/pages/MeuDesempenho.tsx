@@ -52,7 +52,7 @@ export function MeuDesempenho() {
               <div className="flex justify-between items-start">
                 <div className="space-y-2">
                   <p className="text-sm font-medium text-muted-foreground">{kpi.title}</p>
-                  <p className="text-3xl font-black text-foreground">{kpi.value}</p>
+                  <p className="text-title-1 text-foreground">{kpi.value}</p>
                 </div>
                 <div className={cn("p-3 rounded-2xl", kpi.bg, kpi.color)}>
                   <kpi.icon className="h-6 w-6" />
@@ -136,7 +136,7 @@ export function MeuDesempenho() {
                   </div>
                   <div>
                     <p className="text-sm text-muted-foreground font-medium">Taxa de Conversão</p>
-                    <p className="text-2xl font-black text-emerald-600">2.7%</p>
+                    <p className="text-2xl font-semibold text-emerald-600">2.7%</p>
                   </div>
                 </div>
               </div>

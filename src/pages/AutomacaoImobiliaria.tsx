@@ -600,7 +600,7 @@ export function AutomacaoImobiliaria() {
             className="grid grid-cols-1 md:grid-cols-3 gap-6"
           >
             {automationTemplates.map((tmpl: Automation) => (
-              <div key={tmpl.id} className="bg-card p-6 rounded-[2rem] border border-border flex flex-col justify-between group hover:border-primary/50 transition-all relative">
+              <div key={tmpl.id} className="bg-card p-6 rounded-2xl border border-border flex flex-col justify-between group hover:border-primary/50 transition-all relative">
                 <div className="absolute top-6 right-6 flex gap-1">
                   <button 
                     onClick={() => handleEdit(tmpl, true)}
@@ -702,7 +702,7 @@ export function AutomacaoImobiliaria() {
                           )}
                         >
                           <Zap size={24} className={cn("mb-4", !isEditingTemplate ? "text-white" : "text-muted-foreground")} />
-                          <h4 className={cn("font-semibold text-sm uppercase tracking-tight", !isEditingTemplate ? "text-white" : "text-foreground")}>Fluxo Operacional</h4>
+                          <h4 className={cn("font-semibold text-sm tracking-tight", !isEditingTemplate ? "text-white" : "text-foreground")}>Fluxo Operacional</h4>
                           <p className={cn("text-[10px] font-medium mt-1", !isEditingTemplate ? "text-blue-100" : "text-muted-foreground")}>Ativa imediatamente no funil</p>
                         </button>
                         <button 
@@ -713,7 +713,7 @@ export function AutomacaoImobiliaria() {
                           )}
                         >
                           <Bookmark size={24} className={cn("mb-4", isEditingTemplate ? "text-white" : "text-muted-foreground")} />
-                          <h4 className={cn("font-semibold text-sm uppercase tracking-tight", isEditingTemplate ? "text-white" : "text-foreground")}>Modelo (Template)</h4>
+                          <h4 className={cn("font-semibold text-sm tracking-tight", isEditingTemplate ? "text-white" : "text-foreground")}>Modelo (Template)</h4>
                           <p className={cn("text-[10px] font-medium mt-1", isEditingTemplate ? "text-blue-100" : "text-muted-foreground")}>Salva na biblioteca de modelos</p>
                         </button>
                       </div>
@@ -964,7 +964,7 @@ export function AutomacaoImobiliaria() {
                                         const items = [...(action.config.items || []), ""];
                                         updateActionConfig(action.id, { ...action.config, items });
                                       }}
-                                      className="text-[9px] font-semibold uppercase text-primary hover:underline"
+                                      className="text-[9px] font-semibold text-primary hover:underline"
                                     >
                                       + Adicionar Item
                                     </button>
@@ -1115,7 +1115,7 @@ export function AutomacaoImobiliaria() {
                           <button
                             key={type.id}
                             onClick={() => addAction(type.id)}
-                            className="p-6 rounded-[2rem] bg-card border border-border hover:border-blue-500 hover:shadow-xl hover:shadow-black/5 transition-all flex flex-col items-center text-center group"
+                            className="p-6 rounded-2xl bg-card border border-border hover:border-blue-500 hover:shadow-xl hover:shadow-black/5 transition-all flex flex-col items-center text-center group"
                           >
                             <div className={cn("w-12 h-12 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform", type.bg, "dark:bg-muted")}>
                               <type.icon className={type.color} size={24} />

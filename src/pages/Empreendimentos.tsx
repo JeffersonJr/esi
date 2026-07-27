@@ -164,7 +164,7 @@ export function Empreendimentos() {
                 <kpi.icon className={cn('h-5 w-5', kpi.color)} />
               </div>
               <div>
-                <p className="text-2xl font-black leading-none">{kpi.value}</p>
+                <p className="text-2xl font-semibold leading-none">{kpi.value}</p>
                 <p className="text-xs text-muted-foreground font-semibold mt-0.5">{kpi.label}</p>
               </div>
             </CardContent>
@@ -214,7 +214,7 @@ export function Empreendimentos() {
             className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6"
           >
             {filteredEmpreendimentos.map((emp) => (
-              <Card key={emp.id} className="overflow-hidden border-none shadow-sm hover:shadow-md transition-all group bg-card rounded-[24px]">
+              <Card key={emp.id} className="overflow-hidden border-none shadow-sm hover:shadow-md transition-all group bg-card rounded-2xl">
                 <div className="relative h-[240px] overflow-hidden">
                   <img src={emp.imagem} alt={emp.titulo} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
@@ -241,7 +241,7 @@ export function Empreendimentos() {
                     </DropdownMenu>
                   </div>
                   <div className="absolute bottom-4 left-4 right-4 text-white">
-                    <h3 className="font-black text-xl mb-1 truncate">{emp.titulo}</h3>
+                    <h3 className="font-semibold text-xl mb-1 truncate">{emp.titulo}</h3>
                     <p className="text-white/80 text-sm font-medium flex items-center gap-1.5 truncate">
                       <MapPin className="h-3.5 w-3.5" /> {emp.endereco}
                     </p>
@@ -251,11 +251,11 @@ export function Empreendimentos() {
                 <CardContent className="p-5">
                   <div className="flex justify-between items-center mb-4 pb-4 border-b border-border/50">
                     <div>
-                      <p className="text-xs text-muted-foreground font-semibold uppercase tracking-wider mb-1">Construtora</p>
+                      <p className="text-xs text-muted-foreground font-semibold tracking-tight mb-1">Construtora</p>
                       <p className="text-sm font-bold text-foreground">{emp.construtora}</p>
                     </div>
                     <div className="text-right">
-                      <p className="text-xs text-muted-foreground font-semibold uppercase tracking-wider mb-1">Entrega</p>
+                      <p className="text-xs text-muted-foreground font-semibold tracking-tight mb-1">Entrega</p>
                       <p className="text-sm font-bold text-foreground">{emp.dataEntrega}</p>
                     </div>
                   </div>
@@ -272,19 +272,19 @@ export function Empreendimentos() {
 
                   <div className="flex items-center gap-4 bg-muted/30 p-3 rounded-xl mb-5">
                     <div className="flex-1 text-center border-r border-border/50">
-                      <p className="text-xs text-muted-foreground font-semibold uppercase mb-0.5">Total</p>
-                      <p className="font-black text-foreground">{emp.unidadesTotal}</p>
+                      <p className="text-xs text-muted-foreground font-semibold mb-0.5">Total</p>
+                      <p className="font-semibold text-foreground">{emp.unidadesTotal}</p>
                     </div>
                     <div className="flex-1 text-center">
-                      <p className="text-xs text-muted-foreground font-semibold uppercase mb-0.5">Disponíveis</p>
-                      <p className="font-black text-emerald-600">{emp.unidadesDisponiveis}</p>
+                      <p className="text-xs text-muted-foreground font-semibold mb-0.5">Disponíveis</p>
+                      <p className="font-semibold text-emerald-600">{emp.unidadesDisponiveis}</p>
                     </div>
                   </div>
 
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-wider mb-0.5">Valor inicial</p>
-                      <p className="font-black text-lg text-primary">{emp.valor}</p>
+                      <p className="text-[10px] text-muted-foreground font-bold tracking-tight mb-0.5">Valor inicial</p>
+                      <p className="font-semibold text-lg text-primary">{emp.valor}</p>
                     </div>
                     <Button variant="outline" size="sm" className="rounded-xl font-bold h-9 border-primary/20 hover:bg-primary/5 text-primary">
                       Ver Detalhes
@@ -300,7 +300,7 @@ export function Empreendimentos() {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
-            className="bg-card rounded-3xl border border-border/50 shadow-sm overflow-hidden"
+            className="bg-card rounded-2xl border border-border/50 shadow-sm overflow-hidden"
           >
             <div className="overflow-x-auto">
               <Table>
@@ -368,11 +368,11 @@ export function Empreendimentos() {
       <Dialog open={deleteOpen} onOpenChange={setDeleteOpen}>
         <DialogContent className="sm:max-w-[400px] rounded-[32px] p-6">
           <div className="flex flex-col items-center text-center gap-4">
-            <div className="h-16 w-16 rounded-3xl bg-destructive/10 text-destructive flex items-center justify-center">
+            <div className="h-16 w-16 rounded-2xl bg-destructive/10 text-destructive flex items-center justify-center">
               <Trash2 className="h-8 w-8" />
             </div>
             <div>
-              <DialogTitle className="text-xl font-black text-foreground mb-2">Excluir Empreendimento</DialogTitle>
+              <DialogTitle className="text-xl font-semibold text-foreground mb-2">Excluir Empreendimento</DialogTitle>
               <DialogDescription className="text-sm font-medium text-muted-foreground">
                 Tem certeza que deseja excluir <strong>{empreendimentoToDelete?.titulo}</strong>? Esta ação não poderá ser desfeita.
               </DialogDescription>

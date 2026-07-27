@@ -105,11 +105,11 @@ export function Integracoes() {
       <Card key={item.id} className="border-border/50 shadow-sm hover:shadow-md transition-all duration-200 bg-card overflow-hidden flex flex-col">
         <CardHeader className="pb-4 relative">
           <div className="flex justify-between items-start mb-2">
-            <div className={cn("w-14 h-14 rounded-2xl flex items-center justify-center shadow-sm border border-border/50 overflow-hidden select-none", isImage ? 'bg-white' : item.color, !isImage && 'text-white shadow-md')}>
+            <div className={cn("w-14 h-10 rounded-2xl flex items-center justify-center shadow-sm border border-border/50 overflow-hidden select-none", isImage ? 'bg-white' : item.color, !isImage && 'text-white shadow-md')}>
               {renderLogo(item)}
             </div>
             {item.emBreve ? (
-              <Badge variant="secondary" className="bg-amber-100 text-amber-700 hover:bg-amber-100 border-none font-bold text-[10px] uppercase">Em Breve</Badge>
+              <Badge variant="secondary" className="bg-amber-100 text-amber-700 hover:bg-amber-100 border-none font-bold text-[10px]">Em Breve</Badge>
             ) : (
               <Switch checked={item.active} onCheckedChange={() => !item.active && handleConfigurar(item, isSocial)} className="data-[state=checked]:bg-emerald-500" />
             )}
@@ -309,15 +309,15 @@ export function Integracoes() {
                     <p className="text-sm text-muted-foreground">Defina o volume contratado. Exemplo (Super Destaque, Destaque, Simples).</p>
                     <div className="grid grid-cols-3 gap-3">
                       <div className="space-y-1">
-                        <Label className="text-[10px] uppercase font-bold text-muted-foreground">Simples</Label>
+                        <Label className="text-[10px] font-bold text-muted-foreground">Simples</Label>
                         <Input type="number" defaultValue="100" />
                       </div>
                       <div className="space-y-1">
-                        <Label className="text-[10px] uppercase font-bold text-muted-foreground">Destaque</Label>
+                        <Label className="text-[10px] font-bold text-muted-foreground">Destaque</Label>
                         <Input type="number" defaultValue="20" />
                       </div>
                       <div className="space-y-1">
-                        <Label className="text-[10px] uppercase font-bold text-muted-foreground">Super Destaque</Label>
+                        <Label className="text-[10px] font-bold text-muted-foreground">Super Destaque</Label>
                         <Input type="number" defaultValue="5" />
                       </div>
                     </div>

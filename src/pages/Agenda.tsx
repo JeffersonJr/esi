@@ -236,7 +236,7 @@ export function Agenda() {
               <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground" onClick={() => navDate(-1)}>
                 <ChevronLeft className="h-4 w-4" />
               </Button>
-              <Button variant="ghost" size="sm" className="h-8 px-4 text-xs font-bold uppercase tracking-wider text-muted-foreground" onClick={() => setCurrentDate(new Date())}>
+              <Button variant="ghost" size="sm" className="h-8 px-4 text-xs font-bold tracking-tight text-muted-foreground" onClick={() => setCurrentDate(new Date())}>
                 Hoje
               </Button>
               <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground" onClick={() => navDate(1)}>
@@ -261,7 +261,7 @@ export function Agenda() {
                             {/* Dot */}
                             <div className={cn("absolute -left-[9px] top-6 h-4 w-4 rounded-full border-[3px] border-background shadow-sm transition-all", ev.concluida ? "bg-emerald-500" : "bg-primary group-hover:scale-110")} />
                             <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-6">
-                              <div className="text-sm font-black text-foreground shrink-0 pt-0.5 w-16 text-right hidden sm:block">
+                              <div className="text-sm font-semibold text-foreground shrink-0 pt-0.5 w-16 text-right hidden sm:block">
                                 {ev.horario}
                               </div>
                               <div className={cn("flex-1 p-4 rounded-2xl border transition-all cursor-pointer relative overflow-hidden flex flex-col justify-center min-h-[100px]", ev.concluida ? "bg-muted/30 border-dashed border-border/60 opacity-70" : "bg-background shadow-sm hover:shadow-md border-border/80 hover:border-primary/40")}>
@@ -300,7 +300,7 @@ export function Agenda() {
                 <motion.div key="month" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="p-4 sm:p-0">
                   <div className="grid grid-cols-7 gap-px bg-border/50 rounded-2xl overflow-hidden border border-border/50 shadow-sm">
                     {['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'].map(d => (
-                      <div key={d} className="bg-muted/40 py-3 text-center text-xs font-bold text-muted-foreground uppercase tracking-widest">{d}</div>
+                      <div key={d} className="bg-muted/40 py-3 text-center text-xs font-bold text-muted-foreground tracking-tight">{d}</div>
                     ))}
                     {Array.from({ length: 42 }).map((_, i) => {
                       const date = new Date(startOfMonth);
@@ -341,7 +341,7 @@ export function Agenda() {
                       return (
                         <div key={i} onClick={() => { setCurrentDate(d); setViewMode('day'); }} className={cn("flex flex-col gap-3 rounded-2xl p-3 border transition-all cursor-pointer", isToday ? "border-primary/50 shadow-md bg-primary/[0.02]" : "border-border/60 bg-background hover:bg-muted/20 hover:border-border")}>
                           <div className="text-center pb-2 border-b border-border/40">
-                            <p className="text-[10px] font-black uppercase text-muted-foreground tracking-widest">{d.toLocaleDateString('pt-BR', { weekday: 'short' })}</p>
+                            <p className="text-[10px] font-semibold text-muted-foreground tracking-tight">{d.toLocaleDateString('pt-BR', { weekday: 'short' })}</p>
                             <p className={cn("text-xl font-bold mt-1", isToday ? "text-primary" : "text-foreground")}>{d.getDate()}</p>
                           </div>
                           <div className="flex-1 space-y-2">
@@ -366,14 +366,14 @@ export function Agenda() {
         <div className="w-full xl:w-80 space-y-4">
           <div className="bg-primary hover:bg-primary/95 transition-colors rounded-2xl p-5 text-primary-foreground shadow-md cursor-pointer flex flex-col justify-center" onClick={() => { setViewMode('day'); setCurrentDate(new Date()); }}>
             <div className="flex items-center justify-between mb-1">
-              <h3 className="font-black text-lg flex items-center gap-2">Radar do Dia</h3>
+              <h3 className="font-semibold text-lg flex items-center gap-2">Radar do Dia</h3>
               <Activity className="h-5 w-5 opacity-70" />
             </div>
             <p className="text-primary-foreground/80 text-sm">{periodEvents.filter(e => !e.concluida).length} atividades para hoje.</p>
           </div>
 
           <div className="bg-background rounded-2xl border border-border/50 shadow-sm p-5">
-            <h3 className="font-bold text-sm text-muted-foreground uppercase tracking-widest flex items-center justify-between border-b border-border/40 pb-3 mb-4">
+            <h3 className="font-bold text-sm text-muted-foreground tracking-tight flex items-center justify-between border-b border-border/40 pb-3 mb-4">
               <span>Próximas Tarefas</span>
               <Badge variant="secondary" className="font-bold">{eventos.filter(e => !e.concluida).length}</Badge>
             </h3>
@@ -385,7 +385,7 @@ export function Agenda() {
                   <div key={e.id} className="p-3 bg-background rounded-xl border border-border/60 hover:border-primary/40 hover:shadow-sm transition-all cursor-pointer group" onClick={() => { setCurrentDate(new Date(e.data + 'T00:00')); setViewMode('day'); }}>
                     <div className="flex items-center justify-between mb-2">
                       {isToday ? <Badge className="bg-blue-500 text-[10px] px-1.5 py-0 border-none">Hoje</Badge> : <Badge variant="outline" className="text-[10px] px-2 py-0 text-muted-foreground bg-muted/30">{new Date(e.data + 'T00:00').toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' })}</Badge>}
-                      <span className="text-[11px] font-black text-foreground opacity-60 group-hover:text-primary transition-colors">{e.horario}</span>
+                      <span className="text-[11px] font-semibold text-foreground opacity-60 group-hover:text-primary transition-colors">{e.horario}</span>
                     </div>
                     <div className="flex items-start gap-3">
                       <div className={cn("p-1.5 rounded-lg border", getTipoColor(e.tipo))}>
@@ -502,9 +502,9 @@ function KPIBox({ title, value, sub, icon: Icon, color, bg }: { title: string, v
         <Icon className="h-6 w-6" />
       </div>
       <div>
-        <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest leading-none mb-1.5">{title}</p>
+        <p className="text-xs font-bold text-muted-foreground tracking-tight leading-none mb-1.5">{title}</p>
         <div className="flex items-baseline gap-2">
-          <h4 className="text-3xl font-black text-foreground leading-none">{value}</h4>
+          <h4 className="text-title-1 text-foreground leading-none">{value}</h4>
         </div>
         <p className="text-xs text-muted-foreground mt-1 opacity-80">{sub}</p>
       </div>

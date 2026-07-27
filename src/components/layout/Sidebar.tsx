@@ -161,7 +161,7 @@ export function Sidebar() {
             <div key={group.label} className={cn(groupIdx > 0 && 'mt-4')}>
               {/* Group label — only in expanded mode on desktop */}
               {!collapsed && (
-                <p className="hidden lg:block px-3 pb-1 text-[10px] font-semibold uppercase tracking-widest text-muted-foreground/50 select-none">
+                <p className="hidden lg:block px-3 pb-1 text-[10px] font-semibold tracking-tight text-muted-foreground/50 select-none">
                   {group.label}
                 </p>
               )}

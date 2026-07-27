@@ -101,7 +101,7 @@ export function GerenciarFunilSheet({
         <div className="flex-1 overflow-y-auto px-6 py-5 space-y-6">
           {/* Nome e Descrição */}
           <div className="space-y-4">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Informações do Funil</h3>
+            <h3 className="text-xs font-bold tracking-tight text-muted-foreground">Informações do Funil</h3>
             <div className="space-y-1.5">
               <Label className="text-xs">Nome do Funil</Label>
               <Input
@@ -124,7 +124,7 @@ export function GerenciarFunilSheet({
 
           {/* Etapas */}
           <div className="space-y-4">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Colunas do Kanban</h3>
+            <h3 className="text-xs font-bold tracking-tight text-muted-foreground">Colunas do Kanban</h3>
             <p className="text-xs text-muted-foreground -mt-2">
               Adicione, renomeie ou remova colunas. Arraste para reordenar.
             </p>

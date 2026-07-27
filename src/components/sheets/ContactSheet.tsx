@@ -81,7 +81,7 @@ export function ContactSheet({ contato, open, onClose, onSave, onDelete, onViewP
                     </button>
                     <div className="absolute -bottom-10 left-6">
                         <Avatar className="h-20 w-20 border-4 border-background shadow-xl">
-                            <AvatarFallback className="bg-primary/20 text-primary text-xl font-black">{initials}</AvatarFallback>
+                            <AvatarFallback className="bg-primary/20 text-primary text-xl font-semibold">{initials}</AvatarFallback>
                         </Avatar>
                     </div>
                 </div>
@@ -89,7 +89,7 @@ export function ContactSheet({ contato, open, onClose, onSave, onDelete, onViewP
                 {/* Identity row */}
                 <div className="pt-14 px-6 pb-4 shrink-0">
                     <SheetHeader className="text-left">
-                        <SheetTitle className="text-2xl font-black tracking-tight leading-tight">{contato.nome}</SheetTitle>
+                        <SheetTitle className="text-2xl font-semibold tracking-tight leading-tight">{contato.nome}</SheetTitle>
                         <SheetDescription className="flex items-center gap-2 mt-1 flex-wrap">
                             <span className={cn('inline-flex items-center px-2 py-0.5 rounded-md text-xs font-semibold', tipoStyle(contato.tipo))}>
                                 {contato.tipo === 'Cliente' ? <User className="h-3 w-3 mr-1" /> : <Building className="h-3 w-3 mr-1" />}
@@ -122,25 +122,25 @@ export function ContactSheet({ contato, open, onClose, onSave, onDelete, onViewP
                     {isEditing ? (
                         /* ── EDIT MODE ── */
                         <div className="space-y-4">
-                            <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2">
+                            <p className="text-[10px] font-semibold tracking-tight text-muted-foreground flex items-center gap-2">
                                 <span className="w-4 h-[2px] bg-primary inline-block" /> Editando informações
                             </p>
 
                             <div className="space-y-1.5">
-                                <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Nome</Label>
+                                <Label className="text-xs font-semibold text-muted-foreground ">Nome</Label>
                                 <Input value={form.nome} onChange={e => setForm({ ...form, nome: e.target.value })} />
                             </div>
                             <div className="grid grid-cols-2 gap-3">
                                 <div className="space-y-1.5">
-                                    <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">E-mail</Label>
+                                    <Label className="text-xs font-semibold text-muted-foreground ">E-mail</Label>
                                     <Input type="email" value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} />
                                 </div>
                                 <div className="space-y-1.5">
-                                    <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Telefone</Label>
+                                    <Label className="text-xs font-semibold text-muted-foreground ">Telefone</Label>
                                     <Input value={form.telefone} onChange={e => setForm({ ...form, telefone: e.target.value })} />
                                 </div>
                                 <div className="space-y-1.5">
-                                    <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Tipo</Label>
+                                    <Label className="text-xs font-semibold text-muted-foreground ">Tipo</Label>
                                     <Select value={form.tipo} onValueChange={v => setForm({ ...form, tipo: v })}>
                                         <SelectTrigger className="h-9"><SelectValue /></SelectTrigger>
                                         <SelectContent>
@@ -151,7 +151,7 @@ export function ContactSheet({ contato, open, onClose, onSave, onDelete, onViewP
                                     </Select>
                                 </div>
                                 <div className="space-y-1.5">
-                                    <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Status</Label>
+                                    <Label className="text-xs font-semibold text-muted-foreground ">Status</Label>
                                     <Select value={form.status} onValueChange={v => setForm({ ...form, status: v })}>
                                         <SelectTrigger className="h-9"><SelectValue /></SelectTrigger>
                                         <SelectContent>
@@ -162,11 +162,11 @@ export function ContactSheet({ contato, open, onClose, onSave, onDelete, onViewP
                                     </Select>
                                 </div>
                                 <div className="space-y-1.5">
-                                    <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Interesse</Label>
+                                    <Label className="text-xs font-semibold text-muted-foreground ">Interesse</Label>
                                     <Input value={form.interesse} onChange={e => setForm({ ...form, interesse: e.target.value })} />
                                 </div>
                                 <div className="space-y-1.5">
-                                    <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Cidade</Label>
+                                    <Label className="text-xs font-semibold text-muted-foreground ">Cidade</Label>
                                     <Input value={form.cidade} onChange={e => setForm({ ...form, cidade: e.target.value })} />
                                 </div>
                             </div>
@@ -174,7 +174,7 @@ export function ContactSheet({ contato, open, onClose, onSave, onDelete, onViewP
                     ) : (
                         /* ── VIEW MODE ── */
                         <div className="space-y-5">
-                            <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2">
+                            <p className="text-[10px] font-semibold tracking-tight text-muted-foreground flex items-center gap-2">
                                 <span className="w-4 h-[2px] bg-primary inline-block" /> Informações de contato
                             </p>
 
@@ -184,17 +184,17 @@ export function ContactSheet({ contato, open, onClose, onSave, onDelete, onViewP
                             <InfoRow icon={Briefcase} label="Interesse" value={contato.interesse} />
 
                             <Separator />
-                            <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2">
+                            <p className="text-[10px] font-semibold tracking-tight text-muted-foreground flex items-center gap-2">
                                 <span className="w-4 h-[2px] bg-primary inline-block" /> Classificação
                             </p>
 
                             <div className="grid grid-cols-2 gap-3">
                                 <div className="p-3 rounded-xl bg-muted/30 border border-border/40">
-                                    <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wide mb-1">Tipo</p>
+                                    <p className="text-[10px] font-semibold text-muted-foreground  mb-1">Tipo</p>
                                     <span className={cn('inline-flex items-center px-2 py-0.5 rounded-md text-xs font-bold', tipoStyle(contato.tipo))}>{contato.tipo}</span>
                                 </div>
                                 <div className="p-3 rounded-xl bg-muted/30 border border-border/40">
-                                    <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wide mb-1">Status</p>
+                                    <p className="text-[10px] font-semibold text-muted-foreground  mb-1">Status</p>
                                     <span className={cn('inline-flex items-center px-2 py-0.5 rounded-md text-xs font-bold', statusStyle(contato.status))}>{contato.status}</span>
                                 </div>
                             </div>
@@ -237,7 +237,7 @@ function InfoRow({ icon: Icon, label, value }: { icon: any; label: string; value
                 <Icon className="h-4 w-4 text-primary/70" />
             </div>
             <div className="min-w-0">
-                <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wide">{label}</p>
+                <p className="text-[10px] font-semibold text-muted-foreground ">{label}</p>
                 <p className="text-sm font-semibold truncate">{value || '—'}</p>
             </div>
         </div>

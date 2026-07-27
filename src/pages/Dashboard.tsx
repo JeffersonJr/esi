@@ -511,7 +511,7 @@ export function Dashboard() {
           <CardContent className="space-y-5">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
               <div className="space-y-1">
-                <p className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">Progresso Atual</p>
+                <p className="text-[11px] font-medium tracking-tight text-muted-foreground">Progresso Atual</p>
                 <div className="text-2xl font-bold tracking-tight text-foreground">
                   {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(2450000)}
                 </div>
@@ -546,7 +546,7 @@ export function Dashboard() {
                 { label: 'Novos Contratos', value: '8', icon: Briefcase },
               ].map((stat) => (
                 <div key={stat.label} className="space-y-1">
-                  <p className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">{stat.label}</p>
+                  <p className="text-[10px] font-medium tracking-tight text-muted-foreground">{stat.label}</p>
                   <div className="flex items-center gap-1.5">
                     <stat.icon className="h-3.5 w-3.5 text-primary" />
                     <span className="text-sm font-semibold">{stat.value}</span>

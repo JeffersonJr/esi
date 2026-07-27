@@ -1,4 +1,3 @@
-'use client'
 
 import { useState } from 'react'
 import { Star, X, Search, Check, PlusCircle, Bot, Mic, Sparkles, Clock, Loader2 } from 'lucide-react'
@@ -267,7 +266,7 @@ export function FormNovaAtividade({
             key={t}
             type="button"
             onClick={() => setAba(t)}
-            className={`flex-1 rounded-xl py-2 text-xs font-semibold uppercase tracking-wider transition-brand ${aba === t ? 'bg-card text-primary shadow-sm' : 'text-muted-foreground'
+            className={`flex-1 rounded-xl py-2 text-xs font-semibold tracking-tight transition-brand ${aba === t ? 'bg-card text-primary shadow-sm' : 'text-muted-foreground'
               }`}
           >
             {t}
@@ -303,7 +302,7 @@ export function FormNovaAtividade({
                   )}
                 </div>
                 <div>
-                  <span className={`text-[10px] font-extrabold uppercase tracking-widest flex items-center gap-1.5 opacity-95 ${albertStatus === 'idle' ? 'text-[#a9ffd2]' : 'text-primary'}`}>
+                  <span className={`text-[10px] font-extrabold tracking-tight flex items-center gap-1.5 opacity-95 ${albertStatus === 'idle' ? 'text-[#a9ffd2]' : 'text-primary'}`}>
                     {albertStatus === 'idle' && <Sparkles className="size-3 text-[#a9ffd2] fill-[#a9ffd2] animate-pulse" />}
                     {albertStatus === 'gravando' ? 'Gravando...' : albertStatus === 'processando' ? 'Processando com IA...' : albertStatus === 'sucesso' ? 'Pronto!' : 'Albert Assistente de IA'}
                   </span>
@@ -324,7 +323,7 @@ export function FormNovaAtividade({
 
             {/* Tipo */}
             <div>
-              <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">Tipo de atividade</label>
+              <label className="mb-1.5 block text-xs font-semibold  text-muted-foreground">Tipo de atividade</label>
               <div className="flex flex-wrap gap-2">
                 {TIPOS.map((t) => (
                   <button
@@ -345,7 +344,7 @@ export function FormNovaAtividade({
             {/* Título */}
             <div>
               <div className="flex items-center justify-between mb-1.5">
-                <label className="block text-xs font-semibold uppercase tracking-wide text-muted-foreground">Título *</label>
+                <label className="block text-xs font-semibold  text-muted-foreground">Título *</label>
               </div>
               <input
                 type="text"
@@ -358,7 +357,7 @@ export function FormNovaAtividade({
 
             {/* Descrição */}
             <div>
-              <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">Descrição</label>
+              <label className="mb-1.5 block text-xs font-semibold  text-muted-foreground">Descrição</label>
               <textarea
                 value={descricao}
                 onChange={(e) => setDescricao(e.target.value)}
@@ -372,7 +371,7 @@ export function FormNovaAtividade({
 
         {aba === 'nota' && (
           <div>
-            <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">Anotação *</label>
+            <label className="mb-1.5 block text-xs font-semibold  text-muted-foreground">Anotação *</label>
             <textarea
               value={descricao}
               onChange={(e) => setDescricao(e.target.value)}
@@ -386,11 +385,11 @@ export function FormNovaAtividade({
         {aba === 'email' && (
           <>
             <div>
-              <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">Assunto *</label>
+              <label className="mb-1.5 block text-xs font-semibold  text-muted-foreground">Assunto *</label>
               <input type="text" value={emailAssunto} onChange={e => setEmailAssunto(e.target.value)} placeholder="Assunto do e-mail" className="h-12 w-full rounded-2xl border border-border bg-background px-4 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring" />
             </div>
             <div>
-              <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">Mensagem *</label>
+              <label className="mb-1.5 block text-xs font-semibold  text-muted-foreground">Mensagem *</label>
               <textarea value={emailCorpo} onChange={e => setEmailCorpo(e.target.value)} rows={4} placeholder="Corpo do e-mail..." className="w-full resize-none rounded-2xl border border-border bg-background p-4 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring" />
             </div>
           </>
@@ -399,7 +398,7 @@ export function FormNovaAtividade({
         {/* Cliente */}
         {!defaultClienteId && (
           <div className="relative">
-            <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">Cliente</label>
+            <label className="mb-1.5 block text-xs font-semibold  text-muted-foreground">Cliente</label>
             <div className="relative">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
               <input
@@ -433,7 +432,7 @@ export function FormNovaAtividade({
                     </div>
                     <div className="flex flex-col">
                       <span className="text-sm font-semibold text-foreground">{a.nome}</span>
-                      <span className="text-[10px] uppercase text-muted-foreground">{a.origem}</span>
+                      <span className="text-[10px] text-muted-foreground">{a.origem}</span>
                     </div>
                     {clienteIdSelecionado === a.id && <Check className="ml-auto size-4 text-primary" />}
                   </button>
@@ -468,7 +467,7 @@ export function FormNovaAtividade({
               </button>
             </div>
             <div>
-              <label className="mb-1 block text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">Telefone</label>
+              <label className="mb-1 block text-[10px] font-semibold  text-muted-foreground">Telefone</label>
               <input
                 type="tel"
                 value={novoTelefone}
@@ -478,7 +477,7 @@ export function FormNovaAtividade({
               />
             </div>
             <div>
-              <label className="mb-1 block text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">WhatsApp</label>
+              <label className="mb-1 block text-[10px] font-semibold  text-muted-foreground">WhatsApp</label>
               <input
                 type="tel"
                 value={novoWhatsapp}
@@ -488,7 +487,7 @@ export function FormNovaAtividade({
               />
             </div>
             <div>
-              <label className="mb-1 block text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">E-mail</label>
+              <label className="mb-1 block text-[10px] font-semibold  text-muted-foreground">E-mail</label>
               <input
                 type="email"
                 value={novoEmail}
@@ -513,7 +512,7 @@ export function FormNovaAtividade({
           <>
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">Data *</label>
+                <label className="mb-1.5 block text-xs font-semibold  text-muted-foreground">Data *</label>
                 <input
                   type="date"
                   value={data}
@@ -522,7 +521,7 @@ export function FormNovaAtividade({
                 />
               </div>
               <div>
-                <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">Hora *</label>
+                <label className="mb-1.5 block text-xs font-semibold  text-muted-foreground">Hora *</label>
                 <input
                   type="time"
                   value={hora}
@@ -534,7 +533,7 @@ export function FormNovaAtividade({
 
             {/* Imóveis */}
             <div>
-              <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+              <label className="mb-1.5 block text-xs font-semibold  text-muted-foreground">
                 Imóveis vinculados {tipo === 'visita' ? '*' : '(opcional)'}
               </label>
               <div className="relative">

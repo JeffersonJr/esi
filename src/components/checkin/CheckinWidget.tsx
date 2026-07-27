@@ -88,7 +88,7 @@ export function CheckinWidget() {
               }`}>
                 {isCheckedIn ? <LogOut className="h-8 w-8" /> : <LogIn className="h-8 w-8" />}
               </div>
-              <DialogTitle className="text-2xl font-black text-slate-800">
+              <DialogTitle className="text-2xl font-semibold text-slate-800">
                 {isCheckedIn ? 'Encerrar Plantão' : 'Iniciar Plantão'}
               </DialogTitle>
               <p className="text-slate-500 mt-2 text-sm px-4">

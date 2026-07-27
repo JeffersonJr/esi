@@ -18,7 +18,7 @@ export function PropertyQuickView({ open, onClose, imovel }: { open: boolean, on
 
   return (
     <Dialog open={open} onOpenChange={(isOpen) => !isOpen && onClose()}>
-      <DialogContent className="max-w-[95vw] md:max-w-[800px] lg:max-w-[1000px] h-[95vh] md:h-[85vh] p-0 flex flex-col rounded-3xl overflow-hidden border-border/50 bg-background shadow-2xl">
+      <DialogContent className="max-w-[95vw] md:max-w-[800px] lg:max-w-[1000px] h-[95vh] md:h-[85vh] p-0 flex flex-col rounded-2xl overflow-hidden border-border/50 bg-background shadow-2xl">
         
         {/* CABEÇALHO / HERO COMPACTO */}
         <div className="flex flex-col sm:flex-row bg-muted/20 border-b border-border/50 shrink-0">
@@ -55,7 +55,7 @@ export function PropertyQuickView({ open, onClose, imovel }: { open: boolean, on
         {/* CORPO DO MODAL COM ABAS */}
         <Tabs defaultValue="gerais" className="flex-1 flex flex-col min-h-0">
           <div className="border-b border-border/50 bg-muted/10 shrink-0 overflow-x-auto custom-scrollbar">
-            <TabsList className="h-14 w-full justify-start bg-transparent p-0 gap-2 px-4 rounded-none">
+            <TabsList className="h-10 w-full justify-start bg-transparent p-0 gap-2 px-4 rounded-none">
               <TabsTrigger value="gerais" className="data-[state=active]:bg-background data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:shadow-none rounded-none h-full px-4 text-xs font-semibold whitespace-nowrap"><Info className="w-3.5 h-3.5 mr-1.5"/> Gerais</TabsTrigger>
               <TabsTrigger value="internas" className="data-[state=active]:bg-background data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:shadow-none rounded-none h-full px-4 text-xs font-semibold whitespace-nowrap"><Briefcase className="w-3.5 h-3.5 mr-1.5"/> Internas</TabsTrigger>
               <TabsTrigger value="cond" className="data-[state=active]:bg-background data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:shadow-none rounded-none h-full px-4 text-xs font-semibold whitespace-nowrap"><Building2 className="w-3.5 h-3.5 mr-1.5"/> Cond./Emp.</TabsTrigger>
@@ -78,32 +78,32 @@ export function PropertyQuickView({ open, onClose, imovel }: { open: boolean, on
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   <div className="space-y-8">
                     <section>
-                      <h3 className="text-sm font-bold text-muted-foreground uppercase tracking-wider mb-4 flex items-center gap-2"><Calendar className="w-4 h-4"/> Datas e Status</h3>
+                      <h3 className="text-sm font-bold text-muted-foreground tracking-tight mb-4 flex items-center gap-2"><Calendar className="w-4 h-4"/> Datas e Status</h3>
                       <div className="grid grid-cols-2 gap-4">
                         <div className="bg-muted/30 p-3 rounded-xl border border-border/50">
-                          <span className="text-[11px] text-muted-foreground font-semibold uppercase">Cadastrado</span>
+                          <span className="text-[11px] text-muted-foreground font-semibold">Cadastrado</span>
                           <div className="font-medium mt-1">22/04/2026</div>
                         </div>
                         <div className="bg-muted/30 p-3 rounded-xl border border-border/50">
-                          <span className="text-[11px] text-muted-foreground font-semibold uppercase">Atualizado</span>
+                          <span className="text-[11px] text-muted-foreground font-semibold">Atualizado</span>
                           <div className="font-medium mt-1">22/04/2026</div>
                         </div>
                         <div className="bg-muted/30 p-3 rounded-xl border border-border/50 col-span-2 flex justify-between items-center">
-                          <span className="text-[11px] text-muted-foreground font-semibold uppercase">Finalidade</span>
+                          <span className="text-[11px] text-muted-foreground font-semibold">Finalidade</span>
                           <Badge className="bg-emerald-100 text-emerald-700 hover:bg-emerald-100 border-none font-bold">Venda / Locação</Badge>
                         </div>
                       </div>
                     </section>
 
                     <section>
-                      <h3 className="text-sm font-bold text-muted-foreground uppercase tracking-wider mb-4 flex items-center gap-2"><DollarSign className="w-4 h-4"/> Valores Básicos</h3>
+                      <h3 className="text-sm font-bold text-muted-foreground tracking-tight mb-4 flex items-center gap-2"><DollarSign className="w-4 h-4"/> Valores Básicos</h3>
                       <div className="grid grid-cols-2 gap-4">
                         <div className="bg-primary/5 p-4 rounded-xl border border-primary/10">
-                          <span className="text-[11px] text-primary font-bold uppercase">Venda</span>
+                          <span className="text-[11px] text-primary font-bold">Venda</span>
                           <div className="text-xl font-bold text-primary mt-1">{imovel.valor}</div>
                         </div>
                         <div className="bg-primary/5 p-4 rounded-xl border border-primary/10">
-                          <span className="text-[11px] text-primary font-bold uppercase">Locação</span>
+                          <span className="text-[11px] text-primary font-bold">Locação</span>
                           <div className="text-xl font-bold text-primary mt-1">R$ 2.800/mês</div>
                         </div>
                         <div className="col-span-2 flex items-center justify-between text-sm p-3 bg-muted/30 rounded-xl border border-border/50">
@@ -116,30 +116,30 @@ export function PropertyQuickView({ open, onClose, imovel }: { open: boolean, on
 
                   <div className="space-y-8">
                     <section>
-                      <h3 className="text-sm font-bold text-muted-foreground uppercase tracking-wider mb-4 flex items-center gap-2"><Home className="w-4 h-4"/> Medidas e Estrutura</h3>
+                      <h3 className="text-sm font-bold text-muted-foreground tracking-tight mb-4 flex items-center gap-2"><Home className="w-4 h-4"/> Medidas e Estrutura</h3>
                       <div className="grid grid-cols-3 gap-2">
                         <div className="flex flex-col items-center justify-center p-3 bg-muted/30 rounded-xl border border-border/50 text-center">
-                          <span className="text-[11px] text-muted-foreground font-semibold uppercase">Dorms</span>
+                          <span className="text-[11px] text-muted-foreground font-semibold">Dorms</span>
                           <span className="text-lg font-bold mt-0.5">{imovel.dorms}</span>
                         </div>
                         <div className="flex flex-col items-center justify-center p-3 bg-muted/30 rounded-xl border border-border/50 text-center">
-                          <span className="text-[11px] text-muted-foreground font-semibold uppercase">Suítes</span>
+                          <span className="text-[11px] text-muted-foreground font-semibold">Suítes</span>
                           <span className="text-lg font-bold mt-0.5">{imovel.suites}</span>
                         </div>
                         <div className="flex flex-col items-center justify-center p-3 bg-muted/30 rounded-xl border border-border/50 text-center">
-                          <span className="text-[11px] text-muted-foreground font-semibold uppercase">Vagas</span>
+                          <span className="text-[11px] text-muted-foreground font-semibold">Vagas</span>
                           <span className="text-lg font-bold mt-0.5">{imovel.vagas}</span>
                         </div>
                         <div className="flex flex-col items-center justify-center p-3 bg-muted/30 rounded-xl border border-border/50 text-center">
-                          <span className="text-[11px] text-muted-foreground font-semibold uppercase">Salas</span>
+                          <span className="text-[11px] text-muted-foreground font-semibold">Salas</span>
                           <span className="text-lg font-bold mt-0.5">2</span>
                         </div>
                         <div className="flex flex-col items-center justify-center p-3 bg-muted/30 rounded-xl border border-border/50 text-center">
-                          <span className="text-[11px] text-muted-foreground font-semibold uppercase">Banh.</span>
+                          <span className="text-[11px] text-muted-foreground font-semibold">Banh.</span>
                           <span className="text-lg font-bold mt-0.5">1</span>
                         </div>
                         <div className="flex flex-col items-center justify-center p-3 bg-muted/30 rounded-xl border border-border/50 text-center">
-                          <span className="text-[11px] text-muted-foreground font-semibold uppercase">Área Útil</span>
+                          <span className="text-[11px] text-muted-foreground font-semibold">Área Útil</span>
                           <span className="text-lg font-bold mt-0.5 text-primary">{imovel.area}</span>
                         </div>
                       </div>
@@ -160,14 +160,14 @@ export function PropertyQuickView({ open, onClose, imovel }: { open: boolean, on
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   <div className="space-y-6">
                     <section>
-                      <h3 className="text-sm font-bold text-muted-foreground uppercase tracking-wider mb-4 flex items-center gap-2"><AlertCircle className="w-4 h-4"/> Obs. Internas</h3>
+                      <h3 className="text-sm font-bold text-muted-foreground tracking-tight mb-4 flex items-center gap-2"><AlertCircle className="w-4 h-4"/> Obs. Internas</h3>
                       <div className="bg-amber-50 dark:bg-amber-950/30 p-4 rounded-2xl border border-amber-200 dark:border-amber-900/50 text-amber-900 dark:text-amber-200 text-sm leading-relaxed">
                         Proprietário aceita proposta. Chaves na portaria — agendar visita com 1 dia de antecedência. Documentação regularizada.
                       </div>
                     </section>
 
                     <section>
-                      <h3 className="text-sm font-bold text-muted-foreground uppercase tracking-wider mb-4 flex items-center gap-2"><User className="w-4 h-4"/> Proprietário(s)</h3>
+                      <h3 className="text-sm font-bold text-muted-foreground tracking-tight mb-4 flex items-center gap-2"><User className="w-4 h-4"/> Proprietário(s)</h3>
                       <div className="bg-card p-4 rounded-2xl border border-border/50 flex items-center gap-4">
                         <div className="w-12 h-12 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold text-lg">MR</div>
                         <div>
@@ -178,17 +178,17 @@ export function PropertyQuickView({ open, onClose, imovel }: { open: boolean, on
                     </section>
 
                     <section>
-                      <h3 className="text-sm font-bold text-muted-foreground uppercase tracking-wider mb-4 flex items-center gap-2"><HeartHandshake className="w-4 h-4"/> Captação e Indicação</h3>
+                      <h3 className="text-sm font-bold text-muted-foreground tracking-tight mb-4 flex items-center gap-2"><HeartHandshake className="w-4 h-4"/> Captação e Indicação</h3>
                       <div className="grid grid-cols-2 gap-4">
                         <div className="bg-muted/30 p-4 rounded-2xl border border-border/50">
-                          <span className="text-[11px] text-muted-foreground font-semibold uppercase block mb-2">Captadores</span>
+                          <span className="text-[11px] text-muted-foreground font-semibold block mb-2">Captadores</span>
                           <div className="space-y-1 text-sm font-medium">
                             <div className="flex items-center gap-2"><CheckCircle2 className="w-3 h-3 text-emerald-500"/> Simone Alves</div>
                             <div className="flex items-center gap-2"><CheckCircle2 className="w-3 h-3 text-emerald-500"/> Cristiano Rovida</div>
                           </div>
                         </div>
                         <div className="bg-muted/30 p-4 rounded-2xl border border-border/50">
-                          <span className="text-[11px] text-muted-foreground font-semibold uppercase block mb-2">Indicadores</span>
+                          <span className="text-[11px] text-muted-foreground font-semibold block mb-2">Indicadores</span>
                           <div className="space-y-1 text-sm font-medium">
                             <div className="flex items-center gap-2"><User className="w-3 h-3 text-muted-foreground"/> Neide</div>
                           </div>
@@ -199,7 +199,7 @@ export function PropertyQuickView({ open, onClose, imovel }: { open: boolean, on
 
                   <div className="space-y-6">
                     <section>
-                      <h3 className="text-sm font-bold text-muted-foreground uppercase tracking-wider mb-4 flex items-center gap-2"><FileSignature className="w-4 h-4"/> Cartório e Autorizações</h3>
+                      <h3 className="text-sm font-bold text-muted-foreground tracking-tight mb-4 flex items-center gap-2"><FileSignature className="w-4 h-4"/> Cartório e Autorizações</h3>
                       <div className="bg-card rounded-2xl border border-border/50 overflow-hidden divide-y divide-border/50">
                         <div className="p-4 flex items-center justify-between">
                           <span className="text-sm font-medium">Escritura</span>
@@ -237,15 +237,15 @@ export function PropertyQuickView({ open, onClose, imovel }: { open: boolean, on
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     <div className="bg-muted/30 p-4 rounded-2xl border border-border/50 text-center">
-                      <span className="text-xs text-muted-foreground uppercase font-semibold block mb-1">Incorporadora</span>
+                      <span className="text-xs text-muted-foreground font-semibold block mb-1">Incorporadora</span>
                       <span className="font-medium">—</span>
                     </div>
                     <div className="bg-muted/30 p-4 rounded-2xl border border-border/50 text-center">
-                      <span className="text-xs text-muted-foreground uppercase font-semibold block mb-1">Administradora</span>
+                      <span className="text-xs text-muted-foreground font-semibold block mb-1">Administradora</span>
                       <span className="font-medium">—</span>
                     </div>
                     <div className="bg-muted/30 p-4 rounded-2xl border border-border/50 text-center">
-                      <span className="text-xs text-muted-foreground uppercase font-semibold block mb-1">Construtora</span>
+                      <span className="text-xs text-muted-foreground font-semibold block mb-1">Construtora</span>
                       <span className="font-medium">—</span>
                     </div>
                   </div>
@@ -256,7 +256,7 @@ export function PropertyQuickView({ open, onClose, imovel }: { open: boolean, on
               <TabsContent value="valores" className="mt-0 outline-none animate-in fade-in duration-300">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   <div className="space-y-6">
-                    <h3 className="text-sm font-bold text-muted-foreground uppercase tracking-wider mb-4">Venda & Despesas</h3>
+                    <h3 className="text-sm font-bold text-muted-foreground tracking-tight mb-4">Venda & Despesas</h3>
                     <div className="bg-card p-5 rounded-2xl border border-border/50 shadow-sm space-y-4">
                       <div className="flex justify-between items-end border-b border-border/40 pb-4">
                         <span className="text-sm font-semibold text-muted-foreground">Valor de Venda</span>
@@ -281,7 +281,7 @@ export function PropertyQuickView({ open, onClose, imovel }: { open: boolean, on
                     </div>
 
                     <div className="bg-emerald-50 dark:bg-emerald-950/20 p-5 rounded-2xl border border-emerald-100 dark:border-emerald-900/50">
-                      <h4 className="text-xs uppercase font-bold text-emerald-800 dark:text-emerald-400 mb-3">Aceita nas Negociações</h4>
+                      <h4 className="text-xs font-bold text-emerald-800 dark:text-emerald-400 mb-3">Aceita nas Negociações</h4>
                       <div className="space-y-2 text-sm text-emerald-700 dark:text-emerald-300 font-medium">
                         <div className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4"/> FGTS</div>
                         <div className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4"/> Financiamento Bancário</div>
@@ -291,7 +291,7 @@ export function PropertyQuickView({ open, onClose, imovel }: { open: boolean, on
                   </div>
 
                   <div className="space-y-6">
-                    <h3 className="text-sm font-bold text-muted-foreground uppercase tracking-wider mb-4">Locação & Temporada</h3>
+                    <h3 className="text-sm font-bold text-muted-foreground tracking-tight mb-4">Locação & Temporada</h3>
                     <div className="bg-muted/20 p-5 rounded-2xl border border-border/50 text-center flex flex-col items-center justify-center min-h-[140px]">
                       <span className="text-sm font-semibold text-muted-foreground mb-1">Locação Mensal</span>
                       <span className="text-2xl font-bold text-foreground">R$ 2.800</span>

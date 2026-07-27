@@ -177,14 +177,14 @@ export default function ContatoPerfil() {
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h1 className="text-3xl font-black text-slate-800 tracking-tight">{contato.nome}</h1>
-                <Badge variant="outline" className="text-[10px] font-black uppercase tracking-widest border-indigo-100 text-indigo-600 bg-indigo-50/50">Perfil</Badge>
+                <h1 className="text-3xl font-semibold text-slate-800 tracking-tight">{contato.nome}</h1>
+                <Badge variant="outline" className="text-[10px] font-semibold tracking-tight border-indigo-100 text-indigo-600 bg-indigo-50/50">Perfil</Badge>
               </div>
               <p className="text-slate-500 mt-1 font-medium italic">Informações detalhadas do cliente</p>
             </div>
           </div>
           <div className="flex items-center gap-3">
-            <Button onClick={handleEdit} className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold h-12 rounded-2xl shadow-lg shadow-indigo-200 transition-all">
+            <Button onClick={handleEdit} className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold h-9 rounded-xl shadow-lg shadow-indigo-200 transition-all">
               <Edit className="h-4 w-4 mr-2" />
               Editar Perfil
             </Button>
@@ -203,7 +203,7 @@ export default function ContatoPerfil() {
                 <div className="flex bg-muted/30 p-1 m-1 rounded-xl gap-1">
                   <button
                     className={cn(
-                      "flex-1 px-4 py-2.5 font-bold text-xs uppercase tracking-widest transition-all rounded-lg",
+                      "flex-1 px-4 py-2.5 font-bold text-xs tracking-tight transition-all rounded-lg",
                       activeTab === 'informacoes'
                         ? "bg-background text-primary shadow-sm"
                         : "text-muted-foreground hover:bg-background/50"
@@ -214,7 +214,7 @@ export default function ContatoPerfil() {
                   </button>
                   <button
                     className={cn(
-                      "flex-1 px-4 py-2.5 font-bold text-xs uppercase tracking-widest transition-all rounded-lg",
+                      "flex-1 px-4 py-2.5 font-bold text-xs tracking-tight transition-all rounded-lg",
                       activeTab === 'imoveis'
                         ? "bg-background text-primary shadow-sm"
                         : "text-muted-foreground hover:bg-background/50"
@@ -230,7 +230,7 @@ export default function ContatoPerfil() {
                     <div className="space-y-8">
                       {/* Informações Pessoais */}
                       <section>
-                        <h3 className="text-sm font-bold uppercase tracking-widest text-muted-foreground mb-4 flex items-center gap-2">
+                        <h3 className="text-sm font-bold tracking-tight text-muted-foreground mb-4 flex items-center gap-2">
                           <User className="h-4 w-4 opacity-50" />
                           Informações Principais
                         </h3>
@@ -240,7 +240,7 @@ export default function ContatoPerfil() {
                               <Mail className="h-4 w-4 text-primary/60" />
                             </div>
                             <div>
-                              <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground/60">Email</p>
+                              <p className="text-[10px] font-bold tracking-tight text-muted-foreground/60">Email</p>
                               <p className="text-sm font-bold">{contato.email}</p>
                             </div>
                           </div>
@@ -249,7 +249,7 @@ export default function ContatoPerfil() {
                               <Phone className="h-4 w-4 text-primary/60" />
                             </div>
                             <div>
-                              <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground/60">Telefone</p>
+                              <p className="text-[10px] font-bold tracking-tight text-muted-foreground/60">Telefone</p>
                               <p className="text-sm font-bold">{contato.telefone}</p>
                             </div>
                           </div>
@@ -258,7 +258,7 @@ export default function ContatoPerfil() {
                               <MapPin className="h-4 w-4 text-primary/60" />
                             </div>
                             <div>
-                              <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground/60">Cidade Principal</p>
+                              <p className="text-[10px] font-bold tracking-tight text-muted-foreground/60">Cidade Principal</p>
                               <p className="text-sm font-bold">{contato.cidade}</p>
                             </div>
                           </div>
@@ -267,7 +267,7 @@ export default function ContatoPerfil() {
                               <Calendar className="h-4 w-4 text-primary/60" />
                             </div>
                             <div>
-                              <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground/60">Membro desde</p>
+                              <p className="text-[10px] font-bold tracking-tight text-muted-foreground/60">Membro desde</p>
                               <p className="text-sm font-bold">{contato.dataCadastro}</p>
                             </div>
                           </div>
@@ -276,24 +276,24 @@ export default function ContatoPerfil() {
 
                       {/* Preferências */}
                       <section>
-                        <h3 className="text-sm font-bold uppercase tracking-widest text-muted-foreground mb-4 flex items-center gap-2">
+                        <h3 className="text-sm font-bold tracking-tight text-muted-foreground mb-4 flex items-center gap-2">
                           <Layers className="h-4 w-4 opacity-50" />
                           Preferências de Busca
                         </h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <div className="p-4 rounded-xl bg-background border border-border/50">
-                            <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground/60 mb-2">Interesse Imobiliário</p>
+                            <p className="text-[10px] font-bold tracking-tight text-muted-foreground/60 mb-2">Interesse Imobiliário</p>
                             <div className="flex flex-wrap gap-2">
                               <Badge variant="secondary" className="bg-primary/10 text-primary border-none font-bold">{contato.preferencias.tipoImovel}</Badge>
                               <Badge variant="secondary" className="bg-accent/10 text-accent-foreground border-none font-bold">{contato.preferencias.quartos} Quartos</Badge>
                             </div>
                           </div>
                           <div className="p-4 rounded-xl bg-background border border-border/50">
-                            <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground/60 mb-2">Orçamento Previsto</p>
-                            <Badge variant="outline" className="text-primary font-black border-primary/20 bg-primary/5">{contato.preferencias.faixaPreco}</Badge>
+                            <p className="text-[10px] font-bold tracking-tight text-muted-foreground/60 mb-2">Orçamento Previsto</p>
+                            <Badge variant="outline" className="text-primary font-semibold border-primary/20 bg-primary/5">{contato.preferencias.faixaPreco}</Badge>
                           </div>
                           <div className="p-4 rounded-xl bg-background border border-border/50">
-                            <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground/60 mb-2">Bairros Prioritários</p>
+                            <p className="text-[10px] font-bold tracking-tight text-muted-foreground/60 mb-2">Bairros Prioritários</p>
                             <div className="flex flex-wrap gap-1">
                               {contato.preferencias.bairros.map((bairro, index) => (
                                 <Badge key={index} variant="secondary" className="bg-muted text-muted-foreground font-medium">{bairro}</Badge>
@@ -301,7 +301,7 @@ export default function ContatoPerfil() {
                             </div>
                           </div>
                           <div className="p-4 rounded-xl bg-background border border-border/50">
-                            <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground/60 mb-2">Exigências Específicas</p>
+                            <p className="text-[10px] font-bold tracking-tight text-muted-foreground/60 mb-2">Exigências Específicas</p>
                             <div className="flex flex-wrap gap-1">
                               {contato.preferencias.caracteristicas.map((caracteristica, index) => (
                                 <Badge key={index} variant="outline" className="border-border/50 text-[10px]">{caracteristica}</Badge>
@@ -314,7 +314,7 @@ export default function ContatoPerfil() {
                       {/* Observações */}
                       {contato.observacoes && (
                         <section>
-                          <h3 className="text-sm font-bold uppercase tracking-widest text-muted-foreground mb-4 flex items-center gap-2">
+                          <h3 className="text-sm font-bold tracking-tight text-muted-foreground mb-4 flex items-center gap-2">
                             <MessageCircle className="h-4 w-4 opacity-50" />
                             Notas e Observações
                           </h3>
@@ -331,7 +331,7 @@ export default function ContatoPerfil() {
                     <div className="space-y-6">
                       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-muted/20 p-4 rounded-2xl border border-border/40 mb-6">
                         <div>
-                          <h3 className="font-black text-xl tracking-tight">Imóveis Compatíveis</h3>
+                          <h3 className="font-semibold text-xl tracking-tight">Imóveis Compatíveis</h3>
                           <p className="text-xs text-muted-foreground font-medium">Baseado no perfil de interesse de {contato.nome}</p>
                         </div>
                         <div className="flex items-center gap-3">
@@ -341,7 +341,7 @@ export default function ContatoPerfil() {
                                 variant="outline"
                                 size="sm"
                                 onClick={enviarWhatsAppImoveis}
-                                className="gap-2 bg-background border-none shadow-sm font-bold text-[10px] uppercase h-8"
+                                className="gap-2 bg-background border-none shadow-sm font-bold text-[10px] h-8"
                               >
                                 <MessageCircle className="h-3.5 w-3.5 text-success" />
                                 WhatsApp
@@ -350,14 +350,14 @@ export default function ContatoPerfil() {
                                 variant="outline"
                                 size="sm"
                                 onClick={enviarEmailImoveis}
-                                className="gap-2 bg-background border-none shadow-sm font-bold text-[10px] uppercase h-8"
+                                className="gap-2 bg-background border-none shadow-sm font-bold text-[10px] h-8"
                               >
                                 <Mail className="h-3.5 w-3.5 text-primary" />
                                 Email
                               </Button>
                             </div>
                           )}
-                          <Badge variant="secondary" className="h-8 px-4 font-black bg-primary text-primary-foreground border-none">
+                          <Badge variant="secondary" className="h-8 px-4 font-semibold bg-primary text-primary-foreground border-none">
                             {selectedProperties.length} selecionado{selectedProperties.length !== 1 ? 's' : ''}
                           </Badge>
                         </div>
@@ -395,7 +395,7 @@ export default function ContatoPerfil() {
                                     </div>
                                     <div className="absolute bottom-2 right-2">
                                       <Badge className={cn(
-                                        "font-black text-[10px] border-none px-2 py-0.5 shadow-lg",
+                                        "font-semibold text-[10px] border-none px-2 py-0.5 shadow-lg",
                                         imovel.match >= 90 ? 'bg-success text-success-foreground' : 'bg-warning text-warning-foreground'
                                       )}>
                                         {imovel.match}% Match
@@ -408,15 +408,15 @@ export default function ContatoPerfil() {
                                         {imovel.titulo}
                                       </h4>
                                       <div className="flex items-center justify-between mt-1">
-                                        <p className="text-lg font-black text-primary">{imovel.valor}</p>
-                                        <div className="flex items-center gap-1 text-[10px] font-bold text-muted-foreground uppercase opacity-60">
+                                        <p className="text-lg font-semibold text-primary">{imovel.valor}</p>
+                                        <div className="flex items-center gap-1 text-[10px] font-bold text-muted-foreground opacity-60">
                                           <MapPin className="h-3 w-3" />
                                           {imovel.bairro}
                                         </div>
                                       </div>
                                     </div>
 
-                                    <div className="flex items-center gap-4 text-[10px] font-bold text-muted-foreground uppercase tracking-widest mt-4 opacity-70">
+                                    <div className="flex items-center gap-4 text-[10px] font-bold text-muted-foreground tracking-tight mt-4 opacity-70">
                                       <span className="flex items-center gap-1"><Home className="h-3 w-3" /> {imovel.area}</span>
                                       <span className="flex items-center gap-1">🛌 {imovel.quartos}</span>
                                       <Badge variant="outline" className="ml-auto border-none bg-muted/60 text-[9px] h-5">{imovel.tipo}</Badge>
@@ -444,19 +444,19 @@ export default function ContatoPerfil() {
                   <div className="text-center">
                     <div className="relative inline-block mb-4">
                       <Avatar className="w-24 h-24 mx-auto border-4 border-background shadow-xl">
-                        <AvatarFallback className="bg-primary/5 text-primary text-2xl font-black">
+                        <AvatarFallback className="bg-primary/5 text-primary text-2xl font-semibold">
                           {contato.nome.split(' ').map(n => n[0]).join('')}
                         </AvatarFallback>
                       </Avatar>
                       <div className="absolute bottom-1 right-1 h-6 w-6 bg-success border-4 border-background rounded-full"></div>
                     </div>
-                    <h3 className="font-black text-xl tracking-tight">{contato.nome}</h3>
+                    <h3 className="font-semibold text-xl tracking-tight">{contato.nome}</h3>
                     <div className="flex flex-col gap-2 mt-4">
-                      <Badge variant="secondary" className="w-full justify-center h-7 font-bold bg-primary/10 text-primary border-none text-[10px] uppercase tracking-widest">
+                      <Badge variant="secondary" className="w-full justify-center h-7 font-bold bg-primary/10 text-primary border-none text-[10px] tracking-tight">
                         {contato.tipo}
                       </Badge>
                       <Badge variant="outline" className={cn(
-                        "w-full justify-center h-7 font-bold border-none text-[10px] uppercase tracking-widest",
+                        "w-full justify-center h-7 font-bold border-none text-[10px] tracking-tight",
                         contato.status === 'Ativo' ? "bg-success/10 text-success" : "bg-muted text-muted-foreground"
                       )}>
                         {contato.status}
@@ -469,14 +469,14 @@ export default function ContatoPerfil() {
               {/* Quick Actions */}
               <Card className="border-none shadow-sm bg-muted/30">
                 <CardContent className="p-6">
-                  <h3 className="text-sm font-black uppercase tracking-widest text-foreground mb-6">Canal Direto</h3>
+                  <h3 className="text-sm font-semibold tracking-tight text-foreground mb-6">Canal Direto</h3>
                   <div className="space-y-3">
                     <Button className="w-full justify-between h-12 bg-white text-foreground hover:bg-white/90 border border-border/50 group shadow-sm transition-all" onClick={() => enviarEmail(contato.email)}>
                       <div className="flex items-center gap-3">
                         <div className="h-8 w-8 rounded-lg bg-primary/5 flex items-center justify-center group-hover:bg-primary transition-colors">
                           <Mail className="h-4 w-4 text-primary group-hover:text-white transition-colors" />
                         </div>
-                        <span className="font-bold text-xs uppercase tracking-wider">E-mail Corporativo</span>
+                        <span className="font-bold text-xs tracking-tight">E-mail Corporativo</span>
                       </div>
                       <ArrowLeft className="h-4 w-4 rotate-180 opacity-20" />
                     </Button>
@@ -486,7 +486,7 @@ export default function ContatoPerfil() {
                         <div className="h-8 w-8 rounded-lg bg-black/10 flex items-center justify-center">
                           <MessageCircle className="h-4 w-4 text-white" />
                         </div>
-                        <span className="font-bold text-xs uppercase tracking-wider">WhatsApp Lead</span>
+                        <span className="font-bold text-xs tracking-tight">WhatsApp Lead</span>
                       </div>
                       <ArrowLeft className="h-4 w-4 rotate-180 opacity-50" />
                     </Button>
@@ -495,7 +495,7 @@ export default function ContatoPerfil() {
                       <Button variant="ghost" className="w-full justify-between h-10 text-muted-foreground hover:text-primary group" onClick={() => navigate('/imoveis?proprietario=' + contato.id)}>
                         <div className="flex items-center gap-3">
                           <Building className="h-4 w-4 opacity-50 group-hover:opacity-100" />
-                          <span className="font-bold text-[10px] uppercase tracking-widest">Ver Portfólio</span>
+                          <span className="font-bold text-[10px] tracking-tight">Ver Portfólio</span>
                         </div>
                         <ArrowLeft className="h-3 w-3 rotate-180 opacity-0 group-hover:opacity-100 transition-opacity" />
                       </Button>

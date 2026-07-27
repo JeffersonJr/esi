@@ -298,15 +298,15 @@ export default function ImovelDetalhes() {
               </div>
               <div className="min-w-0">
                 <div className="flex items-center gap-3">
-                  <h1 className="text-2xl md:text-3xl font-black text-slate-800 tracking-tight truncate">{imovel.titulo}</h1>
-                  <Badge variant="outline" className={cn("font-bold text-[10px] uppercase border-none shrink-0", getStatusColor(imovel.status))}>
+                  <h1 className="text-2xl md:text-3xl font-semibold text-slate-800 tracking-tight truncate">{imovel.titulo}</h1>
+                  <Badge variant="outline" className={cn("font-bold text-[10px] border-none shrink-0", getStatusColor(imovel.status))}>
                     {imovel.status}
                   </Badge>
                 </div>
                 <div className="flex items-center gap-2 mt-0.5">
-                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">REF: {imovel.codigo}</span>
+                  <span className="text-[10px] font-bold text-slate-400 tracking-tight">REF: {imovel.codigo}</span>
                   <span className="text-[10px] text-slate-300">|</span>
-                  <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">{imovel.tipo}</span>
+                  <span className="text-[10px] font-bold text-slate-500 tracking-tight">{imovel.tipo}</span>
                 </div>
               </div>
             </div>
@@ -314,7 +314,7 @@ export default function ImovelDetalhes() {
             <div className="flex items-center gap-3">
               <Button
                 onClick={handleEdit}
-                className="h-12 px-6 rounded-2xl font-bold bg-indigo-600 hover:bg-indigo-700 text-white shadow-lg shadow-indigo-200 transition-all text-xs uppercase"
+                className="h-9 px-4 rounded-xl font-bold bg-indigo-600 hover:bg-indigo-700 text-white shadow-lg shadow-indigo-200 transition-all text-xs"
               >
                 <Edit className="h-4 w-4 mr-2" />
                 Editar
@@ -322,7 +322,7 @@ export default function ImovelDetalhes() {
               <Button
                 variant="outline"
                 onClick={handlePrint}
-                className="h-12 px-6 rounded-2xl font-bold bg-white border-slate-200 text-slate-700 shadow-sm hover:bg-slate-50 transition-all text-xs uppercase"
+                className="h-9 px-4 rounded-xl font-bold bg-white border-slate-200 text-slate-700 shadow-sm hover:bg-slate-50 transition-all text-xs"
               >
                 <Printer className="h-4 w-4 mr-2" />
                 Imprimir Ficha
@@ -388,11 +388,11 @@ export default function ImovelDetalhes() {
                   )}
 
                   <div className="absolute bottom-6 left-6 flex gap-2">
-                    <Badge className="bg-black/40 backdrop-blur-md text-white border-none px-3 py-1 font-bold text-xs uppercase">
+                    <Badge className="bg-black/40 backdrop-blur-md text-white border-none px-3 py-1 font-bold text-xs">
                       {currentImageIndex + 1} / {imovel.imagens.length} Fotos
                     </Badge>
                     {imovel.videoUrl && (
-                      <Badge className="bg-primary/90 text-primary-foreground border-none px-3 py-1 font-bold text-xs uppercase cursor-pointer hover:bg-primary">
+                      <Badge className="bg-primary/90 text-primary-foreground border-none px-3 py-1 font-bold text-xs cursor-pointer hover:bg-primary">
                         Vídeo
                       </Badge>
                     )}
@@ -430,8 +430,8 @@ export default function ImovelDetalhes() {
                     <Bed className="h-6 w-6 text-primary/60" />
                   </div>
                   <div>
-                    <div className="text-xl font-black leading-tight">{imovel.quartos}</div>
-                    <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Quartos ({imovel.suites} Suíte)</div>
+                    <div className="text-xl font-semibold leading-tight">{imovel.quartos}</div>
+                    <div className="text-[10px] font-bold text-muted-foreground tracking-tight">Quartos ({imovel.suites} Suíte)</div>
                   </div>
                 </div>
                 <div className="bg-white p-6 rounded-2xl shadow-sm border border-border/40 flex items-center gap-4 group hover:border-primary/20 transition-colors">
@@ -439,8 +439,8 @@ export default function ImovelDetalhes() {
                     <Bath className="h-6 w-6 text-primary/60" />
                   </div>
                   <div>
-                    <div className="text-xl font-black leading-tight">{imovel.banheiros}</div>
-                    <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Banheiros</div>
+                    <div className="text-xl font-semibold leading-tight">{imovel.banheiros}</div>
+                    <div className="text-[10px] font-bold text-muted-foreground tracking-tight">Banheiros</div>
                   </div>
                 </div>
                 <div className="bg-white p-6 rounded-2xl shadow-sm border border-border/40 flex items-center gap-4 group hover:border-primary/20 transition-colors">
@@ -448,15 +448,15 @@ export default function ImovelDetalhes() {
                     <Maximize className="h-6 w-6 text-primary/60" />
                   </div>
                   <div>
-                    <div className="text-xl font-black leading-tight">{imovel.area}</div>
-                    <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Área Privativa</div>
+                    <div className="text-xl font-semibold leading-tight">{imovel.area}</div>
+                    <div className="text-[10px] font-bold text-muted-foreground tracking-tight">Área Privativa</div>
                   </div>
                 </div>
               </div>
 
               {/* Description */}
               <div className="bg-white p-8 rounded-2xl shadow-sm border border-border/40">
-                <h3 className="text-lg font-black uppercase tracking-wider mb-6 flex items-center gap-3">
+                <h3 className="text-lg font-semibold tracking-tight mb-6 flex items-center gap-3">
                   <div className="h-8 w-[2px] bg-primary" />
                   Descrição do Imóvel
                 </h3>
@@ -464,26 +464,26 @@ export default function ImovelDetalhes() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-10">
                   <div>
-                    <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/60 mb-4 flex items-center gap-2">
+                    <h4 className="text-[10px] font-semibold tracking-[0.2em] text-primary/60 mb-4 flex items-center gap-2">
                       <Settings className="h-3 w-3" />
                       Diferenciais e Características
                     </h4>
                     <div className="flex flex-wrap gap-2">
                       {imovel.caracteristicas.map((caracteristica, index) => (
-                        <Badge key={index} variant="secondary" className="bg-muted/50 text-foreground font-bold text-[10px] uppercase border-none px-3 py-1.5 hover:bg-primary/10 transition-colors">
+                        <Badge key={index} variant="secondary" className="bg-muted/50 text-foreground font-bold text-[10px] border-none px-3 py-1.5 hover:bg-primary/10 transition-colors">
                           {caracteristica}
                         </Badge>
                       ))}
                     </div>
                   </div>
                   <div>
-                    <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/60 mb-4 flex items-center gap-2">
+                    <h4 className="text-[10px] font-semibold tracking-[0.2em] text-primary/60 mb-4 flex items-center gap-2">
                       <MapPin className="h-3 w-3" />
                       Facilidades na Região
                     </h4>
                     <div className="flex flex-wrap gap-2">
                       {imovel.proximidades.map((proximidade, index) => (
-                        <Badge key={index} variant="outline" className="border-border/60 text-muted-foreground font-bold text-[10px] uppercase px-3 py-1.5 hover:bg-muted transition-colors">
+                        <Badge key={index} variant="outline" className="border-border/60 text-muted-foreground font-bold text-[10px] px-3 py-1.5 hover:bg-muted transition-colors">
                           {proximidade}
                         </Badge>
                       ))}
@@ -494,13 +494,13 @@ export default function ImovelDetalhes() {
 
               {/* Team and Responsibilities */}
               <div className="bg-white p-8 rounded-2xl shadow-sm border border-border/40">
-                <h3 className="text-sm font-black uppercase tracking-wider mb-6 flex items-center gap-3">
+                <h3 className="text-sm font-semibold tracking-tight mb-6 flex items-center gap-3">
                   <div className="h-6 w-[2px] bg-primary" />
                   Equipe e Responsáveis
                 </h3>
                 <div className="grid grid-cols-2 gap-8">
                   <div className="space-y-4">
-                    <h4 className="text-[10px] font-black uppercase tracking-wider text-primary/60">Captadores</h4>
+                    <h4 className="text-[10px] font-semibold tracking-tight text-primary/60">Captadores</h4>
                     <div className="space-y-2">
                       <div className="flex justify-between items-center text-xs">
                         <span className="text-muted-foreground">Principal:</span>
@@ -513,7 +513,7 @@ export default function ImovelDetalhes() {
                     </div>
                   </div>
                   <div className="space-y-4">
-                    <h4 className="text-[10px] font-black uppercase tracking-wider text-primary/60">Indicadores</h4>
+                    <h4 className="text-[10px] font-semibold tracking-tight text-primary/60">Indicadores</h4>
                     <div className="space-y-2">
                       <div className="flex justify-between items-center text-xs">
                         <span className="text-muted-foreground">Origem 1:</span>
@@ -523,8 +523,8 @@ export default function ImovelDetalhes() {
                   </div>
                 </div>
                 <div className="mt-8 pt-6 border-t border-border/30 flex justify-between items-center">
-                  <span className="text-[10px] font-black uppercase tracking-wider text-muted-foreground">Unidade Negocial</span>
-                  <Badge variant="secondary" className="bg-primary/5 text-primary border-none font-bold text-[10px] uppercase">
+                  <span className="text-[10px] font-semibold tracking-tight text-muted-foreground">Unidade Negocial</span>
+                  <Badge variant="secondary" className="bg-primary/5 text-primary border-none font-bold text-[10px]">
                     {imovel.filialImovel}
                   </Badge>
                 </div>
@@ -534,7 +534,7 @@ export default function ImovelDetalhes() {
             {/* Business Conditions Column (Right) */}
             <div className="lg:col-span-4 space-y-8">
               <div className="bg-white p-8 rounded-2xl shadow-sm border border-border/40">
-                <h3 className="text-lg font-black uppercase tracking-wider mb-8 flex items-center gap-3">
+                <h3 className="text-lg font-semibold tracking-tight mb-8 flex items-center gap-3">
                   <div className="h-8 w-[2px] bg-primary" />
                   Condições de Negócio
                 </h3>
@@ -542,13 +542,13 @@ export default function ImovelDetalhes() {
                 <div className="space-y-8">
                   <div className="space-y-6">
                     <div>
-                      <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/60 mb-4 flex items-center gap-2">
+                      <h4 className="text-[10px] font-semibold tracking-[0.2em] text-primary/60 mb-4 flex items-center gap-2">
                         <CreditCard className="h-3 w-3" />
                         Pagamento e Crédito
                       </h4>
                       <div className="flex flex-wrap gap-2">
                         {imovel.formasPagamento.map((forma, index) => (
-                          <Badge key={index} variant="outline" className="border-primary/20 bg-primary/5 text-primary font-bold text-[10px] uppercase px-3 py-1.5">
+                          <Badge key={index} variant="outline" className="border-primary/20 bg-primary/5 text-primary font-bold text-[10px] px-3 py-1.5">
                             {forma}
                           </Badge>
                         ))}
@@ -556,7 +556,7 @@ export default function ImovelDetalhes() {
                     </div>
 
                     <div className="p-4 rounded-xl border border-border/40 bg-muted/20">
-                      <div className="text-[10px] font-black uppercase tracking-wider text-muted-foreground mb-4">Garantias e Facilidades</div>
+                      <div className="text-[10px] font-semibold tracking-tight text-muted-foreground mb-4">Garantias e Facilidades</div>
                       <div className="grid grid-cols-2 gap-y-3">
                         {[
                           { label: 'Aceita FGTS', active: imovel.fgts },
@@ -576,18 +576,18 @@ export default function ImovelDetalhes() {
 
                   <div className="space-y-6">
                     <div className="p-6 rounded-2xl bg-primary/5 border border-primary/10">
-                      <h4 className="text-sm font-black uppercase tracking-wider mb-4 flex items-center gap-2">
+                      <h4 className="text-sm font-semibold tracking-tight mb-4 flex items-center gap-2">
                         <FileText className="h-4 w-4 text-primary" />
                         Autorizações e Exclusividade
                       </h4>
                       <div className="space-y-4">
                         <div className="flex items-center justify-between text-[11px] font-bold text-muted-foreground">
                           <span>Contrato de Exclusividade (Venda)</span>
-                          {imovel.contratoExclusividade ? <Badge className="bg-success text-success-foreground font-black text-[9px] uppercase border-none">Sim - Ativo</Badge> : <span className="opacity-40 italic">Não</span>}
+                          {imovel.contratoExclusividade ? <Badge className="bg-success text-success-foreground font-semibold text-[9px] border-none">Sim - Ativo</Badge> : <span className="opacity-40 italic">Não</span>}
                         </div>
                         {imovel.contratoExclusividade && (
                           <div className="p-3 rounded-lg bg-white/50 border border-primary/5">
-                            <div className="text-[9px] font-black uppercase tracking-wider text-primary/60 mb-1">Período de Vigência</div>
+                            <div className="text-[9px] font-semibold tracking-tight text-primary/60 mb-1">Período de Vigência</div>
                             <div className="flex items-center gap-2 text-[10px] font-bold text-foreground">
                               <Calendar className="h-3 w-3 opacity-40 text-primary" />
                               {imovel.contratoVendaPeriodo?.from} até {imovel.contratoVendaPeriodo?.to}
@@ -601,18 +601,18 @@ export default function ImovelDetalhes() {
               </div>
 
               {/* Marketing and SEO Sidebar */}
-              <div className="bg-[#1e293b] p-8 rounded-3xl shadow-2xl relative overflow-hidden text-white">
+              <div className="bg-[#1e293b] p-8 rounded-2xl shadow-2xl relative overflow-hidden text-white">
                 <div className="absolute top-0 right-0 p-8">
                   <Globe className="h-24 w-24 text-white/5 -mr-8 -mt-8 rotate-12" />
                 </div>
-                <h3 className="text-lg font-black uppercase tracking-wider mb-8 flex items-center gap-3 relative z-10">
+                <h3 className="text-lg font-semibold tracking-tight mb-8 flex items-center gap-3 relative z-10">
                   <div className="h-8 w-[2px] bg-primary" />
                   Marketing Digital (SEO)
                 </h3>
 
                 <div className="space-y-8 relative z-10">
                   <div className="space-y-3">
-                    <div className="text-[10px] font-black uppercase tracking-widest text-primary">Status de Vitrine</div>
+                    <div className="text-[10px] font-semibold tracking-tight text-primary">Status de Vitrine</div>
                     <div className="flex flex-wrap gap-4">
                       {[
                         { label: 'Home Page', active: imovel.destaquePaginaInicial },
@@ -621,7 +621,7 @@ export default function ImovelDetalhes() {
                       ].map(tag => (
                         <div key={tag.label} className="flex items-center gap-2 bg-white/5 px-3 py-2 rounded-lg border border-white/10">
                           <div className={cn("h-1.5 w-1.5 rounded-full", tag.active ? "bg-primary shadow-[0_0_8px_rgba(var(--primary),0.8)]" : "bg-white/20")} />
-                          <span className="text-[10px] font-bold uppercase tracking-wider">{tag.label}</span>
+                          <span className="text-[10px] font-bold tracking-tight">{tag.label}</span>
                         </div>
                       ))}
                     </div>
@@ -629,12 +629,12 @@ export default function ImovelDetalhes() {
 
                   <div className="bg-white/5 rounded-2xl p-6 border border-white/10 space-y-4">
                     <div className="space-y-1">
-                      <span className="text-[9px] font-black uppercase tracking-widest text-primary">SEO Title</span>
+                      <span className="text-[9px] font-semibold tracking-tight text-primary">SEO Title</span>
                       <p className="text-xs font-bold leading-relaxed line-clamp-2 text-white/90 italic">"{imovel.seoTitulo}"</p>
                     </div>
                     <div className="h-[1px] bg-white/5 w-full" />
                     <div className="space-y-1">
-                      <span className="text-[9px] font-black uppercase tracking-widest text-primary">Meta Keywords</span>
+                      <span className="text-[9px] font-semibold tracking-tight text-primary">Meta Keywords</span>
                       <p className="text-[10px] font-medium text-white/60">{imovel.seoKeywords}</p>
                     </div>
                   </div>
@@ -647,29 +647,29 @@ export default function ImovelDetalhes() {
                   <div className="absolute top-0 right-0 p-3">
                     <TrendingUp className="h-12 w-12 text-primary/5 opacity-10 rotate-12" />
                   </div>
-                  <div className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/60 mb-2">Valor do Investimento</div>
+                  <div className="text-[10px] font-semibold tracking-[0.2em] text-primary/60 mb-2">Valor do Investimento</div>
                   <div className="flex items-baseline gap-2">
-                    <span className="text-4xl font-black tracking-tighter text-foreground">{imovel.valor}</span>
-                    {imovel.finalidade.includes('Aluguel') && <span className="text-sm font-bold text-muted-foreground uppercase tracking-widest italic">/mês</span>}
+                    <span className="text-4xl font-semibold tracking-tighter text-foreground">{imovel.valor}</span>
+                    {imovel.finalidade.includes('Aluguel') && <span className="text-sm font-bold text-muted-foreground tracking-tight italic">/mês</span>}
                   </div>
 
                   <div className="grid grid-cols-2 gap-4 mt-8 pt-8 border-t border-border/40">
                     <div>
-                      <div className="text-[9px] font-black uppercase tracking-wider text-muted-foreground mb-1">Condomínio</div>
+                      <div className="text-[9px] font-semibold tracking-tight text-muted-foreground mb-1">Condomínio</div>
                       <div className="text-sm font-bold text-foreground">{imovel.valorCondominio}</div>
                     </div>
                     <div>
-                      <div className="text-[9px] font-black uppercase tracking-wider text-muted-foreground mb-1">IPTU (Anual)</div>
+                      <div className="text-[9px] font-semibold tracking-tight text-muted-foreground mb-1">IPTU (Anual)</div>
                       <div className="text-sm font-bold text-foreground">{imovel.valorIptu}</div>
                     </div>
                   </div>
 
                   <div className="space-y-3 mt-10">
-                    <Button className="w-full h-14 rounded-xl font-black uppercase tracking-widest text-xs gap-3 shadow-lg shadow-primary/20">
+                    <Button className="w-full h-10 rounded-xl font-semibold tracking-tight text-xs gap-3 shadow-lg shadow-primary/20">
                       <MessageCircle className="h-5 w-5" />
                       Falar com Corretor
                     </Button>
-                    <Button variant="outline" className="w-full h-14 rounded-xl font-black uppercase tracking-widest text-[10px] gap-3 border-none bg-muted/50 hover:bg-muted text-muted-foreground transition-all">
+                    <Button variant="outline" className="w-full h-10 rounded-xl font-semibold tracking-tight text-[10px] gap-3 border-none bg-muted/50 hover:bg-muted text-muted-foreground transition-all">
                       <Download className="h-4 w-4" />
                       Baixar Book Digital (PDF)
                     </Button>
@@ -679,13 +679,13 @@ export default function ImovelDetalhes() {
                 {/* Proprietary Info Preview */}
                 <div className="bg-white p-8 rounded-2xl shadow-sm border border-border/40 group hover:border-primary/20 transition-all">
                   <div className="flex items-center gap-4 mb-8">
-                    <div className="h-14 w-14 rounded-2xl bg-muted flex items-center justify-center relative">
+                    <div className="h-10 w-14 rounded-2xl bg-muted flex items-center justify-center relative">
                       <User className="h-7 w-7 text-muted-foreground" />
                       <div className="absolute -bottom-1 -right-1 h-5 w-5 rounded-full bg-success border-2 border-white" />
                     </div>
                     <div>
-                      <div className="text-[10px] font-black uppercase tracking-wider text-primary/60 mb-0.5">Proprietário</div>
-                      <div className="text-base font-black tracking-tight">{imovel.proprietario.nome}</div>
+                      <div className="text-[10px] font-semibold tracking-tight text-primary/60 mb-0.5">Proprietário</div>
+                      <div className="text-base font-semibold tracking-tight">{imovel.proprietario.nome}</div>
                     </div>
                   </div>
 
@@ -706,9 +706,9 @@ export default function ImovelDetalhes() {
                   <div className="p-4 bg-white rounded-2xl shadow-sm mb-4">
                     <img src={generateQRCode()} alt="QR" className="h-24 w-24" />
                   </div>
-                  <div className="text-[10px] font-black uppercase tracking-wider mb-1">Acesso Rápido (QR Code)</div>
+                  <div className="text-[10px] font-semibold tracking-tight mb-1">Acesso Rápido (QR Code)</div>
                   <p className="text-[10px] font-bold text-muted-foreground mb-4 leading-normal">Escaneie para visualizar a página oficial deste imóvel</p>
-                  <Button variant="link" className="text-[10px] font-black uppercase tracking-widest text-primary h-auto p-0" onClick={handleDownloadQR}>
+                  <Button variant="link" className="text-[10px] font-semibold tracking-tight text-primary h-auto p-0" onClick={handleDownloadQR}>
                     Download do QR Code
                   </Button>
                 </div>
@@ -734,20 +734,20 @@ export default function ImovelDetalhes() {
             >
               <div className="p-8 text-center">
                 <div className="flex justify-center mb-8">
-                  <div className="p-6 bg-muted/30 rounded-3xl border-2 border-dashed border-border">
+                  <div className="p-6 bg-muted/30 rounded-2xl border-2 border-dashed border-border">
                     <img src={selectedQRCode} alt="QR Code" className="h-48 w-48" />
                   </div>
                 </div>
-                <h2 className="text-xl font-black tracking-tight mb-2">QR Code do Imóvel</h2>
-                <p className="text-xs font-bold text-muted-foreground leading-relaxed px-6 mb-8 uppercase tracking-wider">
+                <h2 className="text-xl font-semibold tracking-tight mb-2">QR Code do Imóvel</h2>
+                <p className="text-xs font-bold text-muted-foreground leading-relaxed px-6 mb-8 tracking-tight">
                   Utilize este código para compartilhar ou acessar os detalhes em dispositivos móveis.
                 </p>
                 <div className="grid grid-cols-1 gap-3">
-                  <Button onClick={handleDownloadQR} className="h-14 rounded-2xl font-black uppercase tracking-widest text-[10px] gap-3">
+                  <Button onClick={handleDownloadQR} className="h-10 rounded-2xl font-semibold tracking-tight text-[10px] gap-3">
                     <Download className="h-4 w-4" />
                     Baixar QR Code
                   </Button>
-                  <Button variant="ghost" onClick={() => setShowQRModal(false)} className="h-12 rounded-2xl font-bold uppercase tracking-widest text-[9px] text-muted-foreground">
+                  <Button variant="ghost" onClick={() => setShowQRModal(false)} className="h-9 rounded-xl font-bold tracking-tight text-[9px] text-muted-foreground">
                     Fechar
                   </Button>
                 </div>

@@ -152,7 +152,7 @@ export function SistemaVistoria() {
                       <Calendar className="h-6 w-6" />
                     </div>
                   </div>
-                  <h3 className="text-3xl font-black text-foreground tracking-tight mb-1">12</h3>
+                  <h3 className="text-title-1 text-foreground tracking-tight mb-1">12</h3>
                   <p className="text-sm font-medium text-muted-foreground">Vistorias Próximas</p>
                   <p className="text-xs text-slate-500 font-medium mt-1">Agendadas para esta semana</p>
                 </CardContent>
@@ -165,7 +165,7 @@ export function SistemaVistoria() {
                       <PenTool className="h-6 w-6" />
                     </div>
                   </div>
-                  <h3 className="text-3xl font-black text-foreground tracking-tight mb-1">4</h3>
+                  <h3 className="text-title-1 text-foreground tracking-tight mb-1">4</h3>
                   <p className="text-sm font-medium text-muted-foreground">Laudos em Elaboração</p>
                   <p className="text-xs text-slate-500 font-medium mt-1">Por parte dos vistoriadores</p>
                 </CardContent>
@@ -178,7 +178,7 @@ export function SistemaVistoria() {
                       <FileSignature className="h-6 w-6" />
                     </div>
                   </div>
-                  <h3 className="text-3xl font-black text-foreground tracking-tight mb-1">3</h3>
+                  <h3 className="text-title-1 text-foreground tracking-tight mb-1">3</h3>
                   <p className="text-sm font-medium text-muted-foreground">Pendentes de Assinatura</p>
                   <p className="text-xs text-slate-500 font-medium mt-1">Enviados via DocuSign</p>
                 </CardContent>
@@ -191,7 +191,7 @@ export function SistemaVistoria() {
                       <ShieldCheck className="h-6 w-6" />
                     </div>
                   </div>
-                  <h3 className="text-3xl font-black text-foreground tracking-tight mb-1">98%</h3>
+                  <h3 className="text-title-1 text-foreground tracking-tight mb-1">98%</h3>
                   <p className="text-sm font-medium text-muted-foreground">Integridade dos Laudos</p>
                   <p className="text-xs text-indigo-600 font-bold mt-1">Aceites sem contestação</p>
                 </CardContent>
@@ -258,7 +258,7 @@ export function SistemaVistoria() {
                           className={`min-w-[300px] max-w-[320px] w-full flex flex-col rounded-2xl border border-border/60 overflow-hidden transition-colors ${snapshot.isDraggingOver ? 'bg-primary/5 border-primary/30' : 'bg-muted/30 shadow-sm'}`}
                         >
                           <div className="flex items-center justify-between mb-4 px-1">
-                            <h3 className="font-bold text-slate-700 uppercase tracking-wider text-xs">{colunaLabel}</h3>
+                            <h3 className="font-bold text-slate-700 tracking-tight text-xs">{colunaLabel}</h3>
                             <Badge variant="secondary" className="bg-slate-100 text-slate-600 font-bold rounded-lg">{itensColuna.length}</Badge>
                           </div>
 
@@ -283,7 +283,7 @@ export function SistemaVistoria() {
                                     >
                                       <CardContent className="p-4 bg-slate-50/50">
                                         <div className="flex justify-between items-start mb-2">
-                                          <span className="text-[10px] font-black font-mono text-slate-400 tracking-wider bg-white px-2 py-0.5 rounded-md border border-slate-100">{vistoria.id}</span>
+                                          <span className="text-[10px] font-semibold font-mono text-slate-400 tracking-tight bg-white px-2 py-0.5 rounded-md border border-slate-100">{vistoria.id}</span>
                                           {getTipoBadge(vistoria.tipo)}
                                         </div>
 
@@ -333,7 +333,7 @@ export function SistemaVistoria() {
           <div className="bg-white px-4 md:px-6 py-4 border-b border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shrink-0">
             <div>
               <div className="flex items-center gap-3 mb-1">
-                <Badge variant="outline" className="text-slate-500 font-mono tracking-wider">VST-502</Badge>
+                <Badge variant="outline" className="text-slate-500 font-mono tracking-tight">VST-502</Badge>
                 {getTipoBadge('Saída')}
                 {getStatusBadge('Em Análise')}
               </div>
@@ -354,7 +354,7 @@ export function SistemaVistoria() {
             {/* Sidebar Left: Comodos Overview */}
             <div className="w-full lg:w-64 bg-white border-b lg:border-b-0 lg:border-r border-slate-200 flex flex-col shrink-0">
               <div className="p-4 border-b border-slate-100 bg-slate-50">
-                <h3 className="font-bold text-slate-700 uppercase tracking-wider text-xs">Cômodos Inspecionados</h3>
+                <h3 className="font-bold text-slate-700 tracking-tight text-xs">Cômodos Inspecionados</h3>
               </div>
               <div className="flex-1 lg:overflow-y-auto">
                 <div className="p-2 space-y-1 flex lg:block overflow-x-auto lg:overflow-x-visible pb-2 lg:pb-0">
@@ -382,7 +382,7 @@ export function SistemaVistoria() {
                 </div>
               </div>
               <div className="hidden lg:flex p-4 border-t border-slate-100 bg-slate-50 items-center justify-between">
-                <span className="text-xs font-bold text-slate-500 uppercase">Fotos totais:</span>
+                <span className="text-xs font-bold text-slate-500">Fotos totais:</span>
                 <span className="font-bold text-slate-800 text-sm">145 anexos</span>
               </div>
             </div>
@@ -390,7 +390,7 @@ export function SistemaVistoria() {
             {/* Middle: Itens do Comodo */}
             <div className="flex-1 flex flex-col lg:overflow-hidden bg-slate-50/50 min-h-[500px] lg:min-h-0">
               <div className="p-4 md:p-6 pb-2">
-                <h2 className="text-xl font-black text-slate-800">{comodoSelecionado}</h2>
+                <h2 className="text-xl font-semibold text-slate-800">{comodoSelecionado}</h2>
                 <p className="text-sm text-slate-500 font-medium">Avalie as condições de cada item registrado pelo vistoriador.</p>
               </div>
 
@@ -425,7 +425,7 @@ export function SistemaVistoria() {
                           ))}
                           <div className="w-20 h-20 md:w-24 md:h-24 bg-white border border-dashed border-slate-300 rounded-lg flex flex-col items-center justify-center shrink-0 cursor-pointer hover:bg-slate-50 transition-colors">
                             <Plus className="h-4 w-4 md:h-5 md:w-5 text-slate-400 mb-1" />
-                            <span className="text-[9px] md:text-[10px] font-bold text-slate-400 uppercase">Adicionar</span>
+                            <span className="text-[9px] md:text-[10px] font-bold text-slate-400">Adicionar</span>
                           </div>
                         </div>
                       </CardContent>
@@ -438,11 +438,11 @@ export function SistemaVistoria() {
             {/* Right Sidebar: Resumo & Contestacao (Optional/Contextual) */}
             <div className="w-full lg:w-80 bg-white border-t lg:border-t-0 lg:border-l border-slate-200 flex flex-col shrink-0">
               <div className="p-4 border-b border-slate-100 bg-indigo-600">
-                <h3 className="font-bold text-white uppercase tracking-wider text-xs">Resumo do Laudo</h3>
+                <h3 className="font-bold text-white tracking-tight text-xs">Resumo do Laudo</h3>
               </div>
               <div className="p-4 md:p-6 space-y-6 lg:overflow-y-auto">
                 <div>
-                  <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Vistoriador Responsável</h4>
+                  <h4 className="text-xs font-bold text-slate-500 tracking-tight mb-2">Vistoriador Responsável</h4>
                   <div className="flex items-center gap-3">
                     <Avatar><AvatarFallback className="bg-indigo-100 text-indigo-700 font-bold">PO</AvatarFallback></Avatar>
                     <div>
@@ -453,7 +453,7 @@ export function SistemaVistoria() {
                 </div>
 
                 <div className="space-y-3">
-                  <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Apontamentos de Dano</h4>
+                  <h4 className="text-xs font-bold text-slate-500 tracking-tight mb-2">Apontamentos de Dano</h4>
                   <div className="p-3 bg-amber-50 rounded-xl border border-amber-200 flex gap-3 text-sm">
                     <AlertCircle className="h-4 w-4 text-amber-600 shrink-0 mt-0.5" />
                     <div>

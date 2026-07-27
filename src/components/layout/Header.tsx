@@ -93,7 +93,7 @@ export function Header({ mobileMenuTrigger }: HeaderProps) {
   };
 
   return (
-    <header className="h-14 border-b border-border bg-card px-4 md:px-6 flex items-center justify-between sticky top-0 z-30">
+    <header className="h-10 border-b border-border bg-card px-4 md:px-6 flex items-center justify-between sticky top-0 z-30">
       {/* Left: mobile trigger + search */}
       <div className="flex items-center flex-1 gap-3 max-w-lg">
         {mobileMenuTrigger}

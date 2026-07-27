@@ -1,4 +1,3 @@
-'use client'
 
 import { useRef, useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -43,7 +42,7 @@ import {
 
 function Label({ children, required }: { children: React.ReactNode; required?: boolean }) {
   return (
-    <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+    <label className="mb-1.5 block text-xs font-semibold  text-muted-foreground">
       {children}
       {required && <span className="ml-1 text-destructive">*</span>}
     </label>
@@ -93,8 +92,8 @@ function AccordionSection({
   children: React.ReactNode
 }) {
   return (
-    <div className={`rounded-3xl bg-card shadow-soft border transition-all duration-300 ${isOpen ? 'border-primary/20 ring-1 ring-primary/10' : 'border-border'}`}>
-      <button type="button" onClick={onToggle} className="w-full flex items-center justify-between p-5 text-left rounded-3xl active:bg-muted/50 transition-colors">
+    <div className={`rounded-2xl bg-card shadow-soft border transition-all duration-300 ${isOpen ? 'border-primary/20 ring-1 ring-primary/10' : 'border-border'}`}>
+      <button type="button" onClick={onToggle} className="w-full flex items-center justify-between p-5 text-left rounded-2xl active:bg-muted/50 transition-colors">
         <h3 className={`flex items-center gap-2 font-semibold ${isOpen ? 'text-primary' : 'text-foreground'}`}>
           {icon}
           {title}
@@ -432,7 +431,7 @@ export default function CadastroEmpreendimento({ onClose, empreendimentoParaEdit
           <button
             type="button"
             onClick={() => setFase('formulario_fast')}
-            className="flex flex-col items-center gap-3 rounded-3xl border-2 border-primary/20 bg-primary/5 p-6 text-center transition-brand active:scale-[0.98] hover:border-primary/40 hover:bg-primary/10"
+            className="flex flex-col items-center gap-3 rounded-2xl border-2 border-primary/20 bg-primary/5 p-6 text-center transition-brand active:scale-[0.98] hover:border-primary/40 hover:bg-primary/10"
           >
             <div className="flex size-14 items-center justify-center rounded-2xl bg-primary/10">
               <Zap className="size-7 text-primary" strokeWidth={1.5} />
@@ -446,7 +445,7 @@ export default function CadastroEmpreendimento({ onClose, empreendimentoParaEdit
           <button
             type="button"
             onClick={() => setFase('formulario')}
-            className="flex flex-col items-center gap-3 rounded-3xl border border-border bg-card p-6 text-center shadow-soft transition-brand active:scale-[0.98] hover:border-border/80"
+            className="flex flex-col items-center gap-3 rounded-2xl border border-border bg-card p-6 text-center shadow-soft transition-brand active:scale-[0.98] hover:border-border/80"
           >
             <div className="flex size-14 items-center justify-center rounded-2xl bg-muted">
               <LayoutGrid className="size-7 text-muted-foreground" strokeWidth={1.5} />
@@ -519,7 +518,7 @@ export default function CadastroEmpreendimento({ onClose, empreendimentoParaEdit
 
           {/* Localização básica */}
           <div className="border-t border-border/50 pt-4 mt-2">
-            <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-3 flex items-center gap-1.5">
+            <p className="text-xs font-semibold  text-muted-foreground mb-3 flex items-center gap-1.5">
               <MapPin className="size-3.5" /> Localização
             </p>
             <div className="grid grid-cols-2 gap-3 mb-3">
@@ -556,7 +555,7 @@ export default function CadastroEmpreendimento({ onClose, empreendimentoParaEdit
           <button
             type="button"
             onClick={onClose}
-            className="mt-6 flex h-14 w-full items-center justify-center gap-2 rounded-2xl bg-amber text-sm font-semibold text-ink shadow-lg shadow-amber/20 transition-brand active:scale-[0.98]"
+            className="mt-6 flex h-10 w-full items-center justify-center gap-2 rounded-2xl bg-amber text-sm font-semibold text-ink shadow-lg shadow-amber/20 transition-brand active:scale-[0.98]"
           >
             <CheckCircle2 className="size-5" />
             Salvar Rascunho / Fast
@@ -1122,7 +1121,7 @@ export default function CadastroEmpreendimento({ onClose, empreendimentoParaEdit
                       { label: 'Pavimentos', value: torreSel.pavimentos || '-' },
                     ].map(item => (
                       <div key={item.label}>
-                        <p className="text-[10px] uppercase tracking-wide text-muted-foreground">{item.label}</p>
+                        <p className="text-[10px]  text-muted-foreground">{item.label}</p>
                         <p className="text-sm font-medium text-foreground">{item.value}</p>
                       </div>
                     ))}
@@ -1144,7 +1143,7 @@ export default function CadastroEmpreendimento({ onClose, empreendimentoParaEdit
                   {/* Plantas da torre */}
                   <div className="border-t border-border/50 pt-3">
                     <div className="flex items-center justify-between mb-3">
-                      <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
+                      <p className="text-xs font-semibold text-muted-foreground ">
                         Plantas — {torreSel.plantas.length} unidade{torreSel.plantas.length !== 1 ? 's' : ''}
                       </p>
                       <button
@@ -1219,7 +1218,7 @@ export default function CadastroEmpreendimento({ onClose, empreendimentoParaEdit
                     {torreSel.plantas.length > 0 ? (
                       <div className="rounded-2xl border border-border overflow-hidden">
                         {/* Header */}
-                        <div className="grid grid-cols-[80px_1fr_32px_32px_32px_32px_80px_auto] gap-1 bg-muted/50 px-3 py-2 text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
+                        <div className="grid grid-cols-[80px_1fr_32px_32px_32px_32px_80px_auto] gap-1 bg-muted/50 px-3 py-2 text-[10px] font-semibold  text-muted-foreground">
                           <span>Código</span>
                           <span>Nome</span>
                           <span><BedDouble className="size-3.5 mx-auto" /></span>
@@ -1325,7 +1324,7 @@ export default function CadastroEmpreendimento({ onClose, empreendimentoParaEdit
           {/* Exibir no site + Destaque */}
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Exibir no site</p>
+              <p className="mb-2 text-xs font-semibold  text-muted-foreground">Exibir no site</p>
               <div className="flex flex-col gap-2">
                 {[
                   { label: 'Nome', state: exibirNome, set: setExibirNome },
@@ -1346,7 +1345,7 @@ export default function CadastroEmpreendimento({ onClose, empreendimentoParaEdit
               </div>
             </div>
             <div>
-              <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Destaque</p>
+              <p className="mb-2 text-xs font-semibold  text-muted-foreground">Destaque</p>
               <div className="flex flex-col gap-2">
                 {[
                   { label: 'Na Página Inicial', state: destaqueHome, set: setDestaqueHome },
@@ -1379,7 +1378,7 @@ export default function CadastroEmpreendimento({ onClose, empreendimentoParaEdit
 
           {/* SEO */}
           <div className="border-t border-border/50 pt-4">
-            <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground flex items-center gap-1.5">
+            <p className="mb-3 text-xs font-semibold  text-muted-foreground flex items-center gap-1.5">
               <Search className="size-3.5" />
               SEO e Otimização
             </p>
@@ -1399,7 +1398,7 @@ export default function CadastroEmpreendimento({ onClose, empreendimentoParaEdit
               {/* Preview SEO */}
               {(seoTitulo || seoDescricao) && (
                 <div className="rounded-2xl bg-muted/40 border border-border p-4">
-                  <p className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground mb-2 flex items-center gap-1">
+                  <p className="text-[10px] font-semibold  text-muted-foreground mb-2 flex items-center gap-1">
                     <Search className="size-3" /> Exemplo
                   </p>
                   <p className="text-sm font-semibold text-primary">{seoTitulo || 'Título do imóvel — Seu website'}</p>
@@ -1469,7 +1468,7 @@ export default function CadastroEmpreendimento({ onClose, empreendimentoParaEdit
         <button
           type="button"
           onClick={onClose}
-          className="flex h-14 w-full items-center justify-center gap-2 rounded-2xl bg-primary text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/20 transition-brand active:scale-[0.98]"
+          className="flex h-10 w-full items-center justify-center gap-2 rounded-2xl bg-primary text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/20 transition-brand active:scale-[0.98]"
         >
           <CheckCircle2 className="size-5" strokeWidth={2} />
           Salvar Empreendimento

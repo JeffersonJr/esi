@@ -64,9 +64,9 @@ function MetricCard({ title, value, icon: Icon, trend, trendLabel, trendPositive
         <CardContent className="p-6">
           <div className="flex justify-between items-start">
             <div className="space-y-2">
-              <p className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">{title}</p>
+              <p className="text-sm font-semibold text-muted-foreground tracking-tight">{title}</p>
               <div className="flex items-baseline gap-2">
-                <h3 className="text-3xl font-black tracking-tight">{value}</h3>
+                <h3 className="text-3xl font-semibold tracking-tight">{value}</h3>
               </div>
             </div>
             <div className={cn("p-3 rounded-2xl flex items-center justify-center transition-transform group-hover:scale-110", colorClass)}>
@@ -76,7 +76,7 @@ function MetricCard({ title, value, icon: Icon, trend, trendLabel, trendPositive
           {(trend || trendLabel) && (
             <div className="mt-4 flex items-center gap-2 text-sm">
               {trend && (
-                <Badge variant={trendPositive ? 'default' : 'destructive'} className={cn("px-1.5 py-0 text-[10px] uppercase font-bold", trendPositive ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500/20 border-emerald-200/50" : "bg-rose-500/10 text-rose-600 dark:text-rose-400 hover:bg-rose-500/20 border-rose-200/50")}>
+                <Badge variant={trendPositive ? 'default' : 'destructive'} className={cn("px-1.5 py-0 text-[10px] font-bold", trendPositive ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500/20 border-emerald-200/50" : "bg-rose-500/10 text-rose-600 dark:text-rose-400 hover:bg-rose-500/20 border-rose-200/50")}>
                   {trendPositive ? '↑' : '↓'} {trend}
                 </Badge>
               )}
@@ -632,7 +632,7 @@ export function Analytics() {
                     <div className="w-16 bg-gradient-to-t from-blue-600 to-blue-400 rounded-t-xl" style={{ height: '140px' }} />
                     <div className="text-center">
                       <p className="font-bold text-lg leading-none">68%</p>
-                      <p className="text-xs text-muted-foreground uppercase tracking-widest mt-1">Mobile</p>
+                      <p className="text-xs text-muted-foreground tracking-tight mt-1">Mobile</p>
                     </div>
                   </div>
                   {/* Desktop */}
@@ -640,7 +640,7 @@ export function Analytics() {
                     <div className="w-16 bg-gradient-to-t from-emerald-600 to-emerald-400 rounded-t-xl" style={{ height: '60px' }} />
                     <div className="text-center">
                       <p className="font-bold text-lg leading-none">28%</p>
-                      <p className="text-xs text-muted-foreground uppercase tracking-widest mt-1">Desktop</p>
+                      <p className="text-xs text-muted-foreground tracking-tight mt-1">Desktop</p>
                     </div>
                   </div>
                   {/* Tablet */}
@@ -648,7 +648,7 @@ export function Analytics() {
                     <div className="w-16 bg-gradient-to-t from-amber-600 to-amber-400 rounded-t-xl" style={{ height: '20px' }} />
                     <div className="text-center">
                       <p className="font-bold text-lg leading-none">4%</p>
-                      <p className="text-xs text-muted-foreground uppercase tracking-widest mt-1">Tablet</p>
+                      <p className="text-xs text-muted-foreground tracking-tight mt-1">Tablet</p>
                     </div>
                   </div>
                 </div>

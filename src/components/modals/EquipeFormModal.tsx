@@ -109,7 +109,7 @@ export function EquipeFormModal({ open, onClose, equipe }: EquipeFormModalProps)
             <Users className="h-6 w-6 text-white" />
           </div>
           <DialogHeader>
-            <DialogTitle className="text-white text-xl font-black">{isEdit ? 'Editar Equipe' : 'Nova Equipe'}</DialogTitle>
+            <DialogTitle className="text-white text-xl font-semibold">{isEdit ? 'Editar Equipe' : 'Nova Equipe'}</DialogTitle>
             <p className="text-white/70 text-sm">{isEdit ? `Editando ${equipe?.nome}` : 'Configure a nova equipe de vendas'}</p>
           </DialogHeader>
         </div>

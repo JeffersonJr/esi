@@ -1811,7 +1811,7 @@ export default function LeadDetalhes() {
               <User className="h-6 w-6" />
             </div>
             <div>
-              <h1 className="text-2xl font-black text-slate-800 tracking-tight leading-tight">{lead.name}</h1>
+              <h1 className="text-2xl font-semibold text-slate-800 tracking-tight leading-tight">{lead.name}</h1>
               <p className="text-slate-500 text-sm mt-0.5 font-medium">Detalhes completos e histórico do lead</p>
             </div>
           </div>
@@ -2082,19 +2082,19 @@ export default function LeadDetalhes() {
                   <CardContent className="pt-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div className="space-y-2">
-                        <Label className="text-muted-foreground font-bold text-xs uppercase tracking-wider">Quem?</Label>
+                        <Label className="text-muted-foreground font-bold text-xs tracking-tight">Quem?</Label>
                         <Input placeholder="Quem decide a compra?" defaultValue="O casal decide junto." className="bg-muted/30" />
                       </div>
                       <div className="space-y-2">
-                        <Label className="text-muted-foreground font-bold text-xs uppercase tracking-wider">O que?</Label>
+                        <Label className="text-muted-foreground font-bold text-xs tracking-tight">O que?</Label>
                         <Input placeholder="O que estão buscando?" defaultValue="Apartamento 3 quartos com varanda gourmet." className="bg-muted/30" />
                       </div>
                       <div className="space-y-2">
-                        <Label className="text-muted-foreground font-bold text-xs uppercase tracking-wider">Por que?</Label>
+                        <Label className="text-muted-foreground font-bold text-xs tracking-tight">Por que?</Label>
                         <Input placeholder="Motivação principal" defaultValue="A família aumentou, precisam de mais espaço." className="bg-muted/30" />
                       </div>
                       <div className="space-y-2">
-                        <Label className="text-muted-foreground font-bold text-xs uppercase tracking-wider">Quando?</Label>
+                        <Label className="text-muted-foreground font-bold text-xs tracking-tight">Quando?</Label>
                         <Input placeholder="Prazo de mudança" defaultValue="Pretendem mudar em até 3 meses." className="bg-muted/30" />
                       </div>
                     </div>
@@ -2111,19 +2111,19 @@ export default function LeadDetalhes() {
                   <CardContent className="pt-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div className="space-y-2">
-                        <Label className="text-muted-foreground font-bold text-xs uppercase tracking-wider">Família</Label>
+                        <Label className="text-muted-foreground font-bold text-xs tracking-tight">Família</Label>
                         <Input placeholder="Detalhes sobre a família" defaultValue="Casado há 5 anos, 1 filha de 2 anos." className="bg-muted/30" />
                       </div>
                       <div className="space-y-2">
-                        <Label className="text-muted-foreground font-bold text-xs uppercase tracking-wider">Ocupação</Label>
+                        <Label className="text-muted-foreground font-bold text-xs tracking-tight">Ocupação</Label>
                         <Input placeholder="Profissão / Trabalho" defaultValue="Médico cirurgião, trabalha perto do centro." className="bg-muted/30" />
                       </div>
                       <div className="space-y-2">
-                        <Label className="text-muted-foreground font-bold text-xs uppercase tracking-wider">Recreação</Label>
+                        <Label className="text-muted-foreground font-bold text-xs tracking-tight">Recreação</Label>
                         <Input placeholder="Hobbies e lazer" defaultValue="Gosta de correr no parque aos domingos." className="bg-muted/30" />
                       </div>
                       <div className="space-y-2">
-                        <Label className="text-muted-foreground font-bold text-xs uppercase tracking-wider">Desejos</Label>
+                        <Label className="text-muted-foreground font-bold text-xs tracking-tight">Desejos</Label>
                         <Input placeholder="Sonhos e desejos" defaultValue="Ter uma área de lazer para convidar amigos." className="bg-muted/30" />
                       </div>
                     </div>
@@ -2265,7 +2265,7 @@ export default function LeadDetalhes() {
                                     <div className="grid grid-cols-2 gap-4">
                                       {item.resultado && (
                                         <div>
-                                          <p className="text-[10px] font-bold text-slate-400 uppercase mb-1">Resultado</p>
+                                          <p className="text-[10px] font-bold text-slate-400 mb-1">Resultado</p>
                                           <p className="text-sm text-slate-700 flex items-center gap-2">
                                             {isActivity && item.avaliacao === 'boa' && (
                                               <span className="text-lg">😊</span>
@@ -2279,7 +2279,7 @@ export default function LeadDetalhes() {
                                       )}
                                       {item.proximoPasso && (
                                         <div>
-                                          <p className="text-[10px] font-bold text-slate-400 uppercase mb-1">Próximo Passo</p>
+                                          <p className="text-[10px] font-bold text-slate-400 mb-1">Próximo Passo</p>
                                           <p className="text-sm text-slate-700">{item.proximoPasso}</p>
                                         </div>
                                       )}
@@ -3108,7 +3108,7 @@ export default function LeadDetalhes() {
             <div className="col-span-7 space-y-6">
               {/* Notas detalhadas em destaque */}
               <div>
-                <h3 className="text-slate-400 uppercase text-xs font-semibold mb-3">Notas Detalhadas</h3>
+                <h3 className="text-slate-400 text-xs font-semibold mb-3">Notas Detalhadas</h3>
                 <Textarea
                   id="nota-atividade"
                   placeholder="Descreva em detalhes como foi esta atividade..."
@@ -3145,7 +3145,7 @@ export default function LeadDetalhes() {
 
               {/* Tags da Atividade */}
               <div>
-                <h3 className="text-slate-400 uppercase text-xs font-semibold mb-3">Tags da Atividade</h3>
+                <h3 className="text-slate-400 text-xs font-semibold mb-3">Tags da Atividade</h3>
                 <TagManager
                   selectedTags={activityTags}
                   availableTags={availableActivityTags}
@@ -3159,11 +3159,11 @@ export default function LeadDetalhes() {
             {/* Colunas 8-12: Box Lateral */}
             <div className="col-span-5">
               <div className="bg-slate-50/50 rounded-lg p-6 space-y-6">
-                <h3 className="text-slate-400 uppercase text-xs font-semibold mb-4">Configurações</h3>
+                <h3 className="text-slate-400 text-xs font-semibold mb-4">Configurações</h3>
 
                 {/* Avaliação com Emojis */}
                 <div>
-                  <h4 className="text-slate-400 uppercase text-xs font-medium mb-3">Avaliação</h4>
+                  <h4 className="text-slate-400 text-xs font-medium mb-3">Avaliação</h4>
                   <div className="flex justify-center gap-4 p-4 bg-white rounded-lg border border-slate-200">
                     <button
                       type="button"
@@ -3205,7 +3205,7 @@ export default function LeadDetalhes() {
 
                 {/* No Show */}
                 <div>
-                  <h4 className="text-slate-400 uppercase text-xs font-medium mb-3">Visibilidade</h4>
+                  <h4 className="text-slate-400 text-xs font-medium mb-3">Visibilidade</h4>
                   <div className="flex items-center gap-3 p-4 bg-white rounded-lg border border-slate-200">
                     <input
                       type="checkbox"
@@ -3222,7 +3222,7 @@ export default function LeadDetalhes() {
 
                 {/* Responsável */}
                 <div>
-                  <h4 className="text-slate-400 uppercase text-xs font-medium mb-3">Responsável</h4>
+                  <h4 className="text-slate-400 text-xs font-medium mb-3">Responsável</h4>
                   <div className="p-4 bg-white rounded-lg border border-slate-200">
                     <div className="flex items-center gap-3">
                       <div className="w-10 h-10 bg-cyan-500 rounded-full flex items-center justify-center text-white font-semibold">

@@ -71,7 +71,7 @@ export function GestaoLocacoes() {
             <div className="flex items-center gap-3">
               <Button
                 onClick={() => setShowNovoContrato(true)}
-                className="h-12 px-6 rounded-2xl font-bold bg-indigo-600 hover:bg-indigo-700 text-white shadow-lg shadow-indigo-200 transition-all"
+                className="h-9 px-4 rounded-xl font-bold bg-indigo-600 hover:bg-indigo-700 text-white shadow-lg shadow-indigo-200 transition-all"
               >
                 <Plus className="h-4 w-4 mr-2" /> Novo Contrato
               </Button>
@@ -91,8 +91,8 @@ export function GestaoLocacoes() {
                 </div>
                 <Badge className="bg-indigo-100 text-indigo-700 border-none">+12%</Badge>
               </div>
-              <h3 className="text-3xl font-black text-slate-800 tracking-tight mb-1">142</h3>
-              <p className="text-sm font-bold text-slate-600 uppercase tracking-wider">Contratos Ativos</p>
+              <h3 className="text-3xl font-semibold text-slate-800 tracking-tight mb-1">142</h3>
+              <p className="text-sm font-bold text-slate-600 tracking-tight">Contratos Ativos</p>
             </CardContent>
           </Card>
 
@@ -103,8 +103,8 @@ export function GestaoLocacoes() {
                   <DollarSign className="h-6 w-6" />
                 </div>
               </div>
-              <h3 className="text-3xl font-black text-slate-800 tracking-tight mb-1">{formatCurrency(452000)}</h3>
-              <p className="text-sm font-bold text-slate-600 uppercase tracking-wider">Receita Mensal</p>
+              <h3 className="text-3xl font-semibold text-slate-800 tracking-tight mb-1">{formatCurrency(452000)}</h3>
+              <p className="text-sm font-bold text-slate-600 tracking-tight">Receita Mensal</p>
             </CardContent>
           </Card>
 
@@ -116,8 +116,8 @@ export function GestaoLocacoes() {
                 </div>
                 <Badge className="bg-rose-100 text-rose-700 border-none">Alerta</Badge>
               </div>
-              <h3 className="text-3xl font-black text-slate-800 tracking-tight mb-1">4.2%</h3>
-              <p className="text-sm font-bold text-slate-600 uppercase tracking-wider">Inadimplência</p>
+              <h3 className="text-3xl font-semibold text-slate-800 tracking-tight mb-1">4.2%</h3>
+              <p className="text-sm font-bold text-slate-600 tracking-tight">Inadimplência</p>
             </CardContent>
           </Card>
 
@@ -128,8 +128,8 @@ export function GestaoLocacoes() {
                   <Building2 className="h-6 w-6" />
                 </div>
               </div>
-              <h3 className="text-3xl font-black text-slate-800 tracking-tight mb-1">15</h3>
-              <p className="text-sm font-bold text-slate-600 uppercase tracking-wider">Vago / Disponível</p>
+              <h3 className="text-3xl font-semibold text-slate-800 tracking-tight mb-1">15</h3>
+              <p className="text-sm font-bold text-slate-600 tracking-tight">Vago / Disponível</p>
             </CardContent>
           </Card>
         </div>
@@ -154,8 +154,8 @@ export function GestaoLocacoes() {
                     <div key={i} className="flex-1 flex flex-col items-center gap-3">
                       <div className={`w-full h-2 rounded-full ${item.color} opacity-20`} />
                       <div className="flex flex-col items-center">
-                        <span className="text-2xl font-black text-slate-800">{item.count}</span>
-                        <span className="text-[10px] text-slate-500 font-bold uppercase text-center">{item.etapa}</span>
+                        <span className="text-2xl font-semibold text-slate-800">{item.count}</span>
+                        <span className="text-[10px] text-slate-500 font-bold text-center">{item.etapa}</span>
                       </div>
                     </div>
                   ))}
@@ -243,7 +243,7 @@ export function GestaoLocacoes() {
                     <TableRow key={loc.id}>
                       <TableCell>
                         <div className="font-bold text-slate-800">{loc.imovel}</div>
-                        <div className="text-[10px] font-mono text-slate-400 uppercase">{loc.id}</div>
+                        <div className="text-[10px] font-mono text-slate-400">{loc.id}</div>
                       </TableCell>
                       <TableCell className="text-xs">
                         <p><strong>Inq:</strong> {loc.inquilino}</p>

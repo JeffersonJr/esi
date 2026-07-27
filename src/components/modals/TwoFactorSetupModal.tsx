@@ -146,7 +146,7 @@ export function TwoFactorSetupModal({ open, onClose }: TwoFactorSetupModalProps)
                 placeholder="000000"
                 value={verificationCode}
                 onChange={(e) => setVerificationCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
-                className="text-center text-2xl tracking-widest font-mono"
+                className="text-center text-2xl tracking-tight font-mono"
                 maxLength={6}
               />
             </div>

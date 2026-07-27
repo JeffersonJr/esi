@@ -71,20 +71,20 @@ export function NewUserDrawer({ open, onClose, onSave }: NewUserDrawerProps) {
           <div className="p-4 overflow-y-auto flex-1">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-1.5">
-                <Label className="text-xs font-bold text-slate-500 uppercase">Nome</Label>
+                <Label className="text-xs font-bold text-slate-500">Nome</Label>
                 <Input placeholder="Nome completo" value={form.nome} onChange={e => setForm({ ...form, nome: e.target.value })} />
               </div>
               <div className="space-y-1.5">
-                <Label className="text-xs font-bold text-slate-500 uppercase">E-mail</Label>
+                <Label className="text-xs font-bold text-slate-500">E-mail</Label>
                 <Input type="email" placeholder="email@exemplo.com" value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} />
               </div>
               
               <div className="space-y-1.5">
-                <Label className="text-xs font-bold text-slate-500 uppercase">Etiqueta</Label>
+                <Label className="text-xs font-bold text-slate-500">Etiqueta</Label>
                 <Input placeholder="Ex: Top Broker" value={form.etiqueta} onChange={e => setForm({ ...form, etiqueta: e.target.value })} />
               </div>
               <div className="space-y-1.5">
-                <Label className="text-xs font-bold text-slate-500 uppercase">Função</Label>
+                <Label className="text-xs font-bold text-slate-500">Função</Label>
                 <Select value={form.cargo} onValueChange={(val) => setForm({ ...form, cargo: val })}>
                     <SelectTrigger><SelectValue placeholder="Selecione a função..." /></SelectTrigger>
                     <SelectContent>
@@ -105,7 +105,7 @@ export function NewUserDrawer({ open, onClose, onSave }: NewUserDrawerProps) {
               </div>
 
               <div className="space-y-1.5">
-                <Label className="text-xs font-bold text-slate-500 uppercase">Status</Label>
+                <Label className="text-xs font-bold text-slate-500">Status</Label>
                 <Select value={form.status} onValueChange={(val) => setForm({ ...form, status: val })}>
                     <SelectTrigger><SelectValue /></SelectTrigger>
                     <SelectContent>
@@ -115,39 +115,39 @@ export function NewUserDrawer({ open, onClose, onSave }: NewUserDrawerProps) {
                 </Select>
               </div>
               <div className="space-y-1.5">
-                <Label className="text-xs font-bold text-slate-500 uppercase">Data de admissão</Label>
+                <Label className="text-xs font-bold text-slate-500">Data de admissão</Label>
                 <Input type="date" value={extra.dataAdmissao} onChange={e => setExtra({ ...extra, dataAdmissao: e.target.value })} />
               </div>
               
               <div className="space-y-1.5">
-                <Label className="text-xs font-bold text-slate-500 uppercase">Filial</Label>
+                <Label className="text-xs font-bold text-slate-500">Filial</Label>
                 <Input placeholder="Ex: Matriz" value={form.filial} onChange={e => setForm({ ...form, filial: e.target.value })} />
               </div>
               <div className="space-y-1.5">
-                <Label className="text-xs font-bold text-slate-500 uppercase">Equipe</Label>
+                <Label className="text-xs font-bold text-slate-500">Equipe</Label>
                 <Input placeholder="Ex: Vendas Internas" value={form.equipe} onChange={e => setForm({ ...form, equipe: e.target.value })} />
               </div>
 
               <div className="space-y-1.5">
-                <Label className="text-xs font-bold text-slate-500 uppercase">Nº. CRECI</Label>
+                <Label className="text-xs font-bold text-slate-500">Nº. CRECI</Label>
                 <Input placeholder="000000-F" value={extra.creci} onChange={e => setExtra({ ...extra, creci: e.target.value })} />
               </div>
               <div className="space-y-1.5">
-                <Label className="text-xs font-bold text-slate-500 uppercase">Região</Label>
+                <Label className="text-xs font-bold text-slate-500">Região</Label>
                 <Input placeholder="Ex: SP" value={extra.regiao} onChange={e => setExtra({ ...extra, regiao: e.target.value })} />
               </div>
 
               <div className="space-y-1.5">
-                <Label className="text-xs font-bold text-slate-500 uppercase">Delegacia</Label>
+                <Label className="text-xs font-bold text-slate-500">Delegacia</Label>
                 <Input placeholder="Ex: 2ª Delegacia Regional" value={extra.delegacia} onChange={e => setExtra({ ...extra, delegacia: e.target.value })} />
               </div>
               <div className="space-y-1.5">
-                <Label className="text-xs font-bold text-slate-500 uppercase">Localidade</Label>
+                <Label className="text-xs font-bold text-slate-500">Localidade</Label>
                 <Input placeholder="Ex: São Paulo" value={extra.localidade} onChange={e => setExtra({ ...extra, localidade: e.target.value })} />
               </div>
 
               <div className="space-y-1.5">
-                <Label className="text-xs font-bold text-slate-500 uppercase">Domínio</Label>
+                <Label className="text-xs font-bold text-slate-500">Domínio</Label>
                 <Input placeholder="exemplo.com.br" value={extra.dominio} onChange={e => setExtra({ ...extra, dominio: e.target.value })} />
               </div>
               <div className="flex items-center space-x-2 pt-6">

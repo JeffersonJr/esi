@@ -232,8 +232,8 @@ export function DeletedLeads() {
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h1 className="text-3xl font-black text-slate-800 tracking-tight">Lixeira de Leads</h1>
-                <Badge variant="outline" className="text-[10px] font-black uppercase tracking-widest border-slate-200 text-slate-600 bg-slate-50/50">Recuperação</Badge>
+                <h1 className="text-3xl font-semibold text-slate-800 tracking-tight">Lixeira de Leads</h1>
+                <Badge variant="outline" className="text-[10px] font-semibold tracking-tight border-slate-200 text-slate-600 bg-slate-50/50">Recuperação</Badge>
               </div>
               <p className="text-slate-500 mt-1 font-medium italic">Leads excluídos que podem ser restaurados em até 30 dias</p>
             </div>

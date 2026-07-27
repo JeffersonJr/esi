@@ -61,11 +61,11 @@ export function UsuarioFormModal({ open, onClose, usuario, onSave }: UsuarioForm
       <DialogContent className="max-w-lg p-0 overflow-hidden border-none shadow-2xl">
         {/* Header */}
         <div className="bg-gradient-to-r from-primary to-primary/80 p-6 flex items-center gap-4">
-          <Avatar className="h-14 w-14 border-2 border-white/20 shadow-lg">
-            <AvatarFallback className="bg-white/10 text-white text-lg font-black">{initials}</AvatarFallback>
+          <Avatar className="h-10 w-14 border-2 border-white/20 shadow-lg">
+            <AvatarFallback className="bg-white/10 text-white text-lg font-semibold">{initials}</AvatarFallback>
           </Avatar>
           <DialogHeader>
-            <DialogTitle className="text-white text-xl font-black">{isEdit ? 'Editar Usuário' : 'Novo Usuário'}</DialogTitle>
+            <DialogTitle className="text-white text-xl font-semibold">{isEdit ? 'Editar Usuário' : 'Novo Usuário'}</DialogTitle>
             <p className="text-white/70 text-sm">{isEdit ? `Atualizando dados de ${usuario?.nome}` : 'Preencha as informações do novo usuário'}</p>
           </DialogHeader>
         </div>
@@ -73,12 +73,12 @@ export function UsuarioFormModal({ open, onClose, usuario, onSave }: UsuarioForm
         <div className="p-6 space-y-5">
           {/* Dados Pessoais */}
           <div className="space-y-4">
-            <h4 className="text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2">
+            <h4 className="text-[10px] font-semibold tracking-tight text-muted-foreground flex items-center gap-2">
               <span className="w-4 h-[2px] bg-primary inline-block" /> Dados Pessoais
             </h4>
             <div className="grid grid-cols-2 gap-4">
               <div className="col-span-2 space-y-1.5">
-                <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Nome Completo *</Label>
+                <Label className="text-xs font-bold tracking-tight text-muted-foreground">Nome Completo *</Label>
                 <Input
                   placeholder="Nome do usuário"
                   value={formData.nome}
@@ -86,7 +86,7 @@ export function UsuarioFormModal({ open, onClose, usuario, onSave }: UsuarioForm
                 />
               </div>
               <div className="space-y-1.5">
-                <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Email *</Label>
+                <Label className="text-xs font-bold tracking-tight text-muted-foreground">Email *</Label>
                 <Input
                   type="email"
                   placeholder="email@empresa.com"
@@ -95,7 +95,7 @@ export function UsuarioFormModal({ open, onClose, usuario, onSave }: UsuarioForm
                 />
               </div>
               <div className="space-y-1.5">
-                <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Cargo</Label>
+                <Label className="text-xs font-bold tracking-tight text-muted-foreground">Cargo</Label>
                 <Input
                   placeholder="Ex: Corretor, Assistente"
                   value={formData.cargo}
@@ -107,12 +107,12 @@ export function UsuarioFormModal({ open, onClose, usuario, onSave }: UsuarioForm
 
           {/* Permissões */}
           <div className="space-y-4">
-            <h4 className="text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2">
+            <h4 className="text-[10px] font-semibold tracking-tight text-muted-foreground flex items-center gap-2">
               <span className="w-4 h-[2px] bg-primary inline-block" /> Permissões e Acesso
             </h4>
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-1.5">
-                <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-1">
+                <Label className="text-xs font-bold tracking-tight text-muted-foreground flex items-center gap-1">
                   <Shield className="h-3 w-3" /> Nível de Acesso *
                 </Label>
                 <Select value={formData.nivel} onValueChange={(v) => setFormData({ ...formData, nivel: v })}>
@@ -127,7 +127,7 @@ export function UsuarioFormModal({ open, onClose, usuario, onSave }: UsuarioForm
               </div>
               {isEdit && (
                 <div className="space-y-1.5">
-                  <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Status</Label>
+                  <Label className="text-xs font-bold tracking-tight text-muted-foreground">Status</Label>
                   <Select value={formData.status} onValueChange={(v) => setFormData({ ...formData, status: v })}>
                     <SelectTrigger>
                       <SelectValue />

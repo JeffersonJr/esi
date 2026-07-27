@@ -1,4 +1,3 @@
-'use client'
 
 import { useState } from 'react'
 
@@ -52,7 +51,7 @@ export function FiltrosAvancadosSheet({
         <div className="flex-1 flex flex-col gap-6 p-6 overflow-y-auto pb-24">
           {/* Nome */}
           <div>
-            <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+            <label className="mb-2 block text-xs font-semibold tracking-tight text-muted-foreground">
               Nome do Cliente
             </label>
             <div className="flex items-center gap-2 rounded-xl border border-border bg-background px-3 py-2 focus-within:ring-2 focus-within:ring-ring">
@@ -74,7 +73,7 @@ export function FiltrosAvancadosSheet({
 
           {/* Pré-atendimento */}
           <div>
-            <label className="mb-3 block text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+            <label className="mb-3 block text-xs font-semibold tracking-tight text-muted-foreground">
               Pré-atendimento (Albert)
             </label>
             <div className="flex rounded-xl bg-muted/50 p-1 border border-border/50">
@@ -100,7 +99,7 @@ export function FiltrosAvancadosSheet({
 
           {/* Período */}
           <div>
-            <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+            <label className="mb-2 block text-xs font-semibold tracking-tight text-muted-foreground">
               Período de Entrada
             </label>
             <div className="relative">
@@ -129,7 +128,7 @@ export function FiltrosAvancadosSheet({
             {isPersonalizado && (
               <div className="mt-3 flex gap-4 animate-in fade-in slide-in-from-top-2">
                 <div className="flex-1">
-                  <label className="mb-2 block text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">De</label>
+                  <label className="mb-2 block text-[10px] font-semibold tracking-tight text-muted-foreground">De</label>
                   <input
                     type="date"
                     value={dataDe}
@@ -141,7 +140,7 @@ export function FiltrosAvancadosSheet({
                   />
                 </div>
                 <div className="flex-1">
-                  <label className="mb-2 block text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Até</label>
+                  <label className="mb-2 block text-[10px] font-semibold tracking-tight text-muted-foreground">Até</label>
                   <input
                     type="date"
                     value={dataAte}
@@ -158,7 +157,7 @@ export function FiltrosAvancadosSheet({
 
           {/* Temperatura */}
           <div>
-            <label className="mb-3 block text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+            <label className="mb-3 block text-xs font-semibold tracking-tight text-muted-foreground">
               Temperatura
             </label>
             <div className="flex flex-wrap gap-2">
@@ -191,7 +190,7 @@ export function FiltrosAvancadosSheet({
 
           {/* Origem */}
           <div className="flex flex-col min-h-[30dvh] max-h-[40dvh]">
-            <label className="mb-3 block text-xs font-semibold uppercase tracking-wider text-muted-foreground shrink-0">
+            <label className="mb-3 block text-xs font-semibold tracking-tight text-muted-foreground shrink-0">
               Origem do Lead
             </label>
             <div className="flex-1 overflow-y-auto rounded-2xl border border-border bg-background shadow-inner flex flex-col">

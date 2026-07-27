@@ -100,7 +100,7 @@ export function EquipeSheet({ equipe, open, allUsers, onClose, onSave, onDelete 
                 {/* Identity */}
                 <div className="pt-12 px-6 pb-4 shrink-0">
                     <SheetHeader className="text-left">
-                        <SheetTitle className="text-2xl font-black tracking-tight">{equipe.nome}</SheetTitle>
+                        <SheetTitle className="text-2xl font-semibold tracking-tight">{equipe.nome}</SheetTitle>
                         <SheetDescription className="mt-1 flex items-center gap-2 flex-wrap">
                             <span className="text-sm text-muted-foreground line-clamp-2">{equipe.descricao}</span>
                         </SheetDescription>
@@ -111,14 +111,14 @@ export function EquipeSheet({ equipe, open, allUsers, onClose, onSave, onDelete 
                         <div className="flex-1 flex items-center gap-2 p-2.5 rounded-xl bg-muted/30 border border-border/30">
                             <Users className="h-4 w-4 text-primary/70 shrink-0" />
                             <div>
-                                <p className="text-xs font-black leading-none">{equipe.membros.length}</p>
+                                <p className="text-xs font-semibold leading-none">{equipe.membros.length}</p>
                                 <p className="text-[10px] text-muted-foreground">Membros</p>
                             </div>
                         </div>
                         <div className="flex-1 flex items-center gap-2 p-2.5 rounded-xl bg-muted/30 border border-border/30">
                             <Hash className="h-4 w-4 text-primary/70 shrink-0" />
                             <div>
-                                <p className="text-xs font-black leading-none">{corLabel[equipe.cor] || '—'}</p>
+                                <p className="text-xs font-semibold leading-none">{corLabel[equipe.cor] || '—'}</p>
                                 <p className="text-[10px] text-muted-foreground">Cor</p>
                             </div>
                         </div>
@@ -134,15 +134,15 @@ export function EquipeSheet({ equipe, open, allUsers, onClose, onSave, onDelete 
                             <SectionLabel>Editando equipe</SectionLabel>
 
                             <div className="space-y-1.5">
-                                <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Nome da equipe</Label>
+                                <Label className="text-xs font-semibold text-muted-foreground ">Nome da equipe</Label>
                                 <Input value={form.nome} onChange={e => setForm({ ...form, nome: e.target.value })} />
                             </div>
                             <div className="space-y-1.5">
-                                <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Descrição</Label>
+                                <Label className="text-xs font-semibold text-muted-foreground ">Descrição</Label>
                                 <Input value={form.descricao} onChange={e => setForm({ ...form, descricao: e.target.value })} />
                             </div>
                             <div className="space-y-1.5">
-                                <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Cor identificadora</Label>
+                                <Label className="text-xs font-semibold text-muted-foreground ">Cor identificadora</Label>
                                 <div className="flex gap-2">
                                     {COLOR_OPTIONS.map(cor => (
                                         <button
@@ -251,7 +251,7 @@ export function EquipeSheet({ equipe, open, allUsers, onClose, onSave, onDelete 
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
     return (
-        <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2">
+        <p className="text-[10px] font-semibold tracking-tight text-muted-foreground flex items-center gap-2">
             <span className="w-4 h-[2px] bg-primary inline-block" /> {children}
         </p>
     );

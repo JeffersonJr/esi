@@ -283,7 +283,7 @@ export function Configuracoes() {
                       <TableCell className="text-xs font-bold text-slate-600">{membro.cargo}</TableCell>
                       <TableCell className="text-xs text-slate-500 font-medium">{membro.acesso}</TableCell>
                       <TableCell>
-                        <Badge variant="outline" className={membro.status === 'Ativo' ? 'bg-emerald-50 text-emerald-700 border-none font-black text-[10px]' : 'bg-amber-50 text-amber-700 border-none font-black text-[10px]'}>
+                        <Badge variant="outline" className={membro.status === 'Ativo' ? 'bg-emerald-50 text-emerald-700 border-none font-semibold text-[10px]' : 'bg-amber-50 text-amber-700 border-none font-semibold text-[10px]'}>
                           {membro.status}
                         </Badge>
                       </TableCell>
@@ -306,7 +306,7 @@ export function Configuracoes() {
                   <p className="text-xs text-indigo-600 font-medium">Personalize detalhadamente o que cada cargo pode acessar.</p>
                 </div>
               </div>
-              <Button variant="link" className="text-indigo-600 font-black text-xs uppercase tracking-wider">Configurar <ChevronRight className="h-3 w-3 inline ml-1" /></Button>
+              <Button variant="link" className="text-indigo-600 font-semibold text-xs tracking-tight">Configurar <ChevronRight className="h-3 w-3 inline ml-1" /></Button>
             </div>
           </div>
         );
@@ -338,15 +338,15 @@ export function Configuracoes() {
                     </div>
                     <div className="flex items-center gap-6">
                       <div className="flex flex-col items-center gap-1">
-                        <span className="text-[9px] font-black uppercase text-slate-400">Email</span>
+                        <span className="text-[9px] font-semibold text-slate-400">Email</span>
                         <Switch defaultChecked />
                       </div>
                       <div className="flex flex-col items-center gap-1">
-                        <span className="text-[9px] font-black uppercase text-slate-400">Push</span>
+                        <span className="text-[9px] font-semibold text-slate-400">Push</span>
                         <Switch defaultChecked />
                       </div>
                       <div className="flex flex-col items-center gap-1">
-                        <span className="text-[9px] font-black uppercase text-slate-400">WhatsApp</span>
+                        <span className="text-[9px] font-semibold text-slate-400">WhatsApp</span>
                         <Switch />
                       </div>
                     </div>
@@ -372,7 +372,7 @@ export function Configuracoes() {
                     <Label className="font-bold">Logo Oficial</Label>
                     <div className="w-full aspect-[4/3] max-w-[280px] border-2 border-dashed border-slate-200 rounded-2xl flex flex-col items-center justify-center bg-slate-50 hover:bg-slate-100 transition-colors group cursor-pointer">
                       <Camera className="h-8 w-8 text-slate-400 mb-2 group-hover:scale-110 transition-transform" />
-                      <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Fazer Upload</p>
+                      <p className="text-[10px] font-semibold text-slate-400 tracking-tight">Fazer Upload</p>
                       <p className="text-[9px] text-slate-400 mt-1">PNG ou SVG (Fundo transparente)</p>
                     </div>
                     <Button variant="outline" size="sm" className="w-full max-w-[280px] font-bold text-xs h-9">Remover Atual</Button>
@@ -409,7 +409,7 @@ export function Configuracoes() {
                             className={`flex flex-col items-center gap-2 p-3 rounded-xl border-2 transition-all ${theme === t ? 'border-indigo-600 bg-indigo-50/50' : 'border-slate-100 bg-white hover:border-slate-200'}`}
                           >
                             <div className={`h-8 w-full rounded-md ${t === 'dark' ? 'bg-slate-900' : t === 'light' ? 'bg-slate-100' : 'bg-gradient-to-r from-slate-100 to-slate-900'}`} />
-                            <span className="text-[10px] font-black uppercase text-slate-600">{t === 'light' ? 'Claro' : t === 'dark' ? 'Escuro' : 'Auto'}</span>
+                            <span className="text-[10px] font-semibold text-slate-600">{t === 'light' ? 'Claro' : t === 'dark' ? 'Escuro' : 'Auto'}</span>
                           </button>
                         ))}
                       </div>
@@ -431,7 +431,7 @@ export function Configuracoes() {
                             <div className="h-8 w-full rounded-md bg-slate-100 flex items-center justify-center text-slate-400">
                               {l.icon}
                             </div>
-                            <span className="text-[10px] font-black uppercase text-slate-600">{l.label}</span>
+                            <span className="text-[10px] font-semibold text-slate-600">{l.label}</span>
                           </button>
                         ))}
                       </div>
@@ -443,7 +443,7 @@ export function Configuracoes() {
 
             <Card className="border-none shadow-sm bg-slate-900 text-white overflow-hidden relative">
               <div className="p-6">
-                <Badge className="bg-emerald-500/20 text-emerald-400 border-none mb-4 font-black text-[10px]">PREVIEW EM TEMPO REAL</Badge>
+                <Badge className="bg-emerald-500/20 text-emerald-400 border-none mb-4 font-semibold text-[10px]">PREVIEW EM TEMPO REAL</Badge>
                 <div className="flex items-center gap-3 mb-6">
                   <div className="h-4 w-4 rounded-full bg-indigo-500" />
                   <div className="h-1.5 w-32 bg-slate-800 rounded" />
@@ -487,7 +487,7 @@ export function Configuracoes() {
                     <div className="flex-1 min-w-0">
                       <div className="flex justify-between items-start">
                         <h4 className="font-bold text-slate-800 text-sm truncate">{item.nome}</h4>
-                        <Badge variant="outline" className={item.status === 'Ativo' ? 'bg-emerald-50 text-emerald-700 border-none font-black text-[9px] uppercase' : item.status === 'Inativo' ? 'bg-slate-100 text-slate-400 border-none font-black text-[9px] uppercase' : 'bg-amber-50 text-amber-700 border-none font-black text-[9px] uppercase'}>
+                        <Badge variant="outline" className={item.status === 'Ativo' ? 'bg-emerald-50 text-emerald-700 border-none font-semibold text-[9px]' : item.status === 'Inativo' ? 'bg-slate-100 text-slate-400 border-none font-semibold text-[9px]' : 'bg-amber-50 text-amber-700 border-none font-semibold text-[9px]'}>
                           {item.status}
                         </Badge>
                       </div>
@@ -700,8 +700,8 @@ export function Configuracoes() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <Card className="border-none shadow-sm bg-indigo-600 text-white overflow-hidden relative">
                 <CardHeader>
-                  <CardTitle className="text-indigo-100 uppercase tracking-widest text-[10px] font-black">Plano Atual</CardTitle>
-                  <h3 className="text-3xl font-black mt-2">Plano Pro Agency</h3>
+                  <CardTitle className="text-indigo-100 tracking-tight text-[10px] font-semibold">Plano Atual</CardTitle>
+                  <h3 className="text-3xl font-semibold mt-2">Plano Pro Agency</h3>
                   <CardDescription className="text-indigo-100 font-medium">Renova em 22 de Junho, 2024</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
@@ -725,10 +725,10 @@ export function Configuracoes() {
                 <CardContent className="space-y-4">
                   <div className="p-4 rounded-2xl border border-slate-100 flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                      <div className="h-10 w-16 bg-slate-900 rounded-lg flex items-center justify-center text-[8px] font-black text-white italic">VISA</div>
+                      <div className="h-10 w-16 bg-slate-900 rounded-lg flex items-center justify-center text-[8px] font-semibold text-white italic">VISA</div>
                       <div>
                         <p className="font-bold text-slate-800 text-sm">•••• 8502</p>
-                        <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Exp: 08/27</p>
+                        <p className="text-[10px] text-slate-500 font-bold tracking-tight">Exp: 08/27</p>
                       </div>
                     </div>
                     <Button variant="ghost" size="icon" className="text-slate-400"><Edit className="h-4 w-4" /></Button>
@@ -765,8 +765,8 @@ export function Configuracoes() {
                       <TableRow key={i}>
                         <TableCell className="text-xs font-bold text-slate-800">{fat.data}</TableCell>
                         <TableCell className="text-xs text-slate-600 font-medium">{fat.desc}</TableCell>
-                        <TableCell className="text-xs font-black text-slate-800">{fat.valor}</TableCell>
-                        <TableCell><Badge className="bg-emerald-50 text-emerald-600 border-none font-black text-[9px] uppercase">PAGO</Badge></TableCell>
+                        <TableCell className="text-xs font-semibold text-slate-800">{fat.valor}</TableCell>
+                        <TableCell><Badge className="bg-emerald-50 text-emerald-600 border-none font-semibold text-[9px]">PAGO</Badge></TableCell>
                         <TableCell className="text-right">
                           <Button variant="ghost" size="icon" className="h-8 w-8 text-slate-400"><Download className="h-4 w-4" /></Button>
                         </TableCell>
@@ -805,7 +805,7 @@ export function Configuracoes() {
             </Button>
             <Button
               onClick={handleSave}
-              className="bg-indigo-600 hover:bg-indigo-700 text-white font-black px-8 shadow-lg shadow-indigo-100 h-12 rounded-2xl"
+              className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-8 shadow-lg shadow-indigo-100 h-9 rounded-xl"
             >
               {saved ? <CheckCircle2 className="h-5 w-5 mr-2" /> : <Save className="h-5 w-5 mr-2" />}
               {saved ? 'Salvo com sucesso' : 'Salvar Alterações'}

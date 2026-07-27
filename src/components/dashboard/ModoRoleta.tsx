@@ -1,4 +1,3 @@
-'use client'
 
 // Atualizado
 import { useState, useEffect, useRef } from 'react'
@@ -302,7 +301,7 @@ export function ScreenHoje({
         >
           <span className="text-2xl">{tenantAtivo.logo}</span>
           <div>
-            <span className="text-[9px] font-bold text-primary uppercase tracking-wider block">Conectado a</span>
+            <span className="text-[9px] font-bold text-primary tracking-tight block">Conectado a</span>
             <h1 className="text-xs font-bold text-foreground flex items-center gap-1">
               {tenantAtivo.nome}
               <ChevronDown className="size-3.5 text-primary shrink-0" />
@@ -313,7 +312,7 @@ export function ScreenHoje({
           <button
             type="button"
             onClick={() => setMostrarTenantSelector(true)}
-            className="text-[10px] font-black text-primary bg-primary/10 px-3 py-1.5 rounded-xl hover:bg-primary/20 transition-all"
+            className="text-[10px] font-semibold text-primary bg-primary/10 px-3 py-1.5 rounded-xl hover:bg-primary/20 transition-all"
           >
             Alterar
           </button>
@@ -322,7 +321,7 @@ export function ScreenHoje({
             habilitadoRodizio ? (
               <button
                 onClick={() => setMostrarCheckoutModal(true)}
-                className="flex items-center gap-1.5 text-[10px] font-black text-white bg-green-500 px-3 py-1.5 rounded-xl hover:bg-red-500 transition-colors shadow-sm group"
+                className="flex items-center gap-1.5 text-[10px] font-semibold text-white bg-green-500 px-3 py-1.5 rounded-xl hover:bg-red-500 transition-colors shadow-sm group"
               >
                 <Target className="size-3 group-hover:hidden" strokeWidth={3} />
                 <X className="size-3 hidden group-hover:block" strokeWidth={3} />
@@ -332,7 +331,7 @@ export function ScreenHoje({
             ) : (
               <button
                 onClick={() => setMostrarCheckinModal(true)}
-                className="text-[10px] font-black text-white bg-primary px-3 py-1.5 rounded-xl hover:bg-primary/90 transition-all shadow-sm"
+                className="text-[10px] font-semibold text-white bg-primary px-3 py-1.5 rounded-xl hover:bg-primary/90 transition-all shadow-sm"
               >
                 Check-in
               </button>
@@ -342,24 +341,24 @@ export function ScreenHoje({
       </div>
 
       <header className="flex flex-col gap-1">
-        <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
+        <p className="font-mono text-[11px] tracking-[0.18em] text-muted-foreground">
           Terça · 07 Jul
         </p>
-        <h1 className="text-3xl font-semibold text-foreground tracking-tight truncate">
+        <h1 className="text-title-1 text-foreground tracking-tight truncate">
           {saudacao}, Jefferson.
         </h1>
       </header>
 
       {/* Gamification: Modo Roleta Activation trigger banner */}
       {pendentes.length > 3 && (
-        <div className="rounded-3xl border-2 border-primary/25 bg-[#2B5250]/5 p-5 shadow-soft relative overflow-hidden animate-in zoom-in-95 duration-300">
+        <div className="rounded-2xl border-2 border-primary/25 bg-[#2B5250]/5 p-5 shadow-soft relative overflow-hidden animate-in zoom-in-95 duration-300">
           <div className="flex items-start justify-between relative z-10">
             <div className="flex flex-col gap-1.5 max-w-[80%]">
               <div className="inline-flex items-center gap-1.5 self-start px-2.5 py-1 rounded-full bg-primary/10 text-primary border border-primary/20">
                 <Zap className="size-3.5 fill-primary animate-pulse" />
-                <span className="text-[9px] font-black uppercase tracking-wider">Modo Hércules Ativo</span>
+                <span className="text-[9px] font-semibold tracking-tight">Modo Hércules Ativo</span>
               </div>
-              <h3 className="text-lg font-black text-foreground leading-snug mt-1">
+              <h3 className="text-lg font-semibold text-foreground leading-snug mt-1">
                 Você tem {pendentes.length} pendências acumuladas!
               </h3>
               <p className="text-xs text-muted-foreground leading-relaxed font-light mt-0.5">
@@ -377,7 +376,7 @@ export function ScreenHoje({
           <button
             type="button"
             onClick={iniciarModoRoleta}
-            className="w-full flex items-center justify-center gap-2 h-12 rounded-2xl bg-primary text-primary-foreground text-xs font-black shadow-md hover:bg-primary/95 transition-all active:scale-[0.98] mt-4 relative z-10"
+            className="w-full flex items-center justify-center gap-2 h-9 rounded-xl bg-primary text-primary-foreground text-xs font-semibold shadow-md hover:bg-primary/95 transition-all active:scale-[0.98] mt-4 relative z-10"
           >
             <Flame className="size-4 animate-pulse fill-primary-foreground" />
             Entrar no Modo Roleta
@@ -390,7 +389,7 @@ export function ScreenHoje({
         {/* Leads Quentes */}
         <button
           onClick={() => document.getElementById('secao-leads')?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
-          className="flex flex-col text-left rounded-3xl border border-border/60 bg-card p-5 shadow-soft transition-transform active:scale-95 hover:border-primary/30"
+          className="flex flex-col text-left rounded-2xl border border-border/60 bg-card p-5 shadow-soft transition-transform active:scale-95 hover:border-primary/30"
         >
           <div className="flex items-center justify-between mb-2 w-full">
             <span className="text-[13px] font-medium text-muted-foreground">Leads quentes</span>
@@ -405,7 +404,7 @@ export function ScreenHoje({
         {/* Meu desempenho */}
         <button
           onClick={onVerDesempenho}
-          className="flex flex-col text-left rounded-3xl border border-border/60 bg-card p-5 shadow-soft transition-transform active:scale-95 hover:border-primary/30"
+          className="flex flex-col text-left rounded-2xl border border-border/60 bg-card p-5 shadow-soft transition-transform active:scale-95 hover:border-primary/30"
         >
           <div className="flex items-center justify-between mb-2 w-full">
             <span className="text-[13px] font-medium text-muted-foreground">Meu desempenho</span>
@@ -418,7 +417,7 @@ export function ScreenHoje({
         </button>
 
         {/* Propostas */}
-        <div className="col-span-2 flex flex-col rounded-3xl border border-border/60 bg-card p-5 shadow-soft transition-brand">
+        <div className="col-span-2 flex flex-col rounded-2xl border border-border/60 bg-card p-5 shadow-soft transition-brand">
           <span className="mb-2 block text-[13px] font-medium text-muted-foreground">Propostas</span>
           <p className="font-sans text-[2.5rem] leading-none font-bold tracking-tight text-foreground mb-1.5">R$ 4,2M</p>
           <p className="font-mono text-[11px] font-medium tracking-wide text-[#2B5250]">
@@ -435,7 +434,7 @@ export function ScreenHoje({
             Sua agenda
           </h2>
           <div className="flex items-center gap-3">
-            <span className="font-mono text-[11px] font-medium uppercase tracking-widest text-muted-foreground">
+            <span className="font-mono text-[11px] font-medium tracking-tight text-muted-foreground">
               {pendentes.length} Pendentes
             </span>
             <button
@@ -548,7 +547,7 @@ export function ScreenHoje({
                       {lead.interesse}
                     </span>
                     <div className="mt-2 flex items-center gap-2">
-                      <span className={`rounded-full px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider ${tempConfig[lead.temperatura].chip}`}>
+                      <span className={`rounded-full px-2 py-0.5 text-[9px] font-bold tracking-tight ${tempConfig[lead.temperatura].chip}`}>
                         {tempConfig[lead.temperatura].label}
                       </span>
                       <span className="text-[10px] text-muted-foreground">
@@ -641,7 +640,7 @@ export function ScreenHoje({
       {mostrarCheckoutModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-background/80 backdrop-blur-sm" onClick={() => setMostrarCheckoutModal(false)} />
-          <div className="relative w-full max-w-sm rounded-3xl bg-card p-6 shadow-2xl border border-border animate-in fade-in zoom-in-95 text-center">
+          <div className="relative w-full max-w-sm rounded-2xl bg-card p-6 shadow-2xl border border-border animate-in fade-in zoom-in-95 text-center">
             
             <div className="mx-auto mb-4 flex size-14 items-center justify-center rounded-full bg-amber/10 text-amber">
               <MapPinOff className="size-6" strokeWidth={2} />
@@ -746,7 +745,7 @@ export function ScreenHoje({
       {/* Check-in Rodízio Modal */}
       {mostrarCheckinModal && (
         <div className="fixed inset-0 z-[80] flex items-center justify-center bg-background/80 backdrop-blur-sm p-4 animate-in fade-in duration-200">
-          <div className="w-full max-w-sm rounded-3xl bg-card border border-border shadow-2xl p-6 text-center">
+          <div className="w-full max-w-sm rounded-2xl bg-card border border-border shadow-2xl p-6 text-center">
             {checkinStatus === 'pendente' && (
               <>
                 <div className="mx-auto mb-4 flex size-14 items-center justify-center rounded-full bg-primary/10 text-primary">
@@ -857,7 +856,7 @@ export function ScreenHoje({
                     <Trophy className="size-12 animate-bounce" />
                   </div>
                 </div>
-                <h3 className="text-2xl font-black text-foreground mb-3">Mesa Limpa, Guerreiro!</h3>
+                <h3 className="text-title-2 text-foreground mb-3">Mesa Limpa, Guerreiro!</h3>
                 <p className="text-sm text-muted-foreground leading-relaxed mb-6">
                   Você passou por todas as tarefas da pilha. Veja o seu resumo:
                 </p>
@@ -882,7 +881,7 @@ export function ScreenHoje({
             ) : (
               remarcarAtividade ? (
                 <div className="relative w-full max-w-md flex justify-center">
-                  <div className={`w-full max-w-md bg-card border-2 border-primary/50 rounded-3xl shadow-2xl p-6 flex flex-col gap-5 transition-all duration-300 ${roletaEfeitoFrup ? 'opacity-0 -translate-y-[150%] pointer-events-none' : 'animate-in zoom-in-95 duration-300'}`}>
+                  <div className={`w-full max-w-md bg-card border-2 border-primary/50 rounded-2xl shadow-2xl p-6 flex flex-col gap-5 transition-all duration-300 ${roletaEfeitoFrup ? 'opacity-0 -translate-y-[150%] pointer-events-none' : 'animate-in zoom-in-95 duration-300'}`}>
                     <div className="flex items-center gap-3 text-primary mb-2">
                     <Calendar className="size-6" />
                     <h3 className="text-xl font-bold">Remarcar Tarefa</h3>
@@ -907,7 +906,7 @@ export function ScreenHoje({
                   </div>
 
                   <div>
-                    <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">Data Exata</label>
+                    <label className="mb-1.5 block text-xs font-semibold  text-muted-foreground">Data Exata</label>
                     <input
                       type="date"
                       value={novaDataRemarcar}
@@ -916,7 +915,7 @@ export function ScreenHoje({
                     />
                   </div>
                   <div>
-                    <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">Nova Hora</label>
+                    <label className="mb-1.5 block text-xs font-semibold  text-muted-foreground">Nova Hora</label>
                     <input
                       type="time"
                       value={novaHoraRemarcar}
@@ -933,7 +932,7 @@ export function ScreenHoje({
                         setNovaDataRemarcar('')
                         setNovaHoraRemarcar('')
                       }}
-                      className="flex-1 h-12 rounded-2xl border border-border bg-card text-muted-foreground text-xs font-bold transition-all active:scale-95"
+                      className="flex-1 h-9 rounded-xl border border-border bg-card text-muted-foreground text-xs font-bold transition-all active:scale-95"
                     >
                       Cancelar
                     </button>
@@ -941,7 +940,7 @@ export function ScreenHoje({
                       type="button"
                       onClick={confirmarRemarcar}
                       disabled={!novaDataRemarcar || !novaHoraRemarcar}
-                      className="flex-[2] h-12 rounded-2xl bg-primary text-primary-foreground text-xs font-bold transition-all active:scale-95 disabled:opacity-50"
+                      className="flex-[2] h-9 rounded-xl bg-primary text-primary-foreground text-xs font-bold transition-all active:scale-95 disabled:opacity-50"
                     >
                       Confirmar
                     </button>
@@ -961,7 +960,7 @@ export function ScreenHoje({
                     
                     <div>
                       <div className="flex items-center justify-between mb-1.5">
-                        <label className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">O que o Albert deve fazer?</label>
+                        <label className="text-xs font-semibold  text-muted-foreground">O que o Albert deve fazer?</label>
                         <button
                           type="button"
                           disabled={albertVozRoleta !== 'idle'}
@@ -1036,7 +1035,7 @@ export function ScreenHoje({
                           setAlbertVozRoleta('idle')
                           clearInterval(albertVozIntervalRef.current)
                         }}
-                        className="flex-1 h-12 rounded-2xl border border-border bg-card text-muted-foreground text-xs font-bold transition-all active:scale-95"
+                        className="flex-1 h-9 rounded-xl border border-border bg-card text-muted-foreground text-xs font-bold transition-all active:scale-95"
                       >
                         Cancelar
                       </button>
@@ -1048,7 +1047,7 @@ export function ScreenHoje({
                           concluirTarefaRoleta()
                         }}
                         disabled={!textoAlbertRoleta.trim()}
-                        className="flex-[2] h-12 rounded-2xl bg-primary text-primary-foreground text-xs font-bold transition-all active:scale-95 disabled:opacity-50"
+                        className="flex-[2] h-9 rounded-xl bg-primary text-primary-foreground text-xs font-bold transition-all active:scale-95 disabled:opacity-50"
                       >
                         Enviar
                       </button>
@@ -1086,7 +1085,7 @@ export function ScreenHoje({
                             <div className="h-12 w-full bg-muted/40 rounded-2xl" />
                           </div>
                           <div className="flex gap-2">
-                            <div className="flex-1 h-12 rounded-2xl bg-muted" />
+                            <div className="flex-1 h-9 rounded-xl bg-muted" />
                             <div className="size-12 rounded-2xl bg-muted" />
                           </div>
                         </div>
@@ -1095,7 +1094,7 @@ export function ScreenHoje({
                   }
 
                   {/* Visual Background Indicators for Swipe Actions */}
-                  <div className="absolute inset-0 rounded-3xl overflow-hidden shadow-2xl transition-opacity duration-200">
+                  <div className="absolute inset-0 rounded-2xl overflow-hidden shadow-2xl transition-opacity duration-200">
                     {(() => {
                       if (!startX || !currentX || !startY || !currentY) return null;
                       const diffX = currentX - startX;
@@ -1105,13 +1104,13 @@ export function ScreenHoje({
                         return (
                           <div className="w-full h-full bg-blue-500/20 border-2 border-blue-500/50 flex flex-col items-center justify-end pb-8 text-blue-600">
                             <Calendar className="size-12 mb-2" />
-                            <span className="font-bold text-sm uppercase tracking-wider">Remarcar</span>
+                            <span className="font-bold text-sm tracking-tight">Remarcar</span>
                           </div>
                         )
                       } else if (diffX > 30) {
                         return (
                           <div className="w-full h-full bg-green-500/20 border-2 border-green-500/50 flex items-center justify-start pl-8 text-green-600">
-                            <span className="font-bold text-sm uppercase tracking-wider mr-2">Concluir</span>
+                            <span className="font-bold text-sm tracking-tight mr-2">Concluir</span>
                             <ChevronRight className="size-12" />
                           </div>
                         )
@@ -1119,7 +1118,7 @@ export function ScreenHoje({
                         return (
                           <div className="w-full h-full bg-amber-500/20 border-2 border-amber-500/50 flex items-center justify-end pr-8 text-amber-600">
                             <ChevronLeft className="size-12 mr-2" />
-                            <span className="font-bold text-sm uppercase tracking-wider">Pular</span>
+                            <span className="font-bold text-sm tracking-tight">Pular</span>
                           </div>
                         )
                       }
@@ -1170,19 +1169,19 @@ export function ScreenHoje({
                   >
                   {/* Swipe Stamps */}
                   <div 
-                    className="absolute top-10 right-8 border-[4px] border-green-500 text-green-500 font-black text-3xl uppercase tracking-widest rounded-lg px-4 py-2 rotate-12 pointer-events-none transition-opacity z-50 bg-background/50 backdrop-blur-sm"
+                    className="absolute top-10 right-8 border-[4px] border-green-500 text-green-500 font-semibold text-3xl tracking-tight rounded-lg px-4 py-2 rotate-12 pointer-events-none transition-opacity z-50 bg-background/50 backdrop-blur-sm"
                     style={{ opacity: (startX && currentX && (currentX - startX) > 40) ? Math.min(((currentX - startX) - 40) / 100, 1) : 0 }}
                   >
                     Concluir
                   </div>
                   <div 
-                    className="absolute top-10 left-8 border-[4px] border-red-500 text-red-500 font-black text-3xl uppercase tracking-widest rounded-lg px-4 py-2 -rotate-12 pointer-events-none transition-opacity z-50 bg-background/50 backdrop-blur-sm"
+                    className="absolute top-10 left-8 border-[4px] border-red-500 text-red-500 font-semibold text-3xl tracking-tight rounded-lg px-4 py-2 -rotate-12 pointer-events-none transition-opacity z-50 bg-background/50 backdrop-blur-sm"
                     style={{ opacity: (startX && currentX && (currentX - startX) < -40) ? Math.min(((-40 - (currentX - startX))) / 100, 1) : 0 }}
                   >
                     Pular
                   </div>
                   <div 
-                    className="absolute bottom-[20%] left-1/2 -translate-x-1/2 border-[4px] border-amber-500 text-amber-500 font-black text-2xl uppercase tracking-widest rounded-lg px-4 py-2 pointer-events-none transition-opacity z-50 bg-background/50 backdrop-blur-sm"
+                    className="absolute bottom-[20%] left-1/2 -translate-x-1/2 border-[4px] border-amber-500 text-amber-500 font-semibold text-2xl tracking-tight rounded-lg px-4 py-2 pointer-events-none transition-opacity z-50 bg-background/50 backdrop-blur-sm"
                     style={{ opacity: (startY && currentY && (currentY - startY) < -40 && Math.abs(currentY - startY) > Math.abs(currentX - startX)) ? Math.min(((-40 - (currentY - startY))) / 100, 1) : 0 }}
                   >
                     Remarcar
@@ -1190,7 +1189,7 @@ export function ScreenHoje({
 
                   {/* Visual card badge */}
                   <div className="flex items-center justify-between border-b border-border/40 pb-4">
-                    <span className="bg-[#EAEAEA] text-[#333333] px-3 py-1 rounded-full text-[10px] font-bold tracking-widest uppercase">
+                    <span className="bg-[#EAEAEA] text-[#333333] px-3 py-1 rounded-full text-[10px] font-bold tracking-tight">
                       {roletaAtividades[indiceRoleta].tipo}
                     </span>
                     <span className="text-[11px] font-semibold text-muted-foreground">
@@ -1203,12 +1202,12 @@ export function ScreenHoje({
                     <h4 className="font-sans text-[1.4rem] font-bold text-foreground">
                       {roletaAtividades[indiceRoleta].cliente}
                     </h4>
-                    <span className="text-4xl font-black text-foreground">
+                    <span className="text-title-1 text-foreground">
                       {roletaAtividades[indiceRoleta].hora}
                     </span>
                   </div>
                   
-                  <div className="bg-[#F5F5F5] p-4 rounded-3xl border border-transparent">
+                  <div className="bg-[#F5F5F5] p-4 rounded-2xl border border-transparent">
                     <p className="text-[13px] text-muted-foreground">
                       Você ficou de: <span className="font-bold text-foreground">{roletaAtividades[indiceRoleta].titulo}</span>
                     </p>
@@ -1224,7 +1223,7 @@ export function ScreenHoje({
                             window.dispatchEvent(new CustomEvent('open-simulated-screen', { detail: { tipo: 'ligacao', params: { nome: roletaAtividades[indiceRoleta]?.cliente, telefone: roletaAtividades[indiceRoleta]?.telefone } } }))
                           }
                         }}
-                        className="flex-1 flex items-center justify-center gap-2 h-14 rounded-full bg-[#3B8FC2] text-white text-[13px] font-bold transition-all active:scale-95"
+                        className="flex-1 flex items-center justify-center gap-2 h-10 rounded-full bg-[#3B8FC2] text-white text-[13px] font-bold transition-all active:scale-95"
                       >
                         <Phone className="size-4" /> Ligar agora
                       </button>
@@ -1235,7 +1234,7 @@ export function ScreenHoje({
                             window.dispatchEvent(new CustomEvent('open-simulated-screen', { detail: { tipo: 'whatsapp', params: { nome: roletaAtividades[indiceRoleta]?.cliente } } }))
                           }
                         }}
-                        className="flex-1 flex items-center justify-center gap-2 h-14 rounded-full bg-[#25D366] text-white text-[13px] font-bold transition-all active:scale-95"
+                        className="flex-1 flex items-center justify-center gap-2 h-10 rounded-full bg-[#25D366] text-white text-[13px] font-bold transition-all active:scale-95"
                       >
                         <MessageCircle className="size-4" /> WhatsApp
                       </button>
@@ -1243,7 +1242,7 @@ export function ScreenHoje({
                     <button
                       type="button"
                       onClick={() => setAcaoAlbertRoleta(roletaAtividades[indiceRoleta])}
-                      className="w-full flex items-center justify-center gap-2 h-14 rounded-full bg-[#FFF3E0] text-[#B96A12] font-bold text-[13px] transition-all active:scale-95"
+                      className="w-full flex items-center justify-center gap-2 h-10 rounded-full bg-[#FFF3E0] text-[#B96A12] font-bold text-[13px] transition-all active:scale-95"
                     >
                       <Bot className="size-4.5" strokeWidth={2} /> Ação com Albert
                     </button>
@@ -1254,12 +1253,12 @@ export function ScreenHoje({
 
                   {/* Voice Feedback Section */}
                   <div className="flex flex-col gap-3">
-                    <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
+                    <label className="text-[10px] font-bold text-muted-foreground tracking-tight">
                       Feedback por Voz da Visita/Atividade
                     </label>
 
                     {gravandoAudioRoleta ? (
-                      <div className="flex items-center justify-between p-3 h-14 rounded-full bg-[#F4F9FD] border border-[#3B8FC2] text-[#3B8FC2] animate-pulse">
+                      <div className="flex items-center justify-between p-3 h-10 rounded-full bg-[#F4F9FD] border border-[#3B8FC2] text-[#3B8FC2] animate-pulse">
                         <span className="flex items-center gap-2 text-[13px] font-bold pl-2">
                           <span className="size-2.5 rounded-full bg-red-500 animate-ping" />
                           Gravando... {timerAudioRoleta}s
@@ -1276,7 +1275,7 @@ export function ScreenHoje({
                       <button
                         type="button"
                         onClick={toggleAudioRoleta}
-                        className="flex h-14 items-center justify-center gap-2 rounded-full border border-dashed border-[#3B8FC2]/60 bg-[#F4F9FD] text-[#3B8FC2] text-[13px] font-bold hover:bg-[#F4F9FD]/80 transition-all active:scale-95"
+                        className="flex h-10 items-center justify-center gap-2 rounded-full border border-dashed border-[#3B8FC2]/60 bg-[#F4F9FD] text-[#3B8FC2] text-[13px] font-bold hover:bg-[#F4F9FD]/80 transition-all active:scale-95"
                       >
                         <Mic className="size-4.5 text-[#3B8FC2] animate-bounce" />
                         Gravar feedback por áudio
@@ -1303,14 +1302,14 @@ export function ScreenHoje({
                     <button
                       type="button"
                       onClick={pularTarefaRoleta}
-                      className="flex-[1.2] h-14 rounded-full border border-border bg-white text-muted-foreground text-[13px] font-bold transition-all active:scale-95 shadow-sm"
+                      className="flex-[1.2] h-10 rounded-full border border-border bg-white text-muted-foreground text-[13px] font-bold transition-all active:scale-95 shadow-sm"
                     >
                       Pular
                     </button>
                     <button
                       type="button"
                       onClick={concluirTarefaRoleta}
-                      className="flex-[2] h-14 rounded-full bg-[#2B5250] text-white text-[13px] font-bold transition-all active:scale-95 shadow-sm flex items-center justify-center gap-2"
+                      className="flex-[2] h-10 rounded-full bg-[#2B5250] text-white text-[13px] font-bold transition-all active:scale-95 shadow-sm flex items-center justify-center gap-2"
                     >
                       Concluir
                       <ChevronRight className="size-4" />
@@ -1318,7 +1317,7 @@ export function ScreenHoje({
                   </div>
                   
                   {/* Gesture Hints */}
-                  <div className="flex justify-between items-center text-[9px] font-bold text-muted-foreground/60 uppercase tracking-widest px-2 select-none pointer-events-none mt-2">
+                  <div className="flex justify-between items-center text-[9px] font-bold text-muted-foreground/60 tracking-tight px-2 select-none pointer-events-none mt-2">
                     <span className="flex items-center gap-1"><ChevronLeft size={14} className="-ml-1" /> Pular</span>
                     <span className="flex items-center gap-1 flex-col justify-center translate-y-1"><ChevronUp size={14} className="-mb-1.5" /> Remarcar</span>
                     <span className="flex items-center gap-1 text-[#3B8FC2]">Concluir <ChevronRight size={14} className="-mr-1" /></span>

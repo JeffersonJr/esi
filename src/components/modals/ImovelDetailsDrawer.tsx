@@ -59,15 +59,15 @@ export function ImovelDetailsDrawer({ imovel, open, onClose, onEdit }: ImovelDet
                     <div className="flex items-center justify-between mt-2">
                         <div className="flex flex-col gap-1">
                             <div className="flex items-center gap-3">
-                                <SheetTitle className="text-xl font-black tracking-tight">{imovel.titulo}</SheetTitle>
-                                <Badge variant="outline" className={cn("font-bold text-[10px] uppercase border-none", getStatusColor(imovel.status))}>
+                                <SheetTitle className="text-xl font-semibold tracking-tight">{imovel.titulo}</SheetTitle>
+                                <Badge variant="outline" className={cn("font-bold text-[10px] border-none", getStatusColor(imovel.status))}>
                                     {imovel.status}
                                 </Badge>
                             </div>
                             <div className="flex items-center gap-2">
-                                <span className="text-[10px] font-black text-muted-foreground uppercase tracking-wider">REF: {imovel.id || '---'}</span>
+                                <span className="text-[10px] font-semibold text-muted-foreground tracking-tight">REF: {imovel.id || '---'}</span>
                                 <span className="text-[10px] text-muted-foreground/30">|</span>
-                                <span className="text-[10px] font-black text-muted-foreground uppercase tracking-wider">{imovel.tipo}</span>
+                                <span className="text-[10px] font-semibold text-muted-foreground tracking-tight">{imovel.tipo}</span>
                             </div>
                         </div>
                     </div>
@@ -114,7 +114,7 @@ export function ImovelDetailsDrawer({ imovel, open, onClose, onEdit }: ImovelDet
                                 )}
 
                                 <div className="absolute bottom-3 left-3">
-                                    <Badge className="bg-black/60 text-white border-none font-bold text-[9px] uppercase">
+                                    <Badge className="bg-black/60 text-white border-none font-bold text-[9px]">
                                         {currentImageIndex + 1} / {imovelImages.length} Fotos
                                     </Badge>
                                 </div>
@@ -141,8 +141,8 @@ export function ImovelDetailsDrawer({ imovel, open, onClose, onEdit }: ImovelDet
                         {/* Price & Stats */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div className="p-5 rounded-2xl bg-primary/5 border border-primary/10">
-                                <div className="text-[10px] font-black uppercase tracking-wider text-primary/60 mb-1">Valor Pedido</div>
-                                <div className="text-2xl font-black tracking-tight text-primary">{imovel.valor}</div>
+                                <div className="text-[10px] font-semibold tracking-tight text-primary/60 mb-1">Valor Pedido</div>
+                                <div className="text-2xl font-semibold tracking-tight text-primary">{imovel.valor}</div>
                                 {imovel.valorAluguel && (
                                     <div className="text-xs font-bold text-primary/70">{imovel.valorAluguel}/mês</div>
                                 )}
@@ -150,25 +150,25 @@ export function ImovelDetailsDrawer({ imovel, open, onClose, onEdit }: ImovelDet
                             <div className="grid grid-cols-3 gap-3">
                                 <div className="flex flex-col items-center justify-center p-3 rounded-2xl bg-muted/30 border border-border/40">
                                     <Bed className="h-4 w-4 text-muted-foreground mb-1" />
-                                    <span className="text-sm font-black">{imovel.quartos || '—'}</span>
-                                    <span className="text-[8px] font-bold text-muted-foreground uppercase">Quartos</span>
+                                    <span className="text-sm font-semibold">{imovel.quartos || '—'}</span>
+                                    <span className="text-[8px] font-bold text-muted-foreground">Quartos</span>
                                 </div>
                                 <div className="flex flex-col items-center justify-center p-3 rounded-2xl bg-muted/30 border border-border/40">
                                     <Bath className="h-4 w-4 text-muted-foreground mb-1" />
-                                    <span className="text-sm font-black">{imovel.banheiros || '—'}</span>
-                                    <span className="text-[8px] font-bold text-muted-foreground uppercase">Banh.</span>
+                                    <span className="text-sm font-semibold">{imovel.banheiros || '—'}</span>
+                                    <span className="text-[8px] font-bold text-muted-foreground">Banh.</span>
                                 </div>
                                 <div className="flex flex-col items-center justify-center p-3 rounded-2xl bg-muted/30 border border-border/40">
                                     <Maximize className="h-4 w-4 text-muted-foreground mb-1" />
-                                    <span className="text-sm font-black">{imovel.area || '—'}</span>
-                                    <span className="text-[8px] font-bold text-muted-foreground uppercase">Área</span>
+                                    <span className="text-sm font-semibold">{imovel.area || '—'}</span>
+                                    <span className="text-[8px] font-bold text-muted-foreground">Área</span>
                                 </div>
                             </div>
                         </div>
 
                         {/* Address */}
                         <div className="space-y-3">
-                            <h3 className="text-xs font-black uppercase tracking-wider flex items-center gap-2">
+                            <h3 className="text-xs font-semibold tracking-tight flex items-center gap-2">
                                 <MapPin className="h-3.5 w-3.5 text-primary" /> Endereço
                             </h3>
                             <p className="text-sm font-medium text-foreground bg-muted/30 p-4 rounded-xl border border-border/40">
@@ -178,7 +178,7 @@ export function ImovelDetailsDrawer({ imovel, open, onClose, onEdit }: ImovelDet
 
                         {/* Description */}
                         <div className="space-y-3">
-                            <h3 className="text-xs font-black uppercase tracking-wider flex items-center gap-2">
+                            <h3 className="text-xs font-semibold tracking-tight flex items-center gap-2">
                                 <FileText className="h-3.5 w-3.5 text-primary" /> Descrição
                             </h3>
                             <p className="text-sm leading-relaxed text-muted-foreground font-medium">
@@ -189,12 +189,12 @@ export function ImovelDetailsDrawer({ imovel, open, onClose, onEdit }: ImovelDet
                         {/* Features */}
                         {imovel.caracteristicas && imovel.caracteristicas.length > 0 && (
                             <div className="space-y-3">
-                                <h3 className="text-xs font-black uppercase tracking-wider flex items-center gap-2">
+                                <h3 className="text-xs font-semibold tracking-tight flex items-center gap-2">
                                     <Settings className="h-3.5 w-3.5 text-primary" /> Diferenciais
                                 </h3>
                                 <div className="flex flex-wrap gap-2">
                                     {imovel.caracteristicas.map((c: string) => (
-                                        <Badge key={c} variant="secondary" className="bg-primary/5 text-primary-700 dark:text-primary-300 font-bold text-[10px] uppercase border-none px-3 py-1.5">
+                                        <Badge key={c} variant="secondary" className="bg-primary/5 text-primary-700 dark:text-primary-300 font-bold text-[10px] border-none px-3 py-1.5">
                                             {c}
                                         </Badge>
                                     ))}
@@ -209,15 +209,15 @@ export function ImovelDetailsDrawer({ imovel, open, onClose, onEdit }: ImovelDet
                                     <User className="h-5 w-5 text-primary" />
                                 </div>
                                 <div>
-                                    <div className="text-[10px] font-black uppercase text-muted-foreground">Proprietário</div>
-                                    <div className="text-sm font-black">{imovel.proprietario || '—'}</div>
+                                    <div className="text-[10px] font-semibold text-muted-foreground">Proprietário</div>
+                                    <div className="text-sm font-semibold">{imovel.proprietario || '—'}</div>
                                 </div>
                             </div>
                             <div className="grid grid-cols-2 gap-4">
-                                <Button variant="outline" size="sm" className="h-10 gap-2 text-[10px] font-black uppercase">
+                                <Button variant="outline" size="sm" className="h-10 gap-2 text-[10px] font-semibold">
                                     <Phone className="h-3.5 w-3.5" /> Ligar
                                 </Button>
-                                <Button variant="outline" size="sm" className="h-10 gap-2 text-[10px] font-black uppercase">
+                                <Button variant="outline" size="sm" className="h-10 gap-2 text-[10px] font-semibold">
                                     <Mail className="h-3.5 w-3.5" /> E-mail
                                 </Button>
                             </div>
@@ -226,10 +226,10 @@ export function ImovelDetailsDrawer({ imovel, open, onClose, onEdit }: ImovelDet
                 </ScrollArea>
 
                 <SheetFooter className="p-6 border-t bg-muted/20 gap-3">
-                    <Button variant="outline" className="flex-1 h-12 uppercase font-black text-[10px] tracking-widest gap-2" onClick={onClose}>
+                    <Button variant="outline" className="flex-1 h-12 font-semibold text-[10px] tracking-tight gap-2" onClick={onClose}>
                         Fechar
                     </Button>
-                    <Button className="flex-1 h-12 uppercase font-black text-[10px] tracking-widest gap-2 shadow-lg" onClick={onEdit}>
+                    <Button className="flex-1 h-12 font-semibold text-[10px] tracking-tight gap-2 shadow-lg" onClick={onEdit}>
                         <Edit className="h-4 w-4" /> Editar Imóvel
                     </Button>
                 </SheetFooter>

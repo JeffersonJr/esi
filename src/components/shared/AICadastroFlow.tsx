@@ -64,9 +64,9 @@ export function AICadastroFlow({ contexto, onClose, onCompleteManual, onComplete
             Qual a finalidade e qual o tipo que você deseja cadastrar?
           </h3>
 
-          <div className="flex flex-col gap-5 bg-card border border-border p-5 rounded-3xl shadow-sm mb-6">
+          <div className="flex flex-col gap-5 bg-card border border-border p-5 rounded-2xl shadow-sm mb-6">
             <div className="flex flex-col gap-2">
-              <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Finalidade</label>
+              <label className="text-xs font-bold tracking-tight text-muted-foreground">Finalidade</label>
               <select
                 value={finalidade}
                 onChange={(e) => {
@@ -83,7 +83,7 @@ export function AICadastroFlow({ contexto, onClose, onCompleteManual, onComplete
             </div>
 
             <div className="flex flex-col gap-2">
-              <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Tipo</label>
+              <label className="text-xs font-bold tracking-tight text-muted-foreground">Tipo</label>
               <select
                 value={tipo}
                 onChange={(e) => setTipo(e.target.value)}
@@ -97,7 +97,7 @@ export function AICadastroFlow({ contexto, onClose, onCompleteManual, onComplete
           </div>
 
           <Button 
-            className="w-full h-12 rounded-2xl font-bold shadow-md"
+            className="w-full h-9 rounded-xl font-bold shadow-md"
             onClick={() => setFase('escolha_modo')}
           >
             Continuar
@@ -121,7 +121,7 @@ export function AICadastroFlow({ contexto, onClose, onCompleteManual, onComplete
 
         <div className="max-w-sm mx-auto w-full">
           <div className="bg-primary/5 p-3 rounded-2xl border border-primary/20 mb-5 flex flex-col gap-1">
-            <span className="text-[9px] font-bold text-primary uppercase tracking-wider">Estrutura Selecionada</span>
+            <span className="text-[9px] font-bold text-primary tracking-tight">Estrutura Selecionada</span>
             <span className="text-xs font-semibold text-primary">{finalidade} · {tipo}</span>
           </div>
 
@@ -132,7 +132,7 @@ export function AICadastroFlow({ contexto, onClose, onCompleteManual, onComplete
           <div className="flex flex-col gap-4">
             <button
               onClick={() => onCompleteManual({ finalidade, tipo })}
-              className="flex flex-col items-center gap-3 rounded-3xl border border-border bg-card p-6 text-center shadow-sm transition-all hover:border-primary/50"
+              className="flex flex-col items-center gap-3 rounded-2xl border border-border bg-card p-6 text-center shadow-sm transition-all hover:border-primary/50"
             >
               <div className="flex size-14 items-center justify-center rounded-2xl bg-muted">
                 <LayoutGrid className="size-7 text-muted-foreground" strokeWidth={1.5} />
@@ -145,7 +145,7 @@ export function AICadastroFlow({ contexto, onClose, onCompleteManual, onComplete
 
             <button
               onClick={() => setFase('upload')}
-              className="flex flex-col items-center gap-3 rounded-3xl border border-primary/30 bg-gradient-to-br from-primary/5 to-primary/10 p-6 text-center shadow-md transition-all hover:border-primary"
+              className="flex flex-col items-center gap-3 rounded-2xl border border-primary/30 bg-gradient-to-br from-primary/5 to-primary/10 p-6 text-center shadow-md transition-all hover:border-primary"
             >
               <div className="flex size-14 items-center justify-center rounded-2xl bg-primary/20">
                 <Sparkles className="size-7 text-primary" strokeWidth={1.5} />
@@ -209,7 +209,7 @@ export function AICadastroFlow({ contexto, onClose, onCompleteManual, onComplete
           {fotos.length === 0 ? (
             <button
               onClick={() => fileInputRef.current?.click()}
-              className="flex h-[320px] w-full flex-col items-center justify-center rounded-3xl border-2 border-dashed border-primary/30 bg-primary/5 hover:bg-primary/10 transition-colors"
+              className="flex h-[320px] w-full flex-col items-center justify-center rounded-2xl border-2 border-dashed border-primary/30 bg-primary/5 hover:bg-primary/10 transition-colors"
             >
               <div className="flex size-16 items-center justify-center rounded-full bg-primary/20 text-primary">
                 <Camera className="size-8" strokeWidth={1.5} />
@@ -222,7 +222,7 @@ export function AICadastroFlow({ contexto, onClose, onCompleteManual, onComplete
               </p>
             </button>
           ) : (
-            <div className="flex h-[320px] w-full flex-col rounded-3xl border border-border bg-card shadow-sm overflow-hidden">
+            <div className="flex h-[320px] w-full flex-col rounded-2xl border border-border bg-card shadow-sm overflow-hidden">
               <div className="grid grid-cols-2 gap-2 p-2 h-[calc(100%-64px)] overflow-y-auto">
                 {fotos.map((foto, i) => (
                   <div key={foto.id} className="relative h-32 w-full overflow-hidden rounded-2xl bg-muted">
@@ -282,7 +282,7 @@ export function AICadastroFlow({ contexto, onClose, onCompleteManual, onComplete
   if (fase === 'analisando') {
     return (
       <div className="flex flex-col h-full bg-background min-h-[400px] items-center justify-center py-8 text-center max-w-sm mx-auto">
-        <div className="relative flex size-24 items-center justify-center rounded-3xl bg-primary/10">
+        <div className="relative flex size-24 items-center justify-center rounded-2xl bg-primary/10">
           <svg className="absolute inset-0 size-24 -rotate-90" viewBox="0 0 96 96">
             <circle cx="48" cy="48" r="44" fill="none" stroke="hsl(var(--border))" strokeWidth="4" />
             <circle
@@ -363,12 +363,12 @@ export function AICadastroFlow({ contexto, onClose, onCompleteManual, onComplete
             </div>
             
             <div>
-              <p className="text-xs text-muted-foreground uppercase tracking-wider font-bold mb-1">Título Sugerido</p>
+              <p className="text-xs text-muted-foreground tracking-tight font-bold mb-1">Título Sugerido</p>
               <p className="text-sm font-medium">{resultadoIA.titulo}</p>
             </div>
             
             <div>
-              <p className="text-xs text-muted-foreground uppercase tracking-wider font-bold mb-1">Descritivo (Gerado)</p>
+              <p className="text-xs text-muted-foreground tracking-tight font-bold mb-1">Descritivo (Gerado)</p>
               <p className="text-sm text-foreground/80 line-clamp-3">{resultadoIA.descricao}</p>
             </div>
             
@@ -389,7 +389,7 @@ export function AICadastroFlow({ contexto, onClose, onCompleteManual, onComplete
           </p>
 
           <Button 
-            className="w-full h-12 rounded-2xl font-bold shadow-lg shadow-primary/20"
+            className="w-full h-9 rounded-xl font-bold shadow-lg shadow-primary/20"
             onClick={() => onCompleteIA(resultadoIA)}
           >
             Aplicar ao Formulário

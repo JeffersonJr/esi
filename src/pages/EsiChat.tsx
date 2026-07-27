@@ -171,28 +171,28 @@ export function EsiChat() {
             <div className="flex items-center gap-3">
               <Dialog>
                 <DialogTrigger asChild>
-                  <Button className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold h-12 rounded-2xl shadow-lg shadow-indigo-200 transition-all px-6">
+                  <Button className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold h-9 rounded-xl shadow-lg shadow-indigo-200 transition-all px-6">
                     <Plus className="h-4 w-4 mr-2" />
                     Nova Conversa
                   </Button>
                 </DialogTrigger>
-              <DialogContent className="sm:max-w-[425px] rounded-3xl p-8">
+              <DialogContent className="sm:max-w-[425px] rounded-2xl p-8">
                 <DialogHeader className="mb-6">
                   <div className="h-12 w-12 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center mb-4">
                     <Sparkles className="h-6 w-6" />
                   </div>
-                  <DialogTitle className="text-2xl font-black text-slate-800 tracking-tight">Iniciar Nova Conversa</DialogTitle>
+                  <DialogTitle className="text-2xl font-semibold text-slate-800 tracking-tight">Iniciar Nova Conversa</DialogTitle>
                   <DialogDescription className="text-slate-500 font-medium pt-2">
                     Digite o número de WhatsApp ou busque um lead existente para iniciar um atendimento manual.
                   </DialogDescription>
                 </DialogHeader>
                 <div className="space-y-5">
                   <div className="space-y-2">
-                    <label className="text-xs font-black uppercase tracking-widest text-slate-400 ml-1">Número ou Nome</label>
+                    <label className="text-xs font-semibold tracking-tight text-slate-400 ml-1">Número ou Nome</label>
                     <Input placeholder="Ex: (11) 99999-9999" className="h-12 border-slate-200 rounded-xl bg-slate-50 px-4 focus:ring-indigo-100" />
                   </div>
                   <div className="space-y-2">
-                    <label className="text-xs font-black uppercase tracking-widest text-slate-400 ml-1">Primeira Mensagem</label>
+                    <label className="text-xs font-semibold tracking-tight text-slate-400 ml-1">Primeira Mensagem</label>
                     <textarea
                       className="w-full h-32 p-4 border border-slate-200 rounded-2xl resize-none text-sm bg-slate-50 focus:ring-2 focus:ring-indigo-100 focus:outline-none font-medium"
                       placeholder="Olá! Tudo bem? Sou corretor(a) e..."
@@ -240,7 +240,7 @@ export function EsiChat() {
                   >
                     <div className="relative shrink-0">
                       <Avatar className="h-12 w-12 border-2 border-white shadow-sm">
-                        <AvatarFallback className={`${selectedChat.id === chat.id ? 'bg-indigo-600 text-white' : 'bg-slate-200 text-slate-600'} font-black text-xs`}>
+                        <AvatarFallback className={`${selectedChat.id === chat.id ? 'bg-indigo-600 text-white' : 'bg-slate-200 text-slate-600'} font-semibold text-xs`}>
                           {chat.name.split(' ').map(n => n[0]).join('').substring(0, 2)}
                         </AvatarFallback>
                       </Avatar>
@@ -249,14 +249,14 @@ export function EsiChat() {
                     <div className="flex-1 min-w-0 flex flex-col justify-center">
                       <div className="flex justify-between items-baseline mb-0.5">
                         <h4 className="font-bold text-sm text-slate-800 truncate pr-2 tracking-tight">{chat.name}</h4>
-                        <span className={`text-[10px] font-black uppercase tracking-wider shrink-0 ${chat.unread > 0 ? 'text-indigo-600' : 'text-slate-400'}`}>{chat.time}</span>
+                        <span className={`text-[10px] font-semibold tracking-tight shrink-0 ${chat.unread > 0 ? 'text-indigo-600' : 'text-slate-400'}`}>{chat.time}</span>
                       </div>
                       <div className="flex justify-between items-center gap-2">
                         <p className={`text-[13px] truncate font-medium ${chat.unread > 0 ? 'text-slate-900 font-bold' : 'text-slate-500'}`}>
                           {chat.lastMessage}
                         </p>
                         {chat.unread > 0 && (
-                          <Badge className="bg-indigo-600 text-white rounded-full px-1.5 min-w-[20px] h-5 flex items-center justify-center shrink-0 border-none font-black text-[10px]">
+                          <Badge className="bg-indigo-600 text-white rounded-full px-1.5 min-w-[20px] h-5 flex items-center justify-center shrink-0 border-none font-semibold text-[10px]">
                             {chat.unread}
                           </Badge>
                         )}
@@ -283,7 +283,7 @@ export function EsiChat() {
                 </Button>
                 <div className="relative">
                   <Avatar className="h-9 w-9 md:h-11 md:w-11 border border-slate-100 shadow-sm">
-                    <AvatarFallback className="bg-indigo-50 text-indigo-700 font-black text-xs md:text-sm">
+                    <AvatarFallback className="bg-indigo-50 text-indigo-700 font-semibold text-xs md:text-sm">
                       {selectedChat.name.substring(0, 2).toUpperCase()}
                     </AvatarFallback>
                   </Avatar>
@@ -291,8 +291,8 @@ export function EsiChat() {
                 </div>
                 <div className="flex flex-col">
                   <div className="flex items-center gap-2">
-                    <h2 className="font-black text-slate-800 tracking-tight text-sm md:text-lg truncate max-w-[120px] sm:max-w-none">{selectedChat.name}</h2>
-                    <Badge variant="outline" className="hidden sm:flex text-[9px] font-black uppercase tracking-widest bg-emerald-50 text-emerald-600 border-none px-2 py-0">Online</Badge>
+                    <h2 className="font-semibold text-slate-800 tracking-tight text-sm md:text-lg truncate max-w-[120px] sm:max-w-none">{selectedChat.name}</h2>
+                    <Badge variant="outline" className="hidden sm:flex text-[9px] font-semibold tracking-tight bg-emerald-50 text-emerald-600 border-none px-2 py-0">Online</Badge>
                   </div>
                   <div className="flex items-center gap-2 mt-0.5">
                     <AnimatePresence mode="wait">
@@ -304,7 +304,7 @@ export function EsiChat() {
                           exit={{ opacity: 0, scale: 0.9 }}
                         >
                           <Badge
-                            className="text-[9px] h-5 px-2 font-black bg-indigo-600 text-white border-none flex items-center gap-1.5 cursor-pointer hover:bg-indigo-700 transition-all shadow-md shadow-indigo-100 active:scale-95 group uppercase tracking-wider"
+                            className="text-[9px] h-5 px-2 font-semibold bg-indigo-600 text-white border-none flex items-center gap-1.5 cursor-pointer hover:bg-indigo-700 transition-all shadow-md shadow-indigo-100 active:scale-95 group tracking-tight"
                             onClick={(e) => toggleCommand(e)}
                           >
                             <Bot className="h-3 w-3 animate-pulse" />
@@ -319,7 +319,7 @@ export function EsiChat() {
                           exit={{ opacity: 0, scale: 0.9 }}
                         >
                           <Badge
-                            className="text-[9px] h-5 px-2 font-black bg-slate-800 text-white border-none flex items-center gap-1.5 cursor-pointer hover:bg-slate-900 transition-all active:scale-95 uppercase tracking-wider"
+                            className="text-[9px] h-5 px-2 font-semibold bg-slate-800 text-white border-none flex items-center gap-1.5 cursor-pointer hover:bg-slate-900 transition-all active:scale-95 tracking-tight"
                             onClick={(e) => toggleCommand(e)}
                           >
                             <User className="h-3 w-3" />
@@ -328,7 +328,7 @@ export function EsiChat() {
                         </motion.div>
                       )}
                     </AnimatePresence>
-                    <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider hidden sm:block">• Origem: WhatsApp</span>
+                    <span className="text-[10px] text-slate-400 font-bold tracking-tight hidden sm:block">• Origem: WhatsApp</span>
                   </div>
                 </div>
               </div>
@@ -347,7 +347,7 @@ export function EsiChat() {
             <ScrollArea className="flex-1 p-4 md:p-8 relative bg-slate-50/20" style={{ backgroundImage: 'radial-gradient(circle at center, #f1f5f9 1px, transparent 1px)', backgroundSize: '32px 32px' }}>
               <div className="max-w-3xl mx-auto space-y-8">
                 <div className="flex justify-center">
-                  <span className="bg-white border border-slate-100 text-slate-400 text-[10px] font-black uppercase tracking-[0.2em] px-4 py-1.5 rounded-full shadow-sm">Hoje</span>
+                  <span className="bg-white border border-slate-100 text-slate-400 text-[10px] font-semibold tracking-[0.2em] px-4 py-1.5 rounded-full shadow-sm">Hoje</span>
                 </div>
 
                 {/* Bot Msg */}
@@ -356,7 +356,7 @@ export function EsiChat() {
                     <AvatarFallback className="bg-indigo-600 text-white"><Bot className="h-5 w-5" /></AvatarFallback>
                   </Avatar>
                   <div className="flex flex-col gap-2 items-start">
-                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">esi.chat (Bot) • 10:25</span>
+                    <span className="text-[10px] font-semibold text-slate-400 tracking-tight ml-1">esi.chat (Bot) • 10:25</span>
                     <div className="bg-white border border-slate-100 text-slate-700 p-4 rounded-2xl rounded-tl-sm shadow-sm text-sm font-medium leading-relaxed">
                       Olá Maria! Bom dia. Meu nome é esi.chat, sou o assistente virtual da esi. Como posso ajudar você a encontrar o imóvel ideal hoje?
                     </div>
@@ -366,7 +366,7 @@ export function EsiChat() {
                 {/* User Msg */}
                 <div className="flex gap-4 max-w-[85%] ml-auto justify-end animate-in slide-in-from-right-4 duration-300">
                   <div className="flex flex-col gap-2 items-end text-right">
-                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest mr-1">Maria Santos • 10:28</span>
+                    <span className="text-[10px] font-semibold text-slate-400 tracking-tight mr-1">Maria Santos • 10:28</span>
                     <div className="bg-indigo-600 text-white p-4 rounded-2xl rounded-tr-sm shadow-xl shadow-indigo-100/50 text-sm font-medium leading-relaxed">
                       Bom dia. Eu vi um anúncio de vocês no Instagram sobre apartamentos no bairro Pinheiros.
                     </div>
@@ -385,7 +385,7 @@ export function EsiChat() {
                 </div>
 
                 <div className="flex justify-center my-8">
-                  <span className="bg-indigo-50 border border-indigo-100 text-indigo-600 text-[10px] font-black uppercase tracking-widest px-5 py-2 rounded-2xl flex items-center gap-2 shadow-sm">
+                  <span className="bg-indigo-50 border border-indigo-100 text-indigo-600 text-[10px] font-semibold tracking-tight px-5 py-2 rounded-2xl flex items-center gap-2 shadow-sm">
                     <ArrowRight className="h-3 w-3" />
                     esi.chat transferiu o atendimento para João Silva
                   </span>
@@ -465,11 +465,11 @@ export function EsiChat() {
                   <Button variant="ghost" size="icon" onClick={() => setMobileView('chat')} className="-ml-3 text-slate-500 hover:bg-slate-100 rounded-xl">
                     <ChevronLeft className="h-5 w-5" />
                   </Button>
-                  <span className="font-black text-xs uppercase tracking-widest text-slate-400 ml-2">Atendimento</span>
+                  <span className="font-semibold text-xs tracking-tight text-slate-400 ml-2">Atendimento</span>
                 </div>
                 <TabsList className="grid w-full grid-cols-2 bg-slate-50 border border-slate-200 p-1.5 rounded-2xl h-12">
-                  <TabsTrigger value="copilot" className="rounded-xl text-[10px] font-black uppercase tracking-widest data-[state=active]:bg-white data-[state=active]:text-indigo-600 data-[state=active]:shadow-md">Copilot IA</TabsTrigger>
-                  <TabsTrigger value="lead" className="rounded-xl text-[10px] font-black uppercase tracking-widest data-[state=active]:bg-white data-[state=active]:text-slate-800 data-[state=active]:shadow-md">Ficha Lead</TabsTrigger>
+                  <TabsTrigger value="copilot" className="rounded-xl text-[10px] font-semibold tracking-tight data-[state=active]:bg-white data-[state=active]:text-indigo-600 data-[state=active]:shadow-md">Copilot IA</TabsTrigger>
+                  <TabsTrigger value="lead" className="rounded-xl text-[10px] font-semibold tracking-tight data-[state=active]:bg-white data-[state=active]:text-slate-800 data-[state=active]:shadow-md">Ficha Lead</TabsTrigger>
                 </TabsList>
               </div>
 
@@ -479,9 +479,9 @@ export function EsiChat() {
                     <div className="h-8 w-8 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center">
                       <Bot className="h-4 w-4" />
                     </div>
-                    <h3 className="font-black text-xs text-slate-800 uppercase tracking-widest">Resumo Inteligente</h3>
+                    <h3 className="font-semibold text-xs text-slate-800 tracking-tight">Resumo Inteligente</h3>
                   </div>
-                  <div className="bg-indigo-50/50 border border-indigo-100 p-5 rounded-3xl text-sm text-slate-700 leading-relaxed shadow-sm relative overflow-hidden group">
+                  <div className="bg-indigo-50/50 border border-indigo-100 p-5 rounded-2xl text-sm text-slate-700 leading-relaxed shadow-sm relative overflow-hidden group">
                     <div className="absolute top-0 right-0 p-2 opacity-10 group-hover:opacity-100 transition-opacity">
                       <Sparkles className="h-8 w-8 text-indigo-500" />
                     </div>
@@ -494,8 +494,8 @@ export function EsiChat() {
                 </div>
 
                 <div className="space-y-4 pt-4">
-                  <h3 className="font-black text-xs text-slate-800 uppercase tracking-widest px-1">Próximo Passo Recomendado</h3>
-                  <div className="p-5 bg-white border-2 border-dashed border-slate-200 rounded-3xl hover:border-indigo-300 transition-all cursor-pointer group">
+                  <h3 className="font-semibold text-xs text-slate-800 tracking-tight px-1">Próximo Passo Recomendado</h3>
+                  <div className="p-5 bg-white border-2 border-dashed border-slate-200 rounded-2xl hover:border-indigo-300 transition-all cursor-pointer group">
                     <p className="text-sm font-bold text-slate-700 mb-3 group-hover:text-indigo-600">Encaminhar Agenda de Sábado</p>
                     <div className="flex gap-2">
                       <Button size="sm" className="bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold h-9">Gerar Link</Button>
@@ -509,40 +509,40 @@ export function EsiChat() {
                 <div className="flex flex-col items-center py-4 text-center">
                   <div className="relative mb-4">
                     <Avatar className="h-24 w-24 border-4 border-white shadow-xl">
-                      <AvatarFallback className="bg-gradient-to-br from-indigo-500 to-purple-600 text-white text-2xl font-black">MS</AvatarFallback>
+                      <AvatarFallback className="bg-gradient-to-br from-indigo-500 to-purple-600 text-white text-2xl font-semibold">MS</AvatarFallback>
                     </Avatar>
                     <div className="absolute -bottom-1 -right-1 h-8 w-8 rounded-2xl bg-white shadow-lg flex items-center justify-center border border-slate-100">
                       <MessageSquare className="h-4 w-4 text-indigo-600" />
                     </div>
                   </div>
-                  <h2 className="text-2xl font-black text-slate-800 tracking-tight">{selectedChat.name}</h2>
-                  <Badge className="mt-2 bg-emerald-50 text-emerald-600 border-none font-black text-[10px] uppercase tracking-[0.2em] px-3 py-1">Hot Lead</Badge>
+                  <h2 className="text-2xl font-semibold text-slate-800 tracking-tight">{selectedChat.name}</h2>
+                  <Badge className="mt-2 bg-emerald-50 text-emerald-600 border-none font-semibold text-[10px] tracking-[0.2em] px-3 py-1">Hot Lead</Badge>
                 </div>
 
                 <div className="grid grid-cols-3 gap-3">
-                  <Button variant="outline" className="h-14 rounded-2xl flex flex-col gap-1 border-slate-100 hover:bg-slate-50 transition-all">
+                  <Button variant="outline" className="h-10 rounded-2xl flex flex-col gap-1 border-slate-100 hover:bg-slate-50 transition-all">
                     <Phone className="h-4 w-4 text-slate-400" />
-                    <span className="text-[9px] font-black uppercase tracking-widest">Ligar</span>
+                    <span className="text-[9px] font-semibold tracking-tight">Ligar</span>
                   </Button>
-                  <Button variant="outline" className="h-14 rounded-2xl flex flex-col gap-1 border-slate-100 hover:bg-slate-50 transition-all">
+                  <Button variant="outline" className="h-10 rounded-2xl flex flex-col gap-1 border-slate-100 hover:bg-slate-50 transition-all">
                     <Mail className="h-4 w-4 text-slate-400" />
-                    <span className="text-[9px] font-black uppercase tracking-widest">E-mail</span>
+                    <span className="text-[9px] font-semibold tracking-tight">E-mail</span>
                   </Button>
-                  <Button variant="outline" className="h-14 rounded-2xl flex flex-col gap-1 border-slate-100 hover:bg-slate-50 transition-all">
+                  <Button variant="outline" className="h-10 rounded-2xl flex flex-col gap-1 border-slate-100 hover:bg-slate-50 transition-all">
                     <Building className="h-4 w-4 text-slate-400" />
-                    <span className="text-[9px] font-black uppercase tracking-widest">Imóveis</span>
+                    <span className="text-[9px] font-semibold tracking-tight">Imóveis</span>
                   </Button>
                 </div>
 
                 <div className="space-y-4">
-                  <div className="bg-slate-50/50 border border-slate-200 p-5 rounded-3xl space-y-5 shadow-inner">
+                  <div className="bg-slate-50/50 border border-slate-200 p-5 rounded-2xl space-y-5 shadow-inner">
                     <div>
-                      <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2">WhatsApp</span>
+                      <span className="text-[10px] font-semibold text-slate-400 tracking-tight block mb-2">WhatsApp</span>
                       <p className="text-sm font-bold text-slate-800">{selectedChat.phone}</p>
                     </div>
                     <Separator className="bg-slate-200/50" />
                     <div>
-                      <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2">Previsão</span>
+                      <span className="text-[10px] font-semibold text-slate-400 tracking-tight block mb-2">Previsão</span>
                       <div className="flex items-center gap-2">
                         <Calendar className="h-4 w-4 text-indigo-500" />
                         <p className="text-sm font-bold text-slate-800">{selectedChat.timeline}</p>
@@ -550,9 +550,9 @@ export function EsiChat() {
                     </div>
                   </div>
 
-                  <div className="bg-slate-50/50 border border-slate-200 p-5 rounded-3xl space-y-4 shadow-inner">
+                  <div className="bg-slate-50/50 border border-slate-200 p-5 rounded-2xl space-y-4 shadow-inner">
                     <div className="flex items-center justify-between">
-                      <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Negócio Atrelado</span>
+                      <span className="text-[10px] font-semibold text-slate-400 tracking-tight">Negócio Atrelado</span>
                       <Badge className="bg-indigo-100 text-indigo-700 hover:bg-indigo-200 border-none">Fase: Negociação</Badge>
                     </div>
                     <div>

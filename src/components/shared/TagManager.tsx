@@ -177,7 +177,7 @@ export function TagManager({
 
       {/* Selected Tags */}
       <div className="space-y-2">
-        <Label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Selecionadas</Label>
+        <Label className="text-[10px] font-bold text-slate-400 tracking-tight">Selecionadas</Label>
         <div className="flex flex-wrap gap-2 min-h-[44px] p-2 bg-slate-50/50 rounded-xl border border-dashed border-slate-200">
           {selectedTags.length === 0 ? (
             <div className="flex items-center justify-center w-full py-2">
@@ -212,7 +212,7 @@ export function TagManager({
       {/* Available Tags Suggestion */}
       {!tagSearch && filteredTags.length > 0 && (
         <div className="space-y-2">
-          <Label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Sugestões</Label>
+          <Label className="text-[10px] font-bold text-slate-400 tracking-tight">Sugestões</Label>
           <div className="flex flex-wrap gap-2 max-h-32 overflow-y-auto p-1">
             {filteredTags.slice(0, 10).map((tag) => (
               <button
@@ -237,7 +237,7 @@ export function TagManager({
             <button
               type="button"
               onClick={() => setEditMode(!editMode)}
-              className="flex items-center gap-1.5 text-[10px] font-bold text-slate-400 hover:text-indigo-600 uppercase tracking-widest transition-colors"
+              className="flex items-center gap-1.5 text-[10px] font-bold text-slate-400 hover:text-indigo-600 tracking-tight transition-colors"
             >
               <Settings className="h-3 w-3" />
               {editMode ? 'FECHAR GERENCIAMENTO' : 'GERENCIAR TODAS AS TAGS'}

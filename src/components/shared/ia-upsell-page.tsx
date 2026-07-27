@@ -1,4 +1,3 @@
-'use client'
 
 import { useState, useEffect } from 'react'
 import { Bot, Brain, Camera, CheckCircle2, MessageCircle, Sparkles, Trophy, X, Zap, Loader2, Check, ArrowRight } from 'lucide-react'
@@ -95,14 +94,14 @@ export function IAUpsellPage({ onClose, onSuccess, origem }: { onClose: () => vo
 
         {/* Ícone animado */}
         <div className="relative mb-5">
-          <div className="flex size-20 items-center justify-center rounded-3xl bg-teal-shadow/50">
+          <div className="flex size-20 items-center justify-center rounded-2xl bg-teal-shadow/50">
             <Sparkles className="size-10 text-primary-foreground" strokeWidth={1.5} />
           </div>
           {/* Pulso */}
-          <span className="absolute inset-0 animate-ping rounded-3xl bg-teal-mid/30" />
+          <span className="absolute inset-0 animate-ping rounded-2xl bg-teal-mid/30" />
         </div>
 
-        <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-teal-light">evolves IA</p>
+        <p className="font-mono text-[11px] tracking-[0.2em] text-teal-light">evolves IA</p>
         <h1 className="mt-2 text-3xl font-semibold leading-tight text-primary-foreground text-balance">
           Venda mais com<br />Inteligência Artificial
         </h1>
@@ -116,7 +115,7 @@ export function IAUpsellPage({ onClose, onSuccess, origem }: { onClose: () => vo
         <div className="mt-6 grid grid-cols-4 gap-2 w-full">
           {ESTATISTICAS.map((s) => (
             <div key={s.label} className="flex flex-col items-center gap-0.5 rounded-2xl bg-teal-shadow/40 px-2 py-3">
-              <span className="text-lg font-black text-primary-foreground">{s.valor}</span>
+              <span className="text-lg font-semibold text-primary-foreground">{s.valor}</span>
               <span className="text-[9px] font-medium text-teal-light text-center leading-tight">{s.label}</span>
             </div>
           ))}
@@ -166,7 +165,7 @@ export function IAUpsellPage({ onClose, onSuccess, origem }: { onClose: () => vo
               {ESTATISTICAS.map((est) => (
                 <div key={est.label} className="flex flex-col items-center justify-center rounded-[1.25rem] bg-card p-4 shadow-[0_4px_20px_-10px_rgba(0,0,0,0.08)]">
                   <span className="text-2xl font-bold text-primary">{est.valor}</span>
-                  <span className="mt-1 text-center text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+                  <span className="mt-1 text-center text-[10px] font-semibold tracking-tight text-muted-foreground">
                     {est.label}
                   </span>
                 </div>
@@ -237,7 +236,7 @@ export function IAUpsellPage({ onClose, onSuccess, origem }: { onClose: () => vo
             <button
               type="button"
               onClick={onSuccess || onClose}
-              className="flex h-14 w-full items-center justify-center gap-2 rounded-2xl bg-teal-mid text-sm font-semibold text-white shadow-xl shadow-teal-mid/25 transition-brand active:scale-[0.98]"
+              className="flex h-10 w-full items-center justify-center gap-2 rounded-2xl bg-teal-mid text-sm font-semibold text-white shadow-xl shadow-teal-mid/25 transition-brand active:scale-[0.98]"
             >
               <CheckCircle2 className="size-4" />
               Entendi, voltar para o app
@@ -248,7 +247,7 @@ export function IAUpsellPage({ onClose, onSuccess, origem }: { onClose: () => vo
                 type="button"
                 onClick={handleContratar}
                 disabled={contratando}
-                className="flex h-14 w-full items-center justify-center gap-2 rounded-2xl bg-primary text-sm font-semibold text-primary-foreground shadow-xl shadow-primary/25 transition-brand active:scale-[0.98]"
+                className="flex h-10 w-full items-center justify-center gap-2 rounded-2xl bg-primary text-sm font-semibold text-primary-foreground shadow-xl shadow-primary/25 transition-brand active:scale-[0.98]"
               >
                 {contratando ? (
                   <>

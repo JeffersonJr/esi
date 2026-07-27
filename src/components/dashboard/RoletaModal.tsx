@@ -137,7 +137,7 @@ export function RoletaModal({
                 <Trophy className="size-12 animate-bounce" />
               </div>
             </div>
-            <h3 className="text-2xl font-black text-foreground mb-3">Mesa Limpa, Guerreiro!</h3>
+            <h3 className="text-title-2 text-foreground mb-3">Mesa Limpa, Guerreiro!</h3>
             <p className="text-sm text-muted-foreground leading-relaxed mb-6">
               Você passou por todas as tarefas da pilha. Veja o seu resumo:
             </p>
@@ -154,7 +154,7 @@ export function RoletaModal({
             <button
               type="button"
               onClick={onClose}
-              className="w-full h-12 rounded-2xl bg-primary text-primary-foreground text-sm font-bold shadow-xl transition-all active:scale-95 flex items-center justify-center gap-2"
+              className="w-full h-9 rounded-xl bg-primary text-primary-foreground text-sm font-bold shadow-xl transition-all active:scale-95 flex items-center justify-center gap-2"
             >
               Finalizar
             </button>
@@ -162,7 +162,7 @@ export function RoletaModal({
         ) : (
           remarcarAtividade ? (
             <div className="relative w-full max-w-md flex justify-center">
-              <div className={`w-full max-w-md bg-card border-2 border-primary/50 rounded-3xl shadow-2xl p-6 flex flex-col gap-5 transition-all duration-300 ${roletaEfeitoFrup ? 'opacity-0 -translate-y-[150%] pointer-events-none' : 'animate-in zoom-in-95 duration-300'}`}>
+              <div className={`w-full max-w-md bg-card border-2 border-primary/50 rounded-2xl shadow-2xl p-6 flex flex-col gap-5 transition-all duration-300 ${roletaEfeitoFrup ? 'opacity-0 -translate-y-[150%] pointer-events-none' : 'animate-in zoom-in-95 duration-300'}`}>
                 <div className="flex items-center gap-3 text-primary mb-2">
                   <Calendar className="size-6" />
                   <h3 className="text-xl font-bold">Remarcar Tarefa</h3>
@@ -187,7 +187,7 @@ export function RoletaModal({
                 </div>
 
                 <div>
-                  <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">Data Exata</label>
+                  <label className="mb-1.5 block text-xs font-semibold  text-muted-foreground">Data Exata</label>
                   <input
                     type="date"
                     value={novaDataRemarcar}
@@ -196,7 +196,7 @@ export function RoletaModal({
                   />
                 </div>
                 <div>
-                  <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">Nova Hora</label>
+                  <label className="mb-1.5 block text-xs font-semibold  text-muted-foreground">Nova Hora</label>
                   <input
                     type="time"
                     value={novaHoraRemarcar}
@@ -213,7 +213,7 @@ export function RoletaModal({
                       setNovaDataRemarcar('')
                       setNovaHoraRemarcar('')
                     }}
-                    className="flex-1 h-12 rounded-2xl border border-border bg-card text-muted-foreground text-xs font-bold transition-all active:scale-95"
+                    className="flex-1 h-9 rounded-xl border border-border bg-card text-muted-foreground text-xs font-bold transition-all active:scale-95"
                   >
                     Cancelar
                   </button>
@@ -221,7 +221,7 @@ export function RoletaModal({
                     type="button"
                     onClick={confirmarRemarcar}
                     disabled={!novaDataRemarcar || !novaHoraRemarcar}
-                    className="flex-[2] h-12 rounded-2xl bg-primary text-primary-foreground text-xs font-bold transition-all active:scale-95 disabled:opacity-50"
+                    className="flex-[2] h-9 rounded-xl bg-primary text-primary-foreground text-xs font-bold transition-all active:scale-95 disabled:opacity-50"
                   >
                     Confirmar
                   </button>
@@ -230,7 +230,7 @@ export function RoletaModal({
             </div>
           ) : acaoAlbertRoleta ? (
             <div className="relative w-full max-w-md flex justify-center">
-              <div className={`w-full max-w-md bg-card border-2 border-primary/50 rounded-3xl shadow-2xl p-6 flex flex-col gap-5 transition-all duration-300 ${roletaEfeitoFrup ? 'opacity-0 -translate-y-[150%] pointer-events-none' : 'animate-in zoom-in-95 duration-300'}`}>
+              <div className={`w-full max-w-md bg-card border-2 border-primary/50 rounded-2xl shadow-2xl p-6 flex flex-col gap-5 transition-all duration-300 ${roletaEfeitoFrup ? 'opacity-0 -translate-y-[150%] pointer-events-none' : 'animate-in zoom-in-95 duration-300'}`}>
                 <div className="flex items-center gap-3 text-primary mb-2">
                   <Bot className="size-6" />
                   <h3 className="text-xl font-bold">Ação com Albert</h3>
@@ -241,7 +241,7 @@ export function RoletaModal({
                 
                 <div>
                   <div className="flex items-center justify-between mb-1.5">
-                    <label className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">O que o Albert deve fazer?</label>
+                    <label className="text-xs font-semibold  text-muted-foreground">O que o Albert deve fazer?</label>
                     <button
                       type="button"
                       disabled={albertVozRoleta !== 'idle'}
@@ -304,7 +304,7 @@ export function RoletaModal({
                       setAlbertVozRoleta('idle')
                       if (albertVozIntervalRef.current) clearInterval(albertVozIntervalRef.current)
                     }}
-                    className="flex-1 h-12 rounded-2xl border border-border bg-card text-muted-foreground text-xs font-bold transition-all active:scale-95"
+                    className="flex-1 h-9 rounded-xl border border-border bg-card text-muted-foreground text-xs font-bold transition-all active:scale-95"
                   >
                     Voltar
                   </button>
@@ -314,7 +314,7 @@ export function RoletaModal({
                     onClick={() => {
                       concluirTarefaRoleta()
                     }}
-                    className="flex-[2] h-12 rounded-2xl bg-primary text-primary-foreground text-xs font-bold flex items-center justify-center gap-2 transition-all active:scale-95 disabled:opacity-50"
+                    className="flex-[2] h-9 rounded-xl bg-primary text-primary-foreground text-xs font-bold flex items-center justify-center gap-2 transition-all active:scale-95 disabled:opacity-50"
                   >
                     <Bot className="size-4" />
                     Enviar Ação
@@ -369,7 +369,7 @@ export function RoletaModal({
                     {/* Top Section */}
                     <div className="bg-primary/5 p-6 flex flex-col items-center border-b border-border/50">
                       <div className="flex w-full items-center justify-between mb-4">
-                        <span className="text-[10px] font-black uppercase tracking-widest text-primary bg-primary/10 px-3 py-1 rounded-full">
+                        <span className="text-[10px] font-semibold tracking-tight text-primary bg-primary/10 px-3 py-1 rounded-full">
                           {tarefa.tipo}
                         </span>
                         <span className="text-xs font-bold text-muted-foreground flex items-center gap-1">
@@ -381,7 +381,7 @@ export function RoletaModal({
                       <div className="w-20 h-20 bg-primary/20 rounded-full flex items-center justify-center text-4xl mb-4 border-4 border-background shadow-inner">
                         👤
                       </div>
-                      <h2 className="text-2xl font-black text-foreground text-center line-clamp-1">
+                      <h2 className="text-title-2 text-foreground text-center line-clamp-1">
                         {tarefa.title || tarefa.titulo || 'Tarefa sem título'}
                       </h2>
                       <p className="text-sm font-semibold text-muted-foreground text-center mt-1">
@@ -402,7 +402,7 @@ export function RoletaModal({
                         <div className="mt-auto">
                           {feedbackAudioRoleta ? (
                             <div className="bg-green-500/10 border border-green-500/20 rounded-2xl p-3 flex flex-col gap-2">
-                              <span className="text-[10px] font-black text-green-600 uppercase tracking-wider flex items-center gap-1">
+                              <span className="text-[10px] font-semibold text-green-600 tracking-tight flex items-center gap-1">
                                 <CheckCircle className="size-3" /> Transcrição do Feedback
                               </span>
                               <p className="text-sm text-green-700 font-medium">"{feedbackAudioRoleta}"</p>
@@ -416,7 +416,7 @@ export function RoletaModal({
                           ) : (
                             <button
                               onClick={toggleAudioRoleta}
-                              className={`w-full flex items-center justify-center gap-2 h-14 rounded-2xl border-2 transition-all active:scale-95 ${
+                              className={`w-full flex items-center justify-center gap-2 h-10 rounded-2xl border-2 transition-all active:scale-95 ${
                                 gravandoAudioRoleta 
                                   ? 'border-red-500 bg-red-500/10 text-red-600 animate-pulse' 
                                   : 'border-border bg-card text-foreground hover:bg-muted'
@@ -440,7 +440,7 @@ export function RoletaModal({
                         className="col-span-1 flex flex-col items-center justify-center h-16 rounded-2xl bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground transition-all active:scale-95"
                       >
                         <X className="size-5 mb-1" />
-                        <span className="text-[9px] font-black uppercase">Pular</span>
+                        <span className="text-[9px] font-semibold">Pular</span>
                       </button>
                       
                       <button
@@ -449,7 +449,7 @@ export function RoletaModal({
                         className="col-span-1 flex flex-col items-center justify-center h-16 rounded-2xl bg-blue-500/10 text-blue-600 hover:bg-blue-500/20 transition-all active:scale-95"
                       >
                         <Calendar className="size-5 mb-1" />
-                        <span className="text-[9px] font-black uppercase">Adiar</span>
+                        <span className="text-[9px] font-semibold">Adiar</span>
                       </button>
 
                       <button
@@ -458,7 +458,7 @@ export function RoletaModal({
                         className="col-span-1 flex flex-col items-center justify-center h-16 rounded-2xl bg-purple-500/10 text-purple-600 hover:bg-purple-500/20 transition-all active:scale-95"
                       >
                         <Bot className="size-5 mb-1" />
-                        <span className="text-[9px] font-black uppercase">IA</span>
+                        <span className="text-[9px] font-semibold">IA</span>
                       </button>
 
                       <button
@@ -467,7 +467,7 @@ export function RoletaModal({
                         className="col-span-1 flex flex-col items-center justify-center h-16 rounded-2xl bg-green-500 text-white shadow-lg shadow-green-500/30 hover:bg-green-600 transition-all active:scale-95"
                       >
                         <Flame className="size-5 mb-1" />
-                        <span className="text-[9px] font-black uppercase">Feito</span>
+                        <span className="text-[9px] font-semibold">Feito</span>
                       </button>
                     </div>
                   </div>

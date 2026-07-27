@@ -44,7 +44,7 @@ export function TenantSwitcher({ collapsed = false }: { collapsed?: boolean }) {
             {!collapsed && (
               <>
                 <div className="flex flex-col hidden sm:flex justify-center flex-1 overflow-hidden">
-                  <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest leading-none mb-0.5">Imobiliária</span>
+                  <span className="text-[9px] font-bold text-muted-foreground tracking-tight leading-none mb-0.5">Imobiliária</span>
                   <span className="text-xs font-bold text-foreground truncate max-w-[120px] leading-none">
                     {tenantAtivo.nome}
                   </span>

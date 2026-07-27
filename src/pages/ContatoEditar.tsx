@@ -168,18 +168,18 @@ export default function ContatoEditar() {
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h1 className="text-3xl font-black text-slate-800 tracking-tight">Editar Contato</h1>
-                <Badge variant="outline" className="text-[10px] font-black uppercase tracking-widest border-indigo-100 text-indigo-600 bg-indigo-50/50">Edição</Badge>
+                <h1 className="text-3xl font-semibold text-slate-800 tracking-tight">Editar Contato</h1>
+                <Badge variant="outline" className="text-[10px] font-semibold tracking-tight border-indigo-100 text-indigo-600 bg-indigo-50/50">Edição</Badge>
               </div>
               <p className="text-slate-500 mt-1 font-medium italic">Atualize as informações do contato</p>
             </div>
           </div>
           <div className="flex items-center gap-3">
-            <Button variant="outline" onClick={handleCancel} className="bg-white border-slate-200 text-slate-700 font-bold h-12 rounded-2xl shadow-sm hover:bg-slate-50 transition-all">
+            <Button variant="outline" onClick={handleCancel} className="bg-white border-slate-200 text-slate-700 font-bold h-9 rounded-xl shadow-sm hover:bg-slate-50 transition-all">
               <X className="h-4 w-4 mr-2" />
               Cancelar
             </Button>
-            <Button onClick={handleSubmit} className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold h-12 rounded-2xl shadow-lg shadow-indigo-200 transition-all">
+            <Button onClick={handleSubmit} className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold h-9 rounded-xl shadow-lg shadow-indigo-200 transition-all">
               <Save className="h-4 w-4 mr-2" />
               Salvar Alterações
             </Button>

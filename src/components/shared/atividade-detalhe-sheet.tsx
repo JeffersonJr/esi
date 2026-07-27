@@ -1,4 +1,3 @@
-'use client'
 
 import { useState } from 'react'
 import { Calendar, CheckCircle2, ChevronRight, Clock, MessageSquare, Target, User, X, PartyPopper, Phone, MessageCircle, MapPin, FileText as DocumentIcon, Search, ArrowUp, ArrowDown, Pencil, Mic, PhoneOff, Play, Pause, Trash2, Volume2 } from 'lucide-react'
@@ -371,7 +370,7 @@ export function AtividadeDetalheSheet({
         className="absolute inset-0 bg-background/80 backdrop-blur-sm animate-in fade-in duration-200"
         onClick={onClose}
       />
-      <div className="relative flex w-full max-w-[600px] flex-col rounded-t-3xl sm:rounded-3xl bg-card shadow-2xl animate-in sm:zoom-in-95 sm:slide-in-from-bottom-0 slide-in-from-bottom max-h-[95dvh] duration-300 mx-auto">
+      <div className="relative flex w-full max-w-[600px] flex-col rounded-t-3xl sm:rounded-2xl bg-card shadow-2xl animate-in sm:zoom-in-95 sm:slide-in-from-bottom-0 slide-in-from-bottom max-h-[95dvh] duration-300 mx-auto">
         <div className="flex justify-center pt-3 pb-1 shrink-0"><div className="h-1 w-10 rounded-full bg-border" /></div>
 
         {editando ? (
@@ -392,7 +391,7 @@ export function AtividadeDetalheSheet({
               <div className="flex flex-col py-6 animate-in fade-in duration-200">
                 <div className="flex items-center justify-between border-b border-border pb-4 mb-4">
                   <div className="flex-1 min-w-0 pr-2">
-                    <span className="text-[9px] font-bold uppercase tracking-widest text-primary">Avaliação de Imóvel ({indiceAvaliacaoAtual + 1} de {imoveisAvaliacaoPendentes.length})</span>
+                    <span className="text-[9px] font-bold tracking-tight text-primary">Avaliação de Imóvel ({indiceAvaliacaoAtual + 1} de {imoveisAvaliacaoPendentes.length})</span>
                     <h2 className="text-lg font-bold text-foreground mt-0.5 truncate">{imoveisAvaliacaoPendentes[indiceAvaliacaoAtual].nome}</h2>
                   </div>
                   <span className="text-[10px] text-muted-foreground bg-muted px-2.5 py-1 rounded-full font-semibold truncate shrink-0 max-w-[150px]">{imoveisAvaliacaoPendentes[indiceAvaliacaoAtual].endereco}</span>
@@ -406,7 +405,7 @@ export function AtividadeDetalheSheet({
                     className={`flex-1 flex flex-col items-center justify-center gap-1.5 p-3 rounded-2xl border transition-all active:scale-[0.98] ${avaliacaoReacao === 'gostou' ? 'border-green-500 bg-green-50 text-green-700 font-semibold' : 'border-border bg-card hover:bg-muted text-muted-foreground'}`}
                   >
                     <span className="text-3xl">👍</span>
-                    <span className="text-[10px] font-bold uppercase tracking-wider">Gostou</span>
+                    <span className="text-[10px] font-bold tracking-tight">Gostou</span>
                   </button>
                   <button 
                     type="button" 
@@ -414,7 +413,7 @@ export function AtividadeDetalheSheet({
                     className={`flex-1 flex flex-col items-center justify-center gap-1.5 p-3 rounded-2xl border transition-all active:scale-[0.98] ${avaliacaoReacao === 'neutro' ? 'border-amber bg-amber/10 text-[#8a5a1e] font-semibold' : 'border-border bg-card hover:bg-muted text-muted-foreground'}`}
                   >
                     <span className="text-3xl">😐</span>
-                    <span className="text-[10px] font-bold uppercase tracking-wider">Neutro</span>
+                    <span className="text-[10px] font-bold tracking-tight">Neutro</span>
                   </button>
                   <button 
                     type="button" 
@@ -422,7 +421,7 @@ export function AtividadeDetalheSheet({
                     className={`flex-1 flex flex-col items-center justify-center gap-1.5 p-3 rounded-2xl border transition-all active:scale-[0.98] ${avaliacaoReacao === 'nao_gostou' ? 'border-red-500 bg-red-50 text-red-700 font-semibold' : 'border-border bg-card hover:bg-muted text-muted-foreground'}`}
                   >
                     <span className="text-3xl">👎</span>
-                    <span className="text-[10px] font-bold uppercase tracking-wider">Não Gostou</span>
+                    <span className="text-[10px] font-bold tracking-tight">Não Gostou</span>
                   </button>
                 </div>
 
@@ -558,7 +557,7 @@ export function AtividadeDetalheSheet({
                       {tipoInfo.emoji}
                     </div>
                     <div>
-                      <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-1">
+                      <p className="text-xs font-semibold tracking-tight text-muted-foreground mb-1">
                         {atividade.tipo}
                       </p>
                       <h2 className="text-xl font-semibold text-foreground leading-tight">
@@ -603,13 +602,13 @@ export function AtividadeDetalheSheet({
 
                 {atividade.tipo === 'ligacao' && atividade.telefone && (
                   <div className="mt-6 rounded-2xl border border-primary/20 bg-gradient-to-br from-primary/5 to-primary/10 p-5 shadow-sm">
-                    <p className="text-[10px] font-bold uppercase tracking-wider text-primary mb-2">Ligação com Lead</p>
+                    <p className="text-[10px] font-bold tracking-tight text-primary mb-2">Ligação com Lead</p>
                     <div className="flex items-center justify-between gap-4 mb-4">
                       <div>
                         <p className="text-lg font-bold text-foreground">{atividade.telefone}</p>
                         <p className="text-xs text-muted-foreground">Chamada local via operadora</p>
                       </div>
-                      <span className="flex size-10 items-center justify-center rounded-full bg-primary/20 text-primary animate-pulse">
+                      <span className="flex size-10 items-center justify-center rounded-full bg-primary/20 text-primary">
                         <Phone className="size-5" />
                       </span>
                     </div>
@@ -629,7 +628,7 @@ export function AtividadeDetalheSheet({
                 )}
                 {atividade.tipo === 'whatsapp' && atividade.whatsapp && (
                   <div className="mt-6 rounded-2xl border border-green-200 bg-gradient-to-br from-[#25D366]/5 to-[#25D366]/10 p-5 shadow-sm">
-                    <p className="text-[10px] font-bold uppercase tracking-wider text-[#25D366] mb-2">Mensagem de WhatsApp</p>
+                    <p className="text-[10px] font-bold tracking-tight text-[#25D366] mb-2">Mensagem de WhatsApp</p>
                     <div className="flex items-center justify-between gap-4 mb-4">
                       <div>
                         <p className="text-lg font-bold text-foreground">{atividade.whatsapp}</p>
@@ -657,7 +656,7 @@ export function AtividadeDetalheSheet({
                 {atividade.tipo === 'visita' && (
                   <div className="mt-6 rounded-2xl border border-border bg-card p-4 shadow-sm">
                     <div className="mb-3 flex items-center justify-between">
-                      <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-2">
+                      <h3 className="text-xs font-semibold tracking-tight text-muted-foreground flex items-center gap-2">
                         <MapPin className="size-3.5" />
                         Roteiro de visita
                       </h3>
@@ -722,7 +721,7 @@ export function AtividadeDetalheSheet({
                             <div className="mt-3 ml-8 p-3 rounded-xl border border-border/80 bg-background/50 flex flex-col gap-3">
                               {/* Reação/Gostou */}
                               <div className="flex items-center justify-between">
-                                <span className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider">Avaliação rápida</span>
+                                <span className="text-[11px] font-bold text-muted-foreground tracking-tight">Avaliação rápida</span>
                                 <div className="flex gap-1.5">
                                   {(['gostou', 'neutro', 'nao_gostou'] as const).map(reac => (
                                     <button
@@ -883,7 +882,7 @@ export function AtividadeDetalheSheet({
                 )}
 
                 <div className="mt-6 rounded-2xl bg-muted/30 p-4 border border-border/50">
-                  <h3 className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-2">
+                  <h3 className="mb-2 text-xs font-semibold tracking-tight text-muted-foreground flex items-center gap-2">
                     <Target className="size-3.5" />
                     O que deve ser feito
                   </h3>
@@ -893,22 +892,22 @@ export function AtividadeDetalheSheet({
                 </div>
 
                 <div className="mt-6">
-                  <h3 className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-2">
+                  <h3 className="mb-2 text-xs font-semibold tracking-tight text-muted-foreground flex items-center gap-2">
                     <MessageSquare className="size-3.5" />
                     Feedback da atividade
                   </h3>
                   <div className="flex gap-2 mb-3">
                     <button type="button" onClick={() => setEmojiFeedback('ruim')} className={`flex-1 flex flex-col items-center justify-center gap-1 p-2 rounded-xl border transition-colors ${emojiFeedback === 'ruim' ? 'border-red-500 bg-red-50 text-red-700' : 'border-border bg-card hover:bg-muted'}`}>
                       <span className="text-2xl">👎</span>
-                      <span className="text-[10px] font-semibold uppercase tracking-wide">Ruim</span>
+                      <span className="text-[10px] font-semibold ">Ruim</span>
                     </button>
                     <button type="button" onClick={() => setEmojiFeedback('neutra')} className={`flex-1 flex flex-col items-center justify-center gap-1 p-2 rounded-xl border transition-colors ${emojiFeedback === 'neutra' ? 'border-amber bg-amber/10 text-[#8a5a1e]' : 'border-border bg-card hover:bg-muted'}`}>
                       <span className="text-2xl">😐</span>
-                      <span className="text-[10px] font-semibold uppercase tracking-wide">Neutra</span>
+                      <span className="text-[10px] font-semibold ">Neutra</span>
                     </button>
                     <button type="button" onClick={() => setEmojiFeedback('boa')} className={`flex-1 flex flex-col items-center justify-center gap-1 p-2 rounded-xl border transition-colors ${emojiFeedback === 'boa' ? 'border-green-500 bg-green-50 text-green-700' : 'border-border bg-card hover:bg-muted'}`}>
                       <span className="text-2xl">👍</span>
-                      <span className="text-[10px] font-semibold uppercase tracking-wide">Boa</span>
+                      <span className="text-[10px] font-semibold ">Boa</span>
                     </button>
                   </div>
                   {/* Audio Recording UI Component */}

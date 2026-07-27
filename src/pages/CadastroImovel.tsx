@@ -1,4 +1,3 @@
-'use client'
 
 import { useRef, useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -73,8 +72,8 @@ type Fase = 'upload' | 'analisando' | 'resultado' | 'modo' | 'escolha_modo_manua
 
 function AccordionSection({ title, icon, isOpen, onToggle, children }: { title: string, icon: React.ReactNode, isOpen: boolean, onToggle: () => void, children: React.ReactNode }) {
   return (
-    <div className={`rounded-3xl bg-card shadow-soft border transition-all duration-300 ${isOpen ? 'border-primary/20 ring-1 ring-primary/10' : 'border-border'}`}>
-      <button type="button" onClick={onToggle} className="w-full flex items-center justify-between p-5 text-left rounded-3xl active:bg-muted/50 transition-colors">
+    <div className={`rounded-2xl bg-card shadow-soft border transition-all duration-300 ${isOpen ? 'border-primary/20 ring-1 ring-primary/10' : 'border-border'}`}>
+      <button type="button" onClick={onToggle} className="w-full flex items-center justify-between p-5 text-left rounded-2xl active:bg-muted/50 transition-colors">
         <h3 className={`flex items-center gap-2 font-semibold ${isOpen ? 'text-primary' : 'text-foreground'}`}>
           {icon}
           {title}
@@ -543,7 +542,7 @@ export default function CadastroImovel({ onClose, imovelParaEditar, onSaveEdit }
             id="tour-target-imoveis-ia"
             type="button"
             onClick={() => fileInputRef.current?.click()}
-            className="flex h-[320px] w-full flex-col items-center justify-center rounded-3xl border-2 border-dashed border-border bg-card/50 transition-colors"
+            className="flex h-[320px] w-full flex-col items-center justify-center rounded-2xl border-2 border-dashed border-border bg-card/50 transition-colors"
           >
             <div className="flex size-16 items-center justify-center rounded-full bg-primary/10 text-primary">
               <Camera className="size-8" strokeWidth={1.5} />
@@ -556,7 +555,7 @@ export default function CadastroImovel({ onClose, imovelParaEditar, onSaveEdit }
             </p>
           </button>
         ) : (
-          <div className="flex h-[320px] w-full flex-col rounded-3xl border border-border bg-card shadow-soft overflow-hidden">
+          <div className="flex h-[320px] w-full flex-col rounded-2xl border border-border bg-card shadow-soft overflow-hidden">
             <div className="grid grid-cols-2 gap-2 p-2 h-full">
               {fotos.map((foto, i) => (
                 <div key={foto.id} className="relative h-full w-full overflow-hidden rounded-2xl bg-muted">
@@ -627,7 +626,7 @@ export default function CadastroImovel({ onClose, imovelParaEditar, onSaveEdit }
         </div>
 
         <div className="bg-teal-mid/10 p-3 rounded-2xl border border-teal-mid/20 mb-5 flex flex-col gap-1">
-          <span className="text-[9px] font-bold text-teal-deep uppercase tracking-wider">Estrutura Travada</span>
+          <span className="text-[9px] font-bold text-teal-deep tracking-tight">Estrutura Travada</span>
           <span className="text-xs font-semibold text-teal-deep">{finalidade} · {tipoImovel}</span>
         </div>
 
@@ -643,7 +642,7 @@ export default function CadastroImovel({ onClose, imovelParaEditar, onSaveEdit }
               setCadastroTipoMode('fast')
               setFase('formulario_fast')
             }}
-            className="flex flex-col items-center gap-3 rounded-3xl border border-border bg-card p-6 text-center shadow-soft transition-brand active:scale-[0.98] hover:border-border/80"
+            className="flex flex-col items-center gap-3 rounded-2xl border border-border bg-card p-6 text-center shadow-soft transition-brand active:scale-[0.98] hover:border-border/80"
           >
             <div className="flex size-14 items-center justify-center rounded-2xl bg-primary/10">
               <Zap className="size-7 text-primary" strokeWidth={1.5} />
@@ -661,7 +660,7 @@ export default function CadastroImovel({ onClose, imovelParaEditar, onSaveEdit }
               setCadastroTipoMode('completo')
               setFase('formulario')
             }}
-            className="flex flex-col items-center gap-3 rounded-3xl border border-border bg-card p-6 text-center shadow-soft transition-brand active:scale-[0.98] hover:border-border/80"
+            className="flex flex-col items-center gap-3 rounded-2xl border border-border bg-card p-6 text-center shadow-soft transition-brand active:scale-[0.98] hover:border-border/80"
           >
             <div className="flex size-14 items-center justify-center rounded-2xl bg-muted">
               <LayoutGrid className="size-7 text-muted-foreground" strokeWidth={1.5} />
@@ -679,7 +678,7 @@ export default function CadastroImovel({ onClose, imovelParaEditar, onSaveEdit }
               setCadastroTipoMode('ia')
               setFase('upload')
             }}
-            className="flex flex-col items-center gap-3 rounded-3xl border border-border bg-gradient-to-br from-primary/5 to-teal-deep/5 p-6 text-center shadow-soft transition-brand active:scale-[0.98] hover:border-primary/30"
+            className="flex flex-col items-center gap-3 rounded-2xl border border-border bg-gradient-to-br from-primary/5 to-teal-deep/5 p-6 text-center shadow-soft transition-brand active:scale-[0.98] hover:border-primary/30"
           >
             <div className="flex size-14 items-center justify-center rounded-2xl bg-teal-shadow/20">
               <Sparkles className="size-7 text-teal-deep" strokeWidth={1.5} />
@@ -711,9 +710,9 @@ export default function CadastroImovel({ onClose, imovelParaEditar, onSaveEdit }
             Qual a finalidade e qual o tipo de imóvel você deseja cadastrar?
           </h3>
 
-          <div className="flex flex-col gap-5 bg-card border border-border p-5 rounded-3xl shadow-sm mb-6">
+          <div className="flex flex-col gap-5 bg-card border border-border p-5 rounded-2xl shadow-sm mb-6">
             <div className="flex flex-col gap-2">
-              <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Finalidade</label>
+              <label className="text-xs font-bold tracking-tight text-muted-foreground">Finalidade</label>
               <select
                 value={finalidade}
                 onChange={(e) => {
@@ -731,7 +730,7 @@ export default function CadastroImovel({ onClose, imovelParaEditar, onSaveEdit }
             </div>
 
             <div className="flex flex-col gap-2">
-              <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Tipo de Imóvel</label>
+              <label className="text-xs font-bold tracking-tight text-muted-foreground">Tipo de Imóvel</label>
               <select
                 value={tipoImovel}
                 onChange={(e) => {
@@ -763,7 +762,7 @@ export default function CadastroImovel({ onClose, imovelParaEditar, onSaveEdit }
   if (fase === 'analisando') {
     return (
       <div className="flex flex-col items-center py-8 text-center">
-        <div className="relative flex size-24 items-center justify-center rounded-3xl bg-primary/10">
+        <div className="relative flex size-24 items-center justify-center rounded-2xl bg-primary/10">
           {/* Spinner animado */}
           <svg className="absolute inset-0 size-24 -rotate-90" viewBox="0 0 96 96">
             <circle cx="48" cy="48" r="44" fill="none" stroke="hsl(var(--border))" strokeWidth="4" />
@@ -867,7 +866,7 @@ export default function CadastroImovel({ onClose, imovelParaEditar, onSaveEdit }
             <div key={item.label} className="flex items-center gap-3 rounded-2xl bg-card shadow-soft px-4 py-3">
               <span className="text-base">{item.emoji}</span>
               <div className="min-w-0 flex-1">
-                <p className="text-[10px] uppercase tracking-wide text-muted-foreground">{item.label}</p>
+                <p className="text-[10px]  text-muted-foreground">{item.label}</p>
                 <p className="text-sm font-semibold text-foreground truncate">{item.value}</p>
               </div>
               <Zap className="size-3.5 text-teal-mid shrink-0" strokeWidth={1.5} />
@@ -877,7 +876,7 @@ export default function CadastroImovel({ onClose, imovelParaEditar, onSaveEdit }
 
         {/* Descrição gerada */}
         <div className="mb-5 rounded-2xl bg-cream p-4">
-          <p className="mb-1.5 text-[10px] font-semibold uppercase tracking-wide text-muted-foreground flex items-center gap-1.5">
+          <p className="mb-1.5 text-[10px] font-semibold  text-muted-foreground flex items-center gap-1.5">
             <Sparkles className="size-3 text-primary" strokeWidth={1.5} />
             Descrição gerada pela IA
           </p>
@@ -978,7 +977,7 @@ export default function CadastroImovel({ onClose, imovelParaEditar, onSaveEdit }
         <div className="flex flex-col gap-4">
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">Finalidade</label>
+              <label className="mb-1.5 block text-xs font-semibold  text-muted-foreground">Finalidade</label>
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-2">
                 {(['Residencial', 'Comercial', 'Industrial', 'Rural'] as FinalidadeCategoria[]).map((fin) => {
                   const Icon = fin === 'Residencial' ? Home : fin === 'Comercial' ? Store : fin === 'Industrial' ? Factory : TreePine;
@@ -1000,7 +999,7 @@ export default function CadastroImovel({ onClose, imovelParaEditar, onSaveEdit }
               </div>
             </div>
             <div>
-              <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">Tipo</label>
+              <label className="mb-1.5 block text-xs font-semibold  text-muted-foreground">Tipo</label>
               <select value={tipoImovel} onChange={(e) => setTipoImovel(e.target.value)} className="h-12 w-full rounded-2xl border border-border bg-background px-4 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring">
                 {TIPOS_POR_FINALIDADE[finalidade].map((tipo) => <option key={tipo} value={tipo}>{tipo}</option>)}
               </select>
@@ -1008,17 +1007,17 @@ export default function CadastroImovel({ onClose, imovelParaEditar, onSaveEdit }
           </div>
 
           <div>
-            <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">Endereço Básico / Título *</label>
+            <label className="mb-1.5 block text-xs font-semibold  text-muted-foreground">Endereço Básico / Título *</label>
             <input type="text" value={titulo} onChange={(e) => setTitulo(e.target.value)} placeholder="Ex: Apartamento Jardins" className="h-12 w-full rounded-2xl border border-border bg-background px-4 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring" />
           </div>
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">Valor (R$)</label>
+              <label className="mb-1.5 block text-xs font-semibold  text-muted-foreground">Valor (R$)</label>
               <input type="text" value={valor} onChange={(e) => setValor(maskCurrency(e.target.value))} placeholder="R$ 0,00" className="h-12 w-full rounded-2xl border border-border bg-background px-4 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring" />
             </div>
             <div>
-              <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">Área Útil (m²)</label>
+              <label className="mb-1.5 block text-xs font-semibold  text-muted-foreground">Área Útil (m²)</label>
               <input type="number" value={area} onChange={(e) => setArea(e.target.value)} placeholder="Ex: 85" className="h-12 w-full rounded-2xl border border-border bg-background px-4 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring" />
             </div>
           </div>
@@ -1027,15 +1026,15 @@ export default function CadastroImovel({ onClose, imovelParaEditar, onSaveEdit }
           {finalidade === 'Residencial' && (
             <div className="grid grid-cols-3 gap-2">
               <div>
-                <label className="mb-1.5 block text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">Dorms</label>
+                <label className="mb-1.5 block text-[10px] font-semibold  text-muted-foreground">Dorms</label>
                 <input type="number" value={quartos} onChange={(e) => setQuartos(e.target.value)} className="h-12 w-full rounded-2xl border border-border bg-background px-4 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring" />
               </div>
               <div>
-                <label className="mb-1.5 block text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">Suítes</label>
+                <label className="mb-1.5 block text-[10px] font-semibold  text-muted-foreground">Suítes</label>
                 <input type="number" value={suites} onChange={(e) => setSuites(e.target.value)} className="h-12 w-full rounded-2xl border border-border bg-background px-4 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring" />
               </div>
               <div>
-                <label className="mb-1.5 block text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">Vagas</label>
+                <label className="mb-1.5 block text-[10px] font-semibold  text-muted-foreground">Vagas</label>
                 <input type="number" value={vagas} onChange={(e) => setVagas(e.target.value)} className="h-12 w-full rounded-2xl border border-border bg-background px-4 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring" />
               </div>
             </div>
@@ -1044,15 +1043,15 @@ export default function CadastroImovel({ onClose, imovelParaEditar, onSaveEdit }
           {finalidade === 'Comercial' && (
             <div className="grid grid-cols-3 gap-2">
               <div>
-                <label className="mb-1.5 block text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">Salas</label>
+                <label className="mb-1.5 block text-[10px] font-semibold  text-muted-foreground">Salas</label>
                 <input type="number" value={salas} onChange={(e) => setSalas(e.target.value)} className="h-12 w-full rounded-2xl border border-border bg-background px-4 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring" />
               </div>
               <div>
-                <label className="mb-1.5 block text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">Banheiros</label>
+                <label className="mb-1.5 block text-[10px] font-semibold  text-muted-foreground">Banheiros</label>
                 <input type="number" value={banheiros} onChange={(e) => setBanheiros(e.target.value)} className="h-12 w-full rounded-2xl border border-border bg-background px-4 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring" />
               </div>
               <div>
-                <label className="mb-1.5 block text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">Vagas</label>
+                <label className="mb-1.5 block text-[10px] font-semibold  text-muted-foreground">Vagas</label>
                 <input type="number" value={vagas} onChange={(e) => setVagas(e.target.value)} className="h-12 w-full rounded-2xl border border-border bg-background px-4 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring" />
               </div>
             </div>
@@ -1062,17 +1061,17 @@ export default function CadastroImovel({ onClose, imovelParaEditar, onSaveEdit }
             <div className="flex flex-col gap-3">
               <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">Pé Direito (m)</label>
+                  <label className="mb-1.5 block text-xs font-semibold  text-muted-foreground">Pé Direito (m)</label>
                   <input type="text" value={peDireito} onChange={(e) => setPeDireito(e.target.value)} placeholder="Ex: 8" className="h-12 w-full rounded-2xl border border-border bg-background px-4 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring" />
                 </div>
                 <div>
-                  <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">Capac. Piso (t)</label>
+                  <label className="mb-1.5 block text-xs font-semibold  text-muted-foreground">Capac. Piso (t)</label>
                   <input type="text" value={capacidadePiso} onChange={(e) => setCapacidadePiso(e.target.value)} placeholder="Ex: 5" className="h-12 w-full rounded-2xl border border-border bg-background px-4 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring" />
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">Área Pátio (m²)</label>
+                  <label className="mb-1.5 block text-xs font-semibold  text-muted-foreground">Área Pátio (m²)</label>
                   <input type="text" value={areaPatio} onChange={(e) => setAreaPatio(e.target.value)} placeholder="Ex: 300" className="h-12 w-full rounded-2xl border border-border bg-background px-4 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring" />
                 </div>
                 <label className="flex items-center gap-2 mt-6 cursor-pointer select-none">
@@ -1087,11 +1086,11 @@ export default function CadastroImovel({ onClose, imovelParaEditar, onSaveEdit }
             <div className="flex flex-col gap-3">
               <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">Área (Hectares)</label>
+                  <label className="mb-1.5 block text-xs font-semibold  text-muted-foreground">Área (Hectares)</label>
                   <input type="text" value={areaHectares} onChange={(e) => setAreaHectares(e.target.value)} placeholder="Ex: 45" className="h-12 w-full rounded-2xl border border-border bg-background px-4 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring" />
                 </div>
                 <div>
-                  <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">Recursos Hídricos</label>
+                  <label className="mb-1.5 block text-xs font-semibold  text-muted-foreground">Recursos Hídricos</label>
                   <input type="text" value={recursosHidricos} onChange={(e) => setRecursosHidricos(e.target.value)} placeholder="Ex: Rio, poço art." className="h-12 w-full rounded-2xl border border-border bg-background px-4 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring" />
                 </div>
               </div>
@@ -1110,11 +1109,11 @@ export default function CadastroImovel({ onClose, imovelParaEditar, onSaveEdit }
 
           <div className="grid grid-cols-2 gap-3 mt-2 border-t border-border/50 pt-4">
             <div>
-              <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">Proprietário</label>
+              <label className="mb-1.5 block text-xs font-semibold  text-muted-foreground">Proprietário</label>
               <input type="text" value={proprietario} onChange={(e) => setProprietario(e.target.value)} placeholder="Nome" className="h-12 w-full rounded-2xl border border-border bg-background px-4 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring" />
             </div>
             <div>
-              <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">Telefone</label>
+              <label className="mb-1.5 block text-xs font-semibold  text-muted-foreground">Telefone</label>
               <input type="text" value={telefoneProprietario} onChange={(e) => setTelefoneProprietario(maskPhone(e.target.value))} placeholder="(00) 00000-0000" className="h-12 w-full rounded-2xl border border-border bg-background px-4 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring" />
             </div>
           </div>
@@ -1122,7 +1121,7 @@ export default function CadastroImovel({ onClose, imovelParaEditar, onSaveEdit }
           <button
             type="button"
             onClick={onClose}
-            className="mt-6 flex h-14 w-full items-center justify-center gap-2 rounded-2xl bg-amber text-sm font-semibold text-ink shadow-lg shadow-amber/20 transition-brand active:scale-[0.98]"
+            className="mt-6 flex h-10 w-full items-center justify-center gap-2 rounded-2xl bg-amber text-sm font-semibold text-ink shadow-lg shadow-amber/20 transition-brand active:scale-[0.98]"
           >
             <CheckCircle2 className="size-5" />
             Salvar Rascunho / Fast
@@ -1184,7 +1183,7 @@ export default function CadastroImovel({ onClose, imovelParaEditar, onSaveEdit }
 
           {exibindoTranscricao ? (
             <div className="flex flex-col gap-3 mt-1 animate-in fade-in duration-200">
-              <label className="text-xs font-bold text-teal-deep uppercase tracking-wider">Transcrição Gerada</label>
+              <label className="text-xs font-bold text-teal-deep tracking-tight">Transcrição Gerada</label>
               <textarea
                 value={transcricaoIA}
                 onChange={(e) => setTranscricaoIA(e.target.value)}
@@ -1231,7 +1230,7 @@ export default function CadastroImovel({ onClose, imovelParaEditar, onSaveEdit }
         {/* BLOCO 1: NEGOCIAÇÕES E TIPOS */}
         <AccordionSection title="Negociações e Tipos" icon={<FileText className="size-4" strokeWidth={2.5} />} isOpen={openSection === 1} onToggle={() => setOpenSection(openSection === 1 ? 0 : 1)}>
           <div>
-            <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">Título do imóvel *</label>
+            <label className="mb-1.5 block text-xs font-semibold  text-muted-foreground">Título do imóvel *</label>
             <input
               type="text"
               value={titulo}
@@ -1243,18 +1242,18 @@ export default function CadastroImovel({ onClose, imovelParaEditar, onSaveEdit }
 
           <div className="grid grid-cols-2 gap-2">
             <div>
-              <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">Código</label>
+              <label className="mb-1.5 block text-xs font-semibold  text-muted-foreground">Código</label>
               <input type="text" value={codigo} onChange={(e) => setCodigo(e.target.value)} placeholder="Opcional" className="h-12 w-full rounded-2xl border border-border bg-background px-4 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring" />
             </div>
             <div>
-              <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">CIB</label>
+              <label className="mb-1.5 block text-xs font-semibold  text-muted-foreground">CIB</label>
               <input type="text" value={cib} onChange={(e) => setCib(e.target.value)} placeholder="Opcional" className="h-12 w-full rounded-2xl border border-border bg-background px-4 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring" />
             </div>
           </div>
 
           <div className="grid grid-cols-1 gap-4">
             <div>
-              <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">Finalidade</label>
+              <label className="mb-1.5 block text-xs font-semibold  text-muted-foreground">Finalidade</label>
               <div className="grid grid-cols-4 gap-2">
                 {(['Residencial', 'Comercial', 'Industrial', 'Rural'] as FinalidadeCategoria[]).map((fin) => {
                   const Icon = fin === 'Residencial' ? Home : fin === 'Comercial' ? Store : fin === 'Industrial' ? Factory : TreePine;
@@ -1276,7 +1275,7 @@ export default function CadastroImovel({ onClose, imovelParaEditar, onSaveEdit }
               </div>
             </div>
             <div>
-              <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">Tipo</label>
+              <label className="mb-1.5 block text-xs font-semibold  text-muted-foreground">Tipo</label>
               <div className="relative">
                 <select value={tipoImovel} onChange={(e) => setTipoImovel(e.target.value)} className={`h-12 w-full rounded-2xl border bg-background px-4 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring appearance-none pr-10 ${tipoImovel ? 'border-teal-mid/40' : 'border-border'}`}>
                   {TIPOS_POR_FINALIDADE[finalidade].map((t) => <option key={t} value={t}>{t}</option>)}
@@ -1287,7 +1286,7 @@ export default function CadastroImovel({ onClose, imovelParaEditar, onSaveEdit }
           </div>
 
           <div>
-            <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">Operação</label>
+            <label className="mb-1.5 block text-xs font-semibold  text-muted-foreground">Operação</label>
             <div className="flex gap-2 overflow-x-auto scrollbar-none -mx-1 px-1 py-1">
               {(['Venda', 'Locação', 'Temporada', 'Arrendamento'] as const).map((o) => (
                 <button
@@ -1310,7 +1309,7 @@ export default function CadastroImovel({ onClose, imovelParaEditar, onSaveEdit }
 
           <div className="grid grid-cols-2 gap-2">
             <div>
-              <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">Situação</label>
+              <label className="mb-1.5 block text-xs font-semibold  text-muted-foreground">Situação</label>
               <select value={situacaoImovel} onChange={(e) => setSituacaoImovel(e.target.value)} className="h-12 w-full rounded-2xl border border-border bg-background px-4 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring appearance-none">
                 <option value="Pronto">Pronto</option>
                 <option value="Na Planta">Na Planta</option>
@@ -1318,7 +1317,7 @@ export default function CadastroImovel({ onClose, imovelParaEditar, onSaveEdit }
               </select>
             </div>
             <div>
-              <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">Status</label>
+              <label className="mb-1.5 block text-xs font-semibold  text-muted-foreground">Status</label>
               <select value={statusImovel} onChange={(e) => setStatusImovel(e.target.value as (typeof STATUS_OPTIONS)[number])} className="h-12 w-full rounded-2xl border border-border bg-background px-4 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring appearance-none">
                 {STATUS_OPTIONS.map((s) => <option key={s} value={s}>{s}</option>)}
               </select>
@@ -1348,7 +1347,7 @@ export default function CadastroImovel({ onClose, imovelParaEditar, onSaveEdit }
 
               {tipoExclusividade !== 'Nenhuma' && (
                 <div className="mt-2">
-                  <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">Validade (Dias)</label>
+                  <label className="mb-1.5 block text-xs font-semibold  text-muted-foreground">Validade (Dias)</label>
                   <input type="number" value={validadeExclusividade} onChange={(e) => setValidadeExclusividade(e.target.value)} placeholder="Ex: 90" className="h-11 w-full rounded-xl border border-border bg-background px-4 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring" />
                 </div>
               )}
@@ -1360,12 +1359,12 @@ export default function CadastroImovel({ onClose, imovelParaEditar, onSaveEdit }
         <AccordionSection title="Localização e Prédio" icon={<MapPin className="size-4" strokeWidth={2.5} />} isOpen={openSection === 2} onToggle={() => setOpenSection(openSection === 2 ? 0 : 2)}>
           <div className="grid grid-cols-3 gap-2">
             <div className="col-span-1">
-              <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">CEP</label>
+              <label className="mb-1.5 block text-xs font-semibold  text-muted-foreground">CEP</label>
               <input type="text" value={cep} onChange={(e) => setCep(maskCEP(e.target.value))} placeholder="00000-000" className="h-12 w-full rounded-2xl border border-border bg-background px-4 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring" />
               <button type="button" onClick={() => setModalBuscaCep(!modalBuscaCep)} className="mt-1 text-[10px] font-semibold text-primary underline">Não sei meu CEP</button>
             </div>
             <div className="col-span-2">
-              <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">Endereço</label>
+              <label className="mb-1.5 block text-xs font-semibold  text-muted-foreground">Endereço</label>
               <input type="text" value={endereco} onChange={(e) => setEndereco(e.target.value)} placeholder="Rua, número" className="h-12 w-full rounded-2xl border border-border bg-background px-4 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring" />
             </div>
           </div>
@@ -1417,27 +1416,27 @@ export default function CadastroImovel({ onClose, imovelParaEditar, onSaveEdit }
 
           <div className="grid grid-cols-2 gap-2">
             <div>
-              <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">Bairro</label>
+              <label className="mb-1.5 block text-xs font-semibold  text-muted-foreground">Bairro</label>
               <input type="text" value={bairro} onChange={(e) => setBairro(e.target.value)} placeholder="Jardins" className="h-12 w-full rounded-2xl border border-border bg-background px-4 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring" />
             </div>
             <div>
-              <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">Cidade</label>
+              <label className="mb-1.5 block text-xs font-semibold  text-muted-foreground">Cidade</label>
               <input type="text" value={cidade} onChange={(e) => setCidade(e.target.value)} placeholder="São Paulo" className="h-12 w-full rounded-2xl border border-border bg-background px-4 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring" />
             </div>
           </div>
 
           <div>
-            <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">Condomínio/Empreendimento</label>
+            <label className="mb-1.5 block text-xs font-semibold  text-muted-foreground">Condomínio/Empreendimento</label>
             <input type="text" value={condominio} onChange={(e) => setCondominio(e.target.value)} placeholder="Nome do prédio ou loteamento" className="h-12 w-full rounded-2xl border border-border bg-background px-4 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring" />
           </div>
 
           <div className="grid grid-cols-2 gap-2">
             <div>
-              <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">Andar</label>
+              <label className="mb-1.5 block text-xs font-semibold  text-muted-foreground">Andar</label>
               <input type="text" value={andar} onChange={(e) => setAndar(e.target.value)} placeholder="Opcional" className="h-12 w-full rounded-2xl border border-border bg-background px-4 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring" />
             </div>
             <div>
-              <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">Ano de Construção</label>
+              <label className="mb-1.5 block text-xs font-semibold  text-muted-foreground">Ano de Construção</label>
               <input type="text" value={anoConstrucao} onChange={(e) => setAnoConstrucao(e.target.value)} placeholder="YYYY" className="h-12 w-full rounded-2xl border border-border bg-background px-4 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring" />
             </div>
           </div>
@@ -1450,23 +1449,23 @@ export default function CadastroImovel({ onClose, imovelParaEditar, onSaveEdit }
             <AccordionSection title="Composição (Cômodos)" icon={<LayoutGrid className="size-4" strokeWidth={2.5} />} isOpen={openSection === 3} onToggle={() => setOpenSection(openSection === 3 ? 0 : 3)}>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">Dormitórios</label>
+                  <label className="mb-1.5 block text-xs font-semibold  text-muted-foreground">Dormitórios</label>
                   <input type="number" value={quartos} onChange={(e) => setQuartos(e.target.value)} placeholder="0" className="h-12 w-full rounded-2xl border border-border bg-background px-4 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring" />
                 </div>
                 <div>
-                  <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">Suítes</label>
+                  <label className="mb-1.5 block text-xs font-semibold  text-muted-foreground">Suítes</label>
                   <input type="number" value={suites} onChange={(e) => setSuites(e.target.value)} placeholder="0" className="h-12 w-full rounded-2xl border border-border bg-background px-4 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring" />
                 </div>
                 <div>
-                  <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">Banheiros</label>
+                  <label className="mb-1.5 block text-xs font-semibold  text-muted-foreground">Banheiros</label>
                   <input type="number" value={banheiros} onChange={(e) => setBanheiros(e.target.value)} placeholder="0" className="h-12 w-full rounded-2xl border border-border bg-background px-4 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring" />
                 </div>
                 <div>
-                  <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">Salas</label>
+                  <label className="mb-1.5 block text-xs font-semibold  text-muted-foreground">Salas</label>
                   <input type="number" value={salas} onChange={(e) => setSalas(e.target.value)} placeholder="0" className="h-12 w-full rounded-2xl border border-border bg-background px-4 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring" />
                 </div>
                 <div>
-                  <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">Vagas</label>
+                  <label className="mb-1.5 block text-xs font-semibold  text-muted-foreground">Vagas</label>
                   <input type="number" value={vagas} onChange={(e) => setVagas(e.target.value)} placeholder="0" className="h-12 w-full rounded-2xl border border-border bg-background px-4 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring" />
                 </div>
               </div>
@@ -1490,15 +1489,15 @@ export default function CadastroImovel({ onClose, imovelParaEditar, onSaveEdit }
           <AccordionSection title="Características Industriais" icon={<LayoutGrid className="size-4" strokeWidth={2.5} />} isOpen={openSection === 35} onToggle={() => setOpenSection(openSection === 35 ? 0 : 35)}>
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">Pé Direito (m)</label>
+                <label className="mb-1.5 block text-xs font-semibold  text-muted-foreground">Pé Direito (m)</label>
                 <input type="text" value={peDireito} onChange={(e) => setPeDireito(e.target.value)} placeholder="Ex: 8" className="h-12 w-full rounded-2xl border border-border bg-background px-4 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring" />
               </div>
               <div>
-                <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">Capac. Piso (t)</label>
+                <label className="mb-1.5 block text-xs font-semibold  text-muted-foreground">Capac. Piso (t)</label>
                 <input type="text" value={capacidadePiso} onChange={(e) => setCapacidadePiso(e.target.value)} placeholder="Ex: 5" className="h-12 w-full rounded-2xl border border-border bg-background px-4 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring" />
               </div>
               <div>
-                <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">Área de Pátio (m²)</label>
+                <label className="mb-1.5 block text-xs font-semibold  text-muted-foreground">Área de Pátio (m²)</label>
                 <input type="text" value={areaPatio} onChange={(e) => setAreaPatio(e.target.value)} placeholder="Ex: 300" className="h-12 w-full rounded-2xl border border-border bg-background px-4 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring" />
               </div>
               <label className="flex items-center gap-2 mt-8 cursor-pointer select-none">
@@ -1514,11 +1513,11 @@ export default function CadastroImovel({ onClose, imovelParaEditar, onSaveEdit }
           <AccordionSection title="Características Rurais" icon={<LayoutGrid className="size-4" strokeWidth={2.5} />} isOpen={openSection === 36} onToggle={() => setOpenSection(openSection === 36 ? 0 : 36)}>
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">Área Total (Hectares)</label>
+                <label className="mb-1.5 block text-xs font-semibold  text-muted-foreground">Área Total (Hectares)</label>
                 <input type="text" value={areaHectares} onChange={(e) => setAreaHectares(e.target.value)} placeholder="Ex: 45" className="h-12 w-full rounded-2xl border border-border bg-background px-4 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring" />
               </div>
               <div>
-                <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">Recursos Hídricos</label>
+                <label className="mb-1.5 block text-xs font-semibold  text-muted-foreground">Recursos Hídricos</label>
                 <input type="text" value={recursosHidricos} onChange={(e) => setRecursosHidricos(e.target.value)} placeholder="Ex: Rio, poço art." className="h-12 w-full rounded-2xl border border-border bg-background px-4 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring" />
               </div>
               <label className="flex items-center gap-2 cursor-pointer select-none mt-4">
@@ -1536,16 +1535,16 @@ export default function CadastroImovel({ onClose, imovelParaEditar, onSaveEdit }
         {/* BLOCO 4: MEDIDAS E VALORES */}
         <AccordionSection title="Medidas e Valores" icon={<Ruler className="size-4" strokeWidth={2.5} />} isOpen={openSection === 4} onToggle={() => setOpenSection(openSection === 4 ? 0 : 4)}>
           <div>
-            <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">Valor (R$)</label>
+            <label className="mb-1.5 block text-xs font-semibold  text-muted-foreground">Valor (R$)</label>
             <input type="text" value={valor} onChange={(e) => setValor(maskCurrency(e.target.value))} placeholder="R$ 890.000,00" className="h-12 w-full rounded-2xl border border-border bg-background px-4 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring" />
           </div>
           <div className="grid grid-cols-2 gap-2">
             <div>
-              <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">Área Útil/Const.</label>
+              <label className="mb-1.5 block text-xs font-semibold  text-muted-foreground">Área Útil/Const.</label>
               <input type="number" value={area} onChange={(e) => setArea(e.target.value)} placeholder="m²" className="h-12 w-full rounded-2xl border border-border bg-background px-4 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring" />
             </div>
             <div>
-              <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">Área Total</label>
+              <label className="mb-1.5 block text-xs font-semibold  text-muted-foreground">Área Total</label>
               <input type="number" value={areaTotal} onChange={(e) => setAreaTotal(e.target.value)} placeholder="m²" className="h-12 w-full rounded-2xl border border-border bg-background px-4 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring" />
             </div>
           </div>
@@ -1576,7 +1575,7 @@ export default function CadastroImovel({ onClose, imovelParaEditar, onSaveEdit }
           </div>
 
           <div>
-            <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">Descrição do imóvel</label>
+            <label className="mb-1.5 block text-xs font-semibold  text-muted-foreground">Descrição do imóvel</label>
             <textarea value={observacoes} onChange={(e) => setObservacoes(e.target.value)} rows={4} placeholder="Conte a história do imóvel, detalhes e proximidades..." className="w-full resize-none rounded-2xl border border-border bg-background p-4 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring" />
             {observacoes && titulo && (
               <p className="mt-1.5 flex items-center gap-1 text-[10px] text-teal-mid font-medium">
@@ -1603,7 +1602,7 @@ export default function CadastroImovel({ onClose, imovelParaEditar, onSaveEdit }
             {/* Gerenciamento de Fotos */}
             <div>
               <div className="mb-2 flex items-center justify-between">
-                <label className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Fotos ({fotos.length})</label>
+                <label className="text-xs font-semibold  text-muted-foreground">Fotos ({fotos.length})</label>
                 <button type="button" onClick={() => fileInputRef.current?.click()} className="text-xs font-semibold text-primary">Adicionar +</button>
               </div>
 
@@ -1620,7 +1619,7 @@ export default function CadastroImovel({ onClose, imovelParaEditar, onSaveEdit }
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img src={foto.url} alt="Foto" className="h-full w-full object-cover" style={{ transform: `rotate(${foto.rotacao}deg)` }} />
                         {i === 0 && (
-                          <span className="absolute left-1 top-1 rounded bg-black/70 px-1.5 py-0.5 text-[8px] font-bold uppercase text-white">Capa</span>
+                          <span className="absolute left-1 top-1 rounded bg-black/70 px-1.5 py-0.5 text-[8px] font-bold text-white">Capa</span>
                         )}
                       </div>
                       <div className="flex flex-1 flex-col justify-center">
@@ -1643,11 +1642,11 @@ export default function CadastroImovel({ onClose, imovelParaEditar, onSaveEdit }
             </div>
 
             <div className="border-t border-border/50 pt-4 mt-2">
-              <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">URL do Vídeo</label>
+              <label className="mb-1.5 block text-xs font-semibold  text-muted-foreground">URL do Vídeo</label>
               <input type="url" value={urlVideo} onChange={(e) => setUrlVideo(e.target.value)} placeholder="https://youtube.com/..." className="h-12 w-full rounded-2xl border border-border bg-background px-4 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring" />
             </div>
             <div>
-              <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">URL do Tour 360</label>
+              <label className="mb-1.5 block text-xs font-semibold  text-muted-foreground">URL do Tour 360</label>
               <input type="url" value={urlTour360} onChange={(e) => setUrlTour360(e.target.value)} placeholder="https://..." className="h-12 w-full rounded-2xl border border-border bg-background px-4 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring" />
             </div>
           </div>
@@ -1657,64 +1656,64 @@ export default function CadastroImovel({ onClose, imovelParaEditar, onSaveEdit }
         <AccordionSection title="Informações Internas" icon={<Lock className="size-4" strokeWidth={2.5} />} isOpen={openSection === 8} onToggle={() => setOpenSection(openSection === 8 ? 0 : 8)}>
           <div className="flex flex-col gap-4">
             <div>
-              <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">Observações Internas</label>
+              <label className="mb-1.5 block text-xs font-semibold  text-muted-foreground">Observações Internas</label>
               <textarea value={observacoesInternas} onChange={(e) => setObservacoesInternas(e.target.value)} rows={3} placeholder="Anotações sigilosas (visíveis apenas para corretores da imobiliária)..." className="w-full resize-none rounded-2xl border border-border bg-muted/40 p-4 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring" />
             </div>
 
             <div className="grid grid-cols-2 gap-2">
               <div>
-                <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">Chave disponível?</label>
+                <label className="mb-1.5 block text-xs font-semibold  text-muted-foreground">Chave disponível?</label>
                 <select value={chaveDisponivel} onChange={(e) => setChaveDisponivel(e.target.value)} className="h-12 w-full rounded-2xl border border-border bg-background px-4 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring appearance-none">
                   <option value="Sim">Sim</option>
                   <option value="Não">Não</option>
                 </select>
               </div>
               <div>
-                <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">Local das chaves</label>
+                <label className="mb-1.5 block text-xs font-semibold  text-muted-foreground">Local das chaves</label>
                 <input type="text" value={localChaves} onChange={(e) => setLocalChaves(e.target.value)} placeholder="Ex: Portaria" className="h-12 w-full rounded-2xl border border-border bg-background px-4 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring" />
               </div>
             </div>
 
             <div className="grid grid-cols-2 gap-2">
               <div>
-                <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">Matrícula Nº</label>
+                <label className="mb-1.5 block text-xs font-semibold  text-muted-foreground">Matrícula Nº</label>
                 <input type="text" value={matricula} onChange={(e) => setMatricula(e.target.value)} className="h-12 w-full rounded-2xl border border-border bg-background px-4 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring" />
               </div>
               <div>
-                <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">IPTU Nº</label>
+                <label className="mb-1.5 block text-xs font-semibold  text-muted-foreground">IPTU Nº</label>
                 <input type="text" value={iptu} onChange={(e) => setIptu(maskCurrency(e.target.value))} placeholder="R$ 0,00" className="h-12 w-full rounded-2xl border border-border bg-background px-4 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring" />
               </div>
             </div>
 
             <div className="grid grid-cols-2 gap-2">
               <div>
-                <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">INCRA Nº</label>
+                <label className="mb-1.5 block text-xs font-semibold  text-muted-foreground">INCRA Nº</label>
                 <input type="text" value={incra} onChange={(e) => setIncra(e.target.value)} className="h-12 w-full rounded-2xl border border-border bg-background px-4 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring" />
               </div>
               <div>
-                <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">Cartório</label>
+                <label className="mb-1.5 block text-xs font-semibold  text-muted-foreground">Cartório</label>
                 <input type="text" value={cartorio} onChange={(e) => setCartorio(e.target.value)} className="h-12 w-full rounded-2xl border border-border bg-background px-4 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring" />
               </div>
             </div>
 
             <div className="grid grid-cols-2 gap-2">
               <div>
-                <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">Energia Nº</label>
+                <label className="mb-1.5 block text-xs font-semibold  text-muted-foreground">Energia Nº</label>
                 <input type="text" value={energia} onChange={(e) => setEnergia(e.target.value)} className="h-12 w-full rounded-2xl border border-border bg-background px-4 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring" />
               </div>
               <div>
-                <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">Água Nº</label>
+                <label className="mb-1.5 block text-xs font-semibold  text-muted-foreground">Água Nº</label>
                 <input type="text" value={agua} onChange={(e) => setAgua(e.target.value)} className="h-12 w-full rounded-2xl border border-border bg-background px-4 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring" />
               </div>
             </div>
 
             <div className="grid grid-cols-2 gap-2">
               <div>
-                <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">Captador 1</label>
+                <label className="mb-1.5 block text-xs font-semibold  text-muted-foreground">Captador 1</label>
                 <input type="text" value={captador1} onChange={(e) => setCaptador1(e.target.value)} className="h-12 w-full rounded-2xl border border-border bg-background px-4 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring" />
               </div>
               <div>
-                <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">Captador 2</label>
+                <label className="mb-1.5 block text-xs font-semibold  text-muted-foreground">Captador 2</label>
                 <input type="text" value={captador2} onChange={(e) => setCaptador2(e.target.value)} className="h-12 w-full rounded-2xl border border-border bg-background px-4 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring" />
               </div>
             </div>
@@ -1755,15 +1754,15 @@ export default function CadastroImovel({ onClose, imovelParaEditar, onSaveEdit }
               Preencher com IA
             </button>
             <div>
-              <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">Título</label>
+              <label className="mb-1.5 block text-xs font-semibold  text-muted-foreground">Título</label>
               <input type="text" value={seoTitulo} onChange={(e) => setSeoTitulo(e.target.value)} className="h-12 w-full rounded-2xl border border-border bg-background px-4 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring" />
             </div>
             <div>
-              <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">Palavras-Chave</label>
+              <label className="mb-1.5 block text-xs font-semibold  text-muted-foreground">Palavras-Chave</label>
               <input type="text" value={seoPalavras} onChange={(e) => setSeoPalavras(e.target.value)} className="h-12 w-full rounded-2xl border border-border bg-background px-4 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring" />
             </div>
             <div>
-              <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">Descrição</label>
+              <label className="mb-1.5 block text-xs font-semibold  text-muted-foreground">Descrição</label>
               <textarea value={seoDescricao} onChange={(e) => setSeoDescricao(e.target.value)} rows={3} className="w-full resize-none rounded-2xl border border-border bg-background p-4 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring" />
             </div>
           </div>
@@ -1820,8 +1819,8 @@ export default function CadastroImovel({ onClose, imovelParaEditar, onSaveEdit }
         </AccordionSection>
 
         <div className="mt-4 flex gap-2">
-          <button type="button" onClick={() => setFase('upload')} className="h-12 rounded-2xl border border-border px-5 text-sm font-semibold text-foreground transition-brand active:bg-muted">Voltar</button>
-          <button type="button" onClick={handleSave} className="flex-1 h-12 rounded-2xl bg-primary text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/20 transition-transform active:scale-[0.98]">{imovelParaEditar ? 'Salvar Alterações' : 'Salvar Captação'}</button>
+          <button type="button" onClick={() => setFase('upload')} className="h-9 rounded-xl border border-border px-5 text-sm font-semibold text-foreground transition-brand active:bg-muted">Voltar</button>
+          <button type="button" onClick={handleSave} className="flex-1 h-9 rounded-xl bg-primary text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/20 transition-transform active:scale-[0.98]">{imovelParaEditar ? 'Salvar Alterações' : 'Salvar Captação'}</button>
         </div>
       </div>
 
@@ -1845,7 +1844,7 @@ export default function CadastroImovel({ onClose, imovelParaEditar, onSaveEdit }
                 <img src={fotoEditando.url} alt="" className="h-full w-full object-cover" style={{ transform: `rotate(${fotoEditando.rotacao}deg)` }} />
               </div>
               <div>
-                <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">Título</label>
+                <label className="mb-1.5 block text-xs font-semibold  text-muted-foreground">Título</label>
                 <input
                   type="text"
                   value={fotoEditando.titulo}
@@ -1855,7 +1854,7 @@ export default function CadastroImovel({ onClose, imovelParaEditar, onSaveEdit }
                 />
               </div>
               <div>
-                <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">Descrição (Opcional)</label>
+                <label className="mb-1.5 block text-xs font-semibold  text-muted-foreground">Descrição (Opcional)</label>
                 <textarea
                   value={fotoEditando.descricao}
                   onChange={(e) => setFotoEditando({ ...fotoEditando, descricao: e.target.value })}

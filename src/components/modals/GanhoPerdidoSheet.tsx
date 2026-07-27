@@ -1,4 +1,3 @@
-'use client'
 
 import { useState, useRef, useEffect } from 'react'
 import { CheckCircle2, Frown, Trophy, X, PartyPopper, Mic, Volume2, Play, Pause, Trash2 } from 'lucide-react'
@@ -273,7 +272,7 @@ export function GanhoPerdidoSheet({
                 type="button"
                 onClick={handleSubmit}
                 disabled={isGanho ? (!feedback.trim() && !audioUrl) : !motivoPerda}
-                className={`mt-2 flex h-14 w-full items-center justify-center gap-2 rounded-2xl text-sm font-semibold text-white shadow-lg transition-transform hover:opacity-90 active:scale-95 disabled:opacity-50 disabled:active:scale-100 ${
+                className={`mt-2 flex h-10 w-full items-center justify-center gap-2 rounded-2xl text-sm font-semibold text-white shadow-lg transition-transform hover:opacity-90 active:scale-95 disabled:opacity-50 disabled:active:scale-100 ${
                   isGanho ? 'bg-green-600 shadow-green-600/20' : 'bg-red-600 shadow-red-600/20'
                 }`}
               >

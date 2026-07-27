@@ -1,4 +1,3 @@
-'use client'
 
 import { useState, useRef, useEffect } from 'react'
 import { Search, X, ChevronDown, ChevronUp } from 'lucide-react'
@@ -63,7 +62,7 @@ export function SearchableTagSelect({
   return (
     <div className="flex flex-col gap-2">
       {label && (
-        <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{label}</p>
+        <p className="text-xs font-semibold  text-muted-foreground">{label}</p>
       )}
 
       {selected.length > 0 && (
@@ -149,7 +148,7 @@ export function SearchableTagSelect({
           <div className="max-h-72 overflow-y-auto p-3 space-y-4">
             {!query && popularNaoSelecionados.length > 0 && (
               <div>
-                <p className="mb-2 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                <p className="mb-2 text-[10px] font-bold tracking-tight text-muted-foreground">
                   ⭐ Mais usados
                 </p>
                 <div className="flex flex-wrap gap-1.5">
@@ -176,7 +175,7 @@ export function SearchableTagSelect({
               return (
                 <div key={group.label}>
                   {!query && (
-                    <p className="mb-2 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                    <p className="mb-2 text-[10px] font-bold tracking-tight text-muted-foreground">
                       {group.label}
                     </p>
                   )}

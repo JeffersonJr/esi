@@ -109,7 +109,7 @@ export function UserSheet({ usuario, open, onClose, onSave, onDelete }: UserShee
                     )}
                     <div className="absolute -bottom-10 left-6">
                         <Avatar className="h-20 w-20 border-4 border-background shadow-xl">
-                            <AvatarFallback className="bg-indigo-100 text-indigo-700 text-xl font-black dark:bg-indigo-900/50 dark:text-indigo-300">
+                            <AvatarFallback className="bg-indigo-100 text-indigo-700 text-xl font-semibold dark:bg-indigo-900/50 dark:text-indigo-300">
                                 {initials}
                             </AvatarFallback>
                         </Avatar>
@@ -121,7 +121,7 @@ export function UserSheet({ usuario, open, onClose, onSave, onDelete }: UserShee
                     <SheetHeader className="text-left">
                         <div className="flex justify-between items-start">
                             <div>
-                                <SheetTitle className="text-2xl font-black tracking-tight">{form.nome}</SheetTitle>
+                                <SheetTitle className="text-2xl font-semibold tracking-tight">{form.nome}</SheetTitle>
                                 <SheetDescription className="flex items-center gap-2 mt-1 flex-wrap">
                                     <span className={cn('inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-xs font-semibold', nivelStyle(form.nivel))}>
                                         {isAdmin && <Crown className="h-3 w-3" />}
@@ -167,20 +167,20 @@ export function UserSheet({ usuario, open, onClose, onSave, onDelete }: UserShee
                         <TabsContent value="dados" className="py-6 space-y-6 mt-0">
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="space-y-2 col-span-2">
-                                    <Label className="text-xs font-bold text-slate-500 uppercase">Nome</Label>
+                                    <Label className="text-xs font-bold text-slate-500">Nome</Label>
                                     <Input value={form.nome} onChange={e => setForm({ ...form, nome: e.target.value })} />
                                 </div>
                                 <div className="space-y-2">
-                                    <Label className="text-xs font-bold text-slate-500 uppercase">Etiqueta</Label>
+                                    <Label className="text-xs font-bold text-slate-500">Etiqueta</Label>
                                     <Input placeholder="Ex: Especialista" value={form.etiqueta || ''} onChange={e => setForm({ ...form, etiqueta: e.target.value })} />
                                 </div>
                                 <div className="space-y-2">
-                                    <Label className="text-xs font-bold text-slate-500 uppercase">Função / Cargo</Label>
+                                    <Label className="text-xs font-bold text-slate-500">Função / Cargo</Label>
                                     <Input value={form.cargo} onChange={e => setForm({ ...form, cargo: e.target.value })} />
                                 </div>
                                 {!isAdmin && (
                                     <div className="space-y-2">
-                                        <Label className="text-xs font-bold text-slate-500 uppercase">Status</Label>
+                                        <Label className="text-xs font-bold text-slate-500">Status</Label>
                                         <Select value={form.status} onValueChange={v => setForm({ ...form, status: v })}>
                                             <SelectTrigger><SelectValue /></SelectTrigger>
                                             <SelectContent>
@@ -191,39 +191,39 @@ export function UserSheet({ usuario, open, onClose, onSave, onDelete }: UserShee
                                     </div>
                                 )}
                                 <div className="space-y-2">
-                                    <Label className="text-xs font-bold text-slate-500 uppercase">Data de admissão</Label>
+                                    <Label className="text-xs font-bold text-slate-500">Data de admissão</Label>
                                     <Input type="date" />
                                 </div>
                                 <div className="space-y-2 col-span-2">
-                                    <Label className="text-xs font-bold text-slate-500 uppercase">E-mail</Label>
+                                    <Label className="text-xs font-bold text-slate-500">E-mail</Label>
                                     <Input value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} />
                                 </div>
                                 <div className="space-y-2">
-                                    <Label className="text-xs font-bold text-slate-500 uppercase">Filial</Label>
+                                    <Label className="text-xs font-bold text-slate-500">Filial</Label>
                                     <Input placeholder="Matriz" />
                                 </div>
                                 <div className="space-y-2">
-                                    <Label className="text-xs font-bold text-slate-500 uppercase">Equipe</Label>
+                                    <Label className="text-xs font-bold text-slate-500">Equipe</Label>
                                     <Input placeholder="Vendas" value={form.equipe || ''} onChange={e => setForm({ ...form, equipe: e.target.value })} />
                                 </div>
                                 <div className="space-y-2">
-                                    <Label className="text-xs font-bold text-slate-500 uppercase">Nº. CRECI</Label>
+                                    <Label className="text-xs font-bold text-slate-500">Nº. CRECI</Label>
                                     <Input placeholder="12345-J" />
                                 </div>
                                 <div className="space-y-2">
-                                    <Label className="text-xs font-bold text-slate-500 uppercase">Região</Label>
+                                    <Label className="text-xs font-bold text-slate-500">Região</Label>
                                     <Input placeholder="SP" />
                                 </div>
                                 <div className="space-y-2">
-                                    <Label className="text-xs font-bold text-slate-500 uppercase">Delegacia</Label>
+                                    <Label className="text-xs font-bold text-slate-500">Delegacia</Label>
                                     <Input placeholder="" />
                                 </div>
                                 <div className="space-y-2">
-                                    <Label className="text-xs font-bold text-slate-500 uppercase">Localidade</Label>
+                                    <Label className="text-xs font-bold text-slate-500">Localidade</Label>
                                     <Input placeholder="São Paulo" />
                                 </div>
                                 <div className="space-y-2 col-span-2">
-                                    <Label className="text-xs font-bold text-slate-500 uppercase">Domínio</Label>
+                                    <Label className="text-xs font-bold text-slate-500">Domínio</Label>
                                     <Input placeholder="exemplo.esi.chat" />
                                 </div>
                                 <div className="space-y-2 col-span-2">
@@ -249,7 +249,7 @@ export function UserSheet({ usuario, open, onClose, onSave, onDelete }: UserShee
                                     {telefones.map((tel, index) => (
                                         <div key={tel.id} className="flex gap-2 items-end">
                                             <div className="space-y-1 flex-1">
-                                                <Label className="text-[10px] text-muted-foreground uppercase">Tipo</Label>
+                                                <Label className="text-[10px] text-muted-foreground">Tipo</Label>
                                                 <Select value={tel.tipo} onValueChange={(val) => {
                                                     const nt = [...telefones]; nt[index].tipo = val; setTelefones(nt);
                                                 }}>
@@ -262,13 +262,13 @@ export function UserSheet({ usuario, open, onClose, onSave, onDelete }: UserShee
                                                 </Select>
                                             </div>
                                             <div className="space-y-1 flex-1">
-                                                <Label className="text-[10px] text-muted-foreground uppercase">Operadora</Label>
+                                                <Label className="text-[10px] text-muted-foreground">Operadora</Label>
                                                 <Input value={tel.operadora} onChange={e => {
                                                     const nt = [...telefones]; nt[index].operadora = e.target.value; setTelefones(nt);
                                                 }} />
                                             </div>
                                             <div className="space-y-1 flex-[2]">
-                                                <Label className="text-[10px] text-muted-foreground uppercase">Telefone</Label>
+                                                <Label className="text-[10px] text-muted-foreground">Telefone</Label>
                                                 <Input value={tel.numero} placeholder="+55 11 99999-9999" onChange={e => {
                                                     const nt = [...telefones]; nt[index].numero = e.target.value; setTelefones(nt);
                                                 }} />
@@ -290,11 +290,11 @@ export function UserSheet({ usuario, open, onClose, onSave, onDelete }: UserShee
                                 <div className="space-y-4">
                                     <h4 className="text-sm font-bold text-slate-800">Alterar Senha do Administrador</h4>
                                     <div className="space-y-2">
-                                        <Label className="text-xs font-bold text-slate-500 uppercase">Nova Senha</Label>
+                                        <Label className="text-xs font-bold text-slate-500">Nova Senha</Label>
                                         <Input type="password" placeholder="••••••••" />
                                     </div>
                                     <div className="space-y-2">
-                                        <Label className="text-xs font-bold text-slate-500 uppercase">Repetir Senha</Label>
+                                        <Label className="text-xs font-bold text-slate-500">Repetir Senha</Label>
                                         <Input type="password" placeholder="••••••••" />
                                     </div>
                                     <Button className="w-full">Atualizar Senha</Button>

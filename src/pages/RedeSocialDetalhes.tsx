@@ -77,7 +77,7 @@ export default function RedeSocialDetalhes() {
             <Button variant="ghost" size="icon" onClick={() => navigate('/integracoes')} className="rounded-full">
               <ArrowLeft className="w-5 h-5" />
             </Button>
-            <div className={cn("w-14 h-14 rounded-2xl flex items-center justify-center text-white shadow-md select-none", redeAtual.color)}>
+            <div className={cn("w-14 h-10 rounded-2xl flex items-center justify-center text-white shadow-md select-none", redeAtual.color)}>
               {renderLogo(redeAtual)}
             </div>
             <div>
@@ -339,28 +339,28 @@ export default function RedeSocialDetalhes() {
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                <Card className="border-border/50 shadow-sm">
                 <CardHeader className="pb-2">
-                  <CardTitle className="text-sm font-medium text-muted-foreground uppercase tracking-widest">Alcance Total</CardTitle>
+                  <CardTitle className="text-sm font-medium text-muted-foreground tracking-tight">Alcance Total</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-3xl font-black">45.2K</p>
+                  <p className="text-3xl font-semibold">45.2K</p>
                   <p className="text-xs text-emerald-500 font-bold mt-1">+12% vs mês anterior</p>
                 </CardContent>
                </Card>
                <Card className="border-border/50 shadow-sm">
                 <CardHeader className="pb-2">
-                  <CardTitle className="text-sm font-medium text-muted-foreground uppercase tracking-widest">Leads Gerados</CardTitle>
+                  <CardTitle className="text-sm font-medium text-muted-foreground tracking-tight">Leads Gerados</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-3xl font-black">128</p>
+                  <p className="text-3xl font-semibold">128</p>
                   <p className="text-xs text-emerald-500 font-bold mt-1">+5% vs mês anterior</p>
                 </CardContent>
                </Card>
                <Card className="border-border/50 shadow-sm">
                 <CardHeader className="pb-2">
-                  <CardTitle className="text-sm font-medium text-muted-foreground uppercase tracking-widest">Investimento</CardTitle>
+                  <CardTitle className="text-sm font-medium text-muted-foreground tracking-tight">Investimento</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-3xl font-black">R$ 850</p>
+                  <p className="text-3xl font-semibold">R$ 850</p>
                   <p className="text-xs text-muted-foreground font-medium mt-1">Neste mês</p>
                 </CardContent>
                </Card>

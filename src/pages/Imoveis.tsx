@@ -272,7 +272,7 @@ export function Imoveis() {
                 <Icon className={cn('h-5 w-5', color)} />
               </div>
               <div>
-                <p className="text-2xl font-black leading-none">{val}</p>
+                <p className="text-2xl font-semibold leading-none">{val}</p>
                 <p className="text-xs text-muted-foreground font-semibold mt-0.5">{label}</p>
               </div>
             </CardContent>
@@ -303,7 +303,7 @@ export function Imoveis() {
                 key={t}
                 onClick={() => setTipoFilter(t)}
                 className={cn(
-                  'px-3 py-1.5 rounded-lg text-[11px] font-bold uppercase tracking-wide transition-all border shrink-0',
+                  'px-3 py-1.5 rounded-lg text-[11px] font-bold  transition-all border shrink-0',
                   tipoFilter === t
                     ? 'bg-primary text-primary-foreground border-primary shadow-sm'
                     : 'bg-background text-muted-foreground border-border hover:border-primary/40 hover:text-foreground'
@@ -367,7 +367,7 @@ export function Imoveis() {
 
                       {/* Price */}
                       <div className="absolute bottom-3 left-4">
-                        <div className="text-white font-black text-xl drop-shadow">{imovel.valor}</div>
+                        <div className="text-white font-semibold text-xl drop-shadow">{imovel.valor}</div>
                         {imovel.valorAluguel && (
                           <div className="text-white/75 text-[11px] font-semibold">{imovel.valorAluguel}/mês</div>
                         )}
@@ -391,7 +391,7 @@ export function Imoveis() {
                     </div>
 
                     <CardContent className="p-4">
-                      <h3 className="font-black text-base tracking-tight group-hover:text-primary transition-colors line-clamp-1 mb-1">
+                      <h3 className="font-semibold text-base tracking-tight group-hover:text-primary transition-colors line-clamp-1 mb-1">
                         {imovel.titulo}
                       </h3>
                       <p className="flex items-center gap-1 text-xs text-muted-foreground font-medium mb-4 line-clamp-1">
@@ -408,8 +408,8 @@ export function Imoveis() {
                         ].map(({ icon: Icon, val, label }) => (
                           <div key={label} className="flex flex-col items-center gap-0.5">
                             <Icon className="h-3.5 w-3.5 text-primary/50" />
-                            <span className="text-xs font-black">{val}</span>
-                            <span className="text-[9px] font-semibold text-muted-foreground uppercase tracking-wide">{label}</span>
+                            <span className="text-xs font-semibold">{val}</span>
+                            <span className="text-[9px] font-semibold text-muted-foreground ">{label}</span>
                           </div>
                         ))}
                       </div>
@@ -472,7 +472,7 @@ export function Imoveis() {
                           </div>
                         </TableCell>
                         <TableCell>
-                          <div className="font-black text-sm text-primary">{imovel.valor}</div>
+                          <div className="font-semibold text-sm text-primary">{imovel.valor}</div>
                           {imovel.valorAluguel && <div className="text-[10px] text-muted-foreground font-medium">{imovel.valorAluguel}/mês</div>}
                         </TableCell>
                         <TableCell>

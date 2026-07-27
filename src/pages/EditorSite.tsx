@@ -258,7 +258,7 @@ function SectionAccordion({
       >
         <div className="flex items-center gap-2.5">
           <span className={isOpen ? 'text-[hsl(221_68%_45%)] scale-110 transition-transform' : 'text-slate-400'}>{icon}</span>
-          <h2 className={`text-xs font-bold uppercase tracking-wider ${isOpen ? 'text-[hsl(221_68%_25%)]' : 'text-slate-800'}`}>{title}</h2>
+          <h2 className={`text-xs font-bold tracking-tight ${isOpen ? 'text-[hsl(221_68%_25%)]' : 'text-slate-800'}`}>{title}</h2>
         </div>
         <ChevronRight size={14} className={`text-slate-400 transition-transform duration-350 ${isOpen ? 'rotate-90 text-[hsl(221_68%_45%)]' : ''}`} />
       </button>
@@ -290,7 +290,7 @@ function Toggle({ checked, onChange, label }: { checked: boolean; onChange: (v: 
 function InputField({ label, value, onChange, placeholder, type = 'text' }: { label: string; value: string; onChange: (v: string) => void; placeholder?: string; type?: string }) {
   return (
     <div>
-      <label className="block text-[9px] font-bold uppercase tracking-wider text-slate-500 mb-1.5">{label}</label>
+      <label className="block text-[9px] font-bold tracking-tight text-slate-500 mb-1.5">{label}</label>
       <input
         type={type}
         value={value}
@@ -305,7 +305,7 @@ function InputField({ label, value, onChange, placeholder, type = 'text' }: { la
 function TextareaField({ label, value, onChange, placeholder, rows = 3 }: { label: string; value: string; onChange: (v: string) => void; placeholder?: string; rows?: number }) {
   return (
     <div>
-      <label className="block text-[9px] font-bold uppercase tracking-wider text-slate-500 mb-1.5">{label}</label>
+      <label className="block text-[9px] font-bold tracking-tight text-slate-500 mb-1.5">{label}</label>
       <textarea
         value={value}
         onChange={e => onChange(e.target.value)}
@@ -768,17 +768,17 @@ export function EditorSitePage() {
         <div className="relative h-28 bg-slate-100 overflow-hidden shrink-0">
           <img src={property.image} className="w-full h-full object-cover" />
           {tagInfo && (
-            <span className={`absolute top-2 left-2 ${tagInfo.color} text-[7px] font-bold px-1.5 py-0.5 rounded-full uppercase tracking-wider`}>
+            <span className={`absolute top-2 left-2 ${tagInfo.color} text-[7px] font-bold px-1.5 py-0.5 rounded-full tracking-tight`}>
               {tagInfo.emoji} {tagInfo.label}
             </span>
           )}
           {styleName === 'editorial' && (
-            <span className="absolute top-2 right-2 bg-slate-900 text-white font-bold text-[7px] px-1.5 py-0.5 rounded font-display uppercase tracking-widest">Collection</span>
+            <span className="absolute top-2 right-2 bg-slate-900 text-white font-bold text-[7px] px-1.5 py-0.5 rounded font-display tracking-tight">Collection</span>
           )}
         </div>
         <div className="p-3 flex flex-col justify-between flex-grow">
           <div className="space-y-1">
-            <div className={`text-[7px] uppercase tracking-widest font-semibold ${isDark ? 'text-amber-400/90' : 'text-slate-500'}`}>{property.neighborhood}</div>
+            <div className={`text-[7px] tracking-tight font-semibold ${isDark ? 'text-amber-400/90' : 'text-slate-500'}`}>{property.neighborhood}</div>
             <div className={`text-[10px] font-bold line-clamp-2 leading-tight ${isDark ? 'text-white' : 'text-slate-900'} ${styleName === 'classic' || styleName === 'editorial' ? 'font-display' : ''}`} style={{ fontFamily: styleName === 'classic' || styleName === 'editorial' ? fonts.display : fonts.sans }}>{property.title}</div>
           </div>
           <div className="mt-3">
@@ -814,14 +814,14 @@ export function EditorSitePage() {
         <div className={`shrink-0 overflow-hidden bg-slate-100 relative ${styleName === 'editorial' || styleName === 'asymmetric' ? 'w-24 rounded-tr-2xl rounded-bl-2xl' : 'w-24'}`}>
           <img src={property.image} className="w-full h-full object-cover" />
           {tagInfo && (
-            <span className={`absolute top-1.5 left-1.5 ${tagInfo.color} text-[6px] font-bold px-1 py-0.5 rounded-full uppercase`}>
+            <span className={`absolute top-1.5 left-1.5 ${tagInfo.color} text-[6px] font-bold px-1 py-0.5 rounded-full`}>
               {tagInfo.emoji}
             </span>
           )}
         </div>
         <div className="p-2.5 flex flex-col justify-between flex-1 min-w-0">
           <div className="min-w-0 space-y-0.5">
-            <div className={`text-[7px] uppercase tracking-widest font-semibold ${isDark ? 'text-amber-400/90' : 'text-slate-500'}`}>{property.neighborhood}</div>
+            <div className={`text-[7px] tracking-tight font-semibold ${isDark ? 'text-amber-400/90' : 'text-slate-500'}`}>{property.neighborhood}</div>
             <div className={`text-[9px] font-bold truncate ${isDark ? 'text-white' : 'text-slate-900'}`} style={{ fontFamily: styleName === 'editorial' || styleName === 'asymmetric' ? fonts.display : fonts.sans }}>{property.title}</div>
           </div>
           <div>
@@ -992,7 +992,7 @@ export function EditorSitePage() {
               <div className="text-[6px] font-mono opacity-80">CRECI: {contacts.creci}</div>
             </div>
             <div className="space-y-1">
-              <div className="text-[7px] font-bold uppercase tracking-wider" style={{ color: '#fff' }}>Contato</div>
+              <div className="text-[7px] font-bold tracking-tight" style={{ color: '#fff' }}>Contato</div>
               <div className="text-[6px]">{contacts.phone}</div>
               <div className="text-[6px]">{contacts.email}</div>
               <div className="text-[6px] opacity-75 leading-tight">{contacts.address.fullAddress}</div>
@@ -1009,7 +1009,7 @@ export function EditorSitePage() {
       return (
         <footer className="px-4 py-6 border-t space-y-4 text-left shrink-0 bg-zinc-950 border-zinc-800 text-zinc-400">
           <div className="p-3 rounded-xl border border-zinc-800 space-y-2 bg-zinc-900/50">
-            <div className="text-[8px] font-bold text-white uppercase tracking-wider">Newsletter de Lançamentos</div>
+            <div className="text-[8px] font-bold text-white tracking-tight">Newsletter de Lançamentos</div>
             <p className="text-[6px] text-zinc-400">Receba em primeira mão residências suspensas com design assinado.</p>
             <div className="flex gap-1.5">
               <input disabled placeholder="Seu e-mail..." className="flex-1 bg-zinc-800 border border-zinc-700 rounded px-1.5 py-0.5 text-[6px] text-white focus:outline-none" />
@@ -1038,11 +1038,11 @@ export function EditorSitePage() {
         <footer className="px-4 py-6 border-t space-y-4 text-left shrink-0" style={{ backgroundColor: colors.creamDark, borderColor: colors.creamBorder, color: colors.charcoalLight }}>
           <div className="grid grid-cols-3 gap-3">
             <div className="space-y-1.5">
-              <div className="text-[7px] font-bold uppercase tracking-wider text-slate-900">Sobre Nós</div>
+              <div className="text-[7px] font-bold tracking-tight text-slate-900">Sobre Nós</div>
               <p className="text-[6px] leading-tight opacity-75">{settings.sobreText?.slice(0, 100) || 'Curadoria imobiliária premium.'}...</p>
             </div>
             <div className="space-y-1.5">
-              <div className="text-[7px] font-bold uppercase tracking-wider text-slate-900">Serviços</div>
+              <div className="text-[7px] font-bold tracking-tight text-slate-900">Serviços</div>
               <div className="text-[6px] flex flex-col gap-1">
                 <span className="cursor-pointer hover:underline">Venda de Luxo</span>
                 <span className="cursor-pointer hover:underline">Locação Premium</span>
@@ -1050,7 +1050,7 @@ export function EditorSitePage() {
               </div>
             </div>
             <div className="space-y-1.5">
-              <div className="text-[7px] font-bold uppercase tracking-wider text-slate-900">Atendimento</div>
+              <div className="text-[7px] font-bold tracking-tight text-slate-900">Atendimento</div>
               <div className="text-[6px] opacity-75 leading-tight">{settings.openingHours || 'Segunda a Sexta das 9h às 18h · Sábados das 9h às 13h'}</div>
               <div className="text-[5.5px] font-bold mt-1 text-slate-500">CRECI: {contacts.creci}</div>
             </div>
@@ -1069,7 +1069,7 @@ export function EditorSitePage() {
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-48 h-12 bg-amber-500/5 rounded-full filter blur-xl pointer-events-none" />
           <div className="flex flex-col items-center gap-2 relative z-10">
             {logoEl}
-            <div className="text-[6px] uppercase tracking-widest text-amber-500/80 font-bold">{settings.heroTitle}</div>
+            <div className="text-[6px] tracking-tight text-amber-500/80 font-bold">{settings.heroTitle}</div>
           </div>
           <div className="w-12 h-[1px] bg-gradient-to-r from-transparent via-amber-500 to-transparent mx-auto my-2" />
               <div className="flex justify-center gap-4 text-[7px] font-semibold text-zinc-300">
@@ -1103,7 +1103,7 @@ export function EditorSitePage() {
             </div>
           </div>
           <div>
-            <div className="text-[7px] font-bold uppercase tracking-wider mb-2" style={{ color: '#fff' }}>Imóveis</div>
+            <div className="text-[7px] font-bold tracking-tight mb-2" style={{ color: '#fff' }}>Imóveis</div>
             <div className="text-[6px] flex flex-col gap-1">
               <span>Comprar</span>
               <span>Alugar</span>
@@ -1111,7 +1111,7 @@ export function EditorSitePage() {
             </div>
           </div>
           <div>
-            <div className="text-[7px] font-bold uppercase tracking-wider mb-2" style={{ color: '#fff' }}>Empresa</div>
+            <div className="text-[7px] font-bold tracking-tight mb-2" style={{ color: '#fff' }}>Empresa</div>
             <div className="text-[6px] flex flex-col gap-1">
               <span>Sobre nós</span>
               <span>Contato</span>
@@ -1119,7 +1119,7 @@ export function EditorSitePage() {
             </div>
           </div>
           <div>
-            <div className="text-[7px] font-bold uppercase tracking-wider mb-2" style={{ color: '#fff' }}>Contato</div>
+            <div className="text-[7px] font-bold tracking-tight mb-2" style={{ color: '#fff' }}>Contato</div>
             <div className="text-[6px]">{contacts.phone}</div>
             <div className="text-[6px]">{contacts.email}</div>
             <div className="text-[6px] opacity-75 leading-tight">{contacts.address.fullAddress}</div>
@@ -1165,25 +1165,25 @@ export function EditorSitePage() {
           <div className="grid grid-cols-12 gap-1 items-end">
             {showTipo && (
               <div className="col-span-4">
-                <label className="block text-[4.5px] font-bold text-slate-700 uppercase tracking-wider pl-0.5">Tipo</label>
+                <label className="block text-[4.5px] font-bold text-slate-700 tracking-tight pl-0.5">Tipo</label>
                 <div className="w-full bg-slate-50 border border-slate-200 rounded px-1 py-0.5 text-[5px] text-slate-450 truncate">Tipo de imóvel</div>
               </div>
             )}
             {showCidade && (
               <div className="col-span-4">
-                <label className="block text-[4.5px] font-bold text-slate-700 uppercase tracking-wider pl-0.5">Cidade</label>
+                <label className="block text-[4.5px] font-bold text-slate-700 tracking-tight pl-0.5">Cidade</label>
                 <div className="w-full bg-slate-50 border border-slate-200 rounded px-1 py-0.5 text-[5px] text-slate-450 truncate">Localização</div>
               </div>
             )}
             {showBedrooms && (
               <div className="col-span-4">
-                <label className="block text-[4.5px] font-bold text-slate-700 uppercase tracking-wider pl-0.5">Quartos</label>
+                <label className="block text-[4.5px] font-bold text-slate-700 tracking-tight pl-0.5">Quartos</label>
                 <div className="w-full bg-slate-50 border border-slate-200 rounded px-1 py-0.5 text-[5px] text-slate-450 truncate">Dormitórios</div>
               </div>
             )}
             {showPreco && (
               <div className="col-span-4">
-                <label className="block text-[4.5px] font-bold text-slate-700 uppercase tracking-wider pl-0.5">Valor</label>
+                <label className="block text-[4.5px] font-bold text-slate-700 tracking-tight pl-0.5">Valor</label>
                 <div className="w-full bg-slate-50 border border-slate-200 rounded px-1 py-0.5 text-[5px] text-slate-450 truncate">Preço</div>
               </div>
             )}
@@ -1199,7 +1199,7 @@ export function EditorSitePage() {
       return (
         <div className="flex min-h-[260px]">
           <div className="flex-1 flex flex-col justify-center p-6 pr-4 relative z-10" style={{ backgroundColor: colors.charcoal }}>
-            <div className="text-[8px] uppercase tracking-widest mb-2 font-medium" style={{ color: goldAccent }}>Alto Padrão · Curitiba</div>
+            <div className="text-[8px] tracking-tight mb-2 font-medium" style={{ color: goldAccent }}>Alto Padrão · Curitiba</div>
             <h2 className="text-sm font-bold leading-tight mb-2" style={{ color: colors.cream, fontFamily: fonts.display }}>{settings.heroTitle}</h2>
             <p className="text-[8px] leading-relaxed opacity-75 mb-3" style={{ color: colors.cream }}>{settings.heroSubtitle}</p>
             {renderPreviewHeroSearch()}
@@ -1222,7 +1222,7 @@ export function EditorSitePage() {
           <div className="absolute bottom-4 left-8 w-24 h-24 rounded-full opacity-15 blur-2xl" style={{ backgroundColor: goldAccent }} />
           
           <div className="relative z-10 text-center px-6 pt-12 pb-4">
-            <div className="inline-flex items-center gap-1.5 mb-2 px-3 py-1 rounded-full text-[7px] font-bold uppercase tracking-widest" style={{ backgroundColor: `${goldAccent}30`, color: goldAccent, border: `1px solid ${goldAccent}40` }}>
+            <div className="inline-flex items-center gap-1.5 mb-2 px-3 py-1 rounded-full text-[7px] font-bold tracking-tight" style={{ backgroundColor: `${goldAccent}30`, color: goldAccent, border: `1px solid ${goldAccent}40` }}>
               <Sparkles size={8} /> Curadoria Premium · Exclusivo
             </div>
             <h2 className="font-bold text-xl leading-tight mb-2" style={{ color: '#fff', fontFamily: fonts.display }}>{settings.heroTitle}</h2>
@@ -1242,7 +1242,7 @@ export function EditorSitePage() {
           <div className="absolute inset-0" style={{ background: `linear-gradient(105deg, ${colors.charcoal}dd 0%, ${colors.charcoal}99 55%, ${colors.charcoal}22 100%)` }} />
           <div className="relative z-10 px-5 pt-16 pb-6 grid grid-cols-2 gap-4 items-center">
             <div>
-              <div className="text-[7px] uppercase tracking-widest mb-2 font-medium" style={{ color: goldAccent }}>Curadoria Premium</div>
+              <div className="text-[7px] tracking-tight mb-2 font-medium" style={{ color: goldAccent }}>Curadoria Premium</div>
               <h2 className="font-bold text-base leading-tight mb-2" style={{ color: '#fff', fontFamily: fonts.display }}>{settings.heroTitle}</h2>
               <p className="text-[8px] leading-relaxed opacity-75" style={{ color: '#fff' }}>{settings.heroSubtitle}</p>
             </div>
@@ -1264,7 +1264,7 @@ export function EditorSitePage() {
               {renderPreviewHeroSearch()}
             </div>
             <div className="text-right">
-              <div className="text-[7px] uppercase tracking-widest mb-2 font-medium" style={{ color: goldAccent }}>Curadoria Premium</div>
+              <div className="text-[7px] tracking-tight mb-2 font-medium" style={{ color: goldAccent }}>Curadoria Premium</div>
               <h2 className="font-bold text-base leading-tight mb-2" style={{ color: '#fff', fontFamily: fonts.display }}>{settings.heroTitle}</h2>
               <p className="text-[8px] leading-relaxed opacity-75" style={{ color: '#fff' }}>{settings.heroSubtitle}</p>
             </div>
@@ -1278,7 +1278,7 @@ export function EditorSitePage() {
         <img src={heroImg} className="absolute inset-0 w-full h-full object-cover" />
         <div className="absolute inset-0 bg-black/55" />
         <div className="relative z-10 max-w-xs space-y-3">
-          <div className="text-[7px] uppercase tracking-widest text-[#EDBF71] font-bold">Residências Exclusivas</div>
+          <div className="text-[7px] tracking-tight text-[#EDBF71] font-bold">Residências Exclusivas</div>
           <h2 className="text-base font-bold text-white leading-tight" style={{ fontFamily: fonts.display }}>{settings.heroTitle}</h2>
           <p className="text-[7.5px] text-white/80 leading-relaxed">{settings.heroSubtitle}</p>
           {settings.heroStyle === 'search-centered' && (
@@ -1309,7 +1309,7 @@ export function EditorSitePage() {
                     return (
                       <div key={s}>
                         <div className="text-[10px] font-bold" style={{ color: getContrastGold(true), fontFamily: fonts.display }}>{value}</div>
-                        <div className="text-[6px] uppercase tracking-wider mt-0.5 text-white/70">{label}</div>
+                        <div className="text-[6px] tracking-tight mt-0.5 text-white/70">{label}</div>
                       </div>
                     )
                   })}
@@ -1321,7 +1321,7 @@ export function EditorSitePage() {
           if (blockId === 'gallery') {
             return (
               <div key="gallery" className="space-y-2 text-left">
-                <div className="text-[7px] uppercase tracking-widest font-bold animate-fade-in" style={{ color: colors.gold }}>Galeria de Inspiração</div>
+                <div className="text-[7px] tracking-tight font-bold animate-fade-in" style={{ color: colors.gold }}>Galeria de Inspiração</div>
                 <div className="grid grid-cols-3 gap-1.5">
                   {['photo-1600585154340-be6161a56a0c', 'photo-1600596542815-ffad4c1539a9', 'photo-1545324418-cc1a3fa10c00'].map((p, idx) => (
                     <div key={idx} className="aspect-square rounded-lg overflow-hidden border border-slate-100 shadow-sm bg-white animate-fade-in">
@@ -1342,7 +1342,7 @@ export function EditorSitePage() {
             if (tStyle === 'minimal') {
               return (
                 <div key="team" className="space-y-2.5 text-left">
-                  <div className="text-[7px] uppercase tracking-widest font-bold" style={{ color: colors.gold }}>Fale com Nossos Curadores</div>
+                  <div className="text-[7px] tracking-tight font-bold" style={{ color: colors.gold }}>Fale com Nossos Curadores</div>
                   <div className="flex gap-3 justify-center flex-wrap pt-1">
                     {members.map((m, idx) => (
                       <div key={idx} className="flex flex-col items-center space-y-1 animate-fade-in">
@@ -1363,7 +1363,7 @@ export function EditorSitePage() {
             if (tStyle === 'cards') {
               return (
                 <div key="team" className="space-y-2.5 text-left">
-                  <div className="text-[7px] uppercase tracking-widest font-bold" style={{ color: colors.gold }}>Equipe Consultiva</div>
+                  <div className="text-[7px] tracking-tight font-bold" style={{ color: colors.gold }}>Equipe Consultiva</div>
                   <div className="grid grid-cols-2 gap-2">
                     {members.map((m, idx) => (
                       <div key={idx} className="p-2.5 rounded-xl border bg-white/45 backdrop-blur-sm border-white/20 shadow-sm flex items-center gap-2 animate-fade-in">
@@ -1385,7 +1385,7 @@ export function EditorSitePage() {
             if (tStyle === 'list') {
               return (
                 <div key="team" className="space-y-2 pt-1 text-left">
-                  <div className="text-[7px] uppercase tracking-widest font-bold" style={{ color: colors.gold }}>Diretoria de Atendimento</div>
+                  <div className="text-[7px] tracking-tight font-bold" style={{ color: colors.gold }}>Diretoria de Atendimento</div>
                   <div className="space-y-1.5">
                     {members.map((m, idx) => (
                       <div key={idx} className="flex items-center justify-between p-2 rounded-lg bg-white border border-slate-100 shadow-sm animate-fade-in">
@@ -1409,7 +1409,7 @@ export function EditorSitePage() {
             // Default: 'grid'
             return (
               <div key="team" className="space-y-2.5 text-left">
-                <div className="text-[7px] uppercase tracking-widest font-bold" style={{ color: colors.gold }}>Curadores Disponíveis</div>
+                <div className="text-[7px] tracking-tight font-bold" style={{ color: colors.gold }}>Curadores Disponíveis</div>
                 <div className="grid grid-cols-2 gap-2">
                   {members.map((m, idx) => (
                     <div key={idx} className="bg-white rounded-xl border p-2 text-center space-y-1.5 shadow-sm animate-fade-in" style={{ borderColor: colors.creamBorder }}>
@@ -1431,11 +1431,11 @@ export function EditorSitePage() {
           if (blockId === 'form') {
             return (
               <div key="form" className="p-3.5 rounded-xl border space-y-2 text-left bg-slate-50 animate-fade-in" style={{ borderColor: colors.creamBorder }}>
-                <div className="text-[8px] font-bold uppercase tracking-wider text-slate-800">Solicitar Informações</div>
+                <div className="text-[8px] font-bold tracking-tight text-slate-800">Solicitar Informações</div>
                 <div className="space-y-1.5">
                   {Object.entries(settings.formFields).filter(([_, f]: any) => f.enabled).map(([id, f]: any) => (
                     <div key={id} className="space-y-0.5">
-                      <label className="text-[5.5px] font-bold uppercase tracking-wider text-slate-500 block">
+                      <label className="text-[5.5px] font-bold tracking-tight text-slate-500 block">
                         {f.label} {f.required && <span className="text-red-500">*</span>}
                       </label>
                       {id === 'message' ? (
@@ -1465,7 +1465,7 @@ export function EditorSitePage() {
           if (blockId === 'cta') {
             return (
               <div key="cta" className="p-4 rounded-xl text-center animate-fade-in" style={{ backgroundColor: colors.gold, color: '#fff' }}>
-                <div className="text-[9px] font-bold uppercase tracking-wider">Pronto para dar o próximo passo?</div>
+                <div className="text-[9px] font-bold tracking-tight">Pronto para dar o próximo passo?</div>
                 <p className="text-[6px] opacity-80 mt-1 max-w-[200px] mx-auto leading-normal">Agende uma reunião confidencial em nosso escritório no Batel.</p>
                 <button className="mt-2 px-2.5 py-1 bg-white rounded-full text-[5.5px] font-bold text-slate-900 border-0 cursor-pointer">Fale Conosco</button>
               </div>
@@ -1495,7 +1495,7 @@ export function EditorSitePage() {
                     {[{ v: 'R$ 2,4 bi', l: 'Negociados' }, { v: '1.200+', l: 'Imóveis' }, { v: '5', l: 'Cidades' }, { v: '23 anos', l: 'Experiência' }].map(s => (
                       <div key={s.l}>
                         <div className="text-xs font-bold" style={{ color: getContrastGold(true), fontFamily: fonts.display }}>{s.v}</div>
-                        <div className="text-[6px] uppercase tracking-wider mt-0.5" style={{ color: `${colors.cream}80` }}>{s.l}</div>
+                        <div className="text-[6px] tracking-tight mt-0.5" style={{ color: `${colors.cream}80` }}>{s.l}</div>
                       </div>
                     ))}
                   </div>
@@ -1568,7 +1568,7 @@ export function EditorSitePage() {
               if (blockId === 'testimonials') return (
                 <div key="testimonials" className="p-3 rounded-xl border animate-fade-in" style={{ backgroundColor: colors.creamDark, borderColor: colors.creamBorder }}>
                   <p className="text-[8px] italic mb-1.5" style={{ color: colors.charcoal }}>"Excelente atendimento, encontrei minha cobertura dos sonhos!"</p>
-                  <span className="text-[7px] font-bold uppercase tracking-wider" style={{ color: getContrastGold() }}>Beatriz Almeida · Batel</span>
+                  <span className="text-[7px] font-bold tracking-tight" style={{ color: getContrastGold() }}>Beatriz Almeida · Batel</span>
                 </div>
               )
 
@@ -1582,7 +1582,7 @@ export function EditorSitePage() {
 
               if (blockId === 'tags') return (
                 <div key="tags" className="space-y-1.5 animate-fade-in">
-                  <div className="text-[7px] font-bold uppercase tracking-wider" style={{ color: colors.warmGray }}>Explore</div>
+                  <div className="text-[7px] font-bold tracking-tight" style={{ color: colors.warmGray }}>Explore</div>
                   <div className="flex flex-wrap gap-1">
                     {['Apt Luxo Batel', 'Cobertura Cabral', 'Casa Ecoville', 'Lançamentos', 'Studios'].map(t => (
                       <span key={t} className="text-[6px] px-2 py-0.5 rounded-full border font-medium" style={{ backgroundColor: '#fff', borderColor: colors.creamBorder, color: colors.charcoal }}>{t}</span>
@@ -1627,7 +1627,7 @@ export function EditorSitePage() {
               {/* Sidebar filters on the right */}
               {showSidebar && (
                 <div className="w-24 shrink-0 bg-white rounded-xl border p-2 text-left self-start" style={{ borderColor: colors.creamBorder }}>
-                  <div className="text-[6px] font-bold uppercase tracking-wider mb-2" style={{ color: colors.charcoal }}>Filtros Ativos</div>
+                  <div className="text-[6px] font-bold tracking-tight mb-2" style={{ color: colors.charcoal }}>Filtros Ativos</div>
                   <div className="space-y-1 text-[5px] text-slate-500">
                     <div className="bg-slate-50 p-1 rounded border">Finalidade: {label}</div>
                     <div className="bg-slate-50 p-1 rounded border">Tipo: Apartamento</div>
@@ -1647,7 +1647,7 @@ export function EditorSitePage() {
         <div className="flex flex-col min-h-full">
           {renderNavbar()}
           <div className="flex-1 px-4 py-3" style={{ backgroundColor: colors.cream }}>
-            <div className="text-[7px] uppercase tracking-widest mb-0.5 font-bold" style={{ color: colors.gold }}>Exclusivos</div>
+            <div className="text-[7px] tracking-tight mb-0.5 font-bold" style={{ color: colors.gold }}>Exclusivos</div>
             <h3 className="text-sm font-bold mb-3" style={{ fontFamily: fonts.display, color: colors.charcoal }}>Novos Lançamentos</h3>
             <div className="space-y-2.5">
               {[1, 2, 3].map(i => (
@@ -1656,7 +1656,7 @@ export function EditorSitePage() {
                     <img src={`https://images.unsplash.com/photo-${['1545324418-cc1a3fa10c00', '1560448204-e02f11c3d0e2', '1486406146926-c627a92ad1ab'][i - 1]}?w=200&q=80`} className="w-full h-full object-cover" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <div className="text-[7px] uppercase tracking-widest font-bold" style={{ color: colors.gold }}>Lançamento • Batel</div>
+                    <div className="text-[7px] tracking-tight font-bold" style={{ color: colors.gold }}>Lançamento • Batel</div>
                     <div className="text-[9px] font-bold truncate" style={{ fontFamily: fonts.display, color: colors.charcoal }}>Ícaro Jardins {i}</div>
                     <div className="text-[8px] font-bold mt-1" style={{ color: colors.gold }}>{formatPrice(5500000 + i * 800000)}</div>
                   </div>
@@ -1704,7 +1704,7 @@ export function EditorSitePage() {
             ) : (
               <div className="grid grid-cols-2 gap-0">
                 <div className="p-4 space-y-2">
-                  <div className="text-[7px] uppercase tracking-widest font-bold" style={{ color: colors.gold }}>Anuncie</div>
+                  <div className="text-[7px] tracking-tight font-bold" style={{ color: colors.gold }}>Anuncie</div>
                   <h3 className="text-xs font-bold" style={{ fontFamily: fonts.display, color: colors.charcoal }}>{settings.anunciarTitle}</h3>
                   <p className="text-[7px] leading-relaxed" style={{ color: colors.warmGray }}>{settings.anunciarSubtitle}</p>
                   <div className="text-[7px] font-bold flex items-center gap-1" style={{ color: colors.gold }}>Saiba mais <ArrowRight size={8} /></div>
@@ -1734,11 +1734,11 @@ export function EditorSitePage() {
             <h3 className="text-xs font-bold mb-3" style={{ fontFamily: fonts.display, color: colors.charcoal }}>Blog & Conteúdo</h3>
             {['Como avaliar o preço justo de um imóvel', 'Melhores bairros para morar em Curitiba 2026', 'Lançamentos: o que analisar antes de comprar'].map((title, i) => (
               <div key={i} className="flex gap-2 p-2 rounded-xl border animate-fade-in" style={{ borderColor: colors.creamBorder, backgroundColor: colors.creamDark }}>
-                <div className="w-14 h-14 rounded-lg overflow-hidden shrink-0">
+                <div className="w-14 h-10 rounded-lg overflow-hidden shrink-0">
                   <img src={`https://images.unsplash.com/photo-${['1486406146926-c627a92ad1ab', '1600596542815-ffad4c1539a9', '1545324418-cc1a3fa10c00'][i]}?w=200&q=80`} className="w-full h-full object-cover" />
                 </div>
                 <div>
-                  <div className="text-[6px] uppercase tracking-widest font-bold mb-0.5" style={{ color: colors.gold }}>Mercado Imobiliário</div>
+                  <div className="text-[6px] tracking-tight font-bold mb-0.5" style={{ color: colors.gold }}>Mercado Imobiliário</div>
                   <div className="text-[8px] font-bold leading-tight" style={{ color: colors.charcoal, fontFamily: fonts.display }}>{title}</div>
                   <div className="text-[6px] mt-1" style={{ color: colors.warmGray }}>5 min de leitura</div>
                 </div>
@@ -1819,7 +1819,7 @@ export function EditorSitePage() {
 
         return (
           <div className="text-center py-2">
-            <div className="inline-flex items-center gap-1 bg-amber-500/10 text-amber-600 px-2 py-0.5 rounded-full text-[5.5px] font-bold uppercase tracking-wider mb-1">
+            <div className="inline-flex items-center gap-1 bg-amber-500/10 text-amber-600 px-2 py-0.5 rounded-full text-[5.5px] font-bold tracking-tight mb-1">
               <span>🕒 Fale Conosco</span>
             </div>
             <h3 className="text-sm font-bold text-slate-800" style={{ fontFamily: fonts.display, color: colors.charcoal }}>{title}</h3>
@@ -1836,7 +1836,7 @@ export function EditorSitePage() {
             { label: 'E-mail', val: contacts.email },
           ].map(c => (
             <div key={c.label} className="bg-white rounded-lg border p-1.5 shadow-sm" style={{ borderColor: colors.creamBorder }}>
-              <div className="text-[5.5px] font-bold uppercase tracking-wider" style={{ color: colors.gold }}>{c.label}</div>
+              <div className="text-[5.5px] font-bold tracking-tight" style={{ color: colors.gold }}>{c.label}</div>
               <div className="text-[6px] font-semibold text-slate-700 truncate mt-0.5">{c.val}</div>
             </div>
           ))}
@@ -1852,7 +1852,7 @@ export function EditorSitePage() {
                 <div className="space-y-1.5">
                   {activeFields.map(([id, f]: any) => (
                     <div key={id} className="space-y-0.5">
-                      <label className="text-[5.5px] font-bold uppercase tracking-wider text-slate-500 block">{f.label}</label>
+                      <label className="text-[5.5px] font-bold tracking-tight text-slate-500 block">{f.label}</label>
                       <input disabled placeholder={f.label} className="w-full bg-slate-50 border rounded px-1.5 py-0.5 text-[6px]" style={{ borderColor: colors.creamBorder }} />
                     </div>
                   ))}
@@ -1860,7 +1860,7 @@ export function EditorSitePage() {
                 </div>
               </div>
               <div className="bg-white rounded-xl border p-2.5 shadow-sm text-left text-[6.5px]" style={{ borderColor: colors.creamBorder }}>
-                <div className="font-bold text-slate-700 uppercase">Endereço Principal</div>
+                <div className="font-bold text-slate-700">Endereço Principal</div>
                 <p className="text-slate-500 leading-relaxed mt-0.5">{address}</p>
               </div>
             </div>
@@ -1875,7 +1875,7 @@ export function EditorSitePage() {
               <div className="space-y-1">
                 {activeFields.map(([id, f]: any) => (
                   <div key={id} className="space-y-0.5">
-                    <label className="text-[5px] font-bold uppercase tracking-wider text-slate-500 block">{f.label}</label>
+                    <label className="text-[5px] font-bold tracking-tight text-slate-500 block">{f.label}</label>
                     <input disabled placeholder={f.label} className="w-full bg-slate-50 border rounded px-1.5 py-0.5 text-[5.5px]" style={{ borderColor: colors.creamBorder }} />
                   </div>
                 ))}
@@ -1884,7 +1884,7 @@ export function EditorSitePage() {
             </div>
             <div className="col-span-2 space-y-2">
               <div className="bg-white rounded-xl border p-2.5 shadow-sm text-[6px]" style={{ borderColor: colors.creamBorder }}>
-                <div className="font-bold text-slate-700 uppercase">Endereço</div>
+                <div className="font-bold text-slate-700">Endereço</div>
                 <p className="text-slate-500 leading-normal mt-0.5">{address}</p>
                 <div className="mt-1.5 space-y-0.5 text-slate-450">
                   <div>📞 {contacts.phone}</div>
@@ -1918,7 +1918,7 @@ export function EditorSitePage() {
               {statsList.map((s: any, idx: number) => (
                 <div key={idx}>
                   <div className="text-[10px] font-bold" style={{ color: getContrastGold(true), fontFamily: fonts.display }}>{s.value}</div>
-                  <div className="text-[5.5px] uppercase tracking-wider text-white/50">{s.label}</div>
+                  <div className="text-[5.5px] tracking-tight text-white/50">{s.label}</div>
                 </div>
               ))}
             </div>
@@ -1945,14 +1945,14 @@ export function EditorSitePage() {
             return (
               <div key="text" className="grid grid-cols-2 gap-2 text-left text-[6.5px]">
                 <div className="space-y-1.5">
-                  <div className="font-bold text-slate-800 uppercase">Escritórios</div>
+                  <div className="font-bold text-slate-800">Escritórios</div>
                   <div className="bg-white border rounded-lg p-1.5 leading-tight" style={{ borderColor: colors.creamBorder }}>
                     <div className="font-bold">{settings.name} — Sede</div>
                     <div className="text-slate-500">{address}</div>
                   </div>
                 </div>
                 <div className="space-y-1.5">
-                  <div className="font-bold text-slate-800 uppercase">FAQs</div>
+                  <div className="font-bold text-slate-800">FAQs</div>
                   <div className="bg-white border rounded-lg p-1.5 leading-tight" style={{ borderColor: colors.creamBorder }}>
                     <div className="font-semibold text-slate-700">Como funciona a curadoria?</div>
                     <div className="text-slate-500 mt-0.5">Nossa equipe acompanha cada etapa do processo...</div>
@@ -2015,7 +2015,7 @@ export function EditorSitePage() {
           <div>
             <h1 className="font-semibold text-sm tracking-tight text-slate-900 flex items-center gap-2">
               ESI Sites
-              <span className="bg-blue-500/10 text-blue-700 text-[9px] px-2 py-0.5 rounded font-mono border border-blue-500/20 uppercase tracking-widest">Active</span>
+              <span className="bg-blue-500/10 text-blue-700 text-[9px] px-2 py-0.5 rounded font-mono border border-blue-500/20 tracking-tight">Active</span>
             </h1>
             <p className="text-[9px] text-slate-500 font-mono">EDITOR VISUAL DE SITES IMOBILIÁRIOS</p>
           </div>
@@ -2076,7 +2076,7 @@ export function EditorSitePage() {
               />
 
               <div>
-                <label className="block text-[9px] font-bold uppercase tracking-wider text-slate-500 mb-1.5">Status de Publicação</label>
+                <label className="block text-[9px] font-bold tracking-tight text-slate-500 mb-1.5">Status de Publicação</label>
                 <div className="flex bg-slate-100 p-1 rounded-xl border border-slate-200 gap-1">
                   {[
                     { id: 'online', label: '🟢 No Ar (Online)', color: 'text-emerald-700 bg-emerald-50 border-emerald-250 ring-1 ring-emerald-250' },
@@ -2126,9 +2126,9 @@ export function EditorSitePage() {
                       <span className="w-4 h-4 rounded-full border border-slate-200" style={{ backgroundColor: preset.colors.charcoal }} />
                       <span className="w-4 h-4 rounded-full border border-slate-200" style={{ backgroundColor: preset.colors.gold }} />
                     </div>
-                    <span className={`text-[9px] font-bold ${isSelected ? 'text-amber-700' : 'text-slate-700'} group-hover:text-amber-600 transition-colors uppercase tracking-wider`}>{preset.name}</span>
+                    <span className={`text-[9px] font-bold ${isSelected ? 'text-amber-700' : 'text-slate-700'} group-hover:text-amber-600 transition-colors tracking-tight`}>{preset.name}</span>
                     <span className="text-[7px] text-slate-400 leading-tight text-center">{preset.desc.substring(0, 40)}</span>
-                    <span className={`text-[8px] px-2 py-0.5 rounded font-bold tracking-widest uppercase ${isSelected ? 'bg-amber-500 text-slate-950' : 'bg-amber-500/10 text-amber-600 hover:bg-amber-500 hover:text-slate-950'}`}>
+                    <span className={`text-[8px] px-2 py-0.5 rounded font-bold tracking-tight ${isSelected ? 'bg-amber-500 text-slate-950' : 'bg-amber-500/10 text-amber-600 hover:bg-amber-500 hover:text-slate-950'}`}>
                       {isSelected ? '✓ Ativo' : 'Aplicar'}
                     </span>
                   </button>
@@ -2147,7 +2147,7 @@ export function EditorSitePage() {
             isDisabled={isFirstTime && SECTIONS_ORDER.indexOf('colors') > maxUnlockedStepIndex}
           >
             <div className="space-y-3">
-              <label className="block text-[9px] font-bold uppercase tracking-wider text-slate-500">Paletas Temáticas</label>
+              <label className="block text-[9px] font-bold tracking-tight text-slate-500">Paletas Temáticas</label>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                 {COLOR_PRESETS.map(p => (
                   <button key={p.name} onClick={() => setColors(p.colors)} className="p-3 bg-slate-50 rounded-xl border border-slate-200 hover:border-amber-400 text-left transition-all hover:bg-amber-50/30 flex gap-3 items-center group cursor-pointer">
@@ -2166,7 +2166,7 @@ export function EditorSitePage() {
             </div>
 
             <div className="border-t border-slate-100 pt-4">
-              <label className="block text-[9px] font-bold uppercase tracking-wider text-slate-500 mb-3">Ajuste Fino de Cores (Explicação Detalhada)</label>
+              <label className="block text-[9px] font-bold tracking-tight text-slate-500 mb-3">Ajuste Fino de Cores (Explicação Detalhada)</label>
               <div className="grid grid-cols-2 gap-3">
                 {[
                   { label: 'Fundo Base (Cream)', desc: 'Fundo principal claro do portal', key: 'cream' as const },
@@ -2179,11 +2179,11 @@ export function EditorSitePage() {
                   { label: 'Destaque Hover (Gold Light)', desc: 'Efeito de passar o mouse em CTAs', key: 'goldLight' as const },
                 ].map(({ label, desc, key }) => (
                   <div key={key} className="bg-slate-50 p-2.5 rounded-xl border border-slate-200 space-y-1">
-                    <div className="text-[8px] font-bold text-slate-700 uppercase tracking-wider">{label}</div>
+                    <div className="text-[8px] font-bold text-slate-700 tracking-tight">{label}</div>
                     <p className="text-[6.5px] text-slate-400 leading-tight mb-1.5">{desc}</p>
                     <div className="flex gap-1.5 items-center">
                       <input type="color" value={colors[key]} onChange={e => setColors({ ...colors, [key]: e.target.value })} className="w-6 h-6 border-0 rounded cursor-pointer bg-transparent" />
-                      <span className="text-[8px] font-mono text-slate-500 uppercase font-semibold">{colors[key]}</span>
+                      <span className="text-[8px] font-mono text-slate-500 font-semibold">{colors[key]}</span>
                     </div>
                   </div>
                 ))}
@@ -2211,7 +2211,7 @@ export function EditorSitePage() {
               ] as const).map(item => (
                 <div key={item.key} className="p-3 bg-slate-50 rounded-xl border border-slate-200 flex flex-col gap-2">
                   <div>
-                    <div className="text-[9px] font-bold uppercase tracking-wider text-slate-700">{item.label}</div>
+                    <div className="text-[9px] font-bold tracking-tight text-slate-700">{item.label}</div>
                     <p className="text-[7px] text-slate-400 mt-0.5 leading-tight">{item.desc}</p>
                   </div>
                   <div className="flex items-center gap-2">
@@ -2239,13 +2239,13 @@ export function EditorSitePage() {
           >
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block text-[9px] font-bold uppercase tracking-wider text-slate-500 mb-1.5">Fonte Primária (Texto)</label>
+                <label className="block text-[9px] font-bold tracking-tight text-slate-500 mb-1.5">Fonte Primária (Texto)</label>
                 <select value={fonts.sans} onChange={e => setFonts({ ...fonts, sans: e.target.value })} className="w-full bg-white border border-slate-200 rounded-lg p-2 text-xs text-slate-700 shadow-sm">
                   {FONTS_LIST.map(f => <option key={f.name} value={f.name}>{f.name}</option>)}
                 </select>
               </div>
               <div>
-                <label className="block text-[9px] font-bold uppercase tracking-wider text-slate-500 mb-1.5">Fonte Secundária (Títulos)</label>
+                <label className="block text-[9px] font-bold tracking-tight text-slate-500 mb-1.5">Fonte Secundária (Títulos)</label>
                 <select value={fonts.display} onChange={e => setFonts({ ...fonts, display: e.target.value })} className="w-full bg-white border border-slate-200 rounded-lg p-2 text-xs text-slate-700 shadow-sm">
                   {FONTS_LIST.map(f => <option key={f.name} value={f.name}>{f.name}</option>)}
                 </select>
@@ -2270,7 +2270,7 @@ export function EditorSitePage() {
                       <div className="flex justify-between items-start">
                         <div>
                           <span className="text-[9px] text-slate-700 font-bold">{f.name}</span>
-                          <span className="text-[7px] text-slate-400 font-semibold uppercase tracking-wider block">{f.category}</span>
+                          <span className="text-[7px] text-slate-400 font-semibold tracking-tight block">{f.category}</span>
                         </div>
                         {isSelected && <span className="text-[7px] bg-amber-500/10 text-amber-700 font-bold px-1.5 py-0.5 rounded">Ativo</span>}
                       </div>
@@ -2293,7 +2293,7 @@ export function EditorSitePage() {
           >
             {/* Tag selector */}
             <div>
-              <label className="block text-[9px] font-bold uppercase tracking-wider text-slate-500 mb-2">Tag do Card (uma por vez)</label>
+              <label className="block text-[9px] font-bold tracking-tight text-slate-500 mb-2">Tag do Card (uma por vez)</label>
               <div className="flex flex-wrap gap-1.5">
                 {CARD_TAGS.map(tag => (
                   <button key={tag.id} type="button" onClick={() => setSettings(prev => ({ ...prev, cardTag: tag.id }))}
@@ -2306,16 +2306,16 @@ export function EditorSitePage() {
 
             {/* Card previews side by side */}
             <div className="bg-slate-50 rounded-xl border border-slate-200 p-3">
-              <div className="text-[8px] font-bold uppercase tracking-widest text-slate-500 text-center mb-3">Preview dos Cards com Tag Selecionada</div>
+              <div className="text-[8px] font-bold tracking-tight text-slate-500 text-center mb-3">Preview dos Cards com Tag Selecionada</div>
               <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-1">
-                  <div className="text-[7px] text-slate-400 font-bold uppercase tracking-wider text-center">Vertical — {settings.cardVerticalStyle}</div>
+                  <div className="text-[7px] text-slate-400 font-bold tracking-tight text-center">Vertical — {settings.cardVerticalStyle}</div>
                   <div className="p-1.5 bg-white rounded-xl border border-slate-100 h-56 flex flex-col justify-center">
                     {renderVerticalCard(mockProperty, settings.cardVerticalStyle, CARD_TAGS.find(t => t.id === settings.cardTag))}
                   </div>
                 </div>
                 <div className="space-y-1">
-                  <div className="text-[7px] text-slate-400 font-bold uppercase tracking-wider text-center">Horizontal — {settings.cardHorizontalStyle}</div>
+                  <div className="text-[7px] text-slate-400 font-bold tracking-tight text-center">Horizontal — {settings.cardHorizontalStyle}</div>
                   <div className="p-1.5 bg-white rounded-xl border border-slate-100 h-56 flex flex-col justify-center">
                     {renderHorizontalCard(mockProperty, settings.cardHorizontalStyle, CARD_TAGS.find(t => t.id === settings.cardTag))}
                   </div>
@@ -2344,7 +2344,7 @@ export function EditorSitePage() {
             {/* Style selectors */}
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block text-[9px] font-bold uppercase tracking-wider text-slate-500 mb-1.5">Estilo Vertical (6 versões)</label>
+                <label className="block text-[9px] font-bold tracking-tight text-slate-500 mb-1.5">Estilo Vertical (6 versões)</label>
                 <div className="space-y-1">
                   {['classic', 'minimalist', 'glassmorphism', 'editorial', 'bold-border', 'dark-elegance'].map(style => (
                     <button key={style} type="button" onClick={() => {
@@ -2363,7 +2363,7 @@ export function EditorSitePage() {
                 </div>
               </div>
               <div>
-                <label className="block text-[9px] font-bold uppercase tracking-wider text-slate-500 mb-1.5">Estilo Horizontal (6 versões)</label>
+                <label className="block text-[9px] font-bold tracking-tight text-slate-500 mb-1.5">Estilo Horizontal (6 versões)</label>
                 <div className="space-y-1">
                   {['classic', 'minimalist', 'glassmorphism', 'editorial', 'bold-border', 'dark-elegance'].map(style => (
                     <button key={style} type="button" onClick={() => {
@@ -2385,7 +2385,7 @@ export function EditorSitePage() {
 
             {/* Specs toggles */}
             <div className="border-t border-slate-100 pt-3">
-              <label className="block text-[9px] font-bold uppercase tracking-wider text-slate-500 mb-2">Informações visíveis no card</label>
+              <label className="block text-[9px] font-bold tracking-tight text-slate-500 mb-2">Informações visíveis no card</label>
               <div className="grid grid-cols-2 gap-2">
                 {[
                   { key: 'showCardBedrooms', label: 'Quartos' },
@@ -2424,7 +2424,7 @@ export function EditorSitePage() {
                   <div className="text-lg mb-1">{h.emoji}</div>
                   <div className={`text-[9px] font-bold ${settings.heroStyle === h.id ? 'text-amber-700' : 'text-slate-700'}`}>{h.label}</div>
                   <div className="text-[7px] text-slate-400 mt-0.5 leading-tight">{h.desc}</div>
-                  {settings.heroStyle === h.id && <div className="mt-1.5 text-[7px] font-bold text-amber-600 uppercase tracking-wider">✓ Selecionado</div>}
+                  {settings.heroStyle === h.id && <div className="mt-1.5 text-[7px] font-bold text-amber-600 tracking-tight">✓ Selecionado</div>}
                 </button>
               ))}
             </div>
@@ -2436,7 +2436,7 @@ export function EditorSitePage() {
 
             {/* homeFilters config with descriptive labels */}
             <div className="border-t border-slate-100 pt-3">
-              <label className="block text-[8px] font-bold uppercase tracking-wider text-slate-500 mb-2">Filtros de Busca Ativos no Hero (Legenda dos Campos)</label>
+              <label className="block text-[8px] font-bold tracking-tight text-slate-500 mb-2">Filtros de Busca Ativos no Hero (Legenda dos Campos)</label>
               <div className="grid grid-cols-2 gap-2">
                 {[
                   { id: 'finalidade', label: 'Finalidade', desc: 'Abas "Comprar" / "Alugar"' },
@@ -2480,7 +2480,7 @@ export function EditorSitePage() {
                 { label: 'Galeria de Imóvel', key: 'detailGalleryStyle', options: [{ v: 'slider', l: 'Slider' }, { v: 'mosaic', l: 'Mosaico' }, { v: 'grid', l: 'Grid' }] },
               ].map(field => (
                 <div key={field.key}>
-                  <label className="block text-[8px] font-bold uppercase tracking-wider text-slate-500 mb-1.5">{field.label}</label>
+                  <label className="block text-[8px] font-bold tracking-tight text-slate-500 mb-1.5">{field.label}</label>
                   <select value={(settings as any)[field.key]} onChange={e => setSettings(prev => ({ ...prev, [field.key]: e.target.value }))} className="w-full bg-white border border-slate-200 rounded-lg p-2 text-xs text-slate-700">
                     {field.options.map(o => <option key={o.v} value={o.v}>{o.l}</option>)}
                   </select>
@@ -2543,7 +2543,7 @@ export function EditorSitePage() {
 
                   {/* Estrutura */}
                   <div>
-                    <label className="block text-[8px] font-bold uppercase tracking-wider text-slate-500 mb-1.5">Estrutura de Layout</label>
+                    <label className="block text-[8px] font-bold tracking-tight text-slate-500 mb-1.5">Estrutura de Layout</label>
                     <div className="grid grid-cols-3 gap-1.5">
                       {PAGE_STRUCTURES.map(struct => (
                         <button key={struct.id} type="button"
@@ -2561,7 +2561,7 @@ export function EditorSitePage() {
                   {['sobre', 'anunciar', 'contato'].includes(pageKey) && (
                     <div className="space-y-3 pt-1 border-t border-slate-100">
                       <div>
-                        <label className="block text-[8px] font-bold uppercase tracking-wider text-slate-500 mb-1.5">Blocos Visíveis</label>
+                        <label className="block text-[8px] font-bold tracking-tight text-slate-500 mb-1.5">Blocos Visíveis</label>
                         <div className="flex flex-wrap gap-1.5">
                           {PAGE_BLOCKS_OPTIONS.map(block => {
                             const isOn = (settings.pageBlocks[pageKey] || []).includes(block.id)
@@ -2578,7 +2578,7 @@ export function EditorSitePage() {
                       {/* Reordenador & Grade/Stack Selector (Requirement 12) */}
                       <div className="space-y-2 pt-2 border-t border-slate-100">
                         <div className="flex justify-between items-center">
-                          <label className="text-[8px] font-bold uppercase tracking-wider text-slate-500">Sequenciamento & Visualização</label>
+                          <label className="text-[8px] font-bold tracking-tight text-slate-500">Sequenciamento & Visualização</label>
                           <div className="flex border rounded-lg bg-slate-100 p-0.5 border-slate-200">
                             {[
                               { id: 'stack', label: 'Empilhado' },
@@ -2700,7 +2700,7 @@ export function EditorSitePage() {
 
             {/* Add blocks */}
             <div className="pt-2 border-t border-slate-100 mt-2">
-              <label className="block text-[9px] font-bold uppercase tracking-wider text-slate-500 mb-2">+ Adicionar Blocos Disponíveis</label>
+              <label className="block text-[9px] font-bold tracking-tight text-slate-500 mb-2">+ Adicionar Blocos Disponíveis</label>
               <div className="grid grid-cols-2 gap-1.5">
                 {ALL_HOME_BLOCKS.filter(b => !settings.homeBlocks.includes(b.id)).map(block => (
                   <button key={block.id} type="button" onClick={() => addHomeBlock(block.id)}
@@ -2734,7 +2734,7 @@ export function EditorSitePage() {
             <div className="space-y-3 pt-2">
               {/* Adicionar nova cidade */}
               <div className="p-3 bg-slate-50 rounded-xl border border-slate-200 space-y-2">
-                <div className="text-[9px] font-bold uppercase tracking-wider text-slate-700 flex items-center gap-1">
+                <div className="text-[9px] font-bold tracking-tight text-slate-700 flex items-center gap-1">
                   <Plus size={11} className="text-amber-500" /> Adicionar Novo Local
                 </div>
                 <div className="grid grid-cols-3 gap-2">
@@ -2749,7 +2749,7 @@ export function EditorSitePage() {
                     id="new-city-state"
                     placeholder="UF (Ex: SP)"
                     maxLength={2}
-                    className="w-full bg-white border border-slate-200 rounded-lg px-2 py-1.5 text-[10px] text-slate-750 focus:outline-none focus:border-[hsl(221_68%_50%)] uppercase"
+                    className="w-full bg-white border border-slate-200 rounded-lg px-2 py-1.5 text-[10px] text-slate-750 focus:outline-none focus:border-[hsl(221_68%_50%)]"
                   />
                   <input
                     type="number"
@@ -2841,7 +2841,7 @@ export function EditorSitePage() {
             isDisabled={isFirstTime && SECTIONS_ORDER.indexOf('team') > maxUnlockedStepIndex}
           >
             <div className="border-b border-slate-100 pb-4 mb-4">
-              <label className="block text-[9px] font-bold uppercase tracking-wider text-slate-500 mb-1.5">Estilo Visual do Bloco de Equipe</label>
+              <label className="block text-[9px] font-bold tracking-tight text-slate-500 mb-1.5">Estilo Visual do Bloco de Equipe</label>
               <div className="grid grid-cols-4 gap-1.5">
                 {[
                   { id: 'grid', label: 'Grid', icon: '🗂️' },
@@ -2859,7 +2859,7 @@ export function EditorSitePage() {
             </div>
 
             <div className="border-b border-slate-100 pb-4 mb-4">
-              <label className="block text-[9px] font-bold uppercase tracking-wider text-slate-500 mb-1.5">Selecionar Corretores Cadastrados do Sistema</label>
+              <label className="block text-[9px] font-bold tracking-tight text-slate-500 mb-1.5">Selecionar Corretores Cadastrados do Sistema</label>
               <div className="grid grid-cols-2 gap-2">
                 {ALL_SYSTEM_USERS.map(sysUser => {
                   const isSelected = settings.team.some((t: any) => t.id === sysUser.id || t.name === sysUser.name);
@@ -2909,18 +2909,18 @@ export function EditorSitePage() {
                     </div>
                     <div>
                       <div className="text-xs font-bold text-slate-800">{member.name || 'Sem nome'}</div>
-                      <div className="text-[10px] text-amber-600 font-mono uppercase tracking-wider">{member.role || 'Sem cargo'}</div>
+                      <div className="text-[10px] text-amber-600 font-mono tracking-tight">{member.role || 'Sem cargo'}</div>
                     </div>
                   </div>
                   <div className="grid grid-cols-2 gap-2 pt-2 border-t border-slate-200">
                     {[{ label: 'Nome', key: 'name', ph: 'Nome completo' }, { label: 'Cargo', key: 'role', ph: 'Especialidade' }, { label: 'WhatsApp', key: 'phone', ph: '(41) 99999-9999' }, { label: 'E-mail', key: 'email', ph: 'nome@lumina.com.br' }].map(f => (
                       <div key={f.key}>
-                        <label className="block text-[7px] font-bold uppercase tracking-wider text-slate-500 mb-1">{f.label}</label>
+                        <label className="block text-[7px] font-bold tracking-tight text-slate-500 mb-1">{f.label}</label>
                         <input type="text" value={member[f.key] || ''} onChange={e => updateTeamMember(idx, f.key, e.target.value)} placeholder={f.ph} className="w-full bg-white border border-slate-200 rounded-lg px-2 py-1.5 text-[10px] text-slate-705 focus:outline-none focus:border-[hsl(221_68%_50%)]" />
                       </div>
                     ))}
                     <div className="col-span-2">
-                      <label className="block text-[7px] font-bold uppercase tracking-wider text-slate-500 mb-1">Foto (URL)</label>
+                      <label className="block text-[7px] font-bold tracking-tight text-slate-500 mb-1">Foto (URL)</label>
                       <input type="text" value={member.photo || ''} onChange={e => updateTeamMember(idx, 'photo', e.target.value)} placeholder="https://..." className="w-full bg-white border border-slate-200 rounded-lg px-2 py-1.5 text-[10px] text-slate-705 focus:outline-none focus:border-[hsl(221_68%_50%)]" />
                     </div>
                   </div>
@@ -2947,7 +2947,7 @@ export function EditorSitePage() {
             <div className="space-y-3">
               <div className="flex items-center gap-2 pb-1">
                 <span className="text-base">📖</span>
-                <span className="text-[10px] font-bold uppercase tracking-wider text-amber-600">Página Sobre Nós</span>
+                <span className="text-[10px] font-bold tracking-tight text-amber-600">Página Sobre Nós</span>
               </div>
               <InputField label="Título Principal" value={settings.sobreTitle} onChange={v => setSettings(prev => ({ ...prev, sobreTitle: v }))} placeholder="Ex: Nossa História" />
               <TextareaField label="Texto Institucional" value={settings.sobreText} onChange={v => setSettings(prev => ({ ...prev, sobreText: v }))} placeholder="História da empresa..." rows={4} />
@@ -2959,7 +2959,7 @@ export function EditorSitePage() {
             <div className="space-y-3 pt-4 border-t border-slate-100">
               <div className="flex items-center gap-2 pb-1">
                 <span className="text-base">📣</span>
-                <span className="text-[10px] font-bold uppercase tracking-wider text-amber-600">Página Anunciar</span>
+                <span className="text-[10px] font-bold tracking-tight text-amber-600">Página Anunciar</span>
               </div>
               <InputField label="Título da Página" value={settings.anunciarTitle} onChange={v => setSettings(prev => ({ ...prev, anunciarTitle: v }))} placeholder="Ex: Anuncie seu Imóvel" />
               <InputField label="Subtítulo / Chamada" value={settings.anunciarSubtitle} onChange={v => setSettings(prev => ({ ...prev, anunciarSubtitle: v }))} placeholder="Descrição..." />
@@ -2969,7 +2969,7 @@ export function EditorSitePage() {
             <div className="space-y-3 pt-4 border-t border-slate-100">
               <div className="flex items-center gap-2 pb-1">
                 <span className="text-base">📞</span>
-                <span className="text-[10px] font-bold uppercase tracking-wider text-amber-600">Página Contato</span>
+                <span className="text-[10px] font-bold tracking-tight text-amber-600">Página Contato</span>
               </div>
               <InputField label="Título de Contato" value={settings.contatoTitle} onChange={v => setSettings(prev => ({ ...prev, contatoTitle: v }))} placeholder="Ex: Entre em Contato" />
               <InputField label="Subtítulo / Chamada" value={settings.contatoSubtitle} onChange={v => setSettings(prev => ({ ...prev, contatoSubtitle: v }))} placeholder="Agende uma visita..." />
@@ -2978,7 +2978,7 @@ export function EditorSitePage() {
 
             {/* Contato info */}
             <div className="space-y-3 pt-4 border-t border-slate-100">
-              <div className="text-[10px] font-bold uppercase tracking-wider text-slate-500">Dados de Contato</div>
+              <div className="text-[10px] font-bold tracking-tight text-slate-500">Dados de Contato</div>
               <div className="grid grid-cols-2 gap-3">
                 <InputField label="Telefone" value={contacts.phone} onChange={v => setContacts(prev => ({ ...prev, phone: v }))} placeholder="(41) 3000-0000" />
                 <InputField label="E-mail" value={contacts.email} onChange={v => setContacts(prev => ({ ...prev, email: v }))} placeholder="email@..." />
@@ -3063,7 +3063,7 @@ export function EditorSitePage() {
             <div className="space-y-4 pt-2">
               {/* Provisório */}
               <div className="bg-slate-50 border border-slate-200 rounded-xl p-3">
-                <div className="text-[8px] font-bold uppercase tracking-wider text-slate-400 mb-1">Domínio Provisório</div>
+                <div className="text-[8px] font-bold tracking-tight text-slate-400 mb-1">Domínio Provisório</div>
                 <a href={`http://localhost:3000/${settings.slug}`} target="_blank" rel="noopener noreferrer" className="text-xs font-semibold text-amber-600 hover:underline flex items-center gap-1">
                   http://localhost:3000/{settings.slug} <ArrowRight size={10} />
                 </a>
@@ -3071,7 +3071,7 @@ export function EditorSitePage() {
 
               {/* Lista de Domínios Conectados */}
               <div>
-                <label className="block text-[9px] font-bold uppercase tracking-wider text-slate-500 mb-2">Domínios Conectados</label>
+                <label className="block text-[9px] font-bold tracking-tight text-slate-500 mb-2">Domínios Conectados</label>
                 {customDomains.length > 0 ? (
                   <div className="space-y-2">
                     {customDomains.map((dom, idx) => (
@@ -3079,7 +3079,7 @@ export function EditorSitePage() {
                         <div className="flex items-center gap-2">
                           <span className="text-xs font-semibold text-slate-700">{dom}</span>
                           {idx === 0 && (
-                            <span className="bg-amber-100 text-amber-800 text-[7px] font-bold px-1.5 py-0.5 rounded uppercase tracking-wider">Principal</span>
+                            <span className="bg-amber-100 text-amber-800 text-[7px] font-bold px-1.5 py-0.5 rounded tracking-tight">Principal</span>
                           )}
                         </div>
                         <button
@@ -3110,7 +3110,7 @@ export function EditorSitePage() {
 
               {/* Adicionar Novo Domínio */}
               <div className="bg-slate-50 p-3 rounded-xl border border-slate-200 space-y-2">
-                <label className="block text-[9px] font-bold uppercase tracking-wider text-slate-400">Adicionar Domínio Personalizado</label>
+                <label className="block text-[9px] font-bold tracking-tight text-slate-400">Adicionar Domínio Personalizado</label>
                 <div className="flex gap-2">
                   <input
                     type="text"
@@ -3170,8 +3170,8 @@ export function EditorSitePage() {
                   {/* Tabela DNS */}
                   <div className="border border-slate-200 rounded-xl overflow-hidden bg-white shadow-sm animate-fade-in">
                     <div className="bg-slate-50 px-3 py-2 border-b border-slate-200 flex justify-between items-center">
-                      <span className="text-[9px] font-bold uppercase tracking-widest text-slate-500">Apontamento DNS ({customDomains[0]})</span>
-                      <span className="bg-slate-200 text-slate-655 text-[7px] font-mono px-1.5 py-0.5 rounded uppercase">Vercel</span>
+                      <span className="text-[9px] font-bold tracking-tight text-slate-500">Apontamento DNS ({customDomains[0]})</span>
+                      <span className="bg-slate-200 text-slate-655 text-[7px] font-mono px-1.5 py-0.5 rounded">Vercel</span>
                     </div>
                     <div className="divide-y divide-slate-100 text-[10px]">
                       {/* Registro A */}
@@ -3182,11 +3182,11 @@ export function EditorSitePage() {
                         </div>
                         <div className="grid grid-cols-3 gap-2 bg-slate-50 p-2 rounded-lg border border-slate-100 font-mono text-[9px]">
                           <div>
-                            <div className="text-[7px] text-slate-400 uppercase font-sans">Nome/Host</div>
+                            <div className="text-[7px] text-slate-400 font-sans">Nome/Host</div>
                             <div className="text-slate-800">@</div>
                           </div>
                           <div className="col-span-2">
-                            <div className="text-[7px] text-slate-400 uppercase font-sans">Valor/Destino</div>
+                            <div className="text-[7px] text-slate-400 font-sans">Valor/Destino</div>
                             <div className="flex justify-between items-center text-slate-800">
                               <span>76.76.21.21</span>
                               <button type="button" onClick={() => { navigator.clipboard.writeText('76.76.21.21'); showToast('IP copiado!', 'success') }} className="text-amber-600 hover:text-amber-700 font-sans font-bold cursor-pointer text-[8px] border-0 bg-transparent p-0">Copiar</button>
@@ -3203,11 +3203,11 @@ export function EditorSitePage() {
                         </div>
                         <div className="grid grid-cols-3 gap-2 bg-slate-50 p-2 rounded-lg border border-slate-100 font-mono text-[9px]">
                           <div>
-                            <div className="text-[7px] text-slate-400 uppercase font-sans">Nome/Host</div>
+                            <div className="text-[7px] text-slate-400 font-sans">Nome/Host</div>
                             <div className="text-slate-800">www</div>
                           </div>
                           <div className="col-span-2">
-                            <div className="text-[7px] text-slate-400 uppercase font-sans">Valor/Destino</div>
+                            <div className="text-[7px] text-slate-400 font-sans">Valor/Destino</div>
                             <div className="flex justify-between items-center text-slate-800">
                               <span>cname.vercel-dns.com</span>
                               <button type="button" onClick={() => { navigator.clipboard.writeText('cname.vercel-dns.com'); showToast('CNAME copiado!', 'success') }} className="text-amber-600 hover:text-amber-700 font-sans font-bold cursor-pointer text-[8px] border-0 bg-transparent p-0">Copiar</button>
@@ -3234,7 +3234,7 @@ export function EditorSitePage() {
             
             <div className="space-y-4 pt-2">
               <div className="border-b border-slate-100 pb-3 space-y-3">
-                <div className="text-[10px] font-bold uppercase tracking-wider text-amber-600">SEO Básico</div>
+                <div className="text-[10px] font-bold tracking-tight text-amber-600">SEO Básico</div>
                 <InputField 
                   label="Palavras-chave (Keywords - Separadas por vírgula)" 
                   value={settings.seoKeywords || ''} 
@@ -3250,7 +3250,7 @@ export function EditorSitePage() {
               </div>
 
               <div className="border-b border-slate-100 pb-3 space-y-3">
-                <div className="text-[10px] font-bold uppercase tracking-wider text-amber-600">Google Analytics & Tag Manager</div>
+                <div className="text-[10px] font-bold tracking-tight text-amber-600">Google Analytics & Tag Manager</div>
                 <InputField 
                   label="ID do Google Analytics (GA4)" 
                   value={settings.googleAnalyticsId || ''} 
@@ -3266,7 +3266,7 @@ export function EditorSitePage() {
               </div>
 
               <div className="border-b border-slate-100 pb-3 space-y-3">
-                <div className="text-[10px] font-bold uppercase tracking-wider text-amber-600">Google Ads (AdWords)</div>
+                <div className="text-[10px] font-bold tracking-tight text-amber-600">Google Ads (AdWords)</div>
                 <div className="grid grid-cols-2 gap-3">
                   <InputField 
                     label="ID de Conversão Ads" 
@@ -3290,7 +3290,7 @@ export function EditorSitePage() {
               </div>
 
               <div className="border-b border-slate-100 pb-3 space-y-3">
-                <div className="text-[10px] font-bold uppercase tracking-wider text-amber-600">Facebook Meta Pixel & API</div>
+                <div className="text-[10px] font-bold tracking-tight text-amber-600">Facebook Meta Pixel & API</div>
                 <InputField 
                   label="ID do Facebook Pixel" 
                   value={settings.facebookPixelId || ''} 
@@ -3306,7 +3306,7 @@ export function EditorSitePage() {
               </div>
 
               <div className="border-b border-slate-100 pb-3 space-y-3">
-                <div className="text-[10px] font-bold uppercase tracking-wider text-amber-600">RD Station & Pinterest</div>
+                <div className="text-[10px] font-bold tracking-tight text-amber-600">RD Station & Pinterest</div>
                 <div className="grid grid-cols-2 gap-3">
                   <InputField 
                     label="Token RD Station" 
@@ -3331,7 +3331,7 @@ export function EditorSitePage() {
               </div>
 
               <div className="border-b border-slate-100 pb-3 space-y-3">
-                <div className="text-[10px] font-bold uppercase tracking-wider text-amber-600">LinkedIn & TikTok Ads</div>
+                <div className="text-[10px] font-bold tracking-tight text-amber-600">LinkedIn & TikTok Ads</div>
                 <div className="grid grid-cols-2 gap-3">
                   <InputField 
                     label="Partner ID LinkedIn" 
@@ -3349,7 +3349,7 @@ export function EditorSitePage() {
               </div>
 
               <div className="space-y-3">
-                <div className="text-[10px] font-bold uppercase tracking-wider text-amber-600">Scripts Customizados (Avançado)</div>
+                <div className="text-[10px] font-bold tracking-tight text-amber-600">Scripts Customizados (Avançado)</div>
                 <TextareaField 
                   label="Scripts Customizados no Head (<head>)" 
                   value={settings.customScriptsHead || ''} 
@@ -3390,7 +3390,7 @@ export function EditorSitePage() {
               </div>
 
               <div>
-                <label className="block text-[9px] font-bold uppercase tracking-wider text-slate-500 mb-1.5 font-mono">Regras CSS</label>
+                <label className="block text-[9px] font-bold tracking-tight text-slate-500 mb-1.5 font-mono">Regras CSS</label>
                 <textarea
                   value={settings.customCss || ''}
                   onChange={e => setSettings(prev => ({ ...prev, customCss: e.target.value }))}
@@ -3418,7 +3418,7 @@ export function EditorSitePage() {
             <div className="space-y-4 pt-2 font-sans">
               {/* Seção Exportar */}
               <div className="border-b border-slate-100 pb-4 space-y-3">
-                <div className="text-[10px] font-bold uppercase tracking-wider text-amber-600">Exportar Configuração</div>
+                <div className="text-[10px] font-bold tracking-tight text-amber-600">Exportar Configuração</div>
                 <p className="text-[9px] text-slate-500 leading-normal">
                   Copie o código JSON abaixo ou faça o download para salvar em seu computador e fazer o upload no S3.
                 </p>
@@ -3466,7 +3466,7 @@ export function EditorSitePage() {
 
               {/* Seção Importar */}
               <div className="space-y-3">
-                <div className="text-[10px] font-bold uppercase tracking-wider text-amber-600">Importar Configuração</div>
+                <div className="text-[10px] font-bold tracking-tight text-amber-600">Importar Configuração</div>
                 <p className="text-[9px] text-slate-500 leading-normal">
                   Selecione um arquivo `.json` ou cole o código de configuração no formato AWS S3 V2 para carregar instantaneamente.
                 </p>
@@ -3475,7 +3475,7 @@ export function EditorSitePage() {
                 <div className="flex items-center justify-center w-full">
                   <label className="flex flex-col items-center justify-center w-full h-20 border-2 border-slate-200 border-dashed rounded-xl cursor-pointer bg-slate-50 hover:bg-slate-100 hover:border-amber-400 transition-colors">
                     <div className="flex flex-col items-center justify-center pt-3 pb-3">
-                      <p className="text-[9px] text-slate-500 font-bold uppercase tracking-wider">Carregar arquivo .json</p>
+                      <p className="text-[9px] text-slate-500 font-bold tracking-tight">Carregar arquivo .json</p>
                       <p className="text-[8px] text-slate-400 mt-0.5">Arraste ou clique para selecionar</p>
                     </div>
                     <input 
@@ -3513,7 +3513,7 @@ export function EditorSitePage() {
 
                 {/* Paste Textarea */}
                 <div>
-                  <label className="block text-[8px] font-bold uppercase tracking-wider text-slate-400 mb-1">Ou cole o JSON aqui</label>
+                  <label className="block text-[8px] font-bold tracking-tight text-slate-400 mb-1">Ou cole o JSON aqui</label>
                   <textarea
                     value={s3JsonInput}
                     onChange={e => setS3JsonInput(e.target.value)}
@@ -3560,7 +3560,7 @@ export function EditorSitePage() {
           <div className="bg-white border-b border-slate-200 px-4 py-2 flex items-center justify-between shrink-0 shadow-sm gap-2">
             <div className="flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-              <span className="text-[9px] font-bold uppercase tracking-wider text-slate-800">Preview em Tempo Real</span>
+              <span className="text-[9px] font-bold tracking-tight text-slate-800">Preview em Tempo Real</span>
             </div>
 
             {/* Device Switcher */}
@@ -3576,7 +3576,7 @@ export function EditorSitePage() {
                       setPreviewDevice(device)
                       setPreviewNavOpen(false)
                     }}
-                    className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[9px] font-bold uppercase transition-all cursor-pointer border-0 ${
+                    className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[9px] font-bold transition-all cursor-pointer border-0 ${
                       isActive
                         ? 'bg-white text-slate-800 shadow-sm'
                         : 'text-slate-500 hover:text-slate-800 bg-transparent'

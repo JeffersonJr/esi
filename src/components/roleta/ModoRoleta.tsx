@@ -64,12 +64,12 @@ export function ModoRoleta({ eventos, onConcluir, onClose }: ModoRoletaProps) {
         <motion.div
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
-          className="bg-card border border-border shadow-2xl rounded-3xl p-8 max-w-sm w-full text-center"
+          className="bg-card border border-border shadow-2xl rounded-2xl p-8 max-w-sm w-full text-center"
         >
           <div className="w-20 h-20 bg-success/20 text-success rounded-full flex items-center justify-center mx-auto mb-6">
             <CheckCircle2 className="w-10 h-10" />
           </div>
-          <h2 className="text-2xl font-black tracking-tight mb-2">Tudo limpo!</h2>
+          <h2 className="text-2xl font-semibold tracking-tight mb-2">Tudo limpo!</h2>
           <p className="text-muted-foreground mb-8">Você zerou sua fila de atividades para agora.</p>
           <Button size="lg" className="w-full h-12 rounded-xl text-md" onClick={onClose}>
             Voltar para Agenda
@@ -119,10 +119,10 @@ export function ModoRoleta({ eventos, onConcluir, onClose }: ModoRoletaProps) {
               transition={{ type: 'spring', stiffness: 300, damping: 25 }}
               className="w-full"
             >
-              <Card className="border-border shadow-2xl overflow-hidden rounded-3xl bg-card">
+              <Card className="border-border shadow-2xl overflow-hidden rounded-2xl bg-card">
                 <CardHeader className="bg-primary/5 pb-4 border-b border-border/50">
                   <div className="flex justify-between items-start mb-2">
-                    <div className="w-12 h-12 rounded-2xl bg-primary/10 text-primary flex items-center justify-center">
+                    <div className="w-12 h-9 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
                       {getTipoIcon(currentEvent.tipo)}
                     </div>
                     {currentEvent.prioridade === 'alta' && (
@@ -131,7 +131,7 @@ export function ModoRoleta({ eventos, onConcluir, onClose }: ModoRoletaProps) {
                       </Badge>
                     )}
                   </div>
-                  <CardTitle className="text-2xl font-black leading-tight mt-2">{currentEvent.titulo}</CardTitle>
+                  <CardTitle className="text-2xl font-semibold leading-tight mt-2">{currentEvent.titulo}</CardTitle>
                 </CardHeader>
                 <CardContent className="p-6 space-y-6">
                   <div className="space-y-4">
@@ -140,7 +140,7 @@ export function ModoRoleta({ eventos, onConcluir, onClose }: ModoRoletaProps) {
                         <Users className="w-4 h-4 text-foreground" />
                       </div>
                       <div>
-                        <p className="text-xs uppercase tracking-wider font-bold">Cliente</p>
+                        <p className="text-xs tracking-tight font-bold">Cliente</p>
                         <p className="text-sm font-semibold text-foreground">{currentEvent.cliente}</p>
                       </div>
                     </div>
@@ -149,7 +149,7 @@ export function ModoRoleta({ eventos, onConcluir, onClose }: ModoRoletaProps) {
                         <Calendar className="w-4 h-4 text-foreground" />
                       </div>
                       <div>
-                        <p className="text-xs uppercase tracking-wider font-bold">Data e Hora</p>
+                        <p className="text-xs tracking-tight font-bold">Data e Hora</p>
                         <p className="text-sm font-semibold text-foreground">{currentEvent.horario} • {currentEvent.duracao}</p>
                       </div>
                     </div>
@@ -159,7 +159,7 @@ export function ModoRoleta({ eventos, onConcluir, onClose }: ModoRoletaProps) {
                     <Button 
                       variant="outline" 
                       size="lg" 
-                      className="h-14 rounded-2xl text-muted-foreground hover:text-destructive hover:bg-destructive/10 hover:border-destructive/30"
+                      className="h-10 rounded-2xl text-muted-foreground hover:text-destructive hover:bg-destructive/10 hover:border-destructive/30"
                       onClick={handlePular}
                     >
                       <SkipForward className="w-5 h-5 mr-2" />
@@ -167,7 +167,7 @@ export function ModoRoleta({ eventos, onConcluir, onClose }: ModoRoletaProps) {
                     </Button>
                     <Button 
                       size="lg" 
-                      className="h-14 rounded-2xl bg-success hover:bg-success/90 text-white font-bold shadow-lg shadow-success/20"
+                      className="h-10 rounded-2xl bg-success hover:bg-success/90 text-white font-bold shadow-lg shadow-success/20"
                       onClick={handleConcluir}
                     >
                       <CheckCircle2 className="w-5 h-5 mr-2" />

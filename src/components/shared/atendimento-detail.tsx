@@ -1,4 +1,3 @@
-'use client'
 
 import { useState, useEffect, useRef } from 'react'
 import {
@@ -521,7 +520,7 @@ export function AtendimentoDetail({
             <ChevronLeft className="size-4" strokeWidth={2} />
           </button>
           <div className="flex flex-col items-center gap-1">
-            <span className="text-[10px] uppercase tracking-widest text-teal-light/70">Etapa no funil</span>
+            <span className="text-[10px] tracking-tight text-teal-light/70">Etapa no funil</span>
             <span className="text-sm font-semibold text-white">
               {etapasFunil.find(e => e.id === atendimento.etapa)?.label || atendimento.etapa}
             </span>
@@ -597,7 +596,7 @@ export function AtendimentoDetail({
             {/* Atividades */}
             {localAtividades.length > 0 && (
               <div className="mb-6">
-                <h3 className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-2">
+                <h3 className="mb-3 text-xs font-semibold tracking-tight text-muted-foreground flex items-center gap-2">
                   <Calendar className="size-3.5" />
                   Atividades
                 </h3>
@@ -675,7 +674,7 @@ export function AtendimentoDetail({
                       className="w-full text-left rounded-xl p-3 -ml-3 transition-colors hover:bg-muted/50 focus:outline-none"
                     >
                       <div className="flex items-center justify-between">
-                        <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground">
+                        <p className="font-mono text-[10px] tracking-[0.14em] text-muted-foreground">
                           {item.data} · {item.hora}
                         </p>
                         <ChevronRight className={`size-4 text-muted-foreground transition-transform ${isExpanded ? 'rotate-90' : ''}`} />
@@ -860,7 +859,7 @@ export function AtendimentoDetail({
                         className="mt-1 size-5 rounded border-border text-primary focus:ring-primary disabled:opacity-50"
                       />
                       <div>
-                        <p className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">{im.codigo}</p>
+                        <p className="font-mono text-[10px] tracking-tight text-muted-foreground">{im.codigo}</p>
                         <p className="mt-1 text-sm font-semibold text-foreground">{'titulo' in im ? im.titulo : im.nome}</p>
                         <p className="text-xs text-muted-foreground">{im.bairro}, {im.cidade}</p>
                         <p className="mt-1 font-mono text-sm font-semibold text-primary">{'preco' in im ? im.preco : im.precoMin}</p>
@@ -891,7 +890,7 @@ export function AtendimentoDetail({
             {imoveisSelecionados.length > 0 && (
               <div className="sticky bottom-20 mt-4 rounded-[1.5rem] bg-card p-4 shadow-2xl border border-primary/30 animate-in slide-in-from-bottom-5 z-10">
                 <div className="flex items-center justify-between mb-3">
-                  <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
+                  <span className="text-xs font-semibold text-muted-foreground ">
                     {imoveisSelecionados.length} imóvel(is) selecionado(s)
                   </span>
                   <button type="button" onClick={() => setImoveisSelecionados([])} className="text-xs font-medium text-primary">Limpar</button>
@@ -1083,13 +1082,13 @@ export function AtendimentoDetail({
               </div>
               {atendimento.perfil.observacoes && (
                 <div className="rounded-2xl bg-cream p-4">
-                  <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Observações</p>
+                  <p className="text-xs font-semibold  text-muted-foreground">Observações</p>
                   <p className="mt-1 text-sm text-foreground">{atendimento.perfil.observacoes}</p>
                 </div>
               )}
 
               {/* Método 4Q */}
-              <div className="mt-4 rounded-3xl bg-teal-mid/5 shadow-soft p-5 border border-teal-mid/20">
+              <div className="mt-4 rounded-2xl bg-teal-mid/5 shadow-soft p-5 border border-teal-mid/20">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-lg font-semibold text-teal-deep flex items-center gap-2">
                     <Target className="size-5" />
@@ -1109,38 +1108,38 @@ export function AtendimentoDetail({
                 {editing4Q ? (
                   <div className="flex flex-col gap-3 animate-in fade-in">
                     <div className="flex flex-col gap-1">
-                      <span className="text-[11px] font-semibold uppercase tracking-wider text-teal-deep/70">Quem decide?</span>
+                      <span className="text-[11px] font-semibold tracking-tight text-teal-deep/70">Quem decide?</span>
                       <input type="text" value={form4Q.quem} onChange={e => setForm4Q(prev => ({ ...prev, quem: e.target.value }))} className="h-10 w-full rounded-xl border border-border bg-background px-3 text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-teal-mid" />
                     </div>
                     <div className="flex flex-col gap-1">
-                      <span className="text-[11px] font-semibold uppercase tracking-wider text-teal-deep/70">O quê busca?</span>
+                      <span className="text-[11px] font-semibold tracking-tight text-teal-deep/70">O quê busca?</span>
                       <input type="text" value={form4Q.oQue} onChange={e => setForm4Q(prev => ({ ...prev, oQue: e.target.value }))} className="h-10 w-full rounded-xl border border-border bg-background px-3 text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-teal-mid" />
                     </div>
                     <div className="flex flex-col gap-1">
-                      <span className="text-[11px] font-semibold uppercase tracking-wider text-teal-deep/70">Quando precisa?</span>
+                      <span className="text-[11px] font-semibold tracking-tight text-teal-deep/70">Quando precisa?</span>
                       <input type="text" value={form4Q.quando} onChange={e => setForm4Q(prev => ({ ...prev, quando: e.target.value }))} className="h-10 w-full rounded-xl border border-border bg-background px-3 text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-teal-mid" />
                     </div>
                     <div className="flex flex-col gap-1">
-                      <span className="text-[11px] font-semibold uppercase tracking-wider text-teal-deep/70">Quanto (Orçamento)?</span>
+                      <span className="text-[11px] font-semibold tracking-tight text-teal-deep/70">Quanto (Orçamento)?</span>
                       <input type="text" value={form4Q.quanto} onChange={e => setForm4Q(prev => ({ ...prev, quanto: e.target.value }))} className="h-10 w-full rounded-xl border border-border bg-background px-3 text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-teal-mid" />
                     </div>
                   </div>
                 ) : (
                   <div className="flex flex-col gap-3">
                     <div className="flex flex-col gap-0.5">
-                      <span className="text-[11px] font-semibold uppercase tracking-wider text-teal-deep/70">Quem decide?</span>
+                      <span className="text-[11px] font-semibold tracking-tight text-teal-deep/70">Quem decide?</span>
                       <span className="text-sm font-medium text-foreground">{atendimento.perfil.metodo4Q?.quem || '—'}</span>
                     </div>
                     <div className="flex flex-col gap-0.5">
-                      <span className="text-[11px] font-semibold uppercase tracking-wider text-teal-deep/70">O quê busca?</span>
+                      <span className="text-[11px] font-semibold tracking-tight text-teal-deep/70">O quê busca?</span>
                       <span className="text-sm font-medium text-foreground">{atendimento.perfil.metodo4Q?.oQue || '—'}</span>
                     </div>
                     <div className="flex flex-col gap-0.5">
-                      <span className="text-[11px] font-semibold uppercase tracking-wider text-teal-deep/70">Quando precisa?</span>
+                      <span className="text-[11px] font-semibold tracking-tight text-teal-deep/70">Quando precisa?</span>
                       <span className="text-sm font-medium text-foreground">{atendimento.perfil.metodo4Q?.quando || '—'}</span>
                     </div>
                     <div className="flex flex-col gap-0.5">
-                      <span className="text-[11px] font-semibold uppercase tracking-wider text-teal-deep/70">Quanto (Orçamento)?</span>
+                      <span className="text-[11px] font-semibold tracking-tight text-teal-deep/70">Quanto (Orçamento)?</span>
                       <span className="text-sm font-medium text-foreground">{atendimento.perfil.metodo4Q?.quanto || '—'}</span>
                     </div>
                   </div>
@@ -1148,7 +1147,7 @@ export function AtendimentoDetail({
               </div>
 
               {/* Método FORD */}
-              <div className="mt-3 rounded-3xl bg-amber/5 shadow-soft p-5 border border-amber/20">
+              <div className="mt-3 rounded-2xl bg-amber/5 shadow-soft p-5 border border-amber/20">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-lg font-semibold text-[#8a5a1e] flex items-center gap-2">
                     <Heart className="size-5" />
@@ -1168,38 +1167,38 @@ export function AtendimentoDetail({
                 {editingFORD ? (
                   <div className="flex flex-col gap-3 animate-in fade-in">
                     <div className="flex flex-col gap-1">
-                      <span className="text-[11px] font-semibold uppercase tracking-wider text-[#8a5a1e]/70">F (Família)</span>
+                      <span className="text-[11px] font-semibold tracking-tight text-[#8a5a1e]/70">F (Família)</span>
                       <input type="text" value={formFORD.familia} onChange={e => setFormFORD(prev => ({ ...prev, familia: e.target.value }))} className="h-10 w-full rounded-xl border border-border bg-background px-3 text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-[#8a5a1e]" />
                     </div>
                     <div className="flex flex-col gap-1">
-                      <span className="text-[11px] font-semibold uppercase tracking-wider text-[#8a5a1e]/70">O (Ocupação)</span>
+                      <span className="text-[11px] font-semibold tracking-tight text-[#8a5a1e]/70">O (Ocupação)</span>
                       <input type="text" value={formFORD.ocupacao} onChange={e => setFormFORD(prev => ({ ...prev, ocupacao: e.target.value }))} className="h-10 w-full rounded-xl border border-border bg-background px-3 text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-[#8a5a1e]" />
                     </div>
                     <div className="flex flex-col gap-1">
-                      <span className="text-[11px] font-semibold uppercase tracking-wider text-[#8a5a1e]/70">R (Recreação)</span>
+                      <span className="text-[11px] font-semibold tracking-tight text-[#8a5a1e]/70">R (Recreação)</span>
                       <input type="text" value={formFORD.recreacao} onChange={e => setFormFORD(prev => ({ ...prev, recreacao: e.target.value }))} className="h-10 w-full rounded-xl border border-border bg-background px-3 text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-[#8a5a1e]" />
                     </div>
                     <div className="flex flex-col gap-1">
-                      <span className="text-[11px] font-semibold uppercase tracking-wider text-[#8a5a1e]/70">D (Sonhos)</span>
+                      <span className="text-[11px] font-semibold tracking-tight text-[#8a5a1e]/70">D (Sonhos)</span>
                       <input type="text" value={formFORD.sonhos} onChange={e => setFormFORD(prev => ({ ...prev, sonhos: e.target.value }))} className="h-10 w-full rounded-xl border border-border bg-background px-3 text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-[#8a5a1e]" />
                     </div>
                   </div>
                 ) : (
                   <div className="flex flex-col gap-3">
                     <div className="flex flex-col gap-0.5">
-                      <span className="text-[11px] font-semibold uppercase tracking-wider text-[#8a5a1e]/70">F (Família)</span>
+                      <span className="text-[11px] font-semibold tracking-tight text-[#8a5a1e]/70">F (Família)</span>
                       <span className="text-sm font-medium text-foreground">{atendimento.perfil.metodoFORD?.familia || '—'}</span>
                     </div>
                     <div className="flex flex-col gap-0.5">
-                      <span className="text-[11px] font-semibold uppercase tracking-wider text-[#8a5a1e]/70">O (Ocupação)</span>
+                      <span className="text-[11px] font-semibold tracking-tight text-[#8a5a1e]/70">O (Ocupação)</span>
                       <span className="text-sm font-medium text-foreground">{atendimento.perfil.metodoFORD?.ocupacao || '—'}</span>
                     </div>
                     <div className="flex flex-col gap-0.5">
-                      <span className="text-[11px] font-semibold uppercase tracking-wider text-[#8a5a1e]/70">R (Recreação)</span>
+                      <span className="text-[11px] font-semibold tracking-tight text-[#8a5a1e]/70">R (Recreação)</span>
                       <span className="text-sm font-medium text-foreground">{atendimento.perfil.metodoFORD?.recreacao || '—'}</span>
                     </div>
                     <div className="flex flex-col gap-0.5">
-                      <span className="text-[11px] font-semibold uppercase tracking-wider text-[#8a5a1e]/70">D (Sonhos)</span>
+                      <span className="text-[11px] font-semibold tracking-tight text-[#8a5a1e]/70">D (Sonhos)</span>
                       <span className="text-sm font-medium text-foreground">{atendimento.perfil.metodoFORD?.sonhos || '—'}</span>
                     </div>
                   </div>
@@ -1239,7 +1238,7 @@ export function AtendimentoDetail({
                   <p className="mt-1 text-xs text-muted-foreground">{atendimento.albert.instrucoes}</p>
 
                   <div className="mt-4 border-t border-teal-mid/20 pt-4">
-                    <p className="text-xs font-semibold text-teal-deep mb-3 uppercase tracking-wide">Plano de Ação do Albert</p>
+                    <p className="text-xs font-semibold text-teal-deep mb-3 ">Plano de Ação do Albert</p>
                     <div className="flex flex-col gap-3 relative before:absolute before:inset-y-2 before:left-[11px] before:w-px before:bg-teal-mid/30">
                       <div className="flex gap-3 relative">
                         <div className="size-6 shrink-0 rounded-full bg-teal-mid/20 border-2 border-teal-mid flex items-center justify-center text-teal-deep z-10"><MessageCircle className="size-3" /></div>
@@ -1272,15 +1271,15 @@ export function AtendimentoDetail({
 
             <div className="flex flex-col gap-3">
               <div>
-                <label className="mb-1 block text-xs font-semibold text-muted-foreground uppercase tracking-wide">Dia do follow-up</label>
+                <label className="mb-1 block text-xs font-semibold text-muted-foreground ">Dia do follow-up</label>
                 <input type="date" className="h-12 w-full rounded-2xl border border-border bg-card px-4 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring" />
               </div>
               <div>
-                <label className="mb-1 block text-xs font-semibold text-muted-foreground uppercase tracking-wide">Horário</label>
+                <label className="mb-1 block text-xs font-semibold text-muted-foreground ">Horário</label>
                 <input type="time" className="h-12 w-full rounded-2xl border border-border bg-card px-4 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring" />
               </div>
               <div>
-                <label className="mb-1 block text-xs font-semibold text-muted-foreground uppercase tracking-wide">Instrução para o Albert</label>
+                <label className="mb-1 block text-xs font-semibold text-muted-foreground ">Instrução para o Albert</label>
                 <textarea
                   rows={3}
                   placeholder="Ex: Ligar e perguntar se ainda tem interesse no imóvel..."
@@ -1469,7 +1468,7 @@ export function AtendimentoDetail({
             <div className="p-6">
               {previewEnvio.tipo === 'email' && (
                 <div className="mb-4">
-                  <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">Assunto do e-mail</label>
+                  <label className="mb-1.5 block text-xs font-semibold  text-muted-foreground">Assunto do e-mail</label>
                   <input
                     type="text"
                     value={assuntoEnvio}
@@ -1480,7 +1479,7 @@ export function AtendimentoDetail({
                 </div>
               )}
               <div className="mb-4">
-                <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">Mensagem</label>
+                <label className="mb-1.5 block text-xs font-semibold  text-muted-foreground">Mensagem</label>
                 <textarea
                   value={textoEnvio}
                   onChange={(e) => setTextoEnvio(e.target.value)}
@@ -1490,7 +1489,7 @@ export function AtendimentoDetail({
               <button
                 type="button"
                 onClick={handleEnviar}
-                className={`flex h-14 w-full items-center justify-center gap-2 rounded-2xl text-sm font-semibold text-white shadow-xl transition-brand active:scale-[0.98] ${previewEnvio.tipo === 'whatsapp' ? 'bg-green-600 shadow-green-600/20' : 'bg-primary shadow-primary/20'
+                className={`flex h-10 w-full items-center justify-center gap-2 rounded-2xl text-sm font-semibold text-white shadow-xl transition-brand active:scale-[0.98] ${previewEnvio.tipo === 'whatsapp' ? 'bg-green-600 shadow-green-600/20' : 'bg-primary shadow-primary/20'
                   }`}
               >
                 <Send className="size-4" />
@@ -1522,10 +1521,10 @@ export function AtendimentoDetail({
                 <p className="text-xs text-muted-foreground">O termo já inclui os dados do cliente {atendimento.nome} e de {imoveisSelecionados.length} imóvel(is).</p>
               </div>
               <div className="flex gap-3">
-                <button type="button" className="flex-1 h-12 rounded-2xl border border-border bg-background text-sm font-semibold text-foreground">
+                <button type="button" className="flex-1 h-9 rounded-xl border border-border bg-background text-sm font-semibold text-foreground">
                   Baixar PDF
                 </button>
-                <button type="button" onClick={() => setTermoAberto(false)} className="flex-1 h-12 rounded-2xl bg-primary text-sm font-semibold text-primary-foreground">
+                <button type="button" onClick={() => setTermoAberto(false)} className="flex-1 h-9 rounded-xl bg-primary text-sm font-semibold text-primary-foreground">
                   Assinatura Digital
                 </button>
               </div>
@@ -1551,7 +1550,7 @@ function InfoCard({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex flex-col items-center gap-1 rounded-2xl bg-card shadow-soft p-3">
       <span className="font-mono text-xl font-semibold text-primary">{value}</span>
-      <span className="text-[10px] uppercase tracking-wide text-muted-foreground">{label}</span>
+      <span className="text-[10px]  text-muted-foreground">{label}</span>
     </div>
   )
 }

@@ -215,8 +215,8 @@ export function Contatos() {
                 <Icon className={cn('h-5 w-5', stat.color)} />
               </div>
               <div className="min-w-0">
-                <p className="text-xl sm:text-2xl font-black tracking-tight leading-none">{stat.value}</p>
-                <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground mt-0.5">{stat.label}</p>
+                <p className="text-xl sm:text-2xl font-semibold tracking-tight leading-none">{stat.value}</p>
+                <p className="text-[11px] font-semibold  text-muted-foreground mt-0.5">{stat.label}</p>
               </div>
             </motion.div>
           );
@@ -288,7 +288,7 @@ export function Contatos() {
                       </div>
 
                       <div className="space-y-1.5">
-                        <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Status</Label>
+                        <Label className="text-xs font-semibold text-muted-foreground ">Status</Label>
                         <Select value={advanced.status} onValueChange={(v) => setAdvanced(a => ({ ...a, status: v }))}>
                           <SelectTrigger className="h-9">
                             <SelectValue />
@@ -303,7 +303,7 @@ export function Contatos() {
                       </div>
 
                       <div className="space-y-1.5">
-                        <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Cidade</Label>
+                        <Label className="text-xs font-semibold text-muted-foreground ">Cidade</Label>
                         <Input
                           placeholder="Ex: São Paulo"
                           value={advanced.cidade}
@@ -313,7 +313,7 @@ export function Contatos() {
                       </div>
 
                       <div className="space-y-1.5">
-                        <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Interesse</Label>
+                        <Label className="text-xs font-semibold text-muted-foreground ">Interesse</Label>
                         <Input
                           placeholder="Ex: Apartamento"
                           value={advanced.interesse}
@@ -475,26 +475,26 @@ export function Contatos() {
         <SheetContent side="right" className="sm:max-w-[500px] p-0 overflow-y-auto custom-scrollbar border-none shadow-2xl">
           <div className="bg-gradient-to-r from-primary to-primary/80 p-5 sm:p-6 sticky top-0 z-10">
             <SheetHeader>
-              <SheetTitle className="text-white text-lg sm:text-xl font-black">Novo Contato</SheetTitle>
+              <SheetTitle className="text-white text-lg sm:text-xl font-semibold">Novo Contato</SheetTitle>
               <p className="text-white/80 text-sm mt-1">Preencha as informações do novo contato</p>
             </SheetHeader>
           </div>
           <div className="p-5 sm:p-6 space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="sm:col-span-2 space-y-1.5">
-                <Label htmlFor="nome" className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Nome Completo *</Label>
+                <Label htmlFor="nome" className="text-xs font-semibold text-muted-foreground ">Nome Completo *</Label>
                 <Input id="nome" value={newContato.nome} onChange={(e) => setNewContato({ ...newContato, nome: e.target.value })} placeholder="Ex: Maria Silva" />
               </div>
               <div className="space-y-1.5">
-                <Label htmlFor="email" className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">E-mail *</Label>
+                <Label htmlFor="email" className="text-xs font-semibold text-muted-foreground ">E-mail *</Label>
                 <Input id="email" type="email" value={newContato.email} onChange={(e) => setNewContato({ ...newContato, email: e.target.value })} placeholder="email@exemplo.com" />
               </div>
               <div className="space-y-1.5">
-                <Label htmlFor="telefone" className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Telefone *</Label>
+                <Label htmlFor="telefone" className="text-xs font-semibold text-muted-foreground ">Telefone *</Label>
                 <Input id="telefone" value={newContato.telefone} onChange={(e) => setNewContato({ ...newContato, telefone: maskPhone(e.target.value) })} placeholder="(00) 99999-0000" />
               </div>
               <div className="space-y-1.5">
-                <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Tipo *</Label>
+                <Label className="text-xs font-semibold text-muted-foreground ">Tipo *</Label>
                 <Select value={newContato.tipo} onValueChange={(v) => setNewContato({ ...newContato, tipo: v })}>
                   <SelectTrigger><SelectValue placeholder="Selecione..." /></SelectTrigger>
                   <SelectContent>
@@ -505,7 +505,7 @@ export function Contatos() {
                 </Select>
               </div>
               <div className="space-y-1.5">
-                <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Status</Label>
+                <Label className="text-xs font-semibold text-muted-foreground ">Status</Label>
                 <Select value={newContato.status} onValueChange={(v) => setNewContato({ ...newContato, status: v })}>
                   <SelectTrigger><SelectValue /></SelectTrigger>
                   <SelectContent>
@@ -516,11 +516,11 @@ export function Contatos() {
                 </Select>
               </div>
               <div className="space-y-1.5">
-                <Label htmlFor="interesse" className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Interesse</Label>
+                <Label htmlFor="interesse" className="text-xs font-semibold text-muted-foreground ">Interesse</Label>
                 <Input id="interesse" value={newContato.interesse} onChange={(e) => setNewContato({ ...newContato, interesse: e.target.value })} placeholder="Ex: Apartamento" />
               </div>
               <div className="space-y-1.5">
-                <Label htmlFor="cidade" className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Cidade</Label>
+                <Label htmlFor="cidade" className="text-xs font-semibold text-muted-foreground ">Cidade</Label>
                 <Input id="cidade" value={newContato.cidade} onChange={(e) => setNewContato({ ...newContato, cidade: e.target.value })} placeholder="Ex: São Paulo" />
               </div>
             </div>

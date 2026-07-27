@@ -78,7 +78,7 @@ function Section({ title, children }: { title: string; children: React.ReactNode
         onClick={() => setOpen(o => !o)}
         className="flex w-full items-center justify-between text-left mb-1"
       >
-        <h3 className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">{title}</h3>
+        <h3 className="text-[11px] font-bold tracking-tight text-muted-foreground">{title}</h3>
         {open
           ? <ChevronUp className="h-3.5 w-3.5 text-muted-foreground" />
           : <ChevronDown className="h-3.5 w-3.5 text-muted-foreground" />}
