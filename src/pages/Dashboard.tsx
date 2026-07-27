@@ -361,74 +361,60 @@ export function Dashboard() {
   return (
     <div className="space-y-6 animate-in fade-in duration-500">
       {/* Welcome Section */}
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-      >
-        <Card className="relative overflow-hidden border border-border/50 shadow-card bg-gradient-to-br from-primary-800 to-primary-700 text-primary-foreground">
-          <div className="absolute -right-16 -top-16 w-56 h-56 bg-white/5 rounded-full blur-2xl" />
-          <div className="absolute left-0 bottom-0 w-48 h-48 bg-primary-900/30 rounded-full blur-2xl" />
-
-          <CardContent className="p-6 md:p-8 relative z-10">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-5">
-              <div className="flex items-center gap-4">
-                <div className="p-2.5 bg-white/10 rounded-xl border border-white/15">
-                  <GreetingIcon className="h-6 w-6 text-white" />
-                </div>
-                <div>
-                  <h1 className="text-xl md:text-2xl font-bold tracking-tight">
-                    {greeting.text}, <span className="text-primary-200">{userName}</span>
-                  </h1>
-                  <p className="text-sm text-white/60 mt-0.5">
-                    Você possui <span className="font-semibold text-white">2 tarefas urgentes</span> aguardando.
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex-shrink-0">
-                <div className="px-4 py-2.5 bg-black/15 rounded-xl border border-white/10 flex items-center gap-3">
-                  <div className="flex flex-col items-end">
-                    <span className="text-base font-semibold">
-                      {new Date().toLocaleDateString('pt-BR', { day: 'numeric', month: 'long' })}
-                    </span>
-                    <span className="text-[10px] uppercase tracking-widest text-white/50">
-                      {new Date().toLocaleDateString('pt-BR', { weekday: 'long' })}
-                    </span>
-                  </div>
-                  <div className="w-px h-7 bg-white/15" />
-                  <div className="text-lg font-mono font-semibold">
-                    {new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </motion.div>
-
-      {/* Roleta Gamification Banner */}
-      {tarefasPendentes.length > 0 && (
-        <div className="flex flex-col sm:flex-row items-center gap-4 bg-gradient-to-r from-primary/10 to-primary/5 rounded-2xl p-5 border border-primary/20">
-          <div className="flex-1">
-            <div className="flex items-center gap-2">
-              <div className="flex size-8 items-center justify-center rounded-full bg-primary/20 text-primary animate-pulse">
-                <AlertTriangle className="size-4" />
-              </div>
-              <h3 className="text-lg font-black text-foreground leading-snug">
-                Você tem {tarefasPendentes.length} pendências acumuladas!
-              </h3>
-            </div>
-            <p className="text-xs text-muted-foreground leading-relaxed font-light mt-2">
-              Não deixe acumular. Entre no fluxo contínuo e liquide sua fila de atividades de forma ultra rápida com Albert IA.
+      {/* Welcome — Apple minimal style: no card, just typography + metadata */}
+      <div className="flex items-center justify-between gap-4 pb-2">
+        <div className="flex items-center gap-3">
+          <div className="flex size-9 items-center justify-center rounded-xl bg-primary/8 text-primary shrink-0">
+            <GreetingIcon className="h-5 w-5" />
+          </div>
+          <div>
+            <h1 className="text-title-1 text-foreground leading-none">
+              {greeting.text}, {userName}
+            </h1>
+            <p className="text-subheadline text-muted-foreground mt-0.5">
+              Você possui <span className="font-semibold text-foreground">2 tarefas urgentes</span> aguardando.
             </p>
+          </div>
+        </div>
+
+        <div className="hidden sm:flex items-center gap-2 text-right shrink-0">
+          <div className="flex flex-col items-end">
+            <span className="text-[13px] font-semibold text-foreground leading-none">
+              {new Date().toLocaleDateString('pt-BR', { day: 'numeric', month: 'long' })}
+            </span>
+            <span className="text-[11px] text-muted-foreground capitalize mt-0.5">
+              {new Date().toLocaleDateString('pt-BR', { weekday: 'long' })}
+            </span>
+          </div>
+          <div className="w-px h-8 bg-border mx-1" />
+          <span className="text-[17px] font-medium tabular-nums text-foreground">
+            {new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
+          </span>
+        </div>
+      </div>
+
+      {/* Roleta Banner — subtle, minimal */}
+      {tarefasPendentes.length > 0 && (
+        <div className="flex flex-col sm:flex-row items-center gap-3 bg-amber-50/80 dark:bg-amber-950/20 rounded-2xl px-4 py-3 border border-amber-200/60 dark:border-amber-800/30">
+          <div className="flex items-center gap-2.5 flex-1 min-w-0">
+            <div className="flex size-7 items-center justify-center rounded-lg bg-amber-100 dark:bg-amber-900/40 text-amber-600 dark:text-amber-400 shrink-0">
+              <AlertTriangle className="size-3.5" />
+            </div>
+            <div className="min-w-0">
+              <p className="text-[13px] font-semibold text-foreground leading-snug">
+                {tarefasPendentes.length} pendências aguardam sua atenção.
+              </p>
+              <p className="text-xs text-muted-foreground mt-0.5 hidden sm:block">
+                Entre no Modo Roleta e resolva tudo em sequência com Albert IA.
+              </p>
+            </div>
           </div>
           <button
             onClick={() => setModoRoleta(true)}
-            className="w-full sm:w-auto shrink-0 flex items-center justify-center gap-2 h-12 px-6 rounded-2xl bg-primary text-primary-foreground text-xs font-black shadow-md hover:bg-primary/95 transition-all"
+            className="w-full sm:w-auto shrink-0 h-8 px-4 rounded-xl bg-amber-600 dark:bg-amber-500 text-white text-xs font-semibold flex items-center justify-center gap-1.5 hover:bg-amber-700 transition-all"
           >
-            <Flame className="size-4 animate-pulse fill-primary-foreground" />
-            Entrar no Modo Roleta
+            <Flame className="size-3.5" />
+            Modo Roleta
           </button>
         </div>
       )}

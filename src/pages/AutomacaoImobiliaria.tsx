@@ -404,20 +404,20 @@ export function AutomacaoImobiliaria() {
     <div className="p-8 max-w-7xl mx-auto">
       <div className="flex justify-between items-end mb-12">
         <div>
-          <h1 className="text-4xl font-black text-foreground tracking-tight">Workflow Automations</h1>
+          <h1 className="text-title-1 text-foreground">Automações</h1>
           <p className="text-muted-foreground font-medium mt-2">Transforme seu funil em uma máquina de vendas automática</p>
         </div>
         <div className="flex gap-4">
           <button 
             onClick={() => setActiveTab(activeTab === "active" ? "templates" : "active")}
-            className="px-6 py-4 rounded-2xl font-black text-sm flex items-center gap-2 bg-background border border-border text-muted-foreground hover:bg-muted transition-all"
+            className="h-9 px-4 rounded-xl bg-background border border-border text-sm font-semibold text-muted-foreground flex items-center gap-2 hover:bg-muted/60 transition-all"
           >
             {activeTab === "active" ? <Layout size={18} /> : <History size={18} />}
             {activeTab === "active" ? "Ver Templates" : "Minhas Automações"}
           </button>
           <button 
             onClick={() => setShowModal(true)}
-            className="bg-primary text-primary-foreground px-8 py-4 rounded-2xl font-black text-sm flex items-center gap-2 hover:opacity-90 transition-all hover:scale-[1.02]"
+            className="h-9 px-4 rounded-xl bg-primary text-primary-foreground text-sm font-semibold flex items-center gap-2 hover:bg-primary/90 transition-all active:scale-[0.98]"
           >
             <Plus size={20} /> Criar Automação
           </button>
@@ -452,7 +452,7 @@ export function AutomacaoImobiliaria() {
                     )}
                   >
                     <Filter size={20} />
-                    <span className="text-xs font-black uppercase tracking-widest">Filtrar</span>
+                    <span className="text-xs font-semibold">Filtros</span>
                   </button>
                 </div>
               </div>
@@ -500,24 +500,24 @@ export function AutomacaoImobiliaria() {
                       <Zap size={32} />
                     </div>
                     <div>
-                      <h3 className="text-xl font-black text-foreground flex items-center gap-3">
+                      <h3 className="text-[15px] font-semibold text-foreground flex items-center gap-3 leading-tight">
                         {auto.name}
                         {auto.status === 'active' ? (
-                          <span className="text-[9px] bg-green-500/10 text-green-500 px-3 py-1 rounded-full uppercase tracking-widest font-black border border-green-500/20">Fluxo Ativo</span>
+                          <span className="text-[11px] bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-full font-medium border border-emerald-200/60 dark:bg-emerald-950/40 dark:text-emerald-400">Fluxo Ativo</span>
                         ) : (
-                          <span className="text-[10px] bg-muted text-muted-foreground px-3 py-1 rounded-full uppercase tracking-widest font-black">Pausada</span>
+                          <span className="text-[11px] bg-muted text-muted-foreground px-2 py-0.5 rounded-full font-medium border border-border/50">Pausada</span>
                         )}
                         {auto.savedAsTemplate && (
-                          <span className="text-[9px] bg-purple-50 text-purple-600 px-3 py-1 rounded-full uppercase tracking-widest font-black border border-purple-100 flex items-center gap-1"><Library size={10} /> Template</span>
+                          <span className="text-[11px] bg-primary/8 text-primary px-2 py-0.5 rounded-full font-medium border border-primary/20 flex items-center gap-1"><Library size={10} /> Template</span>
                         )}
                       </h3>
                       <div className="flex items-center gap-4 mt-2">
-                        <div className="flex items-center gap-2 text-[10px] font-black text-muted-foreground uppercase tracking-widest">
+                        <div className="flex items-center gap-2 text-[11px] font-medium text-muted-foreground">
                           <MousePointer2 size={12} />
                           Trigger: <span className="text-primary bg-primary/10 px-2 py-0.5 rounded-md">{triggerLabel}</span>
                         </div>
                         <div className="w-1 h-1 bg-border rounded-full" />
-                        <div className="flex items-center gap-2 text-[10px] font-black text-muted-foreground uppercase tracking-widest">
+                        <div className="flex items-center gap-2 text-[11px] font-medium text-muted-foreground">
                           <Plus size={12} />
                           {auto.actions?.length || 0} Ações configuradas
                         </div>
@@ -583,7 +583,7 @@ export function AutomacaoImobiliaria() {
             {filteredAutomations.length === 0 && (
               <div className="text-center py-32 bg-muted/20 rounded-[4rem] border-4 border-dashed border-border">
                 <Zap size={64} className="text-muted-foreground/20 mx-auto mb-6" />
-                <h3 className="text-2xl font-black text-foreground mb-2">Sua esteira está parada</h3>
+                <h3 className="text-title-2 text-foreground mb-1">Sem automações ativas</h3>
                 <p className="text-sm font-medium text-muted-foreground max-w-sm mx-auto">
                   Crie automações para enviar mensagens, agendar tarefas e notificar sua equipe automaticamente.
                 </p>
@@ -621,9 +621,9 @@ export function AutomacaoImobiliaria() {
                     <div className="w-10 h-10 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform shrink-0">
                       <Copy size={18} />
                     </div>
-                    <span className="text-[9px] bg-blue-50 text-blue-600 px-2 py-0.5 rounded-md uppercase tracking-widest font-black">Modelo</span>
+                    <span className="text-[11px] bg-primary/8 text-primary px-2 py-0.5 rounded-full font-medium border border-primary/20">Modelo</span>
                   </div>
-                  <h3 className="text-lg font-black text-foreground mb-2 leading-tight">
+                  <h3 className="text-[15px] font-semibold text-foreground mb-1.5 leading-tight">
                     {tmpl.name}
                   </h3>
                   <p className="text-xs text-muted-foreground font-medium leading-relaxed mb-4">
@@ -631,7 +631,7 @@ export function AutomacaoImobiliaria() {
                   </p>
                   <div className="flex flex-wrap gap-1.5">
                     {tmpl.actions?.map((a: any, i: number) => (
-                      <span key={i} className="text-[8px] font-black uppercase tracking-widest bg-muted text-muted-foreground px-2 py-1 rounded-md border border-border">
+                      <span key={i} className="text-[10px] font-medium bg-muted/60 text-muted-foreground px-2 py-0.5 rounded-full">
                         {a.type}
                       </span>
                     ))}
@@ -639,7 +639,7 @@ export function AutomacaoImobiliaria() {
                 </div>
                 <button 
                   onClick={() => useTemplate(tmpl)}
-                  className="mt-6 w-full py-3 rounded-xl bg-primary text-white font-black text-xs flex items-center justify-center gap-2 hover:bg-primary/90 transition-all shadow-lg shadow-primary/20"
+                  className="mt-4 w-full h-9 rounded-xl bg-primary text-primary-foreground font-semibold text-sm flex items-center justify-center gap-2 hover:bg-primary/90 transition-all"
                 >
                   Usar <ChevronRight size={14} />
                 </button>
@@ -665,11 +665,11 @@ export function AutomacaoImobiliaria() {
                     <Zap size={24} />
                   </div>
                   <div>
-                    <h2 className="text-2xl font-black text-foreground">Configurador de Workflow</h2>
+                    <h2 className="text-title-2 text-foreground">Nova Automação</h2>
                     <div className="flex items-center gap-2 mt-1">
                       <span className={cn("w-2 h-2 rounded-full", step >= 1 ? "bg-blue-500" : "bg-border")} />
                       <span className={cn("w-2 h-2 rounded-full", step >= 2 ? "bg-blue-500" : "bg-border")} />
-                      <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest ml-2">Passo {step} de 2</span>
+                      <span className="text-xs font-medium text-muted-foreground ml-2">Passo {step} de 2</span>
                     </div>
                   </div>
                 </div>
@@ -682,17 +682,17 @@ export function AutomacaoImobiliaria() {
                 {step === 1 ? (
                   <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="space-y-12">
                   <div className="space-y-4">
-                      <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest ml-1">Nome Identificador</label>
+                      <label className="text-xs font-medium text-muted-foreground mb-1">Nome Identificador</label>
                       <input 
                         value={newRule.name}
                         onChange={(e) => setNewRule({...newRule, name: e.target.value})}
                         placeholder="Ex: Onboarding Cliente VIP"
-                        className="w-full bg-muted/50 border border-border rounded-3xl py-6 px-8 text-xl font-black focus:ring-4 focus:ring-primary/10 outline-none transition-all text-foreground"
+                        className="w-full bg-muted/50 border border-transparent rounded-xl py-2.5 px-4 text-[15px] font-medium focus:ring-2 focus:ring-primary/20 focus:border-border outline-none transition-all text-foreground"
                       />
                     </div>
 
                     <div className="space-y-6">
-                      <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest ml-1">Tipo de Automação</label>
+                      <label className="text-xs font-medium text-muted-foreground mb-1">Tipo de Automação</label>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <button 
                           onClick={() => setIsEditingTemplate(false)}
@@ -702,7 +702,7 @@ export function AutomacaoImobiliaria() {
                           )}
                         >
                           <Zap size={24} className={cn("mb-4", !isEditingTemplate ? "text-white" : "text-muted-foreground")} />
-                          <h4 className={cn("font-black text-sm uppercase tracking-tight", !isEditingTemplate ? "text-white" : "text-foreground")}>Fluxo Operacional</h4>
+                          <h4 className={cn("font-semibold text-sm uppercase tracking-tight", !isEditingTemplate ? "text-white" : "text-foreground")}>Fluxo Operacional</h4>
                           <p className={cn("text-[10px] font-medium mt-1", !isEditingTemplate ? "text-blue-100" : "text-muted-foreground")}>Ativa imediatamente no funil</p>
                         </button>
                         <button 
@@ -713,7 +713,7 @@ export function AutomacaoImobiliaria() {
                           )}
                         >
                           <Bookmark size={24} className={cn("mb-4", isEditingTemplate ? "text-white" : "text-muted-foreground")} />
-                          <h4 className={cn("font-black text-sm uppercase tracking-tight", isEditingTemplate ? "text-white" : "text-foreground")}>Modelo (Template)</h4>
+                          <h4 className={cn("font-semibold text-sm uppercase tracking-tight", isEditingTemplate ? "text-white" : "text-foreground")}>Modelo (Template)</h4>
                           <p className={cn("text-[10px] font-medium mt-1", isEditingTemplate ? "text-blue-100" : "text-muted-foreground")}>Salva na biblioteca de modelos</p>
                         </button>
                       </div>
@@ -721,7 +721,7 @@ export function AutomacaoImobiliaria() {
 
                     {/* ── Funil Scope ── */}
                     <div className="space-y-3">
-                      <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest ml-1 flex items-center gap-2">
+                      <label className="text-xs font-medium text-muted-foreground mb-1 flex items-center gap-2">
                         <Layout size={11} /> Aplicar ao Funil
                       </label>
                       <select
@@ -737,7 +737,7 @@ export function AutomacaoImobiliaria() {
 
                     {/* ── Trigger ── */}
                     <div className="space-y-3">
-                      <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest ml-1 flex items-center gap-2">
+                      <label className="text-xs font-medium text-muted-foreground mb-1 flex items-center gap-2">
                         <MousePointer2 size={11} /> Evento Gatilho
                       </label>
                       <select
@@ -752,7 +752,7 @@ export function AutomacaoImobiliaria() {
 
                       {newRule.triggerType === "stage_change" && (
                         <motion.div initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} className="pt-1">
-                          <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-2 ml-1">Qual coluna?</p>
+                          <p className="text-[10px] font-semibold text-muted-foreground tracking-tight mb-2 ml-1">Qual coluna?</p>
                           <div className="flex flex-wrap gap-2">
                             {(newRule.funnelId
                               ? stages.filter((s: any) => s.funnelId === newRule.funnelId)
@@ -762,7 +762,7 @@ export function AutomacaoImobiliaria() {
                                 key={s.id}
                                 onClick={() => setNewRule({ ...newRule, triggerStageId: s.id })}
                                 className={cn(
-                                  "flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-[11px] font-black uppercase tracking-wide transition-all",
+                                  "flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-[11px] font-semibold  transition-all",
                                   newRule.triggerStageId === s.id
                                     ? "border-primary bg-primary text-white shadow-sm"
                                     : "border-border bg-muted text-muted-foreground hover:border-primary/40 hover:text-foreground"
@@ -779,10 +779,10 @@ export function AutomacaoImobiliaria() {
                       {(newRule.triggerType === "tag_added" || newRule.triggerType === "tag_removed") && (
                         <motion.div initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} className="pt-1">
                           <div className="flex items-center justify-between mb-2">
-                            <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest ml-1">Qual tag?</p>
+                            <p className="text-xs font-medium text-muted-foreground mb-1">Qual tag?</p>
                             <button
                               onClick={() => setShowTagModal(true)}
-                              className="text-[10px] font-black uppercase tracking-widest text-primary bg-primary/10 px-3 py-1 rounded-lg flex items-center gap-1 hover:bg-primary/20 transition-all"
+                              className="text-[10px] font-semibold tracking-tight text-primary bg-primary/10 px-3 py-1 rounded-lg flex items-center gap-1 hover:bg-primary/20 transition-all"
                             >
                               <Settings size={11} /> Gerenciar
                             </button>
@@ -793,7 +793,7 @@ export function AutomacaoImobiliaria() {
                                 key={tag.id}
                                 onClick={() => setNewRule({ ...newRule, triggerTagId: tag.id })}
                                 className={cn(
-                                  "flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-[11px] font-black uppercase tracking-wide transition-all",
+                                  "flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-[11px] font-semibold  transition-all",
                                   newRule.triggerTagId === tag.id
                                     ? "border-primary bg-primary text-white shadow-sm"
                                     : "border-border bg-muted text-muted-foreground hover:border-primary/40 hover:text-foreground"
@@ -814,7 +814,7 @@ export function AutomacaoImobiliaria() {
                             min="1"
                             value={newRule.triggerDays || 3}
                             onChange={(e) => setNewRule({ ...newRule, triggerDays: parseInt(e.target.value) || 3 })}
-                            className="w-28 bg-muted border border-border rounded-xl py-3 px-5 text-xl font-black text-foreground outline-none focus:ring-2 focus:ring-primary/10 transition-all text-center"
+                            className="w-28 bg-muted border border-border rounded-xl py-3 px-5 text-xl font-semibold text-foreground outline-none focus:ring-2 focus:ring-primary/10 transition-all text-center"
                           />
                           <span className="text-sm font-bold text-muted-foreground">dias sem interação</span>
                         </motion.div>
@@ -825,8 +825,8 @@ export function AutomacaoImobiliaria() {
                   <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="space-y-12">
                     <div className="flex justify-between items-center">
                       <div>
-                        <h3 className="text-xl font-black text-foreground">Ações em Sequência</h3>
-                        <p className="text-xs text-muted-foreground font-bold uppercase tracking-widest mt-1">Defina o que acontece após o trigger</p>
+                        <h3 className="text-xl font-semibold text-foreground">Ações em Sequência</h3>
+                        <p className="text-xs text-muted-foreground font-bold tracking-tight mt-1">Defina o que acontece após o trigger</p>
                       </div>
                     </div>
 
@@ -846,15 +846,15 @@ export function AutomacaoImobiliaria() {
                                 {type && <type.icon className={type.color} size={24} />}
                               </div>
                               <div>
-                                <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Ação {idx + 1}</span>
-                                <p className="text-sm font-black text-foreground">{type?.label}</p>
+                                <span className="text-[10px] font-semibold text-muted-foreground tracking-tight">Ação {idx + 1}</span>
+                                <p className="text-sm font-semibold text-foreground">{type?.label}</p>
                               </div>
                             </div>
 
                             {action.type === 'activity' ? (
                               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div className="space-y-2">
-                                  <label className="text-[9px] font-black text-muted-foreground uppercase tracking-widest ml-1">Título da Atividade</label>
+                                  <label className="text-[9px] font-semibold text-muted-foreground tracking-tight ml-1">Título da Atividade</label>
                                   <input 
                                     value={action.config.title}
                                     onChange={(e) => updateActionConfig(action.id, { ...action.config, title: e.target.value })}
@@ -862,7 +862,7 @@ export function AutomacaoImobiliaria() {
                                   />
                                 </div>
                                 <div className="space-y-2">
-                                  <label className="text-[9px] font-black text-muted-foreground uppercase tracking-widest ml-1">Tipo</label>
+                                  <label className="text-[9px] font-semibold text-muted-foreground tracking-tight ml-1">Tipo</label>
                                   <select 
                                     value={action.config.type}
                                     onChange={(e) => updateActionConfig(action.id, { ...action.config, type: e.target.value })}
@@ -876,7 +876,7 @@ export function AutomacaoImobiliaria() {
                                   </select>
                                 </div>
                                 <div className="space-y-2">
-                                  <label className="text-[9px] font-black text-muted-foreground uppercase tracking-widest ml-1">Prioridade</label>
+                                  <label className="text-[9px] font-semibold text-muted-foreground tracking-tight ml-1">Prioridade</label>
                                   <select 
                                     value={action.config.priority}
                                     onChange={(e) => updateActionConfig(action.id, { ...action.config, priority: e.target.value })}
@@ -888,7 +888,7 @@ export function AutomacaoImobiliaria() {
                                   </select>
                                 </div>
                                 <div className="space-y-2">
-                                  <label className="text-[9px] font-black text-muted-foreground uppercase tracking-widest ml-1">Vence em quantos dias?</label>
+                                  <label className="text-[9px] font-semibold text-muted-foreground tracking-tight ml-1">Vence em quantos dias?</label>
                                   <input 
                                     type="number"
                                     min="0"
@@ -898,7 +898,7 @@ export function AutomacaoImobiliaria() {
                                   />
                                 </div>
                                 <div className="md:col-span-2 space-y-2">
-                                  <label className="text-[9px] font-black text-muted-foreground uppercase tracking-widest ml-1">Descrição / Notas</label>
+                                  <label className="text-[9px] font-semibold text-muted-foreground tracking-tight ml-1">Descrição / Notas</label>
                                   <textarea 
                                     value={action.config.description}
                                     onChange={(e) => updateActionConfig(action.id, { ...action.config, description: e.target.value })}
@@ -908,7 +908,7 @@ export function AutomacaoImobiliaria() {
                               </div>
                             ) : action.type === 'move_stage' ? (
                               <div className="space-y-3">
-                                <label className="text-[9px] font-black text-muted-foreground uppercase tracking-widest ml-1">Para qual coluna mover?</label>
+                                <label className="text-[9px] font-semibold text-muted-foreground tracking-tight ml-1">Para qual coluna mover?</label>
                                 <select 
                                   value={action.config.stageId}
                                   onChange={(e) => updateActionConfig(action.id, { ...action.config, stageId: e.target.value })}
@@ -924,7 +924,7 @@ export function AutomacaoImobiliaria() {
                               </div>
                             ) : action.type === 'add_tag' || action.type === 'remove_tag' ? (
                               <div className="space-y-3">
-                                <label className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">Qual Tag?</label>
+                                <label className="text-[9px] font-semibold text-muted-foreground tracking-tight">Qual Tag?</label>
                                 <select 
                                   value={action.config.tagId}
                                   onChange={(e) => updateActionConfig(action.id, { ...action.config, tagId: e.target.value })}
@@ -937,7 +937,7 @@ export function AutomacaoImobiliaria() {
                               </div>
                             ) : action.type === 'webhook' ? (
                               <div className="space-y-3">
-                                <label className="text-[9px] font-black text-muted-foreground uppercase tracking-widest ml-1">URL do Webhook (POST)</label>
+                                <label className="text-[9px] font-semibold text-muted-foreground tracking-tight ml-1">URL do Webhook (POST)</label>
                                 <input 
                                   value={action.config.url}
                                   onChange={(e) => updateActionConfig(action.id, { ...action.config, url: e.target.value })}
@@ -948,7 +948,7 @@ export function AutomacaoImobiliaria() {
                             ) : action.type === 'checklist' ? (
                               <div className="space-y-4">
                                 <div className="space-y-2">
-                                  <label className="text-[9px] font-black text-muted-foreground uppercase tracking-widest ml-1">Título do Checklist</label>
+                                  <label className="text-[9px] font-semibold text-muted-foreground tracking-tight ml-1">Título do Checklist</label>
                                   <input 
                                     value={action.config.title}
                                     onChange={(e) => updateActionConfig(action.id, { ...action.config, title: e.target.value })}
@@ -958,13 +958,13 @@ export function AutomacaoImobiliaria() {
                                 </div>
                                 <div className="space-y-3">
                                   <div className="flex items-center justify-between">
-                                    <label className="text-[9px] font-black text-muted-foreground uppercase tracking-widest ml-1">Itens do Checklist</label>
+                                    <label className="text-[9px] font-semibold text-muted-foreground tracking-tight ml-1">Itens do Checklist</label>
                                     <button 
                                       onClick={() => {
                                         const items = [...(action.config.items || []), ""];
                                         updateActionConfig(action.id, { ...action.config, items });
                                       }}
-                                      className="text-[9px] font-black uppercase text-primary hover:underline"
+                                      className="text-[9px] font-semibold uppercase text-primary hover:underline"
                                     >
                                       + Adicionar Item
                                     </button>
@@ -998,7 +998,7 @@ export function AutomacaoImobiliaria() {
                               </div>
                             ) : action.type === 'change_owner' ? (
                               <div className="space-y-3">
-                                <label className="text-[9px] font-black text-muted-foreground uppercase tracking-widest ml-1">Novo Responsável</label>
+                                <label className="text-[9px] font-semibold text-muted-foreground tracking-tight ml-1">Novo Responsável</label>
                                 <select 
                                   value={action.config.userId}
                                   onChange={(e) => updateActionConfig(action.id, { ...action.config, userId: e.target.value })}
@@ -1011,7 +1011,7 @@ export function AutomacaoImobiliaria() {
                               </div>
                             ) : action.type === 'add_note' ? (
                               <div className="space-y-3">
-                                <label className="text-[9px] font-black text-muted-foreground uppercase tracking-widest ml-1">Conteúdo da Nota</label>
+                                <label className="text-[9px] font-semibold text-muted-foreground tracking-tight ml-1">Conteúdo da Nota</label>
                                 <textarea 
                                   value={action.config.content}
                                   onChange={(e) => updateActionConfig(action.id, { ...action.config, content: e.target.value })}
@@ -1022,7 +1022,7 @@ export function AutomacaoImobiliaria() {
                             ) : action.type === 'adjust_value' ? (
                               <div className="grid grid-cols-2 gap-4">
                                 <div className="space-y-2">
-                                  <label className="text-[9px] font-black text-muted-foreground uppercase tracking-widest ml-1">Operação</label>
+                                  <label className="text-[9px] font-semibold text-muted-foreground tracking-tight ml-1">Operação</label>
                                   <select 
                                     value={action.config.operation}
                                     onChange={(e) => updateActionConfig(action.id, { ...action.config, operation: e.target.value })}
@@ -1034,7 +1034,7 @@ export function AutomacaoImobiliaria() {
                                   </select>
                                 </div>
                                 <div className="space-y-2">
-                                  <label className="text-[9px] font-black text-muted-foreground uppercase tracking-widest ml-1">Valor (R$)</label>
+                                  <label className="text-[9px] font-semibold text-muted-foreground tracking-tight ml-1">Valor (R$)</label>
                                   <input 
                                     type="number"
                                     value={action.config.value}
@@ -1046,7 +1046,7 @@ export function AutomacaoImobiliaria() {
                             ) : action.type === 'cross_funnel' ? (
                               <div className="grid grid-cols-2 gap-4">
                                 <div className="space-y-2">
-                                  <label className="text-[9px] font-black text-muted-foreground uppercase tracking-widest ml-1">Funil de Destino</label>
+                                  <label className="text-[9px] font-semibold text-muted-foreground tracking-tight ml-1">Funil de Destino</label>
                                   <select 
                                     value={action.config.funnelId}
                                     onChange={(e) => updateActionConfig(action.id, { ...action.config, funnelId: e.target.value })}
@@ -1058,7 +1058,7 @@ export function AutomacaoImobiliaria() {
                                   </select>
                                 </div>
                                 <div className="space-y-2">
-                                  <label className="text-[9px] font-black text-muted-foreground uppercase tracking-widest ml-1">Coluna de Destino</label>
+                                  <label className="text-[9px] font-semibold text-muted-foreground tracking-tight ml-1">Coluna de Destino</label>
                                   <select 
                                     value={action.config.stageId}
                                     onChange={(e) => updateActionConfig(action.id, { ...action.config, stageId: e.target.value })}
@@ -1073,7 +1073,7 @@ export function AutomacaoImobiliaria() {
                             ) : action.type === 'delay' ? (
                               <div className="flex items-center gap-4">
                                 <div className="space-y-2 flex-1">
-                                  <label className="text-[9px] font-black text-muted-foreground uppercase tracking-widest ml-1">Tempo de Espera</label>
+                                  <label className="text-[9px] font-semibold text-muted-foreground tracking-tight ml-1">Tempo de Espera</label>
                                   <input 
                                     type="number"
                                     min="1"
@@ -1083,7 +1083,7 @@ export function AutomacaoImobiliaria() {
                                   />
                                 </div>
                                 <div className="space-y-2 w-32">
-                                  <label className="text-[9px] font-black text-muted-foreground uppercase tracking-widest ml-1">Unidade</label>
+                                  <label className="text-[9px] font-semibold text-muted-foreground tracking-tight ml-1">Unidade</label>
                                   <select 
                                     value={action.config.unit}
                                     onChange={(e) => updateActionConfig(action.id, { ...action.config, unit: e.target.value })}
@@ -1097,7 +1097,7 @@ export function AutomacaoImobiliaria() {
                               </div>
                             ) : (
                               <div className="space-y-3">
-                                <label className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">Conteúdo da Mensagem</label>
+                                <label className="text-[9px] font-semibold text-muted-foreground tracking-tight">Conteúdo da Mensagem</label>
                                 <textarea 
                                   value={action.config.message}
                                   onChange={(e) => updateActionConfig(action.id, { ...action.config, message: e.target.value })}
@@ -1120,7 +1120,7 @@ export function AutomacaoImobiliaria() {
                             <div className={cn("w-12 h-12 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform", type.bg, "dark:bg-muted")}>
                               <type.icon className={type.color} size={24} />
                             </div>
-                            <span className="text-[9px] font-black uppercase tracking-widest text-foreground">{type.label}</span>
+                            <span className="text-[9px] font-semibold tracking-tight text-foreground">{type.label}</span>
                           </button>
                         ))}
                       </div>
@@ -1132,7 +1132,7 @@ export function AutomacaoImobiliaria() {
               <div className="p-10 border-t border-border bg-muted/20 flex justify-between gap-6">
                 <button 
                   onClick={() => step === 1 ? resetModal() : setStep(1)}
-                  className="px-10 py-5 text-sm font-black text-muted-foreground uppercase tracking-widest hover:text-foreground transition-colors"
+                  className="px-10 py-5 text-sm font-semibold text-muted-foreground tracking-tight hover:text-foreground transition-colors"
                 >
                   {step === 1 ? "Cancelar" : "Voltar"}
                 </button>
@@ -1140,14 +1140,14 @@ export function AutomacaoImobiliaria() {
                   {step === 1 ? (
                     <button 
                       onClick={() => setStep(2)}
-                      className="bg-foreground text-background px-12 py-5 rounded-[1.5rem] font-black text-sm flex items-center gap-2 shadow-xl shadow-black/10"
+                      className="bg-foreground text-background px-12 py-5 rounded-[1.5rem] font-semibold text-sm flex items-center gap-2 shadow-xl shadow-black/10"
                     >
                       Continuar <ArrowRight size={18} />
                     </button>
                   ) : (
                     <button 
                       onClick={handleSave}
-                      className="bg-blue-600 text-white px-12 py-5 rounded-[1.5rem] font-black text-sm flex items-center gap-2 shadow-xl shadow-blue-200 dark:shadow-blue-900/30"
+                      className="bg-blue-600 text-white px-12 py-5 rounded-[1.5rem] font-semibold text-sm flex items-center gap-2 shadow-xl shadow-blue-200 dark:shadow-blue-900/30"
                     >
                       <Zap size={18} /> {editingId ? "Salvar Alterações" : (isEditingTemplate ? "Criar Template" : "Ativar Fluxo")}
                     </button>
