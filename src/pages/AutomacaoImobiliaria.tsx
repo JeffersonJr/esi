@@ -34,7 +34,9 @@ import {
   Settings,
   Search,
   Filter,
-  DollarSign
+  DollarSign,
+  Building,
+  Bot
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
@@ -66,9 +68,110 @@ interface Automation {
   isFavorite?: boolean;
 }
 
+
+const INITIAL_TEMPLATES: Automation[] = [
+  {
+    id: "tpl_1",
+    name: "Boas-vindas Automática (Novo Lead)",
+    triggerType: "form_submitted",
+    status: "active",
+    isTemplate: true,
+    actions: [
+      { id: "a1", type: "whatsapp", config: { message: "Olá! Recebemos seu contato. Um de nossos corretores já vai te atender." } }
+    ]
+  },
+  {
+    id: "tpl_2",
+    name: "Pós-Venda (Negócio Ganho)",
+    triggerType: "deal_won",
+    status: "active",
+    isTemplate: true,
+    actions: [
+      { id: "a1", type: "email", config: { subject: "Parabéns pela sua nova conquista!" } },
+      { id: "a2", type: "activity", config: { title: "Ligar para parabenizar e pedir indicação", days: 3 } }
+    ]
+  },
+  {
+    id: "tpl_3",
+    name: "Follow-up de Resgate",
+    triggerType: "deal_stale",
+    triggerDays: 15,
+    status: "active",
+    isTemplate: true,
+    actions: [
+      { id: "a1", type: "whatsapp", config: { message: "Oi, tudo bem? Ainda tem interesse no imóvel?" } },
+      { id: "a2", type: "activity", config: { title: "Tentar resgatar o lead", days: 1 } }
+    ]
+  },
+  {
+    id: "tpl_4",
+    name: "Rodízio de Vendas (Roleta)",
+    triggerType: "stage_change",
+    triggerStageId: "s1", // Supondo ID de coluna Novo
+    status: "active",
+    isTemplate: true,
+    actions: [
+      { id: "a1", type: "change_owner", config: { roundRobin: true, team: "vendas" } }
+    ]
+  },
+  {
+    id: "tpl_5",
+    name: "Rodízio de Locação",
+    triggerType: "stage_change",
+    triggerStageId: "s1",
+    status: "active",
+    isTemplate: true,
+    actions: [
+      { id: "a1", type: "change_owner", config: { roundRobin: true, team: "locacao" } }
+    ]
+  },
+  {
+    id: "tpl_6",
+    name: "Rodízio de Redes Sociais",
+    triggerType: "form_submitted",
+    status: "active",
+    isTemplate: true,
+    actions: [
+      { id: "a1", type: "change_owner", config: { roundRobin: true, team: "marketing" } }
+    ]
+  },
+  {
+    id: "tpl_7",
+    name: "Onboarding de Corretor no Rodízio",
+    triggerType: "new_user",
+    status: "active",
+    isTemplate: true,
+    actions: [
+      { id: "a1", type: "manage_round_robin", config: { action: "add", team: "vendas" } },
+      { id: "a2", type: "notification", config: { message: "Você foi adicionado à Roleta de Vendas!" } }
+    ]
+  },
+  {
+    id: "tpl_8",
+    name: "Match Inteligente (Novo Imóvel)",
+    triggerType: "new_property",
+    status: "active",
+    isTemplate: true,
+    actions: [
+      { id: "a1", type: "whatsapp", config: { message: "Encontramos um imóvel perfeito que acabou de entrar no nosso radar!" } }
+    ]
+  },
+  {
+    id: "tpl_9",
+    name: "Transbordo de IA para Humano",
+    triggerType: "ai_handover",
+    status: "active",
+    isTemplate: true,
+    actions: [
+      { id: "a1", type: "notification", config: { message: "A IA solicitou transbordo. Assuma o atendimento!" } },
+      { id: "a2", type: "whatsapp", config: { message: "Nosso corretor especializado já vai assumir seu atendimento por aqui. Um instante!" } }
+    ]
+  }
+];
+
 export function AutomacaoImobiliaria() {
   const [automations, setAutomations] = useState<Automation[]>([]);
-  const [automationTemplates, setAutomationTemplates] = useState<Automation[]>([]);
+  const [automationTemplates, setAutomationTemplates] = useState<Automation[]>(INITIAL_TEMPLATES);
   const [availableTags, setAvailableTags] = useState<any[]>([]);
 
   const funnels = [{id: '1', name: 'Vendas'}, {id: '2', name: 'Locação'}];
