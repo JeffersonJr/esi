@@ -106,7 +106,7 @@ export function GestaoSolicitacoes() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 font-sans flex flex-col h-full overflow-hidden">
+    <div className="flex flex-col h-full overflow-hidden">
       <div className="max-w-[1600px] mx-auto w-full px-6 pt-4">
         <PageHeader
           title="Manutenção e Chamados"
@@ -119,13 +119,13 @@ export function GestaoSolicitacoes() {
           actions={
             <div className="flex items-center gap-3">
               <div className="relative md:w-64">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
-                <Input placeholder="Buscar OS, imóvel..." className="pl-9 bg-slate-50 border-slate-200 h-12 rounded-2xl" />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input placeholder="Buscar OS, imóvel..." className="pl-9 bg-background border-border h-10 rounded-xl" />
               </div>
-              <Button variant="outline" className="h-12 px-6 rounded-2xl font-bold bg-white border-slate-200 text-slate-700 shadow-sm hover:bg-slate-50 transition-all">
+              <Button variant="outline" className="h-10 px-4 rounded-xl font-semibold border-border hover:bg-muted/60 transition-all">
                 <Filter className="h-4 w-4 mr-2" /> Filtros
               </Button>
-              <Button className="h-12 px-6 rounded-2xl font-bold bg-indigo-600 hover:bg-indigo-700 text-white shadow-lg shadow-indigo-200 transition-all">
+              <Button className="h-10 px-4 rounded-xl font-semibold gap-2 shadow-md shadow-primary/20">
                 <Plus className="h-4 w-4 mr-2" /> Novo Ticket
               </Button>
             </div>
@@ -145,16 +145,14 @@ export function GestaoSolicitacoes() {
                   <div
                     ref={provided.innerRef}
                     {...provided.droppableProps}
-                    className={`min-w-[320px] max-w-[350px] w-full flex flex-col rounded-2xl p-4 border border-slate-200 transition-colors ${
-                      snapshot.isDraggingOver ? 'bg-indigo-50/50 border-indigo-200' : 'bg-slate-100/50 shadow-sm'
-                    }`}
+                    className={`min-w-[320px] max-w-[350px] w-full flex flex-col rounded-2xl border border-border/60 overflow-hidden transition-colors ${snapshot.isDraggingOver ? 'bg-primary/5 border-primary/30' : 'bg-muted/30 shadow-sm'}`}
                   >
-                    <div className="flex items-center justify-between mb-4 px-1">
-                      <h3 className="font-bold text-slate-700 uppercase tracking-wider text-xs">{colunaLabel}</h3>
-                      <Badge variant="secondary" className="bg-slate-200 text-slate-600 font-bold rounded-lg">{itensColuna.length}</Badge>
+                    <div className="flex items-center justify-between px-4 py-3 border-b border-border/40 bg-card/40 backdrop-blur-sm">
+                      <h3 className="font-semibold text-sm text-foreground">{colunaLabel}</h3>
+                      <span className="flex size-6 items-center justify-center rounded-full bg-background border border-border text-[11px] font-mono font-semibold text-muted-foreground shadow-sm">{itensColuna.length}</span>
                     </div>
 
-                    <div className="flex-1 overflow-y-auto space-y-3 custom-scrollbar pr-1 min-h-[150px]">
+                    <div className="flex-1 overflow-y-auto space-y-3 custom-scrollbar p-4 min-h-[150px]">
                       {itensColuna.map((ticket, index) => (
                         <Draggable key={ticket.id} draggableId={ticket.id} index={index}>
                           {(provided, snapshot) => (
@@ -169,22 +167,22 @@ export function GestaoSolicitacoes() {
                             >
                               <Card
                                 className={`border-none shadow-sm cursor-pointer transition-all group rounded-2xl overflow-hidden ${
-                                  snapshot.isDragging ? 'ring-2 ring-indigo-400 shadow-xl scale-[1.02]' : 'hover:ring-2 hover:ring-indigo-400 hover:shadow-md'
+                                  snapshot.isDragging ? 'ring-2 ring-primary/40 shadow-xl scale-[1.02]' : 'hover:ring-2 hover:ring-primary/30 hover:shadow-md'
                                 }`}
                                 onClick={() => setModalAberto(ticket)}
                               >
                                 <CardContent className="p-4">
                                   <div className="flex justify-between items-start mb-2">
-                                    <span className="text-[10px] font-black font-mono text-slate-400 tracking-wider bg-slate-50 px-2 py-0.5 rounded-md border border-slate-100">{ticket.id}</span>
+                                    <span className="text-[10px] font-black font-mono text-muted-foreground tracking-wider bg-muted/60 px-2 py-0.5 rounded-md border border-border/40">{ticket.id}</span>
                                     {getPrioridadeBadge(ticket.prioridade)}
                                   </div>
 
-                                  <h4 className="font-bold text-slate-800 leading-tight mb-2 group-hover:text-indigo-600 transition-colors">{ticket.titulo}</h4>
-                                  <p className="text-xs text-slate-500 font-medium mb-3 flex items-center gap-1.5"><Home className="h-3 w-3 text-slate-400" /> {ticket.imovel}</p>
+                                  <h4 className="font-semibold text-foreground leading-tight mb-2 group-hover:text-primary transition-colors">{ticket.titulo}</h4>
+                                  <p className="text-xs text-muted-foreground font-medium mb-3 flex items-center gap-1.5"><Home className="h-3 w-3 text-muted-foreground/70" /> {ticket.imovel}</p>
 
                       {/* SLA / Tempo */}
                       {ticket.status !== 'Resolvido' && (
-                        <div className="mb-3 space-y-1.5 bg-slate-50/80 p-3 rounded-xl border border-slate-100">
+                        <div className="mb-3 space-y-1.5 bg-muted/50 p-3 rounded-xl border border-border/40">
                           <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-wider">
                             <span className="text-slate-400">SLA: {ticket.slaHoras}h</span>
                             <span className={getUrgencyColor(ticket.slaHoras, ticket.horasPassadas)}>

@@ -118,7 +118,7 @@ export function SistemaVistoria() {
             <div className="flex items-center gap-3">
               <Button
                 onClick={() => { }}
-                className="h-12 px-6 rounded-2xl font-bold bg-indigo-600 hover:bg-indigo-700 text-white shadow-lg shadow-indigo-200 transition-all"
+                className="h-10 px-4 rounded-xl font-semibold gap-2 shadow-md shadow-primary/20"
               >
                 <Calendar className="h-4 w-4 mr-2" /> Agendar Vistoria
               </Button>
@@ -133,9 +133,9 @@ export function SistemaVistoria() {
         <Tabs value={selectedTab} onValueChange={setSelectedTab} className="w-full">
           <Card className="border-none shadow-sm bg-white overflow-hidden mb-6">
             <div className="p-2 border-b border-slate-100">
-              <TabsList className="bg-slate-50 border border-slate-100 rounded-xl h-12 w-full justify-start overflow-x-auto">
-                <TabsTrigger value="dashboard" className="rounded-lg font-bold data-[state=active]:bg-white data-[state=active]:shadow-sm data-[state=active]:text-indigo-600 px-6">Dashboard</TabsTrigger>
-                <TabsTrigger value="vistorias" className="rounded-lg font-bold data-[state=active]:bg-white data-[state=active]:shadow-sm data-[state=active]:text-indigo-600 px-6">Todas as Vistorias</TabsTrigger>
+              <TabsList className="bg-muted/40 border border-border/50 rounded-xl h-12 w-full justify-start overflow-x-auto">
+                <TabsTrigger value="dashboard" className="rounded-lg font-bold data-[state=active]:bg-background data-[state=active]:shadow-sm data-[state=active]:text-primary px-6">Dashboard</TabsTrigger>
+                <TabsTrigger value="vistorias" className="rounded-lg font-bold data-[state=active]:bg-background data-[state=active]:shadow-sm data-[state=active]:text-primary px-6">Todas as Vistorias</TabsTrigger>
                 <TabsTrigger value="assinaturas" className="rounded-lg font-bold data-[state=active]:bg-white data-[state=active]:shadow-sm data-[state=active]:text-emerald-600 px-6">Aguardando Assinatura <Badge variant="secondary" className="ml-2 bg-emerald-50 text-emerald-600">3</Badge></TabsTrigger>
               </TabsList>
             </div>
@@ -152,8 +152,8 @@ export function SistemaVistoria() {
                       <Calendar className="h-6 w-6" />
                     </div>
                   </div>
-                  <h3 className="text-3xl font-black text-slate-800 tracking-tight mb-1">12</h3>
-                  <p className="text-sm font-bold text-slate-600">Vistorias Próximas</p>
+                  <h3 className="text-3xl font-black text-foreground tracking-tight mb-1">12</h3>
+                  <p className="text-sm font-medium text-muted-foreground">Vistorias Próximas</p>
                   <p className="text-xs text-slate-500 font-medium mt-1">Agendadas para esta semana</p>
                 </CardContent>
               </Card>
@@ -165,8 +165,8 @@ export function SistemaVistoria() {
                       <PenTool className="h-6 w-6" />
                     </div>
                   </div>
-                  <h3 className="text-3xl font-black text-slate-800 tracking-tight mb-1">4</h3>
-                  <p className="text-sm font-bold text-slate-600">Laudos em Elaboração</p>
+                  <h3 className="text-3xl font-black text-foreground tracking-tight mb-1">4</h3>
+                  <p className="text-sm font-medium text-muted-foreground">Laudos em Elaboração</p>
                   <p className="text-xs text-slate-500 font-medium mt-1">Por parte dos vistoriadores</p>
                 </CardContent>
               </Card>
@@ -178,8 +178,8 @@ export function SistemaVistoria() {
                       <FileSignature className="h-6 w-6" />
                     </div>
                   </div>
-                  <h3 className="text-3xl font-black text-slate-800 tracking-tight mb-1">3</h3>
-                  <p className="text-sm font-bold text-slate-600">Pendentes de Assinatura</p>
+                  <h3 className="text-3xl font-black text-foreground tracking-tight mb-1">3</h3>
+                  <p className="text-sm font-medium text-muted-foreground">Pendentes de Assinatura</p>
                   <p className="text-xs text-slate-500 font-medium mt-1">Enviados via DocuSign</p>
                 </CardContent>
               </Card>
@@ -191,8 +191,8 @@ export function SistemaVistoria() {
                       <ShieldCheck className="h-6 w-6" />
                     </div>
                   </div>
-                  <h3 className="text-3xl font-black text-slate-800 tracking-tight mb-1">98%</h3>
-                  <p className="text-sm font-bold text-slate-600">Integridade dos Laudos</p>
+                  <h3 className="text-3xl font-black text-foreground tracking-tight mb-1">98%</h3>
+                  <p className="text-sm font-medium text-muted-foreground">Integridade dos Laudos</p>
                   <p className="text-xs text-indigo-600 font-bold mt-1">Aceites sem contestação</p>
                 </CardContent>
               </Card>
@@ -255,9 +255,7 @@ export function SistemaVistoria() {
                         <div
                           ref={provided.innerRef}
                           {...provided.droppableProps}
-                          className={`min-w-[300px] max-w-[320px] w-full flex flex-col rounded-2xl p-4 border border-slate-200 transition-colors ${
-                            snapshot.isDraggingOver ? 'bg-indigo-50/50 border-indigo-200' : 'bg-white shadow-sm'
-                          }`}
+                          className={`min-w-[300px] max-w-[320px] w-full flex flex-col rounded-2xl border border-border/60 overflow-hidden transition-colors ${snapshot.isDraggingOver ? 'bg-primary/5 border-primary/30' : 'bg-muted/30 shadow-sm'}`}
                         >
                           <div className="flex items-center justify-between mb-4 px-1">
                             <h3 className="font-bold text-slate-700 uppercase tracking-wider text-xs">{colunaLabel}</h3>

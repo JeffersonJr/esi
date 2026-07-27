@@ -313,10 +313,10 @@ export function Funil({
                   key={f.id}
                   onClick={() => setFiltroModo(f.id)}
                   className={cn(
-                    'px-3 py-1.5 rounded-lg text-[11px] font-bold uppercase tracking-wide transition-all border shrink-0',
+                    'h-7 px-3 rounded-full text-xs font-semibold border transition-all shrink-0',
                     filtroModo === f.id
                       ? 'bg-primary text-primary-foreground border-primary shadow-sm'
-                      : 'bg-background text-muted-foreground border-border hover:border-primary/40 hover:text-foreground'
+                      : 'bg-background text-foreground border-border hover:border-primary/60 hover:bg-primary/5'
                   )}
                 >
                   {f.label}

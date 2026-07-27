@@ -197,22 +197,22 @@ export function Usuarios() {
                 </button>
               ))}
               <div className="ml-auto flex items-center gap-2">
-                <div className="flex items-center border rounded-md mr-2">
+                <div className="flex items-center bg-muted/50 rounded-xl p-1 border border-border/50 mr-1">
                   <Button
                     variant={viewMode === 'grid' ? 'secondary' : 'ghost'}
-                    size="icon"
-                    className="h-7 w-8 rounded-r-none"
+                    size="sm"
+                    className="h-9 w-9 p-0 rounded-lg"
                     onClick={() => setViewMode('grid')}
                   >
-                    <Grid className="h-3.5 w-3.5" />
+                    <Grid className="h-4 w-4" />
                   </Button>
                   <Button
                     variant={viewMode === 'table' ? 'secondary' : 'ghost'}
-                    size="icon"
-                    className="h-7 w-8 rounded-l-none"
+                    size="sm"
+                    className="h-9 w-9 p-0 rounded-lg"
                     onClick={() => setViewMode('table')}
                   >
-                    <ListIcon className="h-3.5 w-3.5" />
+                    <ListIcon className="h-4 w-4" />
                   </Button>
                 </div>
                 {hasActiveAdvanced && (

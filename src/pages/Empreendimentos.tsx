@@ -151,50 +151,58 @@ export function Empreendimentos() {
         }
       />
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         {[
           { label: 'Total Cadastrados', value: total, icon: Building, color: 'text-blue-500', bg: 'bg-blue-500/10' },
           { label: 'Em Obras', value: emObras, icon: HardHat, color: 'text-amber-500', bg: 'bg-amber-500/10' },
           { label: 'Prontos', value: prontos, icon: Home, color: 'text-emerald-500', bg: 'bg-emerald-500/10' },
           { label: 'Lançamentos', value: empreendimentos.filter(e => e.estagio === 'Lançamento').length, icon: Pickaxe, color: 'text-purple-500', bg: 'bg-purple-500/10' },
         ].map((kpi, idx) => (
-          <Card key={idx} className="border-none shadow-sm bg-card hover:shadow-md transition-all rounded-3xl">
-            <CardContent className="p-5 flex items-center gap-4">
-              <div className={cn("h-12 w-12 rounded-2xl flex items-center justify-center shrink-0", kpi.bg, kpi.color)}>
-                <kpi.icon className="h-6 w-6" />
+          <Card key={idx} className="border-none shadow-sm">
+            <CardContent className="p-4 flex items-center gap-3">
+              <div className={cn("h-10 w-10 rounded-xl flex items-center justify-center shrink-0", kpi.bg)}>
+                <kpi.icon className={cn('h-5 w-5', kpi.color)} />
               </div>
               <div>
-                <p className="text-sm font-medium text-muted-foreground leading-none mb-1.5">{kpi.label}</p>
-                <p className="text-2xl font-black text-foreground leading-none">{kpi.value}</p>
+                <p className="text-2xl font-black leading-none">{kpi.value}</p>
+                <p className="text-xs text-muted-foreground font-semibold mt-0.5">{kpi.label}</p>
               </div>
             </CardContent>
           </Card>
         ))}
       </div>
 
-      <div className="flex flex-col sm:flex-row gap-4 items-center justify-between">
-        <div className="relative w-full sm:w-96">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input
-            placeholder="Buscar por nome, construtora ou bairro..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-9 h-12 rounded-2xl bg-card border-border/50 shadow-sm"
-          />
-        </div>
-        <div className="flex items-center gap-2 w-full sm:w-auto overflow-x-auto pb-2 sm:pb-0 hide-scrollbar">
-          {ESTAGIO_FILTERS.map(estagio => (
-            <Button
-              key={estagio}
-              variant={estagioFilter === estagio ? 'default' : 'outline'}
-              className={cn("rounded-xl h-10 px-4 font-semibold whitespace-nowrap", estagioFilter === estagio && "shadow-md")}
-              onClick={() => setEstagioFilter(estagio)}
-            >
-              {estagio}
-            </Button>
-          ))}
-        </div>
-      </div>
+      <Card className="border-none shadow-sm bg-muted/30">
+        <CardContent className="p-3 sm:p-4 space-y-3">
+          <div className="flex gap-2">
+            <div className="relative flex-1 group">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+              <Input
+                placeholder="Buscar por nome, construtora ou bairro..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-10 bg-background border-none shadow-sm h-9"
+              />
+            </div>
+          </div>
+          <div className="flex items-center gap-2 overflow-x-auto pb-0.5 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            {ESTAGIO_FILTERS.map(estagio => (
+              <button
+                key={estagio}
+                onClick={() => setEstagioFilter(estagio)}
+                className={cn(
+                  'h-7 px-3 rounded-full text-xs font-semibold border transition-all whitespace-nowrap shrink-0',
+                  estagioFilter === estagio
+                    ? 'bg-primary text-primary-foreground border-primary shadow-sm'
+                    : 'bg-background text-foreground border-border hover:border-primary/60 hover:bg-primary/5'
+                )}
+              >
+                {estagio}
+              </button>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
 
       <AnimatePresence mode="wait">
         {viewMode === 'grid' ? (
