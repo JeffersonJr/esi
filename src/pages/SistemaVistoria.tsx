@@ -29,10 +29,10 @@ import {
 import { PageHeader } from '@/components/layout/PageHeader';
 
 const vistorias = [
-  { id: 'VST-501', imovel: 'Apto 2 Quartos - Centro', endereço: 'Rua das Flores, 123', tipo: 'Entrada', inquilino: 'Maria Alves', vistoriador: 'Pedro Oliveira', data: '20/Jan - 14:00', status: 'Agendado', fotos: 0 },
-  { id: 'VST-502', imovel: 'Casa Cond. Ipê', endereço: 'Av Principal, 400', tipo: 'Saída', inquilino: 'João Silva', vistoriador: 'Pedro Oliveira', data: '18/Jan - 10:00', status: 'Em Análise', fotos: 145 },
-  { id: 'VST-498', imovel: 'Cobertura Jardins', endereço: 'Rua Augusta, 1000', tipo: 'Entrada', inquilino: 'Ana Souza', vistoriador: 'Larissa Costa', data: '10/Jan', status: 'Concluído', fotos: 210 },
-  { id: 'VST-495', imovel: 'Sala Comercial', endereço: 'Av Faria Lima, 3000', tipo: 'Manutenção', inquilino: 'Startup XYZ', vistoriador: 'Larissa Costa', data: '05/Jan', status: 'Aprovado (Assinado)', fotos: 35 }
+  { id: 'VST-501', imovel: 'Apto 2 Quartos - Centro', endereço: 'Rua das Flores, 123', tipo: 'Entrada', inquilino: 'Maria Alves', vistoriador: 'Pedro Oliveira', data: '20/Jan - 14:00', status: 'Agendado', fotos: 0, valorReparo: 0 },
+  { id: 'VST-502', imovel: 'Casa Cond. Ipê', endereço: 'Av Principal, 400', tipo: 'Saída', inquilino: 'João Silva', vistoriador: 'Pedro Oliveira', data: '18/Jan - 10:00', status: 'Em Análise', fotos: 145, valorReparo: 850 },
+  { id: 'VST-498', imovel: 'Cobertura Jardins', endereço: 'Rua Augusta, 1000', tipo: 'Entrada', inquilino: 'Ana Souza', vistoriador: 'Larissa Costa', data: '10/Jan', status: 'Concluído', fotos: 210, valorReparo: 0 },
+  { id: 'VST-495', imovel: 'Sala Comercial', endereço: 'Av Faria Lima, 3000', tipo: 'Manutenção', inquilino: 'Startup XYZ', vistoriador: 'Larissa Costa', data: '05/Jan', status: 'Aprovado (Assinado)', fotos: 35, valorReparo: 1200 }
 ];
 
 const comodosCompletos = [

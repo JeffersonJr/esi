@@ -40,14 +40,15 @@ interface Solicitacao {
   data: string;
   prestador?: { nome: string; especialidade: string };
   status: 'Novo' | 'Atribuído' | 'Em Andamento' | 'Resolvido';
+  custoEstimado?: number;
 }
 
 const solicitacoesMock: Solicitacao[] = [
-  { id: 'OS-1042', imovel: 'Apto 302 - Centro', inquilino: 'João Silva', titulo: 'Curto Circuito Chuveiro', descricao: 'O disjuntor desarma sempre que ligo o chuveiro no quente.', categoria: 'Elétrica', prioridade: 'Alta', slaHoras: 24, horasPassadas: 18, data: 'Hoje, 08:30', status: 'Novo' },
-  { id: 'OS-1043', imovel: 'Casa 5 - Cond. Ipê', inquilino: 'Maria Alves', titulo: 'Infiltração Teto Banheiro', descricao: 'Mancha amarela crescendo no gesso.', categoria: 'Infraestrutura', prioridade: 'Média', slaHoras: 72, horasPassadas: 12, data: 'Ontem', status: 'Novo' },
-  { id: 'OS-1039', imovel: 'Cobertura 10 - Jardins', inquilino: 'Carlos Souza', titulo: 'Vazamento Pia Cozinha', descricao: 'Sifão quebrado, vazando muita água.', categoria: 'Hidráulica', prioridade: 'Urgente', slaHoras: 12, horasPassadas: 8, data: 'Hoje, 10:15', prestador: { nome: 'José Encanador', especialidade: 'Hidráulica' }, status: 'Atribuído' },
-  { id: 'OS-1035', imovel: 'Conjunto 401 Comercial', inquilino: 'Empresa XYZ', titulo: 'Ar Condicionado Não Gela', descricao: 'Máquina liga, mas não sai ar frio.', categoria: 'Eletrodomésticos', prioridade: 'Média', slaHoras: 72, horasPassadas: 48, data: 'Há 2 dias', prestador: { nome: 'ClimaTec', especialidade: 'Refrigeração' }, status: 'Em Andamento' },
-  { id: 'OS-1020', imovel: 'Apto 101 - Bela Vista', inquilino: 'Fernanda Lima', titulo: 'Fechadura Emperrando', descricao: 'Chave não gira direito.', categoria: 'Geral', prioridade: 'Baixa', slaHoras: 120, horasPassadas: 110, data: 'Na semana passada', prestador: { nome: 'Chaveiro Rápido', especialidade: 'Geral' }, status: 'Resolvido' },
+  { id: 'OS-1042', imovel: 'Apto 302 - Centro', inquilino: 'João Silva', titulo: 'Curto Circuito Chuveiro', descricao: 'O disjuntor desarma sempre que ligo o chuveiro no quente.', categoria: 'Elétrica', prioridade: 'Alta', slaHoras: 24, horasPassadas: 18, data: 'Hoje, 08:30', status: 'Novo', custoEstimado: 250 },
+  { id: 'OS-1043', imovel: 'Casa 5 - Cond. Ipê', inquilino: 'Maria Alves', titulo: 'Infiltração Teto Banheiro', descricao: 'Mancha amarela crescendo no gesso.', categoria: 'Infraestrutura', prioridade: 'Média', slaHoras: 72, horasPassadas: 12, data: 'Ontem', status: 'Novo', custoEstimado: 850 },
+  { id: 'OS-1039', imovel: 'Cobertura 10 - Jardins', inquilino: 'Carlos Souza', titulo: 'Vazamento Pia Cozinha', descricao: 'Sifão quebrado, vazando muita água.', categoria: 'Hidráulica', prioridade: 'Urgente', slaHoras: 12, horasPassadas: 8, data: 'Hoje, 10:15', prestador: { nome: 'José Encanador', especialidade: 'Hidráulica' }, status: 'Atribuído', custoEstimado: 120 },
+  { id: 'OS-1035', imovel: 'Conjunto 401 Comercial', inquilino: 'Empresa XYZ', titulo: 'Ar Condicionado Não Gela', descricao: 'Máquina liga, mas não sai ar frio.', categoria: 'Eletrodomésticos', prioridade: 'Média', slaHoras: 72, horasPassadas: 48, data: 'Há 2 dias', prestador: { nome: 'ClimaTec', especialidade: 'Refrigeração' }, status: 'Em Andamento', custoEstimado: 400 },
+  { id: 'OS-1020', imovel: 'Apto 101 - Bela Vista', inquilino: 'Fernanda Lima', titulo: 'Fechadura Emperrando', descricao: 'Chave não gira direito.', categoria: 'Geral', prioridade: 'Baixa', slaHoras: 120, horasPassadas: 110, data: 'Na semana passada', prestador: { nome: 'Chaveiro Rápido', especialidade: 'Geral' }, status: 'Resolvido', custoEstimado: 80 },
 ];
 
 export function GestaoSolicitacoes() {

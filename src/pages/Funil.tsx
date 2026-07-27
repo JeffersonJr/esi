@@ -339,13 +339,41 @@ export function Funil({
           <div className="flex h-full gap-4 items-start w-max">
             {pipeline.map((estagio) => (
               <div key={estagio.id} className="flex flex-col h-[calc(100vh-280px)] w-[320px] shrink-0 bg-muted/30 rounded-[1.25rem] border border-border/60 overflow-hidden shadow-sm">
-                <div className="px-4 py-3 border-b border-border/40 flex items-center justify-between bg-card/40 backdrop-blur-sm">
-                  <h3 className="font-semibold text-sm text-foreground flex items-center gap-2">
-                    {funilAtivo.etapas?.find(e => e.id === estagio.id)?.label || estagio.id}
-                  </h3>
-                  <span className="flex size-6 items-center justify-center rounded-full bg-background border border-border text-[11px] font-mono font-semibold text-muted-foreground shadow-sm">
-                    {estagio.atendimentos.length}
-                  </span>
+                <div className="px-4 py-3 border-b border-border/40 bg-card/40 backdrop-blur-sm flex flex-col gap-2">
+                  <div className="flex items-center justify-between">
+                    <h3 className="font-semibold text-sm text-foreground flex items-center gap-2">
+                      {funilAtivo.etapas?.find(e => e.id === estagio.id)?.label || estagio.id}
+                    </h3>
+                    <span className="flex size-6 items-center justify-center rounded-full bg-background border border-border text-[11px] font-mono font-semibold text-muted-foreground shadow-sm">
+                      {estagio.atendimentos.length}
+                    </span>
+                  </div>
+                  {(() => {
+                    const parseValor = (v?: string) => {
+                      if (!v) return 0;
+                      const nums = v.replace(/[^\d]/g, '');
+                      return parseInt(nums, 10) || 0;
+                    };
+                    const vgv = estagio.atendimentos.filter(a => a.modo === 'venda' || !a.modo).reduce((acc, a) => acc + parseValor(a.valor), 0);
+                    const vgl = estagio.atendimentos.filter(a => a.modo === 'locacao').reduce((acc, a) => acc + parseValor(a.valor), 0);
+                    if (vgv === 0 && vgl === 0) return null;
+                    return (
+                      <div className="flex flex-col gap-0.5 mt-1 border-t border-border/30 pt-2">
+                        {vgv > 0 && (
+                          <div className="flex items-center justify-between text-[11px] font-medium">
+                            <span className="text-muted-foreground">VGV</span>
+                            <span className="text-emerald-600 dark:text-emerald-400 font-bold">{new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(vgv)}</span>
+                          </div>
+                        )}
+                        {vgl > 0 && (
+                          <div className="flex items-center justify-between text-[11px] font-medium">
+                            <span className="text-muted-foreground">VGL</span>
+                            <span className="text-blue-600 dark:text-blue-400 font-bold">{new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(vgl)}</span>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })()}
                 </div>
                 
                 <Droppable droppableId={estagio.id}>
