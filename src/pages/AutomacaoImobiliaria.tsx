@@ -169,8 +169,126 @@ const INITIAL_TEMPLATES: Automation[] = [
   }
 ];
 
+const INITIAL_AUTOMATIONS: Automation[] = [
+  {
+    id: "auto_1",
+    name: "Boas-vindas Automática",
+    triggerType: "form_submitted",
+    status: "active",
+    isTemplate: false,
+    savedAsTemplate: false,
+    isFavorite: true,
+    actions: [
+      { id: "a1", type: "whatsapp", config: { message: "Olá! Recebemos seu contato. Um de nossos corretores já vai te atender em instantes." } }
+    ]
+  },
+  {
+    id: "auto_2",
+    name: "Pós-Venda — Negócio Ganho",
+    triggerType: "deal_won",
+    status: "active",
+    isTemplate: false,
+    savedAsTemplate: false,
+    isFavorite: true,
+    actions: [
+      { id: "a1", type: "email", config: { subject: "Parabéns pela sua nova conquista!" } },
+      { id: "a2", type: "activity", config: { title: "Ligar para parabenizar e solicitar indicação", days: 3 } }
+    ]
+  },
+  {
+    id: "auto_3",
+    name: "Follow-up de Resgate (15 dias)",
+    triggerType: "deal_stale",
+    triggerDays: 15,
+    status: "active",
+    isTemplate: false,
+    savedAsTemplate: false,
+    isFavorite: false,
+    actions: [
+      { id: "a1", type: "whatsapp", config: { message: "Oi, tudo bem? Ainda tem interesse no imóvel?" } },
+      { id: "a2", type: "activity", config: { title: "Tentar resgatar o lead por ligação", days: 1 } }
+    ]
+  },
+  {
+    id: "auto_4",
+    name: "Rodízio de Vendas",
+    triggerType: "stage_change",
+    triggerStageId: "s1",
+    status: "active",
+    isTemplate: false,
+    savedAsTemplate: false,
+    isFavorite: false,
+    actions: [
+      { id: "a1", type: "change_owner", config: { roundRobin: true, team: "vendas" } }
+    ]
+  },
+  {
+    id: "auto_5",
+    name: "Rodízio de Locação",
+    triggerType: "stage_change",
+    triggerStageId: "s1",
+    status: "paused",
+    isTemplate: false,
+    savedAsTemplate: false,
+    isFavorite: false,
+    actions: [
+      { id: "a1", type: "change_owner", config: { roundRobin: true, team: "locacao" } }
+    ]
+  },
+  {
+    id: "auto_6",
+    name: "Rodízio de Redes Sociais",
+    triggerType: "form_submitted",
+    status: "active",
+    isTemplate: false,
+    savedAsTemplate: false,
+    isFavorite: false,
+    actions: [
+      { id: "a1", type: "change_owner", config: { roundRobin: true, team: "marketing" } }
+    ]
+  },
+  {
+    id: "auto_7",
+    name: "Onboarding de Corretor no Rodízio",
+    triggerType: "new_user",
+    status: "active",
+    isTemplate: false,
+    savedAsTemplate: false,
+    isFavorite: false,
+    actions: [
+      { id: "a1", type: "manage_round_robin", config: { action: "add", team: "vendas" } },
+      { id: "a2", type: "notification", config: { message: "Você foi adicionado à Roleta de Vendas!" } }
+    ]
+  },
+  {
+    id: "auto_8",
+    name: "Match Inteligente — Novo Imóvel",
+    triggerType: "new_property",
+    status: "active",
+    isTemplate: false,
+    savedAsTemplate: false,
+    isFavorite: true,
+    actions: [
+      { id: "a1", type: "whatsapp", config: { message: "Encontramos um imóvel perfeito que acabou de entrar no nosso radar! Posso te mostrar?" } }
+    ]
+  },
+  {
+    id: "auto_9",
+    name: "Transbordo de IA para Humano",
+    triggerType: "ai_handover",
+    status: "active",
+    isTemplate: false,
+    savedAsTemplate: false,
+    isFavorite: false,
+    actions: [
+      { id: "a1", type: "notification", config: { message: "A IA solicitou transbordo. Assuma o atendimento!" } },
+      { id: "a2", type: "whatsapp", config: { message: "Nosso corretor especializado já vai assumir seu atendimento. Um instante!" } }
+    ]
+  },
+];
+
 export function AutomacaoImobiliaria() {
-  const [automations, setAutomations] = useState<Automation[]>([]);
+  const [automations, setAutomations] = useState<Automation[]>(INITIAL_AUTOMATIONS);
   const [automationTemplates, setAutomationTemplates] = useState<Automation[]>(INITIAL_TEMPLATES);
   const [availableTags, setAvailableTags] = useState<any[]>([]);
 
