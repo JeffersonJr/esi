@@ -54,6 +54,50 @@ export function RelatoriosAnaliticos() {
 
           {/* ABA IMÓVEIS */}
           <TabsContent value="imoveis" className="mt-0 outline-none space-y-6">
+            
+            {/* KPIs Inteligentes - Imóveis */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+              <Card className="rounded-2xl border-border/50 shadow-sm bg-muted/20">
+                <CardContent className="p-5">
+                  <p className="text-[13px] font-medium text-muted-foreground mb-1">Total de Imóveis</p>
+                  <h3 className="text-2xl font-semibold">1.248</h3>
+                  <div className="flex items-center gap-2 mt-1">
+                    <Badge className="bg-emerald-500/10 text-emerald-600 hover:bg-emerald-500/20 border-0 font-semibold rounded-full px-2 py-0 h-5 text-[11px]">+12</Badge>
+                    <span className="text-[11px] text-muted-foreground">esta semana</span>
+                  </div>
+                </CardContent>
+              </Card>
+              <Card className="rounded-2xl border-border/50 shadow-sm bg-muted/20">
+                <CardContent className="p-5">
+                  <p className="text-[13px] font-medium text-muted-foreground mb-1">Desatualizados (>90d)</p>
+                  <h3 className="text-2xl font-semibold text-amber-600">342</h3>
+                  <div className="flex items-center gap-2 mt-1">
+                    <Badge className="bg-amber-500/10 text-amber-600 hover:bg-amber-500/20 border-0 font-semibold rounded-full px-2 py-0 h-5 text-[11px]">Atenção</Badge>
+                    <span className="text-[11px] text-muted-foreground">revisão necessária</span>
+                  </div>
+                </CardContent>
+              </Card>
+              <Card className="rounded-2xl border-border/50 shadow-sm bg-muted/20">
+                <CardContent className="p-5">
+                  <p className="text-[13px] font-medium text-muted-foreground mb-1">VGV Ativo (Est.)</p>
+                  <h3 className="text-2xl font-semibold">R$ 145M</h3>
+                  <div className="flex items-center gap-2 mt-1">
+                    <span className="text-[11px] text-muted-foreground">Soma de imóveis à venda</span>
+                  </div>
+                </CardContent>
+              </Card>
+              <Card className="rounded-2xl border-border/50 shadow-sm bg-muted/20">
+                <CardContent className="p-5">
+                  <p className="text-[13px] font-medium text-muted-foreground mb-1">Taxa de Captação</p>
+                  <h3 className="text-2xl font-semibold">8.4%</h3>
+                  <div className="flex items-center gap-2 mt-1">
+                    <Badge className="bg-rose-500/10 text-rose-600 hover:bg-rose-500/20 border-0 font-semibold rounded-full px-2 py-0 h-5 text-[11px]">-1.2%</Badge>
+                    <span className="text-[11px] text-muted-foreground">vs mês anterior</span>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
             <div className="flex flex-col sm:flex-row gap-4 items-center justify-between">
               <div className="flex items-center gap-3 w-full sm:w-auto">
                 <Select value={subReportImoveis} onValueChange={setSubReportImoveis}>
@@ -122,6 +166,50 @@ export function RelatoriosAnaliticos() {
 
           {/* ABA NEGÓCIOS */}
           <TabsContent value="negocios" className="mt-0 outline-none space-y-6">
+            
+            {/* KPIs Inteligentes - Negócios */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+              <Card className="rounded-2xl border-border/50 shadow-sm bg-muted/20">
+                <CardContent className="p-5">
+                  <p className="text-[13px] font-medium text-muted-foreground mb-1">Novos Leads</p>
+                  <h3 className="text-2xl font-semibold">254</h3>
+                  <div className="flex items-center gap-2 mt-1">
+                    <Badge className="bg-emerald-500/10 text-emerald-600 hover:bg-emerald-500/20 border-0 font-semibold rounded-full px-2 py-0 h-5 text-[11px]">+24%</Badge>
+                    <span className="text-[11px] text-muted-foreground">esta semana</span>
+                  </div>
+                </CardContent>
+              </Card>
+              <Card className="rounded-2xl border-border/50 shadow-sm bg-muted/20">
+                <CardContent className="p-5">
+                  <p className="text-[13px] font-medium text-muted-foreground mb-1">Estagnados (>15d)</p>
+                  <h3 className="text-2xl font-semibold text-amber-600">89</h3>
+                  <div className="flex items-center gap-2 mt-1">
+                    <Badge className="bg-amber-500/10 text-amber-600 hover:bg-amber-500/20 border-0 font-semibold rounded-full px-2 py-0 h-5 text-[11px]">Risco</Badge>
+                    <span className="text-[11px] text-muted-foreground">esfriando</span>
+                  </div>
+                </CardContent>
+              </Card>
+              <Card className="rounded-2xl border-border/50 shadow-sm bg-muted/20">
+                <CardContent className="p-5">
+                  <p className="text-[13px] font-medium text-muted-foreground mb-1">Ticket Médio (Venda)</p>
+                  <h3 className="text-2xl font-semibold">R$ 680k</h3>
+                  <div className="flex items-center gap-2 mt-1">
+                    <span className="text-[11px] text-muted-foreground">Baseado nos leads atuais</span>
+                  </div>
+                </CardContent>
+              </Card>
+              <Card className="rounded-2xl border-border/50 shadow-sm bg-muted/20">
+                <CardContent className="p-5">
+                  <p className="text-[13px] font-medium text-muted-foreground mb-1">Tempo de Resposta</p>
+                  <h3 className="text-2xl font-semibold">14m</h3>
+                  <div className="flex items-center gap-2 mt-1">
+                    <Badge className="bg-emerald-500/10 text-emerald-600 hover:bg-emerald-500/20 border-0 font-semibold rounded-full px-2 py-0 h-5 text-[11px]">-2m</Badge>
+                    <span className="text-[11px] text-muted-foreground">mais rápido que ontem</span>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
             <div className="flex flex-col sm:flex-row gap-4 items-center justify-between">
               <div className="flex items-center gap-3 w-full sm:w-auto">
                 <Select value={subReportNegocios} onValueChange={setSubReportNegocios}>
